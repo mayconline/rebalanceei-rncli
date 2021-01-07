@@ -16,6 +16,7 @@
 #### :rocket: User Stack Status
 
 - [BackEnd - GraphQL Apollo Server](https://github.com/mayconline/graphql-apollo-server)
+- [BackEnd deploy](https://app-rebalanceei.herokuapp.com/)
 - [Mobile Development - Expo](https://github.com/mayconline/rebalanceei-react-native)
 - [Mobile Production - React Native CLI](https://github.com/mayconline/rebalanceei-rncli)
 - [Jest](https://jestjs.io/docs/en/getting-started)

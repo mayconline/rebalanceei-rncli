@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LOGIN } from '../pages/public/Login';
 
 const httpLink = createHttpLink({
-  uri: 'http://192.168.1.3:4000/',
+  uri: 'https://app-rebalanceei.herokuapp.com/',
   credentials: 'include',
 });
 
