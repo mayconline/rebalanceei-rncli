@@ -72,7 +72,7 @@ const HelpModal = ({ onClose }: IHelpModal) => {
             <Collapse title="Sua duvida não foi respondida ?">
               <Question>
                 Entre em contato conosco atraves do e-mail
-                mayconline.ti@gmail.com
+                rebalanceeiapp@gmail.com
               </Question>
             </Collapse>
           }
