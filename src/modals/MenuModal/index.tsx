@@ -12,6 +12,7 @@ import Divider from '../../components/Divider';
 import ShadowBackdrop from '../../components/ShadowBackdrop';
 import UpdateUserModal from '../UpdateUserModal';
 import HelpModal from '../HelpModal';
+import PlanModal from '../PlanModal';
 
 import {
   Wrapper,
@@ -63,14 +64,16 @@ interface MenuProps {
 
 const MenuModal = ({ onClose }: MenuProps) => {
   const { handleSignOut } = useAuth();
-  const [openModal, setOpenModal] = useState<'User' | 'Help' | null>(null);
+  const [openModal, setOpenModal] = useState<'User' | 'Help' | 'Plan' | null>(
+    null,
+  );
 
   const handleClickMenu = (description: string) => {
     switch (description) {
       case 'Meus Dados':
         return setOpenModal('User');
       case 'Meu Plano Atual':
-        return;
+        return setOpenModal('Plan');
       case 'Termos de Uso':
         return getTerms();
       case 'Ajuda':
@@ -137,6 +140,17 @@ const MenuModal = ({ onClose }: MenuProps) => {
           statusBarTranslucent={true}
         >
           <HelpModal onClose={() => setOpenModal(null)} />
+        </Modal>
+      )}
+
+      {openModal === 'Plan' && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={openModal === 'Plan'}
+          statusBarTranslucent={true}
+        >
+          <PlanModal onClose={() => setOpenModal(null)} />
         </Modal>
       )}
     </>
