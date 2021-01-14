@@ -5,27 +5,21 @@ import { useMutation, useLazyQuery, gql } from '@apollo/client';
 
 import {
   Wrapper,
+  ScrollView,
   ContainerTitle,
   BackIcon,
   Title,
-  CardPlan,
-  CardPlanGroup,
-  CardPlanTitle,
-  CardPlanContainerDescription,
-  CardPlanDescription,
-  CardPlanRole,
   ContainerButtons,
   Container,
-  SubTitle,
-  ContainerPremmium,
-  ContainerPremmiumGroup,
 } from './styles';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import ImagePremmium from '../../../assets/svg/ImagePremmium';
+
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import TextError from '../../components/TextError';
+import CopyPremmium from '../../components/CopyPremmium';
+import CardPlan from '../../components/CardPlan';
 
 interface IUser {
   _id: string;
@@ -44,9 +38,12 @@ interface PlanModal {
   onClose(): void;
 }
 
+type IPlanName = 'FREE' | 'YEAR' | 'MONTH';
+
 const PlanModal = ({ onClose }: PlanModal) => {
   const { color, gradient } = useContext(ThemeContext);
   const [role, setRole] = useState<'USER' | 'PREMIUM'>('USER');
+  const [planName, setPlanName] = useState<IPlanName>('YEAR');
 
   const [
     getUserByToken,
@@ -84,11 +81,15 @@ const PlanModal = ({ onClose }: PlanModal) => {
     }
   }, [role]);
 
+  const handleSelectPlan = useCallback((plan: IPlanName) => {
+    setPlanName(plan);
+  }, []);
+
   return queryLoading ? (
     <Loading />
   ) : (
     <Wrapper>
-      <Container>
+      <ScrollView>
         {!!queryError && <TextError>{queryError?.message}</TextError>}
         <ContainerTitle>
           <Title accessibilityRole="header">Meu Plano Atual</Title>
@@ -100,35 +101,42 @@ const PlanModal = ({ onClose }: PlanModal) => {
             <AntDesign name="closecircleo" size={24} color={color.subtitle} />
           </BackIcon>
         </ContainerTitle>
+        <CardPlan
+          title="Plano Básico - Ativo"
+          descriptions={[
+            '+ Até 2 Carteiras',
+            '+ Até 16 Ativos em cada carteira',
+          ]}
+          plan="Grátis"
+          currentPlan
+          disabled
+        />
+        <CopyPremmium />
 
-        <CardPlan>
-          <CardPlanTitle>Plano Básico - Ativo</CardPlanTitle>
-          <CardPlanGroup>
-            <CardPlanContainerDescription>
-              <CardPlanDescription>+ Até 2 Carteiras</CardPlanDescription>
-              <CardPlanDescription>
-                + Até 16 Ativos em cada carteira
-              </CardPlanDescription>
-            </CardPlanContainerDescription>
-            <CardPlanRole>Grátis</CardPlanRole>
-          </CardPlanGroup>
-        </CardPlan>
+        {/*  <CardPlan
+          title="Plano Mensal"
+          descriptions={['+ Renovação automática']}
+          plan="R$ 9,90 / Mês"
+          active={planName === 'MONTH'}
+          onPress={() => handleSelectPlan('MONTH')}
+        />
+        <CardPlan
+          title="Plano Anual"
+          descriptions={['+ de 24% de desconto', '+ Renovação automática']}
+          plan="R$ 89,90 / Ano"
+          active={planName === 'YEAR'}
+          onPress={() => handleSelectPlan('YEAR')}
+        />
 
-        <ContainerPremmium>
-          <SubTitle accessibilityRole="header">Torne-se Premmium</SubTitle>
-          <ContainerPremmiumGroup>
-            <CardPlanContainerDescription>
-              <CardPlanDescription>+ Carteiras ilimitadas</CardPlanDescription>
-              <CardPlanDescription>+ Ativos ilimitados</CardPlanDescription>
-              <CardPlanDescription>+ Sem Anúncios</CardPlanDescription>
-              <CardPlanDescription>
-                + Todos os Benefícios do app
-              </CardPlanDescription>
-            </CardPlanContainerDescription>
-
-            <ImagePremmium translateX={10} />
-          </ContainerPremmiumGroup>
-        </ContainerPremmium>
+        <ContainerButtons>
+          <Button
+            colors={gradient.darkToLightBlue}
+            onPress={handleSubmit}
+            loading={mutationLoading}
+          >
+            Assine já !
+          </Button>
+        </ContainerButtons>*/}
 
         <ContainerButtons>
           <Button
@@ -139,7 +147,7 @@ const PlanModal = ({ onClose }: PlanModal) => {
             Em Breve !
           </Button>
         </ContainerButtons>
-      </Container>
+      </ScrollView>
     </Wrapper>
   );
 };
