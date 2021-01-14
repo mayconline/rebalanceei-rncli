@@ -3,23 +3,14 @@ import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 import { useMutation, useLazyQuery, gql } from '@apollo/client';
 
-import {
-  Wrapper,
-  ScrollView,
-  ContainerTitle,
-  BackIcon,
-  Title,
-  ContainerButtons,
-  Container,
-} from './styles';
+import { Wrapper, ScrollView, ContainerTitle, BackIcon, Title } from './styles';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import Loading from '../../components/Loading';
-import Button from '../../components/Button';
 import TextError from '../../components/TextError';
-import CopyPremmium from '../../components/CopyPremmium';
-import CardPlan from '../../components/CardPlan';
+import Free from './components/Free';
+import Premium from './components/Premium';
 
 interface IUser {
   _id: string;
@@ -38,19 +29,28 @@ interface PlanModal {
   onClose(): void;
 }
 
-type IPlanName = 'FREE' | 'YEAR' | 'MONTH';
+export type IPlanName = 'FREE' | 'YEAR' | 'MONTH' | null;
 
 const PlanModal = ({ onClose }: PlanModal) => {
-  const { color, gradient } = useContext(ThemeContext);
-  const [role, setRole] = useState<'USER' | 'PREMIUM'>('USER');
-  const [planName, setPlanName] = useState<IPlanName>('YEAR');
-
   const [
     getUserByToken,
     { data, loading: queryLoading, error: queryError },
   ] = useLazyQuery<IGetUser>(GET_USER_BY_TOKEN, {
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
   });
+
+  const currentRole = data?.getUserByToken?.role;
+
+  const { color } = useContext(ThemeContext);
+  const [planName, setPlanName] = useState<IPlanName>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      currentRole === 'USER'
+        ? handleSelectPlan('YEAR')
+        : handleSelectPlan('FREE');
+    }, [currentRole]),
+  );
 
   const [
     updateRole,
@@ -64,11 +64,10 @@ const PlanModal = ({ onClose }: PlanModal) => {
   );
 
   const handleSubmit = useCallback(async () => {
-    return null;
     try {
       await updateRole({
         variables: {
-          role,
+          role: currentRole === 'USER' ? 'PREMIUM' : 'USER',
         },
         refetchQueries: [
           {
@@ -79,7 +78,7 @@ const PlanModal = ({ onClose }: PlanModal) => {
     } catch (err) {
       console.error(mutationError?.message + err);
     }
-  }, [role]);
+  }, [currentRole]);
 
   const handleSelectPlan = useCallback((plan: IPlanName) => {
     setPlanName(plan);
@@ -90,6 +89,7 @@ const PlanModal = ({ onClose }: PlanModal) => {
   ) : (
     <Wrapper>
       <ScrollView>
+        {!!mutationError && <TextError>{mutationError?.message}</TextError>}
         {!!queryError && <TextError>{queryError?.message}</TextError>}
         <ContainerTitle>
           <Title accessibilityRole="header">Meu Plano Atual</Title>
@@ -101,52 +101,21 @@ const PlanModal = ({ onClose }: PlanModal) => {
             <AntDesign name="closecircleo" size={24} color={color.subtitle} />
           </BackIcon>
         </ContainerTitle>
-        <CardPlan
-          title="Plano Básico - Ativo"
-          descriptions={[
-            '+ Até 2 Carteiras',
-            '+ Até 16 Ativos em cada carteira',
-          ]}
-          plan="Grátis"
-          currentPlan
-          disabled
-        />
-        <CopyPremmium />
+        {currentRole === 'USER' && (
+          <Free
+            handleSubmit={handleSubmit}
+            mutationLoading={mutationLoading}
+            planName={planName}
+            handleSelectPlan={handleSelectPlan}
+          />
+        )}
 
-        {/*  <CardPlan
-          title="Plano Mensal"
-          descriptions={['+ Renovação automática']}
-          plan="R$ 9,90 / Mês"
-          active={planName === 'MONTH'}
-          onPress={() => handleSelectPlan('MONTH')}
-        />
-        <CardPlan
-          title="Plano Anual"
-          descriptions={['+ de 24% de desconto', '+ Renovação automática']}
-          plan="R$ 89,90 / Ano"
-          active={planName === 'YEAR'}
-          onPress={() => handleSelectPlan('YEAR')}
-        />
-
-        <ContainerButtons>
-          <Button
-            colors={gradient.darkToLightBlue}
-            onPress={handleSubmit}
-            loading={mutationLoading}
-          >
-            Assine já !
-          </Button>
-        </ContainerButtons>*/}
-
-        <ContainerButtons>
-          <Button
-            colors={gradient.darkToLightBlue}
-            onPress={handleSubmit}
-            loading={mutationLoading}
-          >
-            Em Breve !
-          </Button>
-        </ContainerButtons>
+        {currentRole === 'PREMIUM' && (
+          <Premium
+            handleSubmit={handleSubmit}
+            mutationLoading={mutationLoading}
+          />
+        )}
       </ScrollView>
     </Wrapper>
   );

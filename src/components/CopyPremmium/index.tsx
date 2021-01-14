@@ -9,9 +9,15 @@ import {
   Description,
 } from './styles';
 
-const CopyPremmium = () => (
+interface ICopyPremmium {
+  isPremmium?: boolean;
+}
+
+const CopyPremmium = ({ isPremmium = false }: ICopyPremmium) => (
   <ContainerPremmium>
-    <Title accessibilityRole="header">Torne-se Premmium</Title>
+    <Title accessibilityRole="header">
+      {isPremmium ? 'Premmium' : 'Torne-se Premmium'}
+    </Title>
     <ContainerPremmiumGroup>
       <ContainerDescription>
         <Description>+ Carteiras ilimitadas</Description>
