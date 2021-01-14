@@ -28,6 +28,7 @@ export const Icon = styled.TouchableOpacity`
 
 export const ContainerTitle = styled.View`
   align-items: center;
+  margin-bottom: 36px;
 `;
 
 export const ContainerIndicator = styled.View`
@@ -78,26 +79,6 @@ export const Step = styled.View`
   border-top-right-radius: 20px;
   min-height: 500px;
   width: 100%;
-`;
-
-export const Gradient = styled(LinearGradient)<any>`
-  justify-content: center;
-  margin-top: 36px;
-  border-radius: 24px;
-`;
-
-export const Button = styled.TouchableOpacity<INextButton>`
-  align-items: center;
-  padding: 12px 20px;
-  border-color: ${({ theme }) => theme.color.blue};
-  border-width: ${({ next }) => (next ? '1px' : 'undefined')};
-  border-radius: 24px;
-`;
-
-export const TextButton = styled.Text<INextButton>`
-  color: ${({ theme, next }) =>
-    next ? theme.color.blue : theme.color.secondary};
-  font: 600 20px/28px 'TitilliumWeb-SemiBold';
 `;
 
 export const ContainerTextLink = styled.TouchableOpacity`

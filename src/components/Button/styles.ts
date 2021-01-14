@@ -1,6 +1,10 @@
 import styled from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
 
+interface IButton {
+  outlined?: boolean;
+}
+
 export const Gradient = styled(LinearGradient)<any>`
   justify-content: center;
   margin-top: 4px;
@@ -10,9 +14,13 @@ export const Gradient = styled(LinearGradient)<any>`
 export const ContainerButton = styled.TouchableOpacity<any>`
   align-items: center;
   padding: 12px 44px;
+  border-color: ${({ theme }) => theme.color.blue};
+  border-width: ${({ outlined }) => (outlined ? '1px' : 'undefined')};
+  border-radius: 12px;
 `;
 
-export const TextButton = styled.Text`
-  color: ${({ theme }) => theme.color.secondary};
+export const TextButton = styled.Text<IButton>`
+  color: ${({ theme, outlined }) =>
+    outlined ? theme.color.blue : theme.color.secondary};
   font: 600 20px/28px 'TitilliumWeb-SemiBold';
 `;

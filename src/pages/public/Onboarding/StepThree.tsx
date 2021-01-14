@@ -13,13 +13,11 @@ import {
   Header,
   Title,
   Subtitle,
-  Button,
-  Gradient,
-  TextButton,
   ContainerTextLink,
   TextLink,
 } from './styles';
 
+import Button from '../../../components/Button';
 import OnboardingImgThree from '../../../../assets/svg/OnboardingImgThree';
 
 const StepThree = () => {
@@ -53,15 +51,10 @@ const StepThree = () => {
               Veja a variação de seus ativos e rebalanceeie eles como desejar!
             </Subtitle>
           </ContainerTitle>
-          <Gradient
-            colors={gradient.darkToLightBlue}
-            start={{ x: 1, y: 0 }}
-            end={{ x: 0, y: 0.5 }}
-          >
-            <Button onPress={handleNext}>
-              <TextButton>Vamos Começar</TextButton>
-            </Button>
-          </Gradient>
+
+          <Button colors={gradient.darkToLightBlue} onPress={handleNext}>
+            Vamos Começar
+          </Button>
         </Step>
       </StepContainer>
     </Wrapper>

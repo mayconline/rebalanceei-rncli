@@ -13,13 +13,11 @@ import {
   Header,
   Title,
   Subtitle,
-  Button,
-  Gradient,
-  TextButton,
   ContainerTextLink,
   TextLink,
 } from './styles';
 
+import Button from '../../../components/Button';
 import OnboardingImgTwo from '../../../../assets/svg/OnboardingImgTwo';
 
 const StepTwo = () => {
@@ -54,15 +52,9 @@ const StepTwo = () => {
               preferências!
             </Subtitle>
           </ContainerTitle>
-          <Gradient
-            colors={gradient.lightToGray}
-            start={{ x: 1, y: 0 }}
-            end={{ x: 0, y: 0.5 }}
-          >
-            <Button onPress={handleNext} next={true}>
-              <TextButton next={true}>Próximo</TextButton>
-            </Button>
-          </Gradient>
+          <Button colors={gradient.lightToGray} onPress={handleNext} outlined>
+            Próximo
+          </Button>
         </Step>
       </StepContainer>
     </Wrapper>

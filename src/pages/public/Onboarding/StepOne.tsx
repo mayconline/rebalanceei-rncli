@@ -13,13 +13,11 @@ import {
   Header,
   Title,
   Subtitle,
-  Button,
-  Gradient,
-  TextButton,
   ContainerTextLink,
   TextLink,
 } from './styles';
 
+import Button from '../../../components/Button';
 import OnboardingImgOne from '../../../../assets/svg/OnboardingImgOne';
 
 const StepOne = () => {
@@ -52,15 +50,10 @@ const StepOne = () => {
             <Subtitle>Rebalanceeie seus ativos em sua carteira!</Subtitle>
             <Subtitle>É simples e fácil!</Subtitle>
           </ContainerTitle>
-          <Gradient
-            colors={gradient.lightToGray}
-            start={{ x: 1, y: 0 }}
-            end={{ x: 0, y: 0.5 }}
-          >
-            <Button onPress={handleNext} next={true}>
-              <TextButton next={true}>Próximo</TextButton>
-            </Button>
-          </Gradient>
+
+          <Button colors={gradient.lightToGray} onPress={handleNext} outlined>
+            Próximo
+          </Button>
         </Step>
       </StepContainer>
     </Wrapper>
