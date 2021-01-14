@@ -138,6 +138,7 @@ const Login = () => {
             colors={gradient.darkToLightBlue}
             onPress={handleSubmit}
             loading={loading}
+            disabled={loading}
           >
             Entrar
           </Button>

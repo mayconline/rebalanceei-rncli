@@ -233,6 +233,7 @@ const EditTicket = ({ ticket }: IEditWalletModal) => {
             colors={gradient.lightToDarkRed}
             onPress={handleDeleteSubmit}
             loading={mutationDeleteLoading}
+            disabled={mutationDeleteLoading}
           >
             Deletar
           </Button>
@@ -241,6 +242,7 @@ const EditTicket = ({ ticket }: IEditWalletModal) => {
             colors={gradient.darkToLightBlue}
             onPress={handleSubmit}
             loading={mutationLoading}
+            disabled={mutationLoading}
           >
             Alterar
           </Button>

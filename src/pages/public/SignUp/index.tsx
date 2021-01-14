@@ -191,6 +191,7 @@ const SignUp = () => {
             colors={gradient.darkToLightBlue}
             onPress={handleSubmit}
             loading={mutationLoading}
+            disabled={mutationLoading}
           >
             Criar Conta
           </Button>

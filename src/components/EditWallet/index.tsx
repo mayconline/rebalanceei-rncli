@@ -131,6 +131,7 @@ const EditWallet = ({
           colors={gradient.lightToDarkRed}
           onPress={handleDeleteSubmit}
           loading={mutationDeleteLoading}
+          disabled={mutationDeleteLoading}
         >
           Deletar
         </Button>
@@ -139,6 +140,7 @@ const EditWallet = ({
           colors={gradient.darkToLightBlue}
           onPress={handleEditSubmit}
           loading={mutationLoading}
+          disabled={mutationLoading}
         >
           Alterar
         </Button>

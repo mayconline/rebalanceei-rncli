@@ -245,6 +245,7 @@ const AddTicket = () => {
                 colors={gradient.darkToLightBlue}
                 onPress={handleSubmit}
                 loading={mutationLoading}
+                disabled={mutationLoading}
               >
                 Adicionar
               </Button>

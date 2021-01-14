@@ -177,6 +177,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
                 colors={gradient.lightToDarkRed}
                 onPress={handleDisabledSubmit}
                 loading={mutationLoading}
+                disabled={mutationLoading}
               >
                 Desativar
               </Button>
@@ -185,6 +186,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
                 colors={gradient.darkToLightBlue}
                 onPress={handleSubmit}
                 loading={mutationLoading}
+                disabled={mutationLoading}
               >
                 Alterar
               </Button>

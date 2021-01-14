@@ -139,6 +139,7 @@ const AddWalletModal = ({
                 colors={gradient.darkToLightBlue}
                 onPress={handleSubmit}
                 loading={mutationLoading}
+                disabled={mutationLoading}
               >
                 Adicionar Carteira
               </Button>
