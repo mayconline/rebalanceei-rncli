@@ -54,7 +54,7 @@
     "axios-mock-adapter": "^1.19.0",
     "babel-jest": "^25.1.0",
     "eslint": "^6.5.1",
-    "husky": "^4.3.6",
+    "husky": "^4.3.7",
     "jest": "^25.1.0",
     "jest-styled-components": "^7.0.3",
     "jetifier": "^1.6.6",
@@ -81,5 +81,10 @@
       "src/modals/**/*.tsx",
       "src/contexts/*.tsx"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "jest"
+    }
   }
 }
