@@ -42,13 +42,13 @@ const AmountWallet = () => {
     { data, loading: queryLoading, error: queryError },
   ] = useLazyQuery<IDataTickets>(GET_WALLET_BY_ID, {
     variables: { _id: wallet },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   });
 
   useFocusEffect(
     useCallback(() => {
       getWalletById();
-    }, [wallet]),
+    }, []),
   );
 
   const isPositive = data && data?.getWalletById?.percentRentabilityWallet > 0;

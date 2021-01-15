@@ -7,6 +7,8 @@ import { FormContainer, Form, FormRow, ContainerButtons } from './styles';
 
 import { ITickets, GET_TICKETS_BY_WALLET } from '../../pages/Ticket';
 import { GET_WALLET_BY_USER } from '../../modals/WalletModal';
+import { GET_WALLET_BY_ID } from '../AmountWallet';
+
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Button from '../Button';
 import InputForm from '../InputForm';
@@ -101,12 +103,13 @@ const EditTicket = ({ ticket }: IEditWalletModal) => {
             query: GET_TICKETS_BY_WALLET,
             variables: { walletID: wallet, sort: 'grade' },
           },
-          {
-            query: GET_TICKETS_BY_WALLET,
-            variables: { walletID: wallet, sort: 'symbol' },
-          },
+
           {
             query: GET_WALLET_BY_USER,
+          },
+          {
+            query: GET_WALLET_BY_ID,
+            variables: { _id: wallet },
           },
         ],
       });
@@ -132,11 +135,11 @@ const EditTicket = ({ ticket }: IEditWalletModal) => {
             variables: { walletID: wallet, sort: 'grade' },
           },
           {
-            query: GET_TICKETS_BY_WALLET,
-            variables: { walletID: wallet, sort: 'symbol' },
+            query: GET_WALLET_BY_USER,
           },
           {
-            query: GET_WALLET_BY_USER,
+            query: GET_WALLET_BY_ID,
+            variables: { _id: wallet },
           },
         ],
       });

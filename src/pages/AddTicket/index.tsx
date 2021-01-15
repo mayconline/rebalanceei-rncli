@@ -19,6 +19,7 @@ import ImageAddTicket from '../../../assets/svg/ImageAddTicket';
 import SuccessModal from '../../modals/SuccessModal';
 import { GET_TICKETS_BY_WALLET } from '../Ticket';
 import { GET_WALLET_BY_USER } from '../../modals/WalletModal';
+import { GET_WALLET_BY_ID } from '../../components/AmountWallet';
 import SuggestionsModal from '../../modals/SuggestionsModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -117,11 +118,11 @@ const AddTicket = () => {
             variables: { walletID: wallet, sort: 'grade' },
           },
           {
-            query: GET_TICKETS_BY_WALLET,
-            variables: { walletID: wallet, sort: 'symbol' },
+            query: GET_WALLET_BY_USER,
           },
           {
-            query: GET_WALLET_BY_USER,
+            query: GET_WALLET_BY_ID,
+            variables: { _id: wallet },
           },
         ],
       });
