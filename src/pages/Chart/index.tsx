@@ -59,9 +59,7 @@ const randomDarkColor = () => {
 const Chart = () => {
   const [select, setSelect] = useState('');
   const [dataGraph, setDataGraph] = useState<PieChartData[]>([]);
-  const [selectedFilter, setSelectFilter] = useState<string | undefined>(
-    'Classe',
-  );
+  const [selectedFilter, setSelectFilter] = useState<string>('Classe');
 
   const { wallet } = useAuth();
 
