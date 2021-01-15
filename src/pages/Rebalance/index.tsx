@@ -5,6 +5,8 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { Wrapper } from './styles';
 
+import { getArraySortByParams } from '../../utils/sort';
+
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
 import Empty from '../../components/Empty';
@@ -45,30 +47,42 @@ interface IDataTickets {
 }
 
 const Rebalance = () => {
-  const [selectedFilter, setSelectFilter] = useState<string | undefined>(
-    'targetAmount',
-  );
   const { wallet } = useAuth();
+
+  const [selectedFilter, setSelectFilter] = useState<string>('targetAmount');
+
+  const [rebalanceData, setRebalanceData] = useState<IRebalances[]>(
+    [] as IRebalances[],
+  );
 
   const [
     rebalances,
     { data, loading: queryLoading, error: queryError },
   ] = useLazyQuery<IDataTickets>(REBALANCES, {
-    variables: { walletID: wallet, sort: selectedFilter },
+    variables: { walletID: wallet, sort: 'targetAmount' },
     fetchPolicy: 'cache-and-network',
   });
 
   useFocusEffect(
     useCallback(() => {
       rebalances();
-    }, [selectedFilter]),
+    }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      data?.rebalances &&
+        setRebalanceData(
+          getArraySortByParams(data?.rebalances, selectedFilter),
+        );
+    }, [data, selectedFilter]),
   );
 
   const handleChangeFilter = useCallback((filterName: string) => {
     setSelectFilter(filterName);
   }, []);
 
-  const hasTickets = wallet && !queryLoading && !!data?.rebalances?.length;
+  const hasTickets = wallet && !queryLoading && !!rebalanceData.length;
 
   return queryLoading ? (
     <Loading />
@@ -89,8 +103,8 @@ const Rebalance = () => {
             onPress={handleChangeFilter}
           />
           <ListTicket
-            data={data?.rebalances}
-            extraData={!!queryLoading}
+            data={rebalanceData}
+            extraData={rebalanceData}
             keyExtractor={item => item._id}
             renderItem={({ item }) => <ListItem item={item} />}
           />
