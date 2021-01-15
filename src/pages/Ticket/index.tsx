@@ -6,6 +6,8 @@ import { useLazyQuery, gql } from '@apollo/client';
 
 import { Wrapper } from './styles';
 
+import { getArraySortByParams } from '../../utils/sort';
+
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
 import Empty from '../../components/Empty';
@@ -39,40 +41,46 @@ interface IDataTickets {
 
 const Ticket = () => {
   const navigation = useNavigation();
-
-  const [selectedFilter, setSelectFilter] = useState<string | undefined>(
-    'grade',
-  );
   const { wallet } = useAuth();
+
+  const [selectedFilter, setSelectFilter] = useState<string>('grade');
   const [openModal, setOpenModal] = useState(!wallet ? true : false);
+
+  const [ticketData, setTicketData] = useState<ITickets[]>([] as ITickets[]);
 
   const [
     getTicketsByWallet,
     { data, loading: queryLoading, error: queryError },
   ] = useLazyQuery<IDataTickets>(GET_TICKETS_BY_WALLET, {
-    variables: { walletID: wallet, sort: selectedFilter },
+    variables: { walletID: wallet, sort: 'grade' },
     fetchPolicy: 'cache-first',
   });
 
   useFocusEffect(
     useCallback(() => {
       getTicketsByWallet();
-    }, [wallet, selectedFilter]),
+    }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      data?.getTicketsByWallet &&
+        setTicketData(
+          getArraySortByParams(data?.getTicketsByWallet, selectedFilter),
+        );
+    }, [data, selectedFilter]),
   );
 
   const handleChangeFilter = useCallback((filterName: string) => {
     setSelectFilter(filterName);
   }, []);
 
-  const hasTickets = useMemo(
-    () => !queryLoading && !!data?.getTicketsByWallet?.length,
-    [queryLoading, data],
-  );
-
   const handleOpenEditModal = useCallback((item: ITickets) => {
     navigation.setParams({ ticket: null });
     navigation.navigate('AddTicket', { ticket: item });
   }, []);
+
+  const hasTickets = wallet && !queryLoading && !!ticketData.length;
 
   return queryLoading ? (
     <Loading />
@@ -94,8 +102,8 @@ const Ticket = () => {
               onPress={handleChangeFilter}
             />
             <ListTicket
-              data={data?.getTicketsByWallet}
-              extraData={!!queryLoading}
+              data={ticketData}
+              extraData={ticketData}
               keyExtractor={item => item._id}
               renderItem={({ item }) => (
                 <ListItem
