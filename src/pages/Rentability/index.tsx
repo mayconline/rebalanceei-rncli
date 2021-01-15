@@ -5,6 +5,8 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { Wrapper } from './styles';
 
+import { getArraySortByParams } from '../../utils/sort';
+
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
 import AmountWallet from '../../components/AmountWallet';
@@ -46,31 +48,42 @@ interface IDataTickets {
 }
 
 const Rentability = () => {
-  const [selectedFilter, setSelectFilter] = useState<string | undefined>(
-    'currentAmount',
-  );
-
   const { wallet } = useAuth();
+
+  const [selectedFilter, setSelectFilter] = useState<string>('currentAmount');
+
+  const [rentabilityData, setRentabilityData] = useState<IGetRentability[]>(
+    [] as IGetRentability[],
+  );
 
   const [
     getRentability,
     { data, loading: queryLoading, error: queryError },
   ] = useLazyQuery<IDataTickets>(GET_RENTABILITY, {
-    variables: { walletID: wallet, sort: selectedFilter },
+    variables: { walletID: wallet, sort: 'currentAmount' },
     fetchPolicy: 'cache-and-network',
   });
 
   useFocusEffect(
     useCallback(() => {
       getRentability();
-    }, [selectedFilter]),
+    }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      data?.getRentability &&
+        setRentabilityData(
+          getArraySortByParams(data?.getRentability, selectedFilter),
+        );
+    }, [data, selectedFilter]),
   );
 
   const handleChangeFilter = useCallback((filterName: string) => {
     setSelectFilter(filterName);
   }, []);
 
-  const hasTickets = wallet && !queryLoading && !!data?.getRentability?.length;
+  const hasTickets = wallet && !queryLoading && !!rentabilityData.length;
 
   return queryLoading ? (
     <Loading />
@@ -91,8 +104,8 @@ const Rentability = () => {
             onPress={handleChangeFilter}
           />
           <ListTicket
-            data={data?.getRentability}
-            extraData={!!queryLoading}
+            data={rentabilityData}
+            extraData={rentabilityData}
             keyExtractor={item => item._id}
             ListHeaderComponent={<AmountWallet />}
             renderItem={({ item }) => <ListItem item={item} />}
