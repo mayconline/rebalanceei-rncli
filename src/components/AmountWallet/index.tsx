@@ -112,4 +112,4 @@ export const GET_WALLET_BY_ID = gql`
   }
 `;
 
-export default React.memo(AmountWallet);
+export default AmountWallet;
