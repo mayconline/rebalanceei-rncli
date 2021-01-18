@@ -36,7 +36,7 @@ const PlanModal = ({ onClose }: PlanModal) => {
     getUserByToken,
     { data, loading: queryLoading, error: queryError },
   ] = useLazyQuery<IGetUser>(GET_USER_BY_TOKEN, {
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   });
 
   const currentRole = data?.getUserByToken?.role;

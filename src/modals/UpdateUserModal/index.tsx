@@ -51,7 +51,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
     getUserByToken,
     { data, loading: queryLoading, error: queryError },
   ] = useLazyQuery<IGetUser>(GET_USER_BY_TOKEN, {
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   });
 
   const [
@@ -83,6 +83,11 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
                 variables: {
                   active: false,
                 },
+                refetchQueries: [
+                  {
+                    query: GET_USER_BY_TOKEN,
+                  },
+                ],
               });
               handleSignOut();
             },
@@ -97,7 +102,14 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
 
   const handleSubmit = useCallback(async () => {
     try {
-      await updateUser({ variables: user });
+      await updateUser({
+        variables: user,
+        refetchQueries: [
+          {
+            query: GET_USER_BY_TOKEN,
+          },
+        ],
+      });
       onClose();
     } catch (err) {
       console.error(err);

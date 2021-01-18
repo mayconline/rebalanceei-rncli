@@ -34,7 +34,7 @@ const Free = ({
       />
       <CopyPremmium />
 
-      {/*<CardPlan
+      <CardPlan
         title="Plano Mensal"
         descriptions={['+ Renovação automática']}
         plan="R$ 9,90 / Mês"
@@ -58,7 +58,7 @@ const Free = ({
         >
           Assine já !
         </Button>
-      </ContainerButtons>*/}
+      </ContainerButtons>
 
       <ContainerButtons>
         <Button
