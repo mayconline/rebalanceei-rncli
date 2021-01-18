@@ -57,7 +57,6 @@ const randomDarkColor = () => {
 };
 
 const Chart = () => {
-  const [select, setSelect] = useState('');
   const [dataGraph, setDataGraph] = useState<PieChartData[]>([]);
   const [selectedFilter, setSelectFilter] = useState<string>('Classe');
 
@@ -83,11 +82,10 @@ const Chart = () => {
         value: Number(item.currentPercent.toFixed(1)),
         svg: {
           fill: randomDarkColor(),
-          onPress: () => setSelect(item.symbol),
         },
         key: formatTicket(item.symbol),
         arc: {
-          outerRadius: select === item.symbol ? '108%' : '100%',
+          outerRadius: '100%',
           cornerRadius: 4,
           padAngle: 0.01,
         },
@@ -95,7 +93,7 @@ const Chart = () => {
 
       return setDataGraph(formatedPie);
     }
-  }, [select, data]);
+  }, [data]);
 
   const eachClassChart = useCallback(() => {
     if (data?.rebalances) {
@@ -110,27 +108,26 @@ const Chart = () => {
         value: Number(item.percent.toFixed(1)),
         svg: {
           fill: randomDarkColor(),
-          onPress: () => setSelect(item.name),
         },
         key: item.name,
         arc: {
-          outerRadius: select === item.name ? '108%' : '100%',
+          outerRadius: '100%',
           cornerRadius: 8,
         },
       }));
 
       return setDataGraph(formatedPie);
     }
-  }, [select, data]);
+  }, [data]);
 
   useFocusEffect(
     useCallback(() => {
-      selectedFilter === 'Ativo' && eachTicketChart();
       selectedFilter === 'Classe' && eachClassChart();
-    }, [eachTicketChart, selectedFilter]),
+      selectedFilter === 'Ativo' && eachTicketChart();
+    }, [data, selectedFilter]),
   );
 
-  const hasTickets = wallet && !queryLoading && !!data?.rebalances?.length;
+  const hasTickets = wallet && !queryLoading && !!dataGraph.length;
 
   const Labels = ({ slices }: { slices?: any }) => {
     return slices?.map((slice: any) => {
