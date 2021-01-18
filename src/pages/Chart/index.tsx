@@ -70,6 +70,8 @@ const Chart = () => {
     fetchPolicy: 'cache-and-network',
   });
 
+  const hasTickets = wallet && !queryLoading && !!data?.rebalances.length;
+
   useFocusEffect(
     useCallback(() => {
       rebalances();
@@ -93,7 +95,7 @@ const Chart = () => {
 
       return setDataGraph(formatedPie);
     }
-  }, [data]);
+  }, [hasTickets]);
 
   const eachClassChart = useCallback(() => {
     if (data?.rebalances) {
@@ -118,16 +120,14 @@ const Chart = () => {
 
       return setDataGraph(formatedPie);
     }
-  }, [data]);
+  }, [hasTickets]);
 
   useFocusEffect(
     useCallback(() => {
       selectedFilter === 'Classe' && eachClassChart();
       selectedFilter === 'Ativo' && eachTicketChart();
-    }, [data, selectedFilter]),
+    }, [hasTickets, selectedFilter]),
   );
-
-  const hasTickets = wallet && !queryLoading && !!dataGraph.length;
 
   const Labels = ({ slices }: { slices?: any }) => {
     return slices?.map((slice: any) => {
@@ -193,7 +193,6 @@ const Chart = () => {
                 valueAccessor={({ item }: { item?: any }) => item.value}
                 outerRadius={'92%'}
                 innerRadius={'48%'}
-                numberOfTicks={dataGraph?.length}
               >
                 <Labels />
               </PieChart>
@@ -205,7 +204,7 @@ const Chart = () => {
   );
 };
 
-const REBALANCES = gql`
+export const REBALANCES = gql`
   query rebalances($walletID: ID!, $sort: SortRebalance!) {
     rebalances(walletID: $walletID, sort: $sort) {
       _id
