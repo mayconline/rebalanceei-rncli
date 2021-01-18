@@ -74,7 +74,10 @@ const Rentability = () => {
     useCallback(() => {
       data?.getRentability &&
         setRentabilityData(
-          getArraySortByParams(data?.getRentability, selectedFilter),
+          getArraySortByParams<IGetRentability>(
+            data?.getRentability,
+            selectedFilter,
+          ),
         );
     }, [data, selectedFilter]),
   );

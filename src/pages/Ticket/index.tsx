@@ -66,7 +66,10 @@ const Ticket = () => {
     useCallback(() => {
       data?.getTicketsByWallet &&
         setTicketData(
-          getArraySortByParams(data?.getTicketsByWallet, selectedFilter),
+          getArraySortByParams<ITickets>(
+            data?.getTicketsByWallet,
+            selectedFilter,
+          ),
         );
     }, [data, selectedFilter]),
   );

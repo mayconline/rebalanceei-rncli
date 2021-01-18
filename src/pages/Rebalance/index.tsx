@@ -73,7 +73,7 @@ const Rebalance = () => {
     useCallback(() => {
       data?.rebalances &&
         setRebalanceData(
-          getArraySortByParams(data?.rebalances, selectedFilter),
+          getArraySortByParams<IRebalances>(data?.rebalances, selectedFilter),
         );
     }, [data, selectedFilter]),
   );
