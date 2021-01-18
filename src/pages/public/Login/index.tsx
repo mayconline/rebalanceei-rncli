@@ -57,7 +57,7 @@ const Login = () => {
       variables: account,
     })
       .then(
-        response => response.data?.login && handleSignIn(response.data.login),
+        response => response?.data?.login && handleSignIn(response.data.login),
       )
       .catch(err => console.error(mutationError?.message + err));
   };

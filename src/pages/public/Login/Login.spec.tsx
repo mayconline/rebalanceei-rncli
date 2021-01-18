@@ -39,7 +39,7 @@ describe('Login Page', () => {
     fireEvent.changeText(inputPassword, '1234');
     getByDisplayValue('1234');
 
-    act(() => fireEvent.press(submitButton));
+    await act(async () => fireEvent.press(submitButton));
     await act(async () =>
       waitFor(() => getByText(/Usuário ou Senha não existe./i)),
     );
@@ -47,12 +47,8 @@ describe('Login Page', () => {
     fireEvent.changeText(inputPassword, '123');
     getByDisplayValue('123');
 
-    await act(async () =>
-      waitFor(() => {
-        const loginButton = getByText('Entrar');
-        fireEvent.press(loginButton);
-      }),
-    );
+    const loginButton = getByText('Entrar');
+    await act(async () => fireEvent.press(loginButton));
 
     expect(mockedHandleSignIn).toHaveBeenCalledWith({
       __typename: 'User',
