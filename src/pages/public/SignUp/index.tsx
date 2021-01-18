@@ -87,7 +87,7 @@ const SignUp = () => {
     })
       .then(
         response =>
-          response.data?.createUser && handleSignIn(response.data.createUser),
+          response?.data?.createUser && handleSignIn(response.data.createUser),
       )
       .catch(err => console.error(mutationError?.message + err));
   };

@@ -104,8 +104,8 @@ export const client = new ApolloClient({
 });
 
 function retryLogin(email: string, password: string) {
-  return client.query({
-    query: LOGIN,
+  return client.mutate({
+    mutation: LOGIN,
     variables: {
       email,
       password,

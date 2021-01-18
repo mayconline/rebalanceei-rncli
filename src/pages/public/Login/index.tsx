@@ -1,6 +1,6 @@
 import React, { useContext, useState, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { useLazyQuery, gql } from '@apollo/client';
+import { useMutation, gql } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../../contexts/authContext';
@@ -45,23 +45,22 @@ const Login = () => {
   const { handleSignIn } = useAuth();
   const navigation = useNavigation();
 
-  const [login, { data, loading, error }] = useLazyQuery<ILogin, IAccountLogin>(
-    LOGIN,
-    {
-      variables: account,
-    },
-  );
+  const [
+    login,
+    { loading: mutationLoading, error: mutationError },
+  ] = useMutation<ILogin, IAccountLogin>(LOGIN);
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = () => {
     if (!account.email || !account.password) return;
 
-    try {
-      login();
-      if (!loading && data) handleSignIn(data?.login);
-    } catch (err) {
-      console.error(error?.message + err);
-    }
-  }, [account, data]);
+    login({
+      variables: account,
+    })
+      .then(
+        response => response.data?.login && handleSignIn(response.data.login),
+      )
+      .catch(err => console.error(mutationError?.message + err));
+  };
 
   const handleSetEmail = useCallback(async (email: string) => {
     setAccount(account => ({
@@ -132,13 +131,13 @@ const Login = () => {
             />
           </FormRow>
 
-          {!!error && <TextError>{error?.message}</TextError>}
+          {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
           <Button
             colors={gradient.darkToLightBlue}
             onPress={handleSubmit}
-            loading={loading}
-            disabled={loading}
+            loading={mutationLoading}
+            disabled={mutationLoading}
           >
             Entrar
           </Button>
@@ -153,7 +152,7 @@ const Login = () => {
 };
 
 export const LOGIN = gql`
-  query login($email: String!, $password: String!) {
+  mutation login($email: String!, $password: String!) {
     login(input: { email: $email, password: $password }) {
       _id
       token
