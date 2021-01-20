@@ -1,14 +1,6 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components/native';
-import {
-  Wrapper,
-  ContainerTitle,
-  Title,
-  BackButtonContainer,
-  BackButton,
-  LootieContainer,
-  Gradient,
-} from './styles';
+import { Wrapper, ContainerTitle, Title, LootieContainer } from './styles';
 import LottieView from 'lottie-react-native';
 import Button from '../../components/Button';
 

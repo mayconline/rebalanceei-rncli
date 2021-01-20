@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import LinearGradient from 'react-native-linear-gradient';
 
 export const Wrapper = styled.SafeAreaView`
   background-color: ${({ theme }) => theme.color.secondary};
@@ -29,20 +28,4 @@ export const Title = styled.Text`
 
 export const LootieContainer = styled.View`
   min-height: 500px;
-`;
-
-export const Gradient = styled(LinearGradient)<any>`
-  justify-content: center;
-  border-radius: 24px;
-`;
-
-export const BackButtonContainer = styled.TouchableOpacity`
-  align-items: center;
-  padding: 12px;
-  border-radius: 4px;
-`;
-
-export const BackButton = styled.Text`
-  color: ${({ theme }) => theme.color.secondary};
-  font: 600 20px/28px 'TitilliumWeb-SemiBold';
 `;

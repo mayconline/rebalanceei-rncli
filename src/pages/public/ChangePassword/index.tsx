@@ -3,7 +3,6 @@ import { Modal } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
-import { useAuth } from '../../../contexts/authContext';
 
 import {
   Wrapper,

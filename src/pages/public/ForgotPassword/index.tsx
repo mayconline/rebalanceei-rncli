@@ -3,7 +3,6 @@ import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
-import { useAuth } from '../../../contexts/authContext';
 
 import {
   Wrapper,
@@ -18,7 +17,6 @@ import {
 } from './styles';
 import Entypo from 'react-native-vector-icons/Entypo';
 import ImageRecoveryPassword from '../../../../assets/svg/ImageRecoveryPassword';
-
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
@@ -54,7 +52,7 @@ const ForgotPassword = () => {
           !!response?.data?.sendRecovery &&
           Alert.alert(
             'Verifique seu e-mail',
-            'Um código de redefinição de senha foi enviado para seu e-mail',
+            'Um código de redefinição de senha foi enviado para seu e-mail.',
             [
               {
                 text: 'Continuar',
