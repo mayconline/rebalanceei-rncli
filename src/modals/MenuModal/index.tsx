@@ -92,13 +92,17 @@ const MenuModal = ({ onClose }: MenuProps) => {
       <ShadowBackdrop />
       <Wrapper>
         <TitleContainer>
-          <Title>Menu</Title>
-          <BackIcon onPress={onClose}>
+          <Title accessibilityRole="header">Menu</Title>
+          <BackIcon
+            accessibilityRole="imagebutton"
+            accessibilityLabel="Voltar"
+            onPress={onClose}
+          >
             <AntDesign name="closecircleo" size={24} color="black" />
           </BackIcon>
         </TitleContainer>
 
-        <MenuContainer>
+        <MenuContainer accessibilityRole="menu">
           {menuItens?.map(menuItem => {
             const { lib: Icon, icon, description } = menuItem;
 
@@ -108,6 +112,8 @@ const MenuModal = ({ onClose }: MenuProps) => {
                   onPress={() => {
                     handleClickMenu(description);
                   }}
+                  accessibilityRole="menuitem"
+                  accessibilityLabel={description}
                 >
                   <MenuIcon>
                     <Icon name={icon} size={20} color={'#000'} />
