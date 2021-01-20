@@ -10,6 +10,7 @@ import {
   Gradient,
 } from './styles';
 import LottieView from 'lottie-react-native';
+import Button from '../../components/Button';
 
 interface ISuccessModal {
   onClose(): void;
@@ -43,16 +44,9 @@ const SuccessModal: React.FC<ISuccessModal> = ({
           loop={false}
         />
       </LootieContainer>
-
-      <Gradient
-        colors={gradient.lightToDarkGreen}
-        start={{ x: 1, y: 0 }}
-        end={{ x: 0, y: 0.5 }}
-      >
-        <BackButtonContainer onPress={handleClose}>
-          <BackButton>Voltar</BackButton>
-        </BackButtonContainer>
-      </Gradient>
+      <Button colors={gradient.lightToDarkGreen} onPress={handleClose}>
+        Voltar
+      </Button>
     </Wrapper>
   );
 };

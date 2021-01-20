@@ -19,7 +19,7 @@ export const Icon = styled.TouchableOpacity`
 
 export const ContainerTitle = styled.View`
   flex: 1;
-  padding-left: 20px;
+  padding-left: 36px;
 `;
 
 export const Title = styled.Text`
@@ -32,7 +32,7 @@ export const Image = styled.View`
 `;
 
 export const FormContainer = styled.KeyboardAvoidingView`
-  height: 360px;
+  height: 320px;
   width: 100%;
   position: absolute;
   bottom: 0;
@@ -55,27 +55,4 @@ export const FormRow = styled.View`
   align-items: center;
   margin-bottom: 16px;
   width: 100%;
-`;
-
-export const ContainerTextLink = styled.TouchableOpacity`
-  justify-content: center;
-  align-items: center;
-  margin-top: 24px;
-`;
-
-export const TextLink = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
-  font: 400 16px/24px 'TitilliumWeb-Regular';
-`;
-
-export const ContainerForgotPassword = styled.TouchableOpacity`
-  justify-content: flex-end;
-  align-items: flex-end;
-  margin-bottom: 24px;
-`;
-
-export const TextForgotPassword = styled.Text`
-  color: ${({ theme }) => theme.color.blue};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
-  text-align: right;
 `;

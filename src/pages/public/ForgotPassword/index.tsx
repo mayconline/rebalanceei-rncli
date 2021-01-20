@@ -1,7 +1,7 @@
 import React, { useContext, useState, useCallback } from 'react';
+import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../../contexts/authContext';
 
@@ -15,13 +15,9 @@ import {
   Title,
   Form,
   FormRow,
-  ContainerTextLink,
-  TextLink,
-  ContainerForgotPassword,
-  TextForgotPassword,
 } from './styles';
 import Entypo from 'react-native-vector-icons/Entypo';
-import ImageLogin from '../../../../assets/svg/ImageLogin';
+import ImageRecoveryPassword from '../../../../assets/svg/ImageRecoveryPassword';
 
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
@@ -29,7 +25,6 @@ import TextError from '../../../components/TextError';
 
 interface IAccountLogin {
   email: string;
-  password: string;
 }
 
 interface ILogin {
@@ -39,12 +34,11 @@ interface ILogin {
   };
 }
 
-const Login = () => {
+const ForgotPassword = () => {
   const { color, gradient } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountLogin);
 
-  const { handleSignIn } = useAuth();
   const navigation = useNavigation();
 
   const [
@@ -53,15 +47,22 @@ const Login = () => {
   ] = useMutation<ILogin, IAccountLogin>(LOGIN);
 
   const handleSubmit = () => {
-    if (!account.email || !account.password) return;
+    if (!account.email) return;
 
-    login({
-      variables: account,
-    })
-      .then(
-        response => response?.data?.login && handleSignIn(response.data.login),
-      )
-      .catch(err => console.error(mutationError?.message + err));
+    return Alert.alert(
+      'Verifique seu e-mail',
+      'Um código de redefinição de senha foi enviado para seu e-mail',
+      [
+        {
+          text: 'Continuar',
+          style: 'destructive',
+          onPress: () => {
+            navigation.navigate('ChangePassword');
+          },
+        },
+      ],
+      { cancelable: false },
+    );
   };
 
   const handleSetEmail = useCallback(async (email: string) => {
@@ -69,17 +70,6 @@ const Login = () => {
       ...account,
       email,
     }));
-
-    await AsyncStorage.setItem('@authEmail', email);
-  }, []);
-
-  const handleSetPassword = useCallback(async (password: string) => {
-    setAccount(account => ({
-      ...account,
-      password,
-    }));
-
-    await AsyncStorage.setItem('@authPass', password);
   }, []);
 
   return (
@@ -93,11 +83,11 @@ const Login = () => {
           <Entypo name="chevron-left" size={32} color={color.secondary} />
         </Icon>
         <ContainerTitle>
-          <Title accessibilityRole="header">Bem Vindo de Volta</Title>
+          <Title accessibilityRole="header">Recuperar Senha</Title>
         </ContainerTitle>
       </Header>
       <Image>
-        <ImageLogin />
+        <ImageRecoveryPassword />
       </Image>
       <FormContainer behavior={'padding'}>
         <Form>
@@ -116,28 +106,6 @@ const Login = () => {
             />
           </FormRow>
 
-          <FormRow>
-            <InputForm
-              label="Senha"
-              value={account.password}
-              isSecure
-              placeholder="********"
-              autoCompleteType="password"
-              maxLength={32}
-              returnKeyType="send"
-              autoFocus={focus === 2}
-              onFocus={() => setFocus(2)}
-              onChangeText={handleSetPassword}
-              onEndEditing={() => setFocus(0)}
-              onSubmitEditing={handleSubmit}
-            />
-          </FormRow>
-          <ContainerForgotPassword
-            onPress={() => navigation.navigate('ForgotPassword')}
-          >
-            <TextForgotPassword>Esqueceu a senha?</TextForgotPassword>
-          </ContainerForgotPassword>
-
           {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
           <Button
@@ -146,12 +114,8 @@ const Login = () => {
             loading={mutationLoading}
             disabled={mutationLoading}
           >
-            Entrar
+            Recuperar Senha
           </Button>
-
-          <ContainerTextLink onPress={() => navigation.navigate('SignUp')}>
-            <TextLink>Ainda não possui uma conta?</TextLink>
-          </ContainerTextLink>
         </Form>
       </FormContainer>
     </Wrapper>
@@ -167,4 +131,4 @@ export const LOGIN = gql`
   }
 `;
 
-export default Login;
+export default ForgotPassword;
