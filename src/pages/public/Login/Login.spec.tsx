@@ -34,7 +34,7 @@ describe('Login Page', () => {
     fireEvent.changeText(inputEmail, 'test@test.com');
     getByDisplayValue('test@test.com');
 
-    getByText(/Senha/i);
+    getByText(/^Senha$/i);
     const inputPassword = getByPlaceholderText('********');
     fireEvent.changeText(inputPassword, '1234');
     getByDisplayValue('1234');
@@ -63,6 +63,10 @@ describe('Login Page', () => {
     const signUpLink = getByText(/Ainda não possui uma conta\?/i);
     act(() => fireEvent.press(signUpLink));
     expect(navigate).toHaveBeenCalledWith('SignUp');
+
+    const forgotPasswordLink = getByText(/Esqueceu a senha\?/i);
+    act(() => fireEvent.press(forgotPasswordLink));
+    expect(navigate).toHaveBeenCalledWith('ForgotPassword');
 
     const iconBackButton = getByA11yRole('imagebutton');
     expect(iconBackButton).toBeTruthy();
