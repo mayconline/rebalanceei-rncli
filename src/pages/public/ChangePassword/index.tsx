@@ -1,6 +1,6 @@
 import React, { useContext, useState, useCallback } from 'react';
 import { Modal } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../../contexts/authContext';
@@ -30,10 +30,11 @@ interface IChangePassword {
 }
 
 interface ILogin {
-  login: {
-    _id: string;
-    token: string;
-  };
+  resetPassword: boolean;
+}
+
+interface IDataParamsForm {
+  email: string;
 }
 
 const ChangePassword = () => {
@@ -42,17 +43,27 @@ const ChangePassword = () => {
   const [account, setAccount] = useState({} as IChangePassword);
   const [openModal, setOpenModal] = useState(false);
 
+  const route = useRoute();
+  const params = route?.params as IDataParamsForm;
   const navigation = useNavigation();
 
   const [
-    login,
+    resetPassword,
     { loading: mutationLoading, error: mutationError },
-  ] = useMutation<ILogin>(LOGIN);
+  ] = useMutation<ILogin>(RESET_PASSWORD);
 
   const handleSubmit = () => {
-    if (!account.code || !account.password) return;
+    if (!account.code || !account.password || !params.email) return;
 
-    setOpenModal(true);
+    resetPassword({
+      variables: {
+        email: params.email,
+        code: account.code,
+        password: account.password,
+      },
+    })
+      .then(response => !!response?.data?.resetPassword && setOpenModal(true))
+      .catch(err => console.error(mutationError?.message + err));
   };
 
   const handleSetCode = useCallback(async (code: string) => {
@@ -148,12 +159,9 @@ const ChangePassword = () => {
   );
 };
 
-export const LOGIN = gql`
-  mutation login($email: String!, $password: String!) {
-    login(input: { email: $email, password: $password }) {
-      _id
-      token
-    }
+export const RESET_PASSWORD = gql`
+  mutation resetPassword($email: String!, $code: String!, $password: String!) {
+    resetPassword(input: { email: $email, code: $code, password: $password })
   }
 `;
 

@@ -27,11 +27,8 @@ interface IAccountLogin {
   email: string;
 }
 
-interface ILogin {
-  login: {
-    _id: string;
-    token: string;
-  };
+interface ISendRecovery {
+  sendRecovery: boolean;
 }
 
 const ForgotPassword = () => {
@@ -42,27 +39,37 @@ const ForgotPassword = () => {
   const navigation = useNavigation();
 
   const [
-    login,
+    sendRecovery,
     { loading: mutationLoading, error: mutationError },
-  ] = useMutation<ILogin, IAccountLogin>(LOGIN);
+  ] = useMutation<ISendRecovery, IAccountLogin>(SEND_RECOVERY);
 
   const handleSubmit = () => {
     if (!account.email) return;
 
-    return Alert.alert(
-      'Verifique seu e-mail',
-      'Um código de redefinição de senha foi enviado para seu e-mail',
-      [
-        {
-          text: 'Continuar',
-          style: 'destructive',
-          onPress: () => {
-            navigation.navigate('ChangePassword');
-          },
-        },
-      ],
-      { cancelable: false },
-    );
+    sendRecovery({
+      variables: account,
+    })
+      .then(
+        response =>
+          !!response?.data?.sendRecovery &&
+          Alert.alert(
+            'Verifique seu e-mail',
+            'Um código de redefinição de senha foi enviado para seu e-mail',
+            [
+              {
+                text: 'Continuar',
+                style: 'destructive',
+                onPress: () => {
+                  navigation.navigate('ChangePassword', {
+                    email: account.email,
+                  });
+                },
+              },
+            ],
+            { cancelable: false },
+          ),
+      )
+      .catch(err => console.error(mutationError?.message + err));
   };
 
   const handleSetEmail = useCallback(async (email: string) => {
@@ -122,12 +129,9 @@ const ForgotPassword = () => {
   );
 };
 
-export const LOGIN = gql`
-  mutation login($email: String!, $password: String!) {
-    login(input: { email: $email, password: $password }) {
-      _id
-      token
-    }
+export const SEND_RECOVERY = gql`
+  mutation sendRecovery($email: String!) {
+    sendRecovery(input: { email: $email })
   }
 `;
 
