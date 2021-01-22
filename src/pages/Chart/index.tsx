@@ -181,6 +181,7 @@ const Chart = () => {
         <>
           <SubHeader
             title="Gráficos"
+            count={dataGraph.length}
             filters={initialFilter}
             selectedFilter={selectedFilter}
             onPress={handleChangeFilter}

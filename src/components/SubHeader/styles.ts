@@ -11,12 +11,19 @@ export const Wrapper = styled.SafeAreaView`
   border-top-right-radius: 20px;
 `;
 
+export const ContainerTitle = styled.View`
+  justify-content: space-between;
+  flex-direction: row;
+`;
+
+export const SubTitle = styled.Text`
+  color: ${({ theme }) => theme.color.subtitle};
+  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+`;
+
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.title};
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-  font-family: 'TitilliumWeb-SemiBold';
+  font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;
 
 export const FiltersContainer = styled.View`
@@ -37,8 +44,5 @@ export const TextFilter = styled.Text<IFocused>`
     focused ? theme.color.blue : theme.color.subtitle};
   padding: 4px 16px;
   border-radius: 16px;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-  font-family: 'TitilliumWeb-SemiBold';
+  font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;

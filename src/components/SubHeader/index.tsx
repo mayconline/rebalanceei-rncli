@@ -3,11 +3,20 @@ import { ScrollView } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-import { Wrapper, Title, FiltersContainer, Filter, TextFilter } from './styles';
+import {
+  Wrapper,
+  ContainerTitle,
+  Title,
+  SubTitle,
+  FiltersContainer,
+  Filter,
+  TextFilter,
+} from './styles';
 import { formatFilter } from '../../utils/format';
 
 interface ISubHeaderProps {
   title: string;
+  count: number;
   filters?: IFilters[];
   selectedFilter?: string;
   onPress(filter: string): void;
@@ -19,6 +28,7 @@ interface IFilters {
 
 const SubHeader: React.FC<ISubHeaderProps> = ({
   title,
+  count,
   filters,
   selectedFilter,
   onPress,
@@ -30,7 +40,11 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
 
   return (
     <Wrapper>
-      <Title accessibilityRole="header">{title}</Title>
+      <ContainerTitle>
+        <Title accessibilityRole="header">{title}</Title>
+        <SubTitle>{count} Itens</SubTitle>
+      </ContainerTitle>
+
       {children}
       <FiltersContainer>
         <ScrollView

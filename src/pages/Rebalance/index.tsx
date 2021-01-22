@@ -98,6 +98,7 @@ const Rebalance = () => {
         <>
           <SubHeader
             title="Rebalancear"
+            count={rebalanceData.length}
             filters={initialFilter}
             selectedFilter={selectedFilter}
             onPress={handleChangeFilter}

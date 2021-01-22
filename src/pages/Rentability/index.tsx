@@ -102,6 +102,7 @@ const Rentability = () => {
         <>
           <SubHeader
             title="Variação da carteira"
+            count={rentabilityData.length}
             filters={initialFilter}
             selectedFilter={selectedFilter}
             onPress={handleChangeFilter}

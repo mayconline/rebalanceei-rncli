@@ -100,6 +100,7 @@ const Ticket = () => {
           <>
             <SubHeader
               title="Meus Ativos"
+              count={ticketData.length}
               filters={initialFilter}
               selectedFilter={selectedFilter}
               onPress={handleChangeFilter}
