@@ -1,7 +1,9 @@
 import React, { useContext, useState, useCallback } from 'react';
+import { Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 import { useMutation, useLazyQuery, gql } from '@apollo/client';
+import { useAuth } from '../../contexts/authContext';
 
 import { Wrapper, ScrollView, ContainerTitle, BackIcon, Title } from './styles';
 
@@ -32,6 +34,8 @@ interface PlanModal {
 export type IPlanName = 'FREE' | 'YEAR' | 'MONTH' | null;
 
 const PlanModal = ({ onClose }: PlanModal) => {
+  const { handleSignOut } = useAuth();
+
   const [
     getUserByToken,
     { data, loading: queryLoading, error: queryError },
@@ -75,6 +79,21 @@ const PlanModal = ({ onClose }: PlanModal) => {
           },
         ],
       });
+
+      Alert.alert(
+        'Perfil atualizado com sucesso',
+        'Por favor entre novamente no aplicativo',
+        [
+          {
+            text: 'Continuar',
+            style: 'destructive',
+            onPress: async () => {
+              handleSignOut();
+            },
+          },
+        ],
+        { cancelable: false },
+      );
     } catch (err) {
       console.error(mutationError?.message + err);
     }
