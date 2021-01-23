@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Modal } from 'react-native';
+import { Modal, Platform } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
@@ -98,7 +98,7 @@ const ChangePassword = () => {
           <ImageRecoveryPassword />
         </Image>
 
-        <FormContainer behavior={'padding'}>
+        <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
           <Form>
             <FormRow>
               <InputForm

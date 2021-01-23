@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
@@ -94,7 +94,7 @@ const ForgotPassword = () => {
       <Image>
         <ImageRecoveryPassword />
       </Image>
-      <FormContainer behavior={'padding'}>
+      <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
         <Form>
           <FormRow>
             <InputForm

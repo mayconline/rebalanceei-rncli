@@ -6,6 +6,7 @@ import { useAuth } from '../../contexts/authContext';
 import { useMutation, useLazyQuery, gql } from '@apollo/client';
 import {
   Wrapper,
+  Image,
   FormContainer,
   ContainerTitle,
   BackIcon,
@@ -14,7 +15,7 @@ import {
   FormRow,
   ContainerButtons,
 } from './styles';
-import ImageAddTicket from '../../../assets/svg/ImageAddTicket';
+import ImageProfile from '../../../assets/svg/ImageProfile';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
@@ -145,7 +146,9 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
             <AntDesign name="closecircleo" size={24} color={color.secondary} />
           </BackIcon>
         </ContainerTitle>
-        <ImageAddTicket />
+        <Image>
+          <ImageProfile />
+        </Image>
         <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
           <Form>
             <FormRow>

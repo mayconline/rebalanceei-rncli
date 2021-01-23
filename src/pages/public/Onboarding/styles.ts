@@ -64,12 +64,8 @@ export const Image = styled.View`
 `;
 
 export const StepContainer = styled.View`
-  height: 320px;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  elevation: 5;
+  flex: 1;
+  max-height: 316px;
 `;
 
 export const Step = styled.View`

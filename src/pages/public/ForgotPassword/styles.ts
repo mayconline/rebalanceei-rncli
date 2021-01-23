@@ -32,12 +32,8 @@ export const Image = styled.View`
 `;
 
 export const FormContainer = styled.KeyboardAvoidingView`
-  height: 320px;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  elevation: 5;
+  flex: 1;
+  max-height: 316px;
 `;
 
 export const Form = styled.View`
@@ -46,7 +42,6 @@ export const Form = styled.View`
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   min-height: 500px;
-  width: 100%;
 `;
 
 export const FormRow = styled.View`
@@ -54,5 +49,4 @@ export const FormRow = styled.View`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-  width: 100%;
 `;

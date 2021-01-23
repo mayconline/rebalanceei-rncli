@@ -32,7 +32,7 @@ export const Image = styled.View`
 `;
 
 export const FormContainer = styled.KeyboardAvoidingView`
-  height: 360px;
+  height: 364px;
   width: 100%;
   position: absolute;
   bottom: 0;

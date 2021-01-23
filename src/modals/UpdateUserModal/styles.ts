@@ -6,9 +6,14 @@ export const Wrapper = styled.SafeAreaView`
   elevation: 5;
 `;
 
+export const Image = styled.View`
+  height: 220px;
+`;
+
 export const ContainerTitle = styled.View`
-  margin-top: 40px;
+  margin: 40px 0 20px;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
 `;
 
@@ -36,20 +41,17 @@ export const Form = styled.View`
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   min-height: 500px;
-  width: 100%;
 `;
 
 export const FormRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 16px;
-  width: 100%;
 `;
 
 export const ContainerButtons = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 80px;
+  margin-top: 40px;
 `;

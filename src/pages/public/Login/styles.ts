@@ -32,7 +32,7 @@ export const Image = styled.View`
 `;
 
 export const FormContainer = styled.KeyboardAvoidingView`
-  height: 360px;
+  height: 364px;
   width: 100%;
   position: absolute;
   bottom: 0;
@@ -46,7 +46,6 @@ export const Form = styled.View`
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   min-height: 500px;
-  width: 100%;
 `;
 
 export const FormRow = styled.View`
@@ -54,7 +53,6 @@ export const FormRow = styled.View`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-  width: 100%;
 `;
 
 export const ContainerTextLink = styled.TouchableOpacity`

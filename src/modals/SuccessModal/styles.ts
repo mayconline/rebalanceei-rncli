@@ -5,12 +5,7 @@ export const Wrapper = styled.SafeAreaView`
   padding: 20px 20px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  height: 608px;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  elevation: 5;
+  flex: 1;
   flex-direction: column;
   justify-content: space-between;
 `;
