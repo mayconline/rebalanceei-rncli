@@ -100,12 +100,7 @@ const AddWalletModal = ({
             {isEdit ? 'Alterar Carteira' : 'Criar Nova Carteira'}
           </Title>
         </ContainerTitle>
-        <ImageAddTicket
-          translateX={36}
-          translateY={52}
-          scaleX={1.1}
-          scaleY={1.3}
-        />
+        <ImageAddTicket />
         <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
           {isEdit ? (
             <EditWallet

@@ -15,7 +15,6 @@ export const Wrapper = styled.TouchableOpacity<IWrapper>`
       : theme.color.titleNotImport};
   border-width: 2px;
   border-radius: 12px;
-  elevation: ${({ currentPlan, active }) => (currentPlan || active ? 2 : 0)};
 `;
 
 export const CardPlanTitle = styled.Text`
