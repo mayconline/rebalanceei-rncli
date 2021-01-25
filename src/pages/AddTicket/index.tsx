@@ -181,7 +181,7 @@ const AddTicket = () => {
                     color={color.titleNotImport}
                   />
                   <SuggestButtonText accessibilityRole="button">
-                    Busque e Selecione um Ativo
+                    Clique para Buscar e Selecione um Ativo
                   </SuggestButtonText>
                 </SuggestButton>
               </FormRow>

@@ -23,6 +23,7 @@ import TextError from '../../components/TextError';
 import AddWalletModal from '../AddWalletModal';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
+import { formatNumber } from '../../utils/format';
 
 interface IWalletProps {
   onClose(): void;
@@ -100,6 +101,15 @@ const WalletModal = ({ onClose }: IWalletProps) => {
           data={data?.getWalletByUser}
           extraData={!!queryLoading}
           keyExtractor={item => item._id}
+          ListFooterComponent={
+            <>
+              <Title>
+                Total:{' '}
+                {formatNumber(data?.getWalletByUser[0]?.sumAmountAllWallet)}
+              </Title>
+              <Title>{data?.getWalletByUser?.length} Itens</Title>
+            </>
+          }
           renderItem={({ item }) => (
             <ListItem
               item={item}

@@ -14,7 +14,7 @@ export const Wrapper = styled.SafeAreaView`
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 
-  height: 320px;
+  height: 340px;
   width: 100%;
   position: absolute;
   bottom: 0;
@@ -26,7 +26,7 @@ export const Title = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
   font: 600 16px/20px 'TitilliumWeb-SemiBold';
   align-self: center;
-  padding-bottom: 8px;
+  margin: 8px;
 `;
 
 export const Content = styled.View`

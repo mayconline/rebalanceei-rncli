@@ -57,7 +57,7 @@ describe('AddTicket Tab', () => {
 
     const suggestButton = getAllByA11yRole('button')[0];
     expect(suggestButton).toHaveProperty('children', [
-      'Busque e Selecione um Ativo',
+      'Clique para Buscar e Selecione um Ativo',
     ]);
 
     getByText(/Ativo Selecionado/i);

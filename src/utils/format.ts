@@ -1,4 +1,11 @@
-export const formatNumber = (amount: number) => `R$ ${amount?.toFixed(2)}`;
+export const formatNumber = (amount?: number) => {
+  let money = amount
+    ?.toFixed(2)
+    .replace('.', ',')
+    .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+  return `R$ ${money}`;
+};
 
 export const formatAveragePricePreview = (averagePrice: string) => {
   let preview = '';
