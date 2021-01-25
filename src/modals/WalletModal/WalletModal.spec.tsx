@@ -31,12 +31,19 @@ describe('Wallet Modal', () => {
     const title = await findByA11yRole('header');
     expect(title).toHaveProperty('children', ['Carteiras']);
 
+    const sumAllAmount = await findByA11yRole('summary');
+    expect(sumAllAmount).toHaveProperty('children', [
+      'Total:',
+      ' ',
+      'R$ 5.877,50',
+    ]);
+
     const radioGroup = getAllByA11yRole('radio');
     expect(radioGroup).toHaveLength(2);
 
     const radioOptionOne = getByA11yLabel('Nova cart');
     const currentAmountOne = getAllByA11yLabel('Valor atual da carteira')[0];
-    expect(currentAmountOne).toHaveProperty('children', ['R$ 5807.40']);
+    expect(currentAmountOne).toHaveProperty('children', ['R$ 5.807,40']);
 
     const currentPercentOne = getAllByA11yLabel(
       'Percentual de valorização da carteira',
@@ -50,7 +57,7 @@ describe('Wallet Modal', () => {
 
     const radioOptionTwo = getByA11yLabel('MINHA CARTEIRA ADM');
     const currentAmountTwo = getAllByA11yLabel('Valor atual da carteira')[1];
-    expect(currentAmountTwo).toHaveProperty('children', ['R$ 70.10']);
+    expect(currentAmountTwo).toHaveProperty('children', ['R$ 70,10']);
 
     const currentPercentTwo = getAllByA11yLabel(
       'Percentual de valorização da carteira',

@@ -103,7 +103,13 @@ const WalletModal = ({ onClose }: IWalletProps) => {
           keyExtractor={item => item._id}
           ListFooterComponent={
             <>
-              <Title>
+              <Title
+                accessibilityRole="summary"
+                accessibilityLabel="Valor total somado das carteiras"
+                accessibilityValue={{
+                  now: data?.getWalletByUser[0]?.sumAmountAllWallet,
+                }}
+              >
                 Total:{' '}
                 {formatNumber(data?.getWalletByUser[0]?.sumAmountAllWallet)}
               </Title>

@@ -35,7 +35,7 @@ describe('Rentability Tab', () => {
     ]);
 
     const costItemOne = getAllByA11yLabel(/Saldo aplicado no ativo/i)[0];
-    expect(costItemOne).toHaveProperty('children', ['R$ 1371.20']);
+    expect(costItemOne).toHaveProperty('children', ['R$ 1.371,20']);
 
     const variationPercentItemOne = getAllByA11yLabel(
       /Porcentagem de variação do ativo/i,
@@ -44,18 +44,18 @@ describe('Rentability Tab', () => {
     expect(variationPercentItemOne.props.style[0].color).toBe('#75BF72');
 
     const currentAmountItemOne = getAllByA11yLabel(/Saldo atual do ativo/i)[0];
-    expect(currentAmountItemOne).toHaveProperty('children', ['R$ 1876.00']);
+    expect(currentAmountItemOne).toHaveProperty('children', ['R$ 1.876,00']);
     expect(currentAmountItemOne.props.style[0].color).toBe('#75BF72');
 
     await act(async () => {
       const walletCost = findByA11yLabel(/Saldo aplicado na carteira/i);
-      expect((await walletCost).props.children).toBe('R$ 16900.63');
+      expect((await walletCost).props.children).toBe('R$ 16.900,63');
       expect((await walletCost).props.style[0].color).toBe('#0D1F3C');
     });
 
     await act(async () => {
       const walletCurrentAmount = findByA11yLabel(/Saldo atual da carteira/i);
-      expect((await walletCurrentAmount).props.children).toBe('R$ 18816.10');
+      expect((await walletCurrentAmount).props.children).toBe('R$ 18.816,10');
       expect((await walletCurrentAmount).props.style[0].color).toBe('#0D1F3C');
     });
 
@@ -78,7 +78,7 @@ describe('Rentability Tab', () => {
     ]);
 
     const costItemTwo = getAllByA11yLabel(/Saldo aplicado no ativo/i)[1];
-    expect(costItemTwo).toHaveProperty('children', ['R$ 1158.30']);
+    expect(costItemTwo).toHaveProperty('children', ['R$ 1.158,30']);
 
     const variationPercentItemTwo = getAllByA11yLabel(
       /Porcentagem de variação do ativo/i,
@@ -87,7 +87,7 @@ describe('Rentability Tab', () => {
     expect(variationPercentItemTwo.props.style[0].color).toBe('#f44336');
 
     const currentAmountItemTwo = getAllByA11yLabel(/Saldo atual do ativo/i)[1];
-    expect(currentAmountItemTwo).toHaveProperty('children', ['R$ 1019.92']);
+    expect(currentAmountItemTwo).toHaveProperty('children', ['R$ 1.019,92']);
     expect(currentAmountItemTwo.props.style[0].color).toBe('#f44336');
   });
 

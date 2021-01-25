@@ -50,7 +50,7 @@ describe('Rebalance Tab', () => {
     const targetAmountItemOne = getAllByA11yLabel(
       /Valor para rebalancear o ativo na carteira/i,
     )[0];
-    expect(targetAmountItemOne).toHaveProperty('children', ['R$ 456.66']);
+    expect(targetAmountItemOne).toHaveProperty('children', ['R$ 456,66']);
     expect(targetAmountItemOne.props.style[0].color).toBe('#75BF72');
 
     const symbolItemThree = getAllByA11yLabel(/Código do Ativo/i)[2];
@@ -81,7 +81,7 @@ describe('Rebalance Tab', () => {
     const targetAmountItemThree = getAllByA11yLabel(
       /Valor para rebalancear o ativo na carteira/i,
     )[2];
-    expect(targetAmountItemThree).toHaveProperty('children', ['R$ 0.00']);
+    expect(targetAmountItemThree).toHaveProperty('children', ['R$ 0,00']);
     expect(targetAmountItemThree.props.style[0].color).toBe('#db8818');
 
     const symbolItemFour = getAllByA11yLabel(/Código do Ativo/i)[3];
@@ -116,7 +116,7 @@ describe('Rebalance Tab', () => {
     const targetAmountItemFour = getAllByA11yLabel(
       /Valor para rebalancear o ativo na carteira/i,
     )[3];
-    expect(targetAmountItemFour).toHaveProperty('children', ['R$ -112.83']);
+    expect(targetAmountItemFour).toHaveProperty('children', ['R$ -112,83']);
     expect(targetAmountItemFour.props.style[0].color).toBe('#f44336');
   });
 

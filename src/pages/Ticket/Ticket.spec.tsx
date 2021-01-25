@@ -41,7 +41,7 @@ describe('Ticket Tab', () => {
     expect(quantityItemOne).toHaveProperty('children', [
       '174',
       'x ',
-      'R$ 5.42',
+      'R$ 5,42',
     ]);
 
     const gradeItemOne = getAllByA11yLabel(
