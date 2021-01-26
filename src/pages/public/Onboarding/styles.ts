@@ -1,12 +1,6 @@
 import styled from 'styled-components/native';
-import LinearGradient from 'react-native-linear-gradient';
-
 interface IStepIndicator {
   active?: boolean;
-}
-
-interface INextButton {
-  next?: boolean;
 }
 
 export const Wrapper = styled.SafeAreaView`
