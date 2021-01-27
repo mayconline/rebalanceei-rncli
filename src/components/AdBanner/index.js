@@ -4,7 +4,7 @@ import { AdMobBanner } from 'react-native-admob';
 
 const AdBanner = () => {
   return (
-    <SafeAreaView style={{ alignSelf: 'center' }}>
+    <SafeAreaView style={{ alignSelf: 'center', marginVertical: 8 }}>
       <AdMobBanner
         adSize="banner"
         adUnitID="ca-app-pub-3940256099942544/6300978111" //test ID

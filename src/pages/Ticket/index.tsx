@@ -109,9 +109,15 @@ const Ticket = () => {
               data={ticketData}
               extraData={ticketData}
               keyExtractor={item => item._id}
-              renderItem={({ item }) => (
+              renderItem={({ item, index }) => (
                 <ListItem
                   item={item}
+                  showAdBanner={
+                    (index > 0 && index % 5 === 0) ||
+                    (ticketData.length <= 5 && index === ticketData.length - 1)
+                      ? true
+                      : false
+                  }
                   handleOpenEditModal={handleOpenEditModal}
                 />
               )}
