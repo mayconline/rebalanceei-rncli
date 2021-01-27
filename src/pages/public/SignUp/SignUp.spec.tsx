@@ -73,6 +73,7 @@ describe('SignUp Page', () => {
         __typename: 'User',
         _id: 'id_created',
         token: 'token_created',
+        role: 'role_logged',
       }),
     );
   });
@@ -111,6 +112,7 @@ const SUCCESSFUL_CREATE_USER = {
       createUser: {
         _id: 'id_created',
         token: 'token_created',
+        role: 'role_logged',
         __typename: 'User',
       },
     },

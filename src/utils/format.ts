@@ -1,4 +1,6 @@
 export const formatNumber = (amount?: number) => {
+  if (!amount) return `R$ 0,00`;
+
   let money = amount
     ?.toFixed(2)
     .replace('.', ',')
@@ -131,4 +133,10 @@ export const getLengthTicketPerClass = (
   }));
 
   return countClass;
+};
+
+export const getPositionAdBanner = (index: number, length: number) => {
+  return (index > 0 && index % 5 === 0) || (length <= 5 && index === length - 1)
+    ? true
+    : false;
 };

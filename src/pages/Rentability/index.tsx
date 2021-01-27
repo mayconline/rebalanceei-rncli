@@ -6,6 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Wrapper } from './styles';
 
 import { getArraySortByParams } from '../../utils/sort';
+import { getPositionAdBanner } from '../../utils/format';
 
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
@@ -112,7 +113,15 @@ const Rentability = () => {
             extraData={rentabilityData}
             keyExtractor={item => item._id}
             ListHeaderComponent={<AmountWallet />}
-            renderItem={({ item }) => <ListItem item={item} />}
+            renderItem={({ item, index }) => (
+              <ListItem
+                item={item}
+                showAdBanner={getPositionAdBanner(
+                  index,
+                  rentabilityData.length,
+                )}
+              />
+            )}
           />
         </>
       )}

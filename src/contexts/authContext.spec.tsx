@@ -2,7 +2,6 @@ import { renderHook, act } from '@testing-library/react-hooks';
 import { useAuth, AuthProvider } from './authContext';
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 
-const setItemSpy = jest.spyOn(mockAsyncStorage, 'setItem');
 const multiGetSpy = jest.spyOn(mockAsyncStorage, 'multiGet');
 const multiRemoveSpy = jest.spyOn(mockAsyncStorage, 'multiRemove');
 const multiSetSpy = jest.spyOn(mockAsyncStorage, 'multiSet');
@@ -25,13 +24,17 @@ describe('Auth Context', () => {
       result.current.handleSignIn({
         _id: 'id_logged',
         token: 'token_logged',
+        role: 'role_logged',
       });
     });
 
     await waitForNextUpdate();
 
-    expect(setItemSpy).toHaveBeenCalledTimes(1);
-    expect(setItemSpy).toHaveBeenCalledWith('@authToken', 'token_logged');
+    expect(multiSetSpy).toHaveBeenCalledTimes(1);
+    expect(multiSetSpy).toHaveBeenCalledWith([
+      ['@authRole', 'role_logged'],
+      ['@authToken', 'token_logged'],
+    ]);
 
     expect(result.current.signed).toBeTruthy();
     expect(result.current.loading).toBeFalsy();
@@ -45,6 +48,7 @@ describe('Auth Context', () => {
     await waitForNextUpdate();
 
     expect(multiGetSpy).toHaveBeenCalledWith([
+      '@authRole',
       '@authToken',
       '@authWallet',
       '@authWalletName',
@@ -68,6 +72,7 @@ describe('Auth Context', () => {
       '@authToken',
       '@authEmail',
       '@authPass',
+      '@authRole',
     ]);
 
     expect(result.current.signed).toBeFalsy();

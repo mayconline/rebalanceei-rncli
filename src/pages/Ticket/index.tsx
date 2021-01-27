@@ -7,6 +7,7 @@ import { useLazyQuery, gql } from '@apollo/client';
 import { Wrapper } from './styles';
 
 import { getArraySortByParams } from '../../utils/sort';
+import { getPositionAdBanner } from '../../utils/format';
 
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
@@ -112,12 +113,7 @@ const Ticket = () => {
               renderItem={({ item, index }) => (
                 <ListItem
                   item={item}
-                  showAdBanner={
-                    (index > 0 && index % 5 === 0) ||
-                    (ticketData.length <= 5 && index === ticketData.length - 1)
-                      ? true
-                      : false
-                  }
+                  showAdBanner={getPositionAdBanner(index, ticketData.length)}
                   handleOpenEditModal={handleOpenEditModal}
                 />
               )}

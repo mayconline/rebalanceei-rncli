@@ -54,6 +54,7 @@ describe('Login Page', () => {
       __typename: 'User',
       _id: 'id_logged',
       token: 'token_logged',
+      role: 'role_logged',
     });
   });
 
@@ -89,6 +90,7 @@ const SUCCESSFUL_LOGIN_USER = {
       login: {
         _id: 'id_logged',
         token: 'token_logged',
+        role: 'role_logged',
         __typename: 'User',
       },
     },

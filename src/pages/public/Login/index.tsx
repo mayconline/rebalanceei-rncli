@@ -36,6 +36,7 @@ interface ILogin {
   login: {
     _id: string;
     token: string;
+    role: string;
   };
 }
 
@@ -163,6 +164,7 @@ export const LOGIN = gql`
     login(input: { email: $email, password: $password }) {
       _id
       token
+      role
     }
   }
 `;

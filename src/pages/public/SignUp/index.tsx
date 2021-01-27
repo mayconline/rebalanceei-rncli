@@ -40,6 +40,7 @@ interface ICreateUser {
   createUser: {
     _id: string;
     token: string;
+    role: string;
   };
 }
 
@@ -216,6 +217,7 @@ export const CREATE_USER = gql`
     ) {
       _id
       token
+      role
     }
   }
 `;

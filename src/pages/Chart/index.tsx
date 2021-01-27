@@ -18,6 +18,7 @@ import {
 import Empty from '../../components/Empty';
 import Loading from '../../components/Loading';
 import TextError from '../../components/TextError';
+import AdBanner from '../../components/AdBanner';
 
 const initialFilter = [
   {
@@ -198,6 +199,7 @@ const Chart = () => {
                 <Labels />
               </PieChart>
             </ContainerGraph>
+            <AdBanner />
           </Content>
         </>
       )}

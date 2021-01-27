@@ -6,6 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Wrapper } from './styles';
 
 import { getArraySortByParams } from '../../utils/sort';
+import { getPositionAdBanner } from '../../utils/format';
 
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
@@ -107,7 +108,12 @@ const Rebalance = () => {
             data={rebalanceData}
             extraData={rebalanceData}
             keyExtractor={item => item._id}
-            renderItem={({ item }) => <ListItem item={item} />}
+            renderItem={({ item, index }) => (
+              <ListItem
+                item={item}
+                showAdBanner={getPositionAdBanner(index, rebalanceData.length)}
+              />
+            )}
           />
         </>
       )}

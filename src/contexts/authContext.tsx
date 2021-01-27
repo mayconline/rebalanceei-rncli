@@ -12,12 +12,14 @@ import { useApolloClient } from '@apollo/client';
 interface ISignIn {
   _id: string;
   token: string;
+  role: string;
 }
 
 interface IAuthContext {
   signed: boolean;
   loading: boolean;
   isConnected: boolean;
+  showBanner: boolean;
   wallet: string | null;
   walletName: string | null;
   handleSetWallet(walletID: string, walletName: string): void;
@@ -31,6 +33,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [signed, setSigned] = useState<boolean>(false);
   const [wallet, setWallet] = useState<string | null>(null);
   const [walletName, setWalletName] = useState<string | null>(null);
+  const [showBanner, setShowBanner] = useState(false);
   const [loading, setLoading] = useState(true);
   const client = useApolloClient();
 
@@ -38,14 +41,20 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const loadStorageData = useCallback(async () => {
     const [
+      storageRole,
       storageToken,
       storageWallet,
       storageWalletName,
     ] = await AsyncStorage.multiGet([
+      '@authRole',
       '@authToken',
       '@authWallet',
       '@authWalletName',
     ]);
+
+    if (storageRole[1] === 'USER') {
+      setShowBanner(true);
+    }
 
     if (storageToken[1]) {
       setSigned(true);
@@ -67,9 +76,14 @@ export const AuthProvider: React.FC = ({ children }) => {
     setLoading(true);
 
     try {
-      const { token } = userLogin;
+      const { token, role } = userLogin;
 
-      await AsyncStorage.setItem('@authToken', token);
+      await AsyncStorage.multiSet([
+        ['@authRole', role],
+        ['@authToken', token],
+      ]);
+
+      if (role === 'USER') setShowBanner(true);
       setSigned(true);
 
       setLoading(false);
@@ -87,10 +101,12 @@ export const AuthProvider: React.FC = ({ children }) => {
       '@authToken',
       '@authEmail',
       '@authPass',
+      '@authRole',
     ]);
-    setSigned(false);
+    setShowBanner(false);
     setWallet(null);
     setWalletName(null);
+    setSigned(false);
   }, []);
 
   const handleSetWallet = useCallback(
@@ -111,6 +127,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         signed,
         wallet,
         walletName,
+        showBanner,
         handleSetWallet,
         handleSignIn,
         handleSignOut,
