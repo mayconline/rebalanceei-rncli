@@ -14,12 +14,19 @@ import {
 } from './styles';
 
 import RebalanceeiLogo from '../../../../assets/svg/RebalanceeiLogo';
+import { getLocalStorage } from '../../../utils/localStorage';
 
 const Welcome = () => {
   const navigation = useNavigation();
 
-  const handleEnter = useCallback(() => {
-    navigation.navigate('StepOne');
+  const handleEnter = useCallback(async () => {
+    const hasFirstAccess = await getLocalStorage('@authFirstAccess');
+
+    if (hasFirstAccess) {
+      navigation.navigate('Login');
+    } else {
+      navigation.navigate('StepOne');
+    }
   }, []);
 
   return (

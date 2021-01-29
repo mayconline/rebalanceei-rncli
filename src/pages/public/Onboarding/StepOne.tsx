@@ -19,6 +19,7 @@ import {
 
 import Button from '../../../components/Button';
 import OnboardingImgOne from '../../../../assets/svg/OnboardingImgOne';
+import { setLocalStorage } from '../../../utils/localStorage';
 
 const StepOne = () => {
   const { gradient } = useContext(ThemeContext);
@@ -28,10 +29,15 @@ const StepOne = () => {
     navigation.navigate('StepTwo');
   };
 
+  const handleSkip = async () => {
+    await setLocalStorage('@authFirstAccess', 'true');
+    navigation.navigate('SignUp');
+  };
+
   return (
     <Wrapper>
       <Header>
-        <ContainerTextLink onPress={() => navigation.navigate('SignUp')}>
+        <ContainerTextLink onPress={handleSkip}>
           <TextLink>Pular</TextLink>
         </ContainerTextLink>
       </Header>

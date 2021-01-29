@@ -19,12 +19,14 @@ import {
 
 import Button from '../../../components/Button';
 import OnboardingImgThree from '../../../../assets/svg/OnboardingImgThree';
+import { setLocalStorage } from '../../../utils/localStorage';
 
 const StepThree = () => {
   const { gradient } = useContext(ThemeContext);
   const navigation = useNavigation();
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    await setLocalStorage('@authFirstAccess', 'true');
     navigation.navigate('SignUp');
   };
 
