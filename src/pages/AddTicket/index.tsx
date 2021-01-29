@@ -120,10 +120,6 @@ const AddTicket = () => {
           {
             query: GET_WALLET_BY_USER,
           },
-          {
-            query: GET_WALLET_BY_ID,
-            variables: { _id: wallet },
-          },
         ],
       });
 
@@ -167,7 +163,10 @@ const AddTicket = () => {
         <ImageAddTicket />
 
         {isEdit ? (
-          <EditTicket ticket={params?.ticket} />
+          <EditTicket
+            ticket={params?.ticket}
+            openModal={() => setOpenModal(true)}
+          />
         ) : (
           <FormContainer
             behavior={Platform.OS == 'ios' ? 'padding' : 'position'}

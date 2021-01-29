@@ -35,9 +35,10 @@ interface IDeleteTicket {
 
 interface IEditWalletModal {
   ticket: ITickets;
+  openModal(): void;
 }
 
-const EditTicket = ({ ticket }: IEditWalletModal) => {
+const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
   const { gradient } = useContext(ThemeContext);
   const { wallet } = useAuth();
   const navigation = useNavigation();
@@ -61,7 +62,6 @@ const EditTicket = ({ ticket }: IEditWalletModal) => {
 
   const handleGoBack = useCallback(() => {
     navigation.setParams({ ticket: null });
-    navigation.goBack();
     setTicketForm({} as IDataForm);
   }, []);
 
@@ -107,14 +107,11 @@ const EditTicket = ({ ticket }: IEditWalletModal) => {
           {
             query: GET_WALLET_BY_USER,
           },
-          {
-            query: GET_WALLET_BY_ID,
-            variables: { _id: wallet },
-          },
         ],
       });
 
       handleGoBack();
+      openModal();
     } catch (err) {
       console.error(mutationError?.message + err);
     }
@@ -137,14 +134,11 @@ const EditTicket = ({ ticket }: IEditWalletModal) => {
           {
             query: GET_WALLET_BY_USER,
           },
-          {
-            query: GET_WALLET_BY_ID,
-            variables: { _id: wallet },
-          },
         ],
       });
 
       handleGoBack();
+      openModal();
     } catch (err) {
       console.error(mutationDeleteError?.message + err);
     }

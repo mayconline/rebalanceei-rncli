@@ -23,7 +23,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
   return (
     <Wrapper>
       <ContainerTitle>
-        <Title>Cadastrado com sucesso</Title>
+        <Title>Realizado com Sucesso 🎉</Title>
       </ContainerTitle>
 
       <LootieContainer>
