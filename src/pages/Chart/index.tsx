@@ -126,8 +126,13 @@ const Chart = () => {
   useFocusEffect(
     useCallback(() => {
       selectedFilter === 'Classe' && eachClassChart();
+    }, [selectedFilter, eachClassChart]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
       selectedFilter === 'Ativo' && eachTicketChart();
-    }, [hasTickets, selectedFilter]),
+    }, [selectedFilter, eachTicketChart]),
   );
 
   const Labels = ({ slices }: { slices?: any }) => {
