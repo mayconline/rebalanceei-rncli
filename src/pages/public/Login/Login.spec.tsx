@@ -2,6 +2,9 @@ import React from 'react';
 import Login, { LOGIN } from './index';
 import { render, fireEvent, waitFor, act } from '../../../utils/testProvider';
 import { GraphQLError } from 'graphql';
+import * as localStorage from '../../../utils/localStorage';
+
+const mockedSetLocalStorage = jest.spyOn(localStorage, 'setLocalStorage');
 
 const mockedHandleSignIn = jest.fn();
 
@@ -34,10 +37,21 @@ describe('Login Page', () => {
     fireEvent.changeText(inputEmail, 'test@test.com');
     getByDisplayValue('test@test.com');
 
+    await waitFor(() =>
+      expect(mockedSetLocalStorage).toHaveBeenCalledWith(
+        '@authEmail',
+        'test@test.com',
+      ),
+    );
+
     getByText(/^Senha$/i);
     const inputPassword = getByPlaceholderText('********');
     fireEvent.changeText(inputPassword, '1234');
     getByDisplayValue('1234');
+
+    await waitFor(() =>
+      expect(mockedSetLocalStorage).toHaveBeenCalledWith('@authPass', '1234'),
+    );
 
     await act(async () => fireEvent.press(submitButton));
     await act(async () =>

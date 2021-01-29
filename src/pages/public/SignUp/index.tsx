@@ -2,7 +2,6 @@ import React, { useContext, useState, useCallback } from 'react';
 import { Switch, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../../contexts/authContext';
 
@@ -29,6 +28,7 @@ import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
 
 import { getTerms } from '../../../utils/Terms';
+import { setLocalStorage } from '../../../utils/localStorage';
 
 interface IAccountRegister {
   email: string;
@@ -99,7 +99,7 @@ const SignUp = () => {
       email,
     }));
 
-    await AsyncStorage.setItem('@authEmail', email);
+    await setLocalStorage('@authEmail', email);
   }, []);
 
   const handleSetPassword = useCallback(async (password: string) => {
@@ -108,7 +108,7 @@ const SignUp = () => {
       password,
     }));
 
-    await AsyncStorage.setItem('@authPass', password);
+    await setLocalStorage('@authPass', password);
   }, []);
 
   return (
