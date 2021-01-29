@@ -1,15 +1,15 @@
-import { ApolloError } from '@apollo/client';
 import React from 'react';
+import { formatErrors } from '../../utils/format';
 import { TextContentError } from './styles';
 
 interface ITextError {
-  children?: string | ApolloError;
+  children: string;
   isTabs?: boolean;
 }
 
 const TextError = ({ children, isTabs }: ITextError) => (
   <TextContentError isTabs={isTabs} numberOfLines={1} ellipsizeMode="tail">
-    {children}
+    {formatErrors(children)}
   </TextContentError>
 );
 

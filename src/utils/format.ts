@@ -140,3 +140,28 @@ export const getPositionAdBanner = (index: number, length: number) => {
     ? true
     : false;
 };
+
+export const formatErrors = (error: string) =>
+  ({
+    [error]: error,
+    'User or Password Invalid': 'Usuário ou Senha inválido',
+    'Token Not Exists': 'Token não cadastrado',
+    'Token Invalid or Expired': 'Token inválido ou expirado',
+    'User Exists': 'Usuário já cadastrado',
+    'User Not Exists': 'Usuário não cadastrado',
+    'Email Already Send': 'E-mail enviado',
+    'Code Invalid or Expired': 'Code inválido ou expirado',
+    'User Unauthorized': 'Usuário não autorizado',
+    'User Inactive': 'Usuário desabilitado',
+    'Wallet Not Found': 'Carteira não encontrada',
+    'Ticket Not Found': 'Ativo não encontrado',
+    'Ticket Exists': 'Ativo já cadastrado',
+    'Tickets limited to 16 items': 'Limite de 16 ativos já cadastrados',
+    'Wallet limited to 2 items': 'Limite de 2 carteiras já cadastradas',
+    'Failed Convert Dollar': 'Erro ao realizar a conversão do dollar',
+    'Failed Stock API': 'Erro ao buscar os dados',
+    'Failed SendGrid': 'Falha ao enviar o e-mail',
+    'Response not successful: Received status code 400':
+      'Nenhuma carteira selecionada',
+    'Network request failed': 'Falha de conexão com o servidor',
+  }[error]);
