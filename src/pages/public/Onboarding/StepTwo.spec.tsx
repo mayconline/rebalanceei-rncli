@@ -1,6 +1,9 @@
 import React from 'react';
 import StepTwo from './StepTwo';
-import { render, fireEvent } from '../../../utils/testProvider';
+import { render, fireEvent, waitFor } from '../../../utils/testProvider';
+import * as localStorage from '../../../utils/localStorage';
+
+const mockedSetLocalStorage = jest.spyOn(localStorage, 'setLocalStorage');
 
 describe('Onboarding StepTwo', () => {
   it('should display correct page view', async () => {
@@ -9,6 +12,14 @@ describe('Onboarding StepTwo', () => {
     const skipButton = await findByText(/Pular/i);
 
     fireEvent.press(skipButton);
+
+    await waitFor(() =>
+      expect(mockedSetLocalStorage).toHaveBeenCalledWith(
+        '@authFirstAccess',
+        'true',
+      ),
+    );
+
     expect(navigate).toBeCalledWith('SignUp');
 
     getByText(/Adicione seus ativos e dê notas a eles/i);
