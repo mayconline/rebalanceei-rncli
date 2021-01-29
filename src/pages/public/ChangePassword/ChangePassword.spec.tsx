@@ -45,7 +45,7 @@ describe('ChangePassword Page', () => {
     const resetButton = getByText('Alterar Senha');
     act(() => fireEvent.press(resetButton));
 
-    await waitFor(() => getByText(/Cadastrado com sucesso/i));
+    await waitFor(() => getByText(/Realizado com sucesso/i));
   });
 });
 

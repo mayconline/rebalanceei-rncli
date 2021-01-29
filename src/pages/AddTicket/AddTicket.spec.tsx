@@ -109,7 +109,6 @@ describe('AddTicket Tab', () => {
       getAllByA11yRole,
       getByA11yLabel,
       getByDisplayValue,
-      goBack,
       setParams,
     } = render(
       <AddTicket />,
@@ -149,7 +148,6 @@ describe('AddTicket Tab', () => {
     await act(async () => fireEvent.press(submitButton));
 
     expect(setParams).toHaveBeenCalledWith({ ticket: null });
-    expect(goBack).toBeCalledTimes(1);
   });
 
   it('should successfully delete ticket', async () => {
@@ -170,7 +168,6 @@ describe('AddTicket Tab', () => {
     await act(async () => fireEvent.press(submitButton[0]));
 
     expect(setParams).toHaveBeenCalledWith({ ticket: null });
-    expect(goBack).toBeCalledTimes(1);
   });
 
   it('should throw error on create ticket', async () => {
