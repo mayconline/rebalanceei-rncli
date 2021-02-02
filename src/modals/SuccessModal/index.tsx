@@ -7,6 +7,7 @@ import Button from '../../components/Button';
 import { getLocalStorage, setLocalStorage } from '../../utils/localStorage';
 import { showAdMob } from '../../utils/AdMob';
 import PlanModal from '../PlanModal';
+import { useAuth } from '../../contexts/authContext';
 
 interface ISuccessModal {
   onClose(): void;
@@ -18,6 +19,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
   beforeModalClose,
 }) => {
   const { color, gradient } = useContext(ThemeContext);
+  const { showBanner } = useAuth();
 
   const [openModal, setOpenModal] = useState<'Plan' | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -40,7 +42,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
     setLoading(true);
     const viewCount = await setViewCount();
 
-    if (viewCount % 8 === 0) {
+    if (showBanner && viewCount % 8 === 0) {
       await showAdMob();
       setLoading(false);
       setOpenModal('Plan');
