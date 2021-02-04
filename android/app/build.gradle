@@ -132,8 +132,8 @@ android {
         applicationId "com.rebalanceei"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.1"
         multiDexEnabled true
     }
     splits {
@@ -190,6 +190,10 @@ android {
 }
 
 dependencies {
+    def billing_version = "3.0.0"
+    
+    implementation "com.android.billingclient:billing:$billing_version"
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
