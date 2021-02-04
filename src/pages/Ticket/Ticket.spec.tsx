@@ -9,6 +9,8 @@ jest.mock('../../contexts/authContext', () => ({
   }),
 }));
 
+jest.mock('../../components/AdBanner', () => () => null);
+
 describe('Ticket Tab', () => {
   it('should successfully list tickets', async () => {
     const {
