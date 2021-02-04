@@ -5,7 +5,7 @@ import { Wrapper, ContainerTitle, Title, LootieContainer } from './styles';
 import LottieView from 'lottie-react-native';
 import Button from '../../components/Button';
 import { getLocalStorage, setLocalStorage } from '../../utils/localStorage';
-import { showAdMob } from '../../utils/AdMob';
+import { showAdMob } from '../../services/AdMob';
 import PlanModal from '../PlanModal';
 import { useAuth } from '../../contexts/authContext';
 
