@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { ActivityIndicator, Linking } from 'react-native';
+import { ActivityIndicator, Alert, Linking } from 'react-native';
 import { useAuth } from '../../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
 
@@ -7,7 +7,7 @@ import CopyPremmium from '../../../components/CopyPremmium';
 import CardPlan from '../../../components/CardPlan';
 import Button from '../../../components/Button';
 
-import { ContainerButtons } from '../styles';
+import { ContainerButtons, SubTitle } from '../styles';
 
 const Premium = () => {
   const { gradient, color } = useContext(ThemeContext);
@@ -21,10 +21,28 @@ const Premium = () => {
   const handleCancelSubscription = useCallback(() => {
     const link = `https://play.google.com/store/account/subscriptions?package=${plan?.packageName}&sku=${plan?.productId}`;
 
-    //assinatura fica ativa até a data de renovação
+    Alert.alert(
+      'Deseja mesmo cancelar?',
+      `Seu plano continuará ativo até o fim do ciclo contratado:
+      
+      Início: ${new Date(Number(plan?.transactionDate)).toLocaleDateString()}
+      Final: ${new Date(Number(plan?.renewDate)).toLocaleDateString()}
+      `,
+      [
+        {
+          text: 'Voltar',
+          style: 'cancel',
+        },
+        {
+          text: 'Continuar',
+          style: 'destructive',
+          onPress: () => Linking.openURL(link),
+        },
+      ],
+      { cancelable: false },
+    );
 
-    console.log('link', link);
-    return Linking.openURL(link);
+    return;
   }, [plan]);
 
   return loading ? (
@@ -43,9 +61,10 @@ const Premium = () => {
         currentPlan
         disabled
       />
-
+      <SubTitle>
+        *Seu Plano será renovado automáticamente na data da renovação.
+      </SubTitle>
       <CopyPremmium isPremmium />
-
       <ContainerButtons>
         <Button
           colors={gradient.lightToDarkRed}
@@ -56,6 +75,10 @@ const Premium = () => {
           Cancelar Plano
         </Button>
       </ContainerButtons>
+
+      <SubTitle>
+        *Seu Plano continuará ativo até o fim do ciclo contratado.
+      </SubTitle>
     </>
   );
 };

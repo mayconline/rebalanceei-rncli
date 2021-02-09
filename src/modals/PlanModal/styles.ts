@@ -34,12 +34,12 @@ export const Title = styled.Text`
 export const ContainerButtons = styled.View`
   align-items: center;
   justify-content: center;
-  margin: 8px 0 32px;
+  margin: 8px 0;
 `;
 
 export const SubTitle = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
-  font: 600 20px/24px 'TitilliumWeb-SemiBold';
+  color: ${({ theme }) => theme.color.titleNotImport};
+  font: 400 16px/20px 'TitilliumWeb-Regular';
   text-align: center;
   flex: 1;
   margin: 12px 0;
