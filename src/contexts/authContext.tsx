@@ -22,6 +22,7 @@ interface IAuthContext {
   showBanner: boolean;
   wallet: string | null;
   walletName: string | null;
+  userID: string | null;
   handleSetWallet(walletID: string, walletName: string): void;
   handleSignIn(user: ISignIn): Promise<void>;
   handleSignOut(): Promise<void>;
@@ -35,6 +36,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [walletName, setWalletName] = useState<string | null>(null);
   const [showBanner, setShowBanner] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [userID, setUserID] = useState<string | null>(null);
   const client = useApolloClient();
 
   const { isConnected } = useNetInfo();
@@ -45,11 +47,13 @@ export const AuthProvider: React.FC = ({ children }) => {
       storageToken,
       storageWallet,
       storageWalletName,
+      storageID,
     ] = await AsyncStorage.multiGet([
       '@authRole',
       '@authToken',
       '@authWallet',
       '@authWalletName',
+      '@authID',
     ]);
 
     if (storageRole[1] === 'USER') {
@@ -65,6 +69,10 @@ export const AuthProvider: React.FC = ({ children }) => {
       setWalletName(storageWalletName[1]);
     }
 
+    if (storageID[1]) {
+      setUserID(storageID[1]);
+    }
+
     setLoading(false);
   }, []);
 
@@ -76,14 +84,16 @@ export const AuthProvider: React.FC = ({ children }) => {
     setLoading(true);
 
     try {
-      const { token, role } = userLogin;
+      const { token, role, _id } = userLogin;
 
       await AsyncStorage.multiSet([
         ['@authRole', role],
         ['@authToken', token],
+        ['@authID', _id],
       ]);
 
       if (role === 'USER') setShowBanner(true);
+      setUserID(_id);
       setSigned(true);
 
       setLoading(false);
@@ -106,6 +116,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     setShowBanner(false);
     setWallet(null);
     setWalletName(null);
+    setUserID(null);
     setSigned(false);
   }, []);
 
@@ -133,6 +144,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         handleSignOut,
         loading,
         isConnected,
+        userID,
       }}
     >
       {children}

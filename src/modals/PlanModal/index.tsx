@@ -1,5 +1,5 @@
-import React, { useContext, useState, useCallback } from 'react';
-import { Alert } from 'react-native';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
+import { Alert, Linking } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 import { useMutation, useLazyQuery, gql } from '@apollo/client';
@@ -31,7 +31,7 @@ interface PlanModal {
   onClose(): void;
 }
 
-export type IPlanName = 'FREE' | 'YEAR' | 'MONTH' | null;
+export type IPlanName = 'FREE' | 'P1Y' | 'P1M' | null;
 
 const PlanModal = ({ onClose }: PlanModal) => {
   const { handleSignOut } = useAuth();
@@ -51,7 +51,7 @@ const PlanModal = ({ onClose }: PlanModal) => {
   useFocusEffect(
     useCallback(() => {
       currentRole === 'USER'
-        ? handleSelectPlan('YEAR')
+        ? handleSelectPlan('P1Y')
         : handleSelectPlan('FREE');
     }, [currentRole]),
   );
