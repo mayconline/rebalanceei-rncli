@@ -1,70 +1,44 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { ActivityIndicator, Linking } from 'react-native';
+import { useAuth } from '../../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
 
 import CopyPremmium from '../../../components/CopyPremmium';
 import CardPlan from '../../../components/CardPlan';
 import Button from '../../../components/Button';
 
-import { ContainerButtons, SubTitle } from '../styles';
-import { getLocalStorage } from '../../../utils/localStorage';
-import { ActivityIndicator, Linking } from 'react-native';
-import { useAuth } from '../../../contexts/authContext';
+import { ContainerButtons } from '../styles';
 
-interface IPremmium {
-  handleSubmit(): void;
-  mutationLoading?: boolean;
-}
-
-interface ICurrentPlan {
-  description: string;
-  localizedPrice: string;
-  productId: string;
-  subscriptionPeriodAndroid: string;
-  transactionDate: number;
-  packageName: string;
-  renewDate: number;
-  transactionId: string;
-}
-
-const Premium = ({ handleSubmit, mutationLoading }: IPremmium) => {
+const Premium = () => {
   const { gradient, color } = useContext(ThemeContext);
-  const { userID } = useAuth();
-  const [currentPlan, setCurrentPlan] = useState<ICurrentPlan>(
-    {} as ICurrentPlan,
-  );
+  const { plan } = useAuth();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getLocalStorage(`@plan-${userID}`)
-      .then(response => {
-        console.log('response', response);
-        !!response && setCurrentPlan(JSON.parse(response));
-      })
-      .then(() => setLoading(false));
-  }, [userID]);
+    !!plan && setLoading(false);
+  }, [plan]);
 
   const handleCancelSubscription = useCallback(() => {
-    const link = `https://play.google.com/store/account/subscriptions?package=${currentPlan.packageName}&sku=${currentPlan.productId}`;
+    const link = `https://play.google.com/store/account/subscriptions?package=${plan?.packageName}&sku=${plan?.productId}`;
 
     //assinatura fica ativa até a data de renovação
 
     console.log('link', link);
-    Linking.openURL(link);
-    return handleSubmit();
-  }, [currentPlan]);
+    return Linking.openURL(link);
+  }, [plan]);
 
   return loading ? (
     <ActivityIndicator size="large" color={color.bgHeaderEmpty} />
   ) : (
     <>
       <CardPlan
-        title={`${currentPlan?.description} - Ativo`}
+        title={`${plan?.description} - Ativo`}
         descriptions={[
           'Data da Renovação',
-          `${new Date(currentPlan?.renewDate).toLocaleDateString()}`,
+          `${new Date(Number(plan?.renewDate)).toLocaleDateString()}`,
         ]}
-        plan={`${currentPlan?.localizedPrice} / ${
-          currentPlan?.subscriptionPeriodAndroid === 'P1M' ? 'Mês' : 'Ano'
+        plan={`${plan?.localizedPrice} / ${
+          plan?.subscriptionPeriodAndroid === 'P1M' ? 'Mês' : 'Ano'
         }`}
         currentPlan
         disabled
@@ -76,8 +50,8 @@ const Premium = ({ handleSubmit, mutationLoading }: IPremmium) => {
         <Button
           colors={gradient.lightToDarkRed}
           onPress={handleCancelSubscription}
-          loading={mutationLoading}
-          disabled={mutationLoading}
+          loading={loading}
+          disabled={loading}
         >
           Cancelar Plano
         </Button>

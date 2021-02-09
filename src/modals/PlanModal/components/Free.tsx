@@ -1,10 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   EmitterSubscription,
-  EventEmitter,
   Platform,
 } from 'react-native';
+import { useAuth } from '../../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
 
 import CopyPremmium from '../../../components/CopyPremmium';
@@ -12,11 +13,9 @@ import CardPlan from '../../../components/CardPlan';
 import Button from '../../../components/Button';
 
 import { ContainerButtons } from '../styles';
-import { IPlanName } from '../index';
+import { GET_USER_BY_TOKEN, IPlanName, IUser } from '../index';
 
-import { useAuth } from '../../../contexts/authContext';
 import TextError from '../../../components/TextError';
-import { setLocalStorage } from '../../../utils/localStorage';
 
 import {
   conectionStore,
@@ -32,19 +31,13 @@ import {
   SubscriptionPurchase,
   Subscription,
 } from 'react-native-iap';
+import { gql, useMutation } from '@apollo/client';
 
-type Tsku = 'rebalanceei_premium_anual' | 'rebalanceei_premium_mensal';
-
-/*interface ISubscriptions {
-  description: string;
-  localizedPrice: string;
-  productId: Tsku;
-  subscriptionPeriodAndroid: IPlanName;
-  packageNameAndroid: string;
-}*/
+interface IUpdateRole {
+  updateRole: IUser;
+}
 
 interface IFree {
-  handleSubmit(): void;
   mutationLoading?: boolean;
   planName: IPlanName;
   handleSelectPlan(plan: IPlanName): void;
@@ -57,23 +50,56 @@ export const listSku = Platform.select({
 let purchaseUpdateSubscription: EmitterSubscription;
 let purchaseErrorSubscription: EmitterSubscription;
 
-const Free = ({
-  handleSubmit,
-  mutationLoading,
-  planName,
-  handleSelectPlan,
-}: IFree) => {
-  const { userID } = useAuth();
+const Free = ({ planName, handleSelectPlan }: IFree) => {
+  const { userID, handleSignOut } = useAuth();
   const { gradient, color } = useContext(ThemeContext);
   const [loading, setLoading] = useState(true);
+  const [loadingPurchase, setLoadingPurchase] = useState(false);
   const [skuID, setSkuID] = useState<Subscription>({} as Subscription);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined,
   );
-
   const [subscriptions, setSubscriptions] = useState<Subscription[]>(
     [] as Subscription[],
   );
+
+  const [
+    updateRole,
+    { loading: mutationLoading, error: mutationError },
+  ] = useMutation<IUpdateRole>(UPDATE_ROLE);
+
+  const handleChangePlan = useCallback(async (plan: object) => {
+    try {
+      await updateRole({
+        variables: {
+          role: 'PREMIUM',
+          ...plan,
+        },
+        refetchQueries: [
+          {
+            query: GET_USER_BY_TOKEN,
+          },
+        ],
+      });
+
+      Alert.alert(
+        'Compra realizada com sucesso!',
+        'Por favor entre novamente no aplicativo.',
+        [
+          {
+            text: 'Continuar',
+            style: 'destructive',
+            onPress: async () => {
+              handleSignOut();
+            },
+          },
+        ],
+        { cancelable: false },
+      );
+    } catch (err) {
+      console.error(mutationError?.message + err);
+    }
+  }, []);
 
   useEffect(() => {
     !!listSku &&
@@ -105,7 +131,6 @@ const Free = ({
               initalDate.getDate() + period,
             );
 
-            //salvar no banco
             const transactionData = {
               transactionDate: purchase?.transactionDate,
               renewDate: renewSubscription,
@@ -117,18 +142,11 @@ const Free = ({
               transactionId: purchase?.transactionId,
             };
 
-            console.log('transactionData', transactionData);
-
-            await setLocalStorage(
-              `@plan-${purchase?.obfuscatedAccountIdAndroid}`,
-              JSON.stringify(transactionData),
-            );
-
             await finishTransaction(purchase, false);
 
-            handleSubmit();
+            await handleChangePlan(transactionData);
 
-            setLoading(false);
+            setLoadingPurchase(false);
           } catch (err) {
             console.warn('ackErr', err);
             setLoading(false);
@@ -152,12 +170,12 @@ const Free = ({
   }, [skuID]);
 
   const handlePurchaseSubscription = useCallback(async () => {
-    setLoading(true);
+    setLoadingPurchase(true);
 
     !!skuID && !!userID && (await requestSubscribe(skuID.productId, userID));
   }, [skuID, userID]);
 
-  const handleChangeOptionPlan = useCallback(async (sku, duration?: string) => {
+  const handleChangeOptionPlan = useCallback(async (sku, duration) => {
     !!sku && setSkuID(sku);
     !!duration && handleSelectPlan(duration);
   }, []);
@@ -175,6 +193,7 @@ const Free = ({
       />
       <CopyPremmium />
 
+      {!!mutationError && <TextError>{mutationError?.message}</TextError>}
       {!!errorMessage && <TextError>{errorMessage}</TextError>}
 
       {subscriptions?.map(subscription => (
@@ -203,8 +222,8 @@ const Free = ({
         <Button
           colors={gradient.darkToLightBlue}
           onPress={handlePurchaseSubscription}
-          loading={mutationLoading || loading}
-          disabled={mutationLoading || loading}
+          loading={mutationLoading || loading || loadingPurchase}
+          disabled={mutationLoading || loading || loadingPurchase}
         >
           Assine já !
         </Button>
@@ -214,3 +233,50 @@ const Free = ({
 };
 
 export default Free;
+
+export const UPDATE_ROLE = gql`
+  mutation updateRole(
+    $role: Role!
+    $transactionDate: Float
+    $renewDate: Float
+    $description: String
+    $localizedPrice: String
+    $productId: String
+    $subscriptionPeriodAndroid: String
+    $packageName: String
+    $transactionId: String
+  ) {
+    updateRole(
+      input: {
+        role: $role
+        plan: {
+          transactionDate: $transactionDate
+          renewDate: $renewDate
+          description: $description
+          localizedPrice: $localizedPrice
+          productId: $productId
+          subscriptionPeriodAndroid: $subscriptionPeriodAndroid
+          packageName: $packageName
+          transactionId: $transactionId
+        }
+      }
+    ) {
+      _id
+      email
+      active
+      checkTerms
+      role
+      token
+      plan {
+        transactionDate
+        renewDate
+        description
+        localizedPrice
+        productId
+        subscriptionPeriodAndroid
+        packageName
+        transactionId
+      }
+    }
+  }
+`;

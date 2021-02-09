@@ -13,6 +13,18 @@ interface ISignIn {
   _id: string;
   token: string;
   role: string;
+  plan?: IPlan;
+}
+
+interface IPlan {
+  transactionDate?: number;
+  renewDate?: number;
+  description?: string;
+  localizedPrice?: string;
+  productId?: string;
+  subscriptionPeriodAndroid?: string;
+  packageName?: string;
+  transactionId?: string;
 }
 
 interface IAuthContext {
@@ -23,6 +35,7 @@ interface IAuthContext {
   wallet: string | null;
   walletName: string | null;
   userID: string | null;
+  plan: IPlan | null;
   handleSetWallet(walletID: string, walletName: string): void;
   handleSignIn(user: ISignIn): Promise<void>;
   handleSignOut(): Promise<void>;
@@ -37,6 +50,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [showBanner, setShowBanner] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userID, setUserID] = useState<string | null>(null);
+  const [plan, setPlan] = useState<IPlan | null>(null);
   const client = useApolloClient();
 
   const { isConnected } = useNetInfo();
@@ -48,16 +62,22 @@ export const AuthProvider: React.FC = ({ children }) => {
       storageWallet,
       storageWalletName,
       storageID,
+      storagePlan,
     ] = await AsyncStorage.multiGet([
       '@authRole',
       '@authToken',
       '@authWallet',
       '@authWalletName',
       '@authID',
+      '@authPlan',
     ]);
 
     if (storageRole[1] === 'USER') {
       setShowBanner(true);
+    }
+
+    if (storageRole[1] === 'PREMIUM' && storagePlan[1]) {
+      setPlan(JSON.parse(storagePlan[1]));
     }
 
     if (storageToken[1]) {
@@ -84,15 +104,17 @@ export const AuthProvider: React.FC = ({ children }) => {
     setLoading(true);
 
     try {
-      const { token, role, _id } = userLogin;
+      const { token, role, _id, plan } = userLogin;
 
       await AsyncStorage.multiSet([
         ['@authRole', role],
         ['@authToken', token],
         ['@authID', _id],
+        ['@authPlan', JSON.stringify(plan)],
       ]);
 
       if (role === 'USER') setShowBanner(true);
+      if (role === 'PREMIUM' && !!plan) setPlan(plan);
       setUserID(_id);
       setSigned(true);
 
@@ -112,10 +134,12 @@ export const AuthProvider: React.FC = ({ children }) => {
       '@authEmail',
       '@authPass',
       '@authRole',
+      '@authPlan',
     ]);
     setShowBanner(false);
     setWallet(null);
     setWalletName(null);
+    setPlan(null);
     setUserID(null);
     setSigned(false);
   }, []);
@@ -145,6 +169,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         loading,
         isConnected,
         userID,
+        plan,
       }}
     >
       {children}

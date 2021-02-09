@@ -218,6 +218,16 @@ export const CREATE_USER = gql`
       _id
       token
       role
+      plan {
+        transactionDate
+        renewDate
+        description
+        localizedPrice
+        productId
+        subscriptionPeriodAndroid
+        packageName
+        transactionId
+      }
     }
   }
 `;
