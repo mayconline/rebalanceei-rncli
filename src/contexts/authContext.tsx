@@ -11,7 +11,11 @@ import { useApolloClient, useMutation } from '@apollo/client';
 import { Alert } from 'react-native';
 import { GET_USER_BY_TOKEN } from '../modals/PlanModal';
 import { IUpdateRole, UPDATE_ROLE } from '../modals/PlanModal/components/Free';
-import { restoreSubscription, validHasSubscription } from '../services/Iap';
+import {
+  restoreSubscription,
+  setNewSubscriptionsDate,
+  validHasSubscription,
+} from '../services/Iap';
 
 interface ISignIn {
   _id: string;
@@ -86,7 +90,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
 
     if (storageRole[1] === 'PREMIUM' && storagePlan[1]) {
-      setPlan(JSON.parse(storagePlan[1]));
+      await handleVerificationPlan(JSON.parse(storagePlan[1]));
     }
 
     if (storageToken[1]) {
@@ -123,35 +127,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       ]);
 
       if (role === 'USER') setShowBanner(true);
-      if (role === 'PREMIUM' && !!plan) {
-        const hasSubscription = await validHasSubscription(plan);
-
-        if (hasSubscription) {
-          setPlan(plan);
-        } else {
-          const purchases = await restoreSubscription();
-          if (!!purchases.length) {
-            const period = plan.subscriptionPeriodAndroid === 'P1M' ? 34 : 369;
-
-            const initalDate = new Date(purchases[0]?.transactionDate);
-
-            const renewSubscription = initalDate.setDate(
-              initalDate.getDate() + period,
-            );
-
-            const transactionData = {
-              ...plan,
-              transactionDate: purchases[0]?.transactionDate,
-              renewDate: renewSubscription,
-              transactionId: purchases[0]?.transactionId,
-            };
-
-            await handleUpdatePlan(transactionData);
-          } else {
-            await handleCancelPlan();
-          }
-        }
-      }
+      if (role === 'PREMIUM' && !!plan) await handleVerificationPlan(plan);
 
       setUserID(_id);
       setSigned(true);
@@ -227,7 +203,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
   }, []);
 
-  const handleUpdatePlan = useCallback(async (plan: object) => {
+  const handleUpdatePlan = useCallback(async (plan: IPlan) => {
     updateRole({
       variables: {
         role: 'PREMIUM',
@@ -240,6 +216,40 @@ export const AuthProvider: React.FC = ({ children }) => {
           setPlan(response?.data?.updateRole?.plan),
       )
       .catch(err => console.error(mutationError?.message + err));
+  }, []);
+
+  const handleVerificationPlan = useCallback(async (plan: IPlan) => {
+    const hasSubscription = await validHasSubscription(plan);
+
+    if (hasSubscription) {
+      setPlan(plan);
+    } else {
+      const purchases = await restoreSubscription();
+
+      if (!!purchases.length) {
+        const { transactionDate, renewDate, subscriptionPeriodAndroid } = plan;
+
+        const {
+          newTransactionDate,
+          newRenewDate,
+        } = await setNewSubscriptionsDate(
+          Number(transactionDate),
+          String(subscriptionPeriodAndroid),
+          Number(renewDate),
+        );
+
+        const transactionData = {
+          ...plan,
+          transactionDate: newTransactionDate,
+          renewDate: newRenewDate,
+          transactionId: purchases[0]?.transactionId,
+        };
+
+        await handleUpdatePlan(transactionData);
+      } else {
+        await handleCancelPlan();
+      }
+    }
   }, []);
 
   return (

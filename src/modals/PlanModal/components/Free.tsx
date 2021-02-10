@@ -122,13 +122,24 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
         if (receipt) {
           try {
-            const period =
+            /*  const period =
               skuID?.subscriptionPeriodAndroid === 'P1M' ? 34 : 369;
 
             const initalDate = new Date(purchase?.transactionDate);
+            
             const renewSubscription = initalDate.setDate(
               initalDate.getDate() + period,
+            );*/
+
+            //if test 5min M or 30min Y
+            const period = skuID?.subscriptionPeriodAndroid === 'P1M' ? 5 : 30;
+
+            const initalDate = new Date(purchase?.transactionDate);
+
+            const renewSubscription = initalDate.setMinutes(
+              initalDate.getMinutes() + period,
             );
+            //
 
             const transactionData = {
               transactionDate: purchase?.transactionDate,

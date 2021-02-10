@@ -45,6 +45,13 @@ const Premium = () => {
     return;
   }, [plan]);
 
+  const formatDate = (dateNumber: number) => {
+    const date = new Date(dateNumber).toLocaleDateString();
+    const time = new Date(dateNumber).toLocaleTimeString();
+
+    return `${date} às ${time}`;
+  };
+
   return loading ? (
     <ActivityIndicator size="large" color={color.bgHeaderEmpty} />
   ) : (
@@ -53,7 +60,7 @@ const Premium = () => {
         title={`${plan?.description} - Ativo`}
         descriptions={[
           'Data da Renovação',
-          `${new Date(Number(plan?.renewDate)).toLocaleDateString()}`,
+          `${formatDate(Number(plan?.renewDate))}`,
         ]}
         plan={`${plan?.localizedPrice} / ${
           plan?.subscriptionPeriodAndroid === 'P1M' ? 'Mês' : 'Ano'

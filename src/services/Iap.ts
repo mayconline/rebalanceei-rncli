@@ -4,6 +4,8 @@ import {
   requestSubscription,
   flushFailedPurchasesCachedAsPendingAndroid,
   getAvailablePurchases,
+  getPurchaseHistory,
+  validateReceiptAndroid,
 } from 'react-native-iap';
 
 import { IPlan } from '../contexts/authContext';
@@ -91,8 +93,6 @@ export const requestSubscribe = async (sku: string, userID: string) => {
 export const restoreSubscription = async () => {
   const purchases = await getAvailablePurchases();
 
-  console.log(purchases);
-
   return purchases;
 };
 
@@ -110,4 +110,51 @@ export const validHasSubscription = async (plan?: IPlan) => {
   if (today > Number(renewDate)) return false;
 
   return true;
+};
+
+export const setNewSubscriptionsDate = async (
+  transactionDate: number,
+  subscriptionPeriodAndroid: string,
+  renewDate: number,
+) => {
+  const today = new Date().getTime();
+
+  if (today > Number(renewDate)) {
+    /*   const purchaseDay = new Date(Number(transactionDate));
+    const period = subscriptionPeriodAndroid === 'P1M' ? 34 : 369;
+
+    const newTransactionDate = purchaseDay.setDate(
+      purchaseDay.getDate() + period,
+    );
+    const newInitalDate = new Date(newTransactionDate);
+
+    const newRenewDate = newInitalDate.setDate(
+      newInitalDate.getDate() + period,
+    );*/
+
+    //if test 5min M or 30min Y
+    const purchaseDay = new Date(Number(transactionDate));
+    const period = subscriptionPeriodAndroid === 'P1M' ? 5 : 30;
+
+    const newTransactionDate = purchaseDay.setMinutes(
+      purchaseDay.getMinutes() + period,
+    );
+
+    const newInitalDate = new Date(newTransactionDate);
+
+    const newRenewDate = newInitalDate.setMinutes(
+      newInitalDate.getMinutes() + period,
+    );
+    //
+
+    return {
+      newTransactionDate,
+      newRenewDate,
+    };
+  } else {
+    return {
+      newTransactionDate: transactionDate,
+      newRenewDate: renewDate,
+    };
+  }
 };

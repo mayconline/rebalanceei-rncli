@@ -16,7 +16,7 @@ interface ICopyPremmium {
 const CopyPremmium = ({ isPremmium = false }: ICopyPremmium) => (
   <ContainerPremmium>
     <Title accessibilityRole="header">
-      {isPremmium ? 'Premmium' : 'Torne-se Premmium'}
+      {isPremmium ? 'Premium' : 'Torne-se Premium'}
     </Title>
     <ContainerPremmiumGroup>
       <ContainerDescription>

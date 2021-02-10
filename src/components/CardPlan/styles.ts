@@ -20,15 +20,15 @@ export const Wrapper = styled.TouchableOpacity<IWrapper>`
 export const CardPlanTitle = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 400 16px/24px 'TitilliumWeb-Regular';
-  margin: 12px 24px 0;
+  margin: 12px 16px 0;
 `;
 
 export const CardPlanGroup = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  padding: 8px;
-  margin: 8px;
+  padding: 8px 12px;
+  margin: 12px;
 `;
 
 export const CardPlanContainerDescription = styled.View``;
