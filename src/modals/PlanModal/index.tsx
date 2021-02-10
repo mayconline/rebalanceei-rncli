@@ -12,10 +12,12 @@ import Loading from '../../components/Loading';
 import TextError from '../../components/TextError';
 import Free from './components/Free';
 import Premium from './components/Premium';
+import { IPlan } from '../../contexts/authContext';
 
 export interface IUser {
   _id: string;
   role: string;
+  plan?: IPlan;
 }
 
 interface IGetUser {

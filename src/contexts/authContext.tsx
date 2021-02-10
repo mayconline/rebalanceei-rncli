@@ -7,7 +7,11 @@ import React, {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNetInfo } from '@react-native-community/netinfo';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client';
+import { Alert } from 'react-native';
+import { GET_USER_BY_TOKEN } from '../modals/PlanModal';
+import { IUpdateRole, UPDATE_ROLE } from '../modals/PlanModal/components/Free';
+import { restoreSubscription, validHasSubscription } from '../services/Iap';
 
 interface ISignIn {
   _id: string;
@@ -16,7 +20,7 @@ interface ISignIn {
   plan?: IPlan;
 }
 
-interface IPlan {
+export interface IPlan {
   transactionDate?: number;
   renewDate?: number;
   description?: string;
@@ -52,6 +56,11 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [userID, setUserID] = useState<string | null>(null);
   const [plan, setPlan] = useState<IPlan | null>(null);
   const client = useApolloClient();
+
+  const [
+    updateRole,
+    { loading: mutationLoading, error: mutationError },
+  ] = useMutation<IUpdateRole>(UPDATE_ROLE);
 
   const { isConnected } = useNetInfo();
 
@@ -114,7 +123,36 @@ export const AuthProvider: React.FC = ({ children }) => {
       ]);
 
       if (role === 'USER') setShowBanner(true);
-      if (role === 'PREMIUM' && !!plan) setPlan(plan);
+      if (role === 'PREMIUM' && !!plan) {
+        const hasSubscription = await validHasSubscription(plan);
+
+        if (hasSubscription) {
+          setPlan(plan);
+        } else {
+          const purchases = await restoreSubscription();
+          if (!!purchases.length) {
+            const period = plan.subscriptionPeriodAndroid === 'P1M' ? 34 : 369;
+
+            const initalDate = new Date(purchases[0]?.transactionDate);
+
+            const renewSubscription = initalDate.setDate(
+              initalDate.getDate() + period,
+            );
+
+            const transactionData = {
+              ...plan,
+              transactionDate: purchases[0]?.transactionDate,
+              renewDate: renewSubscription,
+              transactionId: purchases[0]?.transactionId,
+            };
+
+            await handleUpdatePlan(transactionData);
+          } else {
+            await handleCancelPlan();
+          }
+        }
+      }
+
       setUserID(_id);
       setSigned(true);
 
@@ -155,6 +193,54 @@ export const AuthProvider: React.FC = ({ children }) => {
     },
     [],
   );
+
+  const handleCancelPlan = useCallback(async () => {
+    try {
+      await updateRole({
+        variables: {
+          role: 'USER',
+        },
+        refetchQueries: [
+          {
+            query: GET_USER_BY_TOKEN,
+          },
+        ],
+      });
+
+      Alert.alert(
+        'Plano Premium Cancelado',
+        `Não conseguimos identificar o pagamento do seu plano, caso seja um engano, por favor entre em contato conosco através do email:
+        rebalanceeiapp@gmail.com`,
+        [
+          {
+            text: 'Continuar',
+            style: 'destructive',
+            onPress: async () => {
+              handleSignOut();
+            },
+          },
+        ],
+        { cancelable: false },
+      );
+    } catch (err) {
+      console.error(mutationError?.message + err);
+    }
+  }, []);
+
+  const handleUpdatePlan = useCallback(async (plan: object) => {
+    updateRole({
+      variables: {
+        role: 'PREMIUM',
+        ...plan,
+      },
+    })
+      .then(
+        response =>
+          response?.data?.updateRole?.plan &&
+          setPlan(response?.data?.updateRole?.plan),
+      )
+      .catch(err => console.error(mutationError?.message + err));
+  }, []);
 
   return (
     <AuthContext.Provider

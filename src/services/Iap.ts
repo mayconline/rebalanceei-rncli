@@ -2,16 +2,11 @@ import {
   initConnection,
   getSubscriptions,
   requestSubscription,
-  purchaseErrorListener,
-  purchaseUpdatedListener,
   flushFailedPurchasesCachedAsPendingAndroid,
-  InAppPurchase,
-  SubscriptionPurchase,
-  ProductPurchase,
-  finishTransaction,
-  PurchaseError,
   getAvailablePurchases,
 } from 'react-native-iap';
+
+import { IPlan } from '../contexts/authContext';
 
 interface IDataSubscription {
   autoRenewingAndroid?: boolean;
@@ -35,8 +30,7 @@ export const conectionStore = async () => {
   try {
     await initConnection();
     await flushFailedPurchasesCachedAsPendingAndroid();
-
-    console.log('connect');
+    console.log('open connection');
   } catch (err) {
     console.error('not connection to store' + err);
   }
@@ -59,7 +53,7 @@ export const requestSubscribe = async (sku: string, userID: string) => {
   };*/
 
   try {
-    await requestSubscription(
+    return await requestSubscription(
       sku,
       true,
       undefined,
@@ -67,14 +61,6 @@ export const requestSubscribe = async (sku: string, userID: string) => {
       undefined,
       userID,
     );
-
-    /*  if (transaction?.purchaseStateAndroid === 1) {
-      response.data = { ...transaction };
-      response.successfull = true;
-      response.message = 'Compra realizada com sucesso';
-    }
-
-    return response;*/
   } catch (err) {
     console.log('errRequest', err);
     /*  response.error = true;
@@ -105,5 +91,23 @@ export const requestSubscribe = async (sku: string, userID: string) => {
 export const restoreSubscription = async () => {
   const purchases = await getAvailablePurchases();
 
+  console.log(purchases);
+
   return purchases;
+};
+
+export const validHasSubscription = async (plan?: IPlan) => {
+  if (!plan) return false;
+
+  const { transactionDate, renewDate } = plan;
+
+  const today = new Date().getTime();
+  const purchaseDay = new Date(Number(transactionDate));
+  const refundExpire = purchaseDay.setDate(purchaseDay.getDate() + 3);
+
+  if (today < refundExpire) return false;
+
+  if (today > Number(renewDate)) return false;
+
+  return true;
 };

@@ -12,7 +12,7 @@ import CopyPremmium from '../../../components/CopyPremmium';
 import CardPlan from '../../../components/CardPlan';
 import Button from '../../../components/Button';
 
-import { ContainerButtons } from '../styles';
+import { ContainerButtons, SubTitle } from '../styles';
 import { GET_USER_BY_TOKEN, IPlanName, IUser } from '../index';
 
 import TextError from '../../../components/TextError';
@@ -33,7 +33,7 @@ import {
 } from 'react-native-iap';
 import { gql, useMutation } from '@apollo/client';
 
-interface IUpdateRole {
+export interface IUpdateRole {
   updateRole: IUser;
 }
 
@@ -54,7 +54,6 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
   const { userID, handleSignOut } = useAuth();
   const { gradient, color } = useContext(ThemeContext);
   const [loading, setLoading] = useState(true);
-  const [loadingPurchase, setLoadingPurchase] = useState(false);
   const [skuID, setSkuID] = useState<Subscription>({} as Subscription);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined,
@@ -124,7 +123,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
         if (receipt) {
           try {
             const period =
-              skuID?.subscriptionPeriodAndroid === 'P1M' ? 30 : 365;
+              skuID?.subscriptionPeriodAndroid === 'P1M' ? 34 : 369;
 
             const initalDate = new Date(purchase?.transactionDate);
             const renewSubscription = initalDate.setDate(
@@ -144,9 +143,9 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
             await finishTransaction(purchase, false);
 
-            await handleChangePlan(transactionData);
+            setLoading(false);
 
-            setLoadingPurchase(false);
+            await handleChangePlan(transactionData);
           } catch (err) {
             console.warn('ackErr', err);
             setLoading(false);
@@ -158,6 +157,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     purchaseErrorSubscription = purchaseErrorListener(
       (error: PurchaseError) => {
         console.warn('purchaseErrorListener', error);
+        setLoading(false);
       },
     );
 
@@ -165,12 +165,12 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       purchaseUpdateSubscription.remove();
       purchaseErrorSubscription.remove();
       endConnection();
-      console.log('close connection');
+      console.log('closed connection');
     };
   }, [skuID]);
 
   const handlePurchaseSubscription = useCallback(async () => {
-    setLoadingPurchase(true);
+    setLoading(true);
 
     !!skuID && !!userID && (await requestSubscribe(skuID.productId, userID));
   }, [skuID, userID]);
@@ -222,12 +222,16 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
         <Button
           colors={gradient.darkToLightBlue}
           onPress={handlePurchaseSubscription}
-          loading={mutationLoading || loading || loadingPurchase}
-          disabled={mutationLoading || loading || loadingPurchase}
+          loading={mutationLoading || loading}
+          disabled={mutationLoading || loading}
         >
           Assine já !
         </Button>
       </ContainerButtons>
+
+      <SubTitle>
+        *Precisa de ajuda? - Acesse nossa pagina de ajuda no menu.
+      </SubTitle>
     </>
   );
 };
