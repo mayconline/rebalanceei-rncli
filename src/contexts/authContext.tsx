@@ -7,9 +7,8 @@ import React, {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNetInfo } from '@react-native-community/netinfo';
-import { useApolloClient, useMutation } from '@apollo/client';
-import { Alert } from 'react-native';
-import { IUpdateRole, UPDATE_ROLE } from '../modals/PlanModal/components/Free';
+import { useApolloClient } from '@apollo/client';
+
 import {
   restoreSubscription,
   setNewSubscriptionsDate,
@@ -24,7 +23,9 @@ interface ISignIn {
   plan?: IPlan;
 }
 
-export interface IPlan {
+type IStatePlan = 'ACTIVE' | 'PENDING' | 'CANCEL' | null;
+
+interface IPlan {
   transactionDate?: number;
   renewDate?: number;
   description?: string;
@@ -44,6 +45,7 @@ interface IAuthContext {
   walletName: string | null;
   userID: string | null;
   plan: IPlan | null;
+  statePlan: IStatePlan;
   handleSetWallet(walletID: string, walletName: string): void;
   handleSignIn(user: ISignIn): Promise<void>;
   handleSignOut(): Promise<void>;
@@ -59,11 +61,9 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [userID, setUserID] = useState<string | null>(null);
   const [plan, setPlan] = useState<IPlan | null>(null);
-  const client = useApolloClient();
+  const [statePlan, setStatePlan] = useState<IStatePlan>(null);
 
-  const [updateRole, { error: mutationError }] = useMutation<IUpdateRole>(
-    UPDATE_ROLE,
-  );
+  const client = useApolloClient();
 
   const { isConnected } = useNetInfo();
 
@@ -147,7 +147,9 @@ export const AuthProvider: React.FC = ({ children }) => {
       '@authPass',
       '@authRole',
       '@authPlan',
+      '@authID',
     ]);
+    setStatePlan(null);
     setShowBanner(false);
     setWallet(null);
     setWalletName(null);
@@ -168,54 +170,13 @@ export const AuthProvider: React.FC = ({ children }) => {
     [],
   );
 
-  const handleCancelPlan = useCallback(async () => {
-    try {
-      await updateRole({
-        variables: {
-          role: 'USER',
-        },
-      });
-
-      Alert.alert(
-        'Plano Premium Cancelado',
-        `Não conseguimos identificar o pagamento do seu plano, caso seja um engano, por favor entre em contato conosco através do email:
-        rebalanceeiapp@gmail.com`,
-        [
-          {
-            text: 'Continuar',
-            style: 'destructive',
-            onPress: async () => {
-              handleSignOut();
-            },
-          },
-        ],
-        { cancelable: false },
-      );
-    } catch (err) {
-      console.error(mutationError?.message + err);
-    }
-  }, []);
-
-  const handleUpdatePlan = useCallback(async (plan: IPlan) => {
-    updateRole({
-      variables: {
-        role: 'PREMIUM',
-        ...plan,
-      },
-    })
-      .then(async () => {
-        setPlan(plan);
-        await setLocalStorage('@authPlan', JSON.stringify(plan));
-      })
-      .catch(err => console.error(mutationError?.message + err));
-  }, []);
-
   const handleVerificationPlan = useCallback(async (plan: IPlan) => {
     const hasSubscription = await validHasSubscription(plan);
 
     if (hasSubscription) {
       setPlan(plan);
       await setLocalStorage('@authPlan', JSON.stringify(plan));
+      setStatePlan('ACTIVE');
     } else {
       const purchases = await restoreSubscription();
 
@@ -238,9 +199,14 @@ export const AuthProvider: React.FC = ({ children }) => {
           transactionId: purchases[0]?.transactionId,
         };
 
-        await handleUpdatePlan(transactionData);
+        setStatePlan('PENDING');
+
+        setPlan(transactionData);
+        await setLocalStorage('@authPlan', JSON.stringify(transactionData));
       } else {
-        await handleCancelPlan();
+        setStatePlan('CANCEL');
+        setPlan(plan);
+        await setLocalStorage('@authPlan', JSON.stringify(plan));
       }
     }
   }, []);
@@ -259,6 +225,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         isConnected,
         userID,
         plan,
+        statePlan,
       }}
     >
       {children}

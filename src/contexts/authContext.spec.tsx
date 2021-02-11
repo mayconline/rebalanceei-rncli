@@ -34,6 +34,7 @@ describe('Auth Context', () => {
     expect(multiSetSpy).toHaveBeenCalledWith([
       ['@authRole', 'role_logged'],
       ['@authToken', 'token_logged'],
+      ['@authID', 'id_logged'],
     ]);
 
     expect(result.current.signed).toBeTruthy();
@@ -52,6 +53,8 @@ describe('Auth Context', () => {
       '@authToken',
       '@authWallet',
       '@authWalletName',
+      '@authID',
+      '@authPlan',
     ]);
   });
 
@@ -73,6 +76,8 @@ describe('Auth Context', () => {
       '@authEmail',
       '@authPass',
       '@authRole',
+      '@authPlan',
+      '@authID',
     ]);
 
     expect(result.current.signed).toBeFalsy();

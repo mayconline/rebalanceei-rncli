@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Modal } from 'react-native';
+import { Alert, Modal } from 'react-native';
 import { useAuth } from '../../contexts/authContext';
-import { useLazyQuery, gql } from '@apollo/client';
+import { useLazyQuery, gql, useMutation } from '@apollo/client';
 
 import { Wrapper } from './styles';
 
@@ -17,6 +17,10 @@ import TextError from '../../components/TextError';
 import WalletModal from '../../modals/WalletModal';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
+import {
+  IUpdateRole,
+  UPDATE_ROLE,
+} from '../../modals/PlanModal/components/Free';
 
 const initialFilter = [
   {
@@ -42,12 +46,54 @@ interface IDataTickets {
 
 const Ticket = () => {
   const navigation = useNavigation();
-  const { wallet } = useAuth();
+  const { wallet, plan, statePlan, handleSignOut } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('grade');
   const [openModal, setOpenModal] = useState(!wallet ? true : false);
 
   const [ticketData, setTicketData] = useState<ITickets[]>([] as ITickets[]);
+
+  const [updateRole, { error: mutationError }] = useMutation<IUpdateRole>(
+    UPDATE_ROLE,
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!!plan && !!statePlan && statePlan !== 'ACTIVE') {
+        try {
+          updateRole({
+            variables: {
+              role: statePlan === 'CANCEL' ? 'USER' : 'PREMIUM',
+              ...plan,
+              transactionDate:
+                statePlan === 'CANCEL' ? 0 : plan?.transactionDate,
+              renewDate: statePlan === 'CANCEL' ? 0 : plan?.renewDate,
+            },
+          }).then(() => {
+            if (statePlan === 'CANCEL') {
+              Alert.alert(
+                'Plano Premium Cancelado',
+                `Não conseguimos identificar o pagamento do seu plano, caso seja um engano, por favor entre em contato conosco através do email:
+      rebalanceeiapp@gmail.com`,
+                [
+                  {
+                    text: 'Continuar',
+                    style: 'destructive',
+                    onPress: async () => {
+                      handleSignOut();
+                    },
+                  },
+                ],
+                { cancelable: false },
+              );
+            }
+          });
+        } catch (err) {
+          console.error(mutationError?.message + err);
+        }
+      }
+    }, [plan, statePlan]),
+  );
 
   const [
     getTicketsByWallet,
