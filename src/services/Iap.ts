@@ -32,7 +32,6 @@ export const conectionStore = async () => {
   try {
     await initConnection();
     await flushFailedPurchasesCachedAsPendingAndroid();
-    console.log('open connection');
   } catch (err) {
     console.error('not connection to store' + err);
   }
@@ -64,7 +63,7 @@ export const requestSubscribe = async (sku: string, userID: string) => {
       userID,
     );
   } catch (err) {
-    console.log('errRequest', err);
+    console.error('errRequest', err);
     /*  response.error = true;
 
     switch (err) {
@@ -102,10 +101,13 @@ export const validHasSubscription = async (plan?: IPlan) => {
   const { transactionDate, renewDate } = plan;
 
   const today = new Date().getTime();
-  const purchaseDay = new Date(Number(transactionDate));
-  const refundExpire = purchaseDay.setDate(purchaseDay.getDate() + 3);
 
-  if (today < refundExpire) return false;
+  const purchaseDay = new Date(Number(transactionDate));
+  const beforeExpire = purchaseDay.setDate(purchaseDay.getDate() + 1);
+  const afterExpire = purchaseDay.setDate(purchaseDay.getDate() + 2);
+  const refundExpire = today > beforeExpire && today < afterExpire;
+
+  if (refundExpire) return false;
 
   if (today > Number(renewDate)) return false;
 
@@ -120,20 +122,35 @@ export const setNewSubscriptionsDate = async (
   const today = new Date().getTime();
 
   if (today > Number(renewDate)) {
-    /*   const purchaseDay = new Date(Number(transactionDate));
-    const period = subscriptionPeriodAndroid === 'P1M' ? 34 : 369;
-
-    const newTransactionDate = purchaseDay.setDate(
-      purchaseDay.getDate() + period,
+    const {
+      newTransactionDate,
+      newRenewDate,
+    } = await calculateRenovateSubscriptionDate(
+      transactionDate,
+      subscriptionPeriodAndroid,
+      true,
     );
-    const newInitalDate = new Date(newTransactionDate);
 
-    const newRenewDate = newInitalDate.setDate(
-      newInitalDate.getDate() + period,
-    );*/
+    return {
+      newTransactionDate,
+      newRenewDate,
+    };
+  } else {
+    return {
+      newTransactionDate: transactionDate,
+      newRenewDate: renewDate,
+    };
+  }
+};
 
-    //if test 5min M or 30min Y
-    const purchaseDay = new Date(Number(transactionDate));
+const calculateRenovateSubscriptionDate = async (
+  transactionDate: number,
+  subscriptionPeriodAndroid: string,
+  isTest: boolean,
+) => {
+  const purchaseDay = new Date(Number(transactionDate));
+
+  if (isTest) {
     const period = subscriptionPeriodAndroid === 'P1M' ? 5 : 30;
 
     const newTransactionDate = purchaseDay.setMinutes(
@@ -145,16 +162,54 @@ export const setNewSubscriptionsDate = async (
     const newRenewDate = newInitalDate.setMinutes(
       newInitalDate.getMinutes() + period,
     );
-    //
 
     return {
       newTransactionDate,
       newRenewDate,
     };
   } else {
+    const period = subscriptionPeriodAndroid === 'P1M' ? 34 : 369;
+
+    const newTransactionDate = purchaseDay.setDate(
+      purchaseDay.getDate() + period,
+    );
+    const newInitalDate = new Date(newTransactionDate);
+
+    const newRenewDate = newInitalDate.setDate(
+      newInitalDate.getDate() + period,
+    );
+
     return {
-      newTransactionDate: transactionDate,
-      newRenewDate: renewDate,
+      newTransactionDate,
+      newRenewDate,
+    };
+  }
+};
+
+export const calculateInitialRenewSubscription = async (
+  transactionDate: number,
+  subscriptionPeriodAndroid: string,
+  isTest: boolean,
+) => {
+  const initalDate = new Date(transactionDate);
+
+  if (isTest) {
+    const period = subscriptionPeriodAndroid === 'P1M' ? 5 : 30;
+
+    const renewSubscription = initalDate.setMinutes(
+      initalDate.getMinutes() + period,
+    );
+
+    return {
+      renewSubscription,
+    };
+  } else {
+    const period = subscriptionPeriodAndroid === 'P1M' ? 34 : 369;
+
+    const renewSubscription = initalDate.setDate(initalDate.getDate() + period);
+
+    return {
+      renewSubscription,
     };
   }
 };

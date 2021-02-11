@@ -9,13 +9,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { useApolloClient, useMutation } from '@apollo/client';
 import { Alert } from 'react-native';
-import { GET_USER_BY_TOKEN } from '../modals/PlanModal';
 import { IUpdateRole, UPDATE_ROLE } from '../modals/PlanModal/components/Free';
 import {
   restoreSubscription,
   setNewSubscriptionsDate,
   validHasSubscription,
 } from '../services/Iap';
+import { setLocalStorage } from '../utils/localStorage';
 
 interface ISignIn {
   _id: string;
@@ -61,10 +61,9 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [plan, setPlan] = useState<IPlan | null>(null);
   const client = useApolloClient();
 
-  const [
-    updateRole,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation<IUpdateRole>(UPDATE_ROLE);
+  const [updateRole, { error: mutationError }] = useMutation<IUpdateRole>(
+    UPDATE_ROLE,
+  );
 
   const { isConnected } = useNetInfo();
 
@@ -123,7 +122,6 @@ export const AuthProvider: React.FC = ({ children }) => {
         ['@authRole', role],
         ['@authToken', token],
         ['@authID', _id],
-        ['@authPlan', JSON.stringify(plan)],
       ]);
 
       if (role === 'USER') setShowBanner(true);
@@ -176,11 +174,6 @@ export const AuthProvider: React.FC = ({ children }) => {
         variables: {
           role: 'USER',
         },
-        refetchQueries: [
-          {
-            query: GET_USER_BY_TOKEN,
-          },
-        ],
       });
 
       Alert.alert(
@@ -210,11 +203,10 @@ export const AuthProvider: React.FC = ({ children }) => {
         ...plan,
       },
     })
-      .then(
-        response =>
-          response?.data?.updateRole?.plan &&
-          setPlan(response?.data?.updateRole?.plan),
-      )
+      .then(async () => {
+        setPlan(plan);
+        await setLocalStorage('@authPlan', JSON.stringify(plan));
+      })
       .catch(err => console.error(mutationError?.message + err));
   }, []);
 
@@ -223,6 +215,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     if (hasSubscription) {
       setPlan(plan);
+      await setLocalStorage('@authPlan', JSON.stringify(plan));
     } else {
       const purchases = await restoreSubscription();
 

@@ -18,6 +18,7 @@ import { GET_USER_BY_TOKEN, IPlanName, IUser } from '../index';
 import TextError from '../../../components/TextError';
 
 import {
+  calculateInitialRenewSubscription,
   conectionStore,
   getListSubscriptions,
   requestSubscribe,
@@ -122,24 +123,13 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
         if (receipt) {
           try {
-            /*  const period =
-              skuID?.subscriptionPeriodAndroid === 'P1M' ? 34 : 369;
-
-            const initalDate = new Date(purchase?.transactionDate);
-            
-            const renewSubscription = initalDate.setDate(
-              initalDate.getDate() + period,
-            );*/
-
-            //if test 5min M or 30min Y
-            const period = skuID?.subscriptionPeriodAndroid === 'P1M' ? 5 : 30;
-
-            const initalDate = new Date(purchase?.transactionDate);
-
-            const renewSubscription = initalDate.setMinutes(
-              initalDate.getMinutes() + period,
+            const {
+              renewSubscription,
+            } = await calculateInitialRenewSubscription(
+              purchase?.transactionDate,
+              String(skuID?.subscriptionPeriodAndroid),
+              true,
             );
-            //
 
             const transactionData = {
               transactionDate: purchase?.transactionDate,
@@ -176,7 +166,6 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       purchaseUpdateSubscription.remove();
       purchaseErrorSubscription.remove();
       endConnection();
-      console.log('closed connection');
     };
   }, [skuID]);
 
