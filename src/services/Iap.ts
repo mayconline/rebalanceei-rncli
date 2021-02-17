@@ -4,29 +4,9 @@ import {
   requestSubscription,
   flushFailedPurchasesCachedAsPendingAndroid,
   getAvailablePurchases,
-  getPurchaseHistory,
-  validateReceiptAndroid,
 } from 'react-native-iap';
 
 import { IPlan } from '../contexts/authContext';
-
-interface IDataSubscription {
-  autoRenewingAndroid?: boolean;
-  isAcknowledgedAndroid?: boolean;
-  obfuscatedAccountIdAndroid?: string;
-  productId?: string;
-  purchaseStateAndroid?: number;
-  purchaseToken?: string;
-  transactionDate?: number;
-  transactionId?: string;
-}
-
-export interface IRequestSubscription {
-  data?: IDataSubscription;
-  error: boolean;
-  successfull: boolean;
-  message?: string;
-}
 
 export const conectionStore = async () => {
   try {
@@ -46,13 +26,6 @@ export const getListSubscriptions = async (listSku: string[]) => {
 };
 
 export const requestSubscribe = async (sku: string, userID: string) => {
-  /*  let response: IRequestSubscription = {
-    data: undefined,
-    error: false,
-    successfull: false,
-    message: undefined,
-  };*/
-
   try {
     return await requestSubscription(
       sku,
@@ -63,29 +36,7 @@ export const requestSubscribe = async (sku: string, userID: string) => {
       userID,
     );
   } catch (err) {
-    console.error('errRequest', err);
-    /*  response.error = true;
-
-    switch (err) {
-      case 'Payment is Cancelled.':
-        response.message = 'Compra não realizada.';
-      case 'You already own this item.':
-        response.message = 'Produto já foi assinado.';
-      case 'deferred_payment':
-        response.message = 'Compra aguardando aprovação.';
-      case 'receipt_validation_failed':
-        response.message = 'Erro ao validar a transação.';
-      case 'receipt_invalid':
-        response.message = 'Não foi possível processar sua compra.';
-      case 'receipt_request_failed':
-        response.message = 'Não conseguimos validar sua transação.';
-      case 'cross_platform_conflict':
-        response.message = 'Assinatura ativa em outro dispositivo';
-      default:
-        response.message = 'Não foi possível concluir a compra';
-    }
-
-    return response;*/
+    console.error('errRequest', err.message);
   }
 };
 

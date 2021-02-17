@@ -25,7 +25,7 @@ interface ISignIn {
 
 type IStatePlan = 'ACTIVE' | 'PENDING' | 'CANCEL' | null;
 
-interface IPlan {
+export interface IPlan {
   transactionDate?: number;
   renewDate?: number;
   description?: string;

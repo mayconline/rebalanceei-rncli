@@ -34,6 +34,10 @@ import {
 } from 'react-native-iap';
 import { gql, useMutation } from '@apollo/client';
 
+export const listSku = Platform.select({
+  android: ['rebalanceei_premium_mensal', 'rebalanceei_premium_anual'],
+});
+
 export interface IUpdateRole {
   updateRole: IUser;
 }
@@ -43,10 +47,6 @@ interface IFree {
   planName: IPlanName;
   handleSelectPlan(plan: IPlanName): void;
 }
-
-export const listSku = Platform.select({
-  android: ['rebalanceei_premium_mensal', 'rebalanceei_premium_anual'],
-});
 
 let purchaseUpdateSubscription: EmitterSubscription;
 let purchaseErrorSubscription: EmitterSubscription;
@@ -157,14 +157,14 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
     purchaseErrorSubscription = purchaseErrorListener(
       (error: PurchaseError) => {
-        console.warn('purchaseErrorListener', error);
+        setErrorMessage(error.message);
         setLoading(false);
       },
     );
 
     return () => {
-      purchaseUpdateSubscription.remove();
-      purchaseErrorSubscription.remove();
+      purchaseUpdateSubscription?.remove();
+      purchaseErrorSubscription?.remove();
       endConnection();
     };
   }, [skuID]);
@@ -178,6 +178,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
   const handleChangeOptionPlan = useCallback(async (sku, duration) => {
     !!sku && setSkuID(sku);
     !!duration && handleSelectPlan(duration);
+    setErrorMessage(undefined);
   }, []);
 
   return loading ? (

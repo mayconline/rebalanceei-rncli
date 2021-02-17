@@ -164,4 +164,8 @@ export const formatErrors = (error: string) =>
     'Response not successful: Received status code 400':
       'Nenhuma carteira selecionada',
     'Network request failed': 'Falha de conexão com o servidor',
+    'Payment is Cancelled.': 'Pagamento não realizado',
+    'An unknown or unexpected error has occured. Please try again later.':
+      'Pagamento recusado',
+    'You already own this item.': 'Sua conta google já possui esta assinatura',
   }[error]);
