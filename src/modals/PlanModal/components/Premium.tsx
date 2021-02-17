@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Linking } from 'react-native';
+import { ActivityIndicator, Alert } from 'react-native';
 import { useAuth } from '../../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
 
@@ -8,6 +8,7 @@ import CardPlan from '../../../components/CardPlan';
 import Button from '../../../components/Button';
 
 import { ContainerButtons, SubTitle } from '../styles';
+import { getLinkCancelPlan } from '../../../utils/CancelPlan';
 
 const Premium = () => {
   const { gradient, color } = useContext(ThemeContext);
@@ -19,8 +20,6 @@ const Premium = () => {
   }, [plan]);
 
   const handleCancelSubscription = useCallback(() => {
-    const link = `https://play.google.com/store/account/subscriptions?package=${plan?.packageName}&sku=${plan?.productId}`;
-
     Alert.alert(
       'Deseja mesmo cancelar?',
       `Seu plano continuará ativo até o fim do ciclo contratado:
@@ -36,7 +35,11 @@ const Premium = () => {
         {
           text: 'Continuar',
           style: 'destructive',
-          onPress: () => Linking.openURL(link),
+          onPress: () =>
+            getLinkCancelPlan(
+              String(plan?.packageName),
+              String(plan?.productId),
+            ),
         },
       ],
       { cancelable: false },
