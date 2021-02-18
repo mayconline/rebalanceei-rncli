@@ -123,6 +123,8 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
         if (receipt) {
           try {
+            setErrorMessage(undefined);
+
             const {
               renewSubscription,
             } = await calculateInitialRenewSubscription(
@@ -149,6 +151,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
             await handleChangePlan(transactionData);
           } catch (err) {
             console.warn('ackErr', err);
+            setErrorMessage(err);
             setLoading(false);
           }
         }
