@@ -130,7 +130,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
             } = await calculateInitialRenewSubscription(
               purchase?.transactionDate,
               String(skuID?.subscriptionPeriodAndroid),
-              true,
+              false,
             );
 
             const transactionData = {

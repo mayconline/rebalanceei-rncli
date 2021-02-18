@@ -79,7 +79,7 @@ export const setNewSubscriptionsDate = async (
     } = await calculateRenovateSubscriptionDate(
       transactionDate,
       subscriptionPeriodAndroid,
-      true,
+      false,
     );
 
     return {
