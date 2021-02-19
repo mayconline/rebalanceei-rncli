@@ -33,6 +33,7 @@ const ListItem = ({
 
   return (
     <>
+      {showAdBanner && <AdBanner />}
       <Content>
         <Card colors={gradient.lightToGray} variation={item.variationPercent}>
           <CardContent>
@@ -93,7 +94,6 @@ const ListItem = ({
           </AmountContainer>
         </Card>
       </Content>
-      {showAdBanner && <AdBanner />}
     </>
   );
 };

@@ -39,6 +39,7 @@ const ListItem = ({
 
   return (
     <>
+      {showAdBanner && <AdBanner />}
       <Content>
         <Card colors={gradient.lightToGray} status={item.status}>
           <CardContent>
@@ -106,7 +107,6 @@ const ListItem = ({
           </AmountContainer>
         </Card>
       </Content>
-      {showAdBanner && <AdBanner />}
     </>
   );
 };

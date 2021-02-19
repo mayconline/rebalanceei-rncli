@@ -82,7 +82,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
           loading={loading}
           disabled={loading}
         >
-          Voltar
+          Concluir
         </Button>
       </Wrapper>
 

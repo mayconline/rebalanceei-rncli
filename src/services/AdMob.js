@@ -4,7 +4,7 @@ import { AdMobInterstitial } from 'react-native-admob';
 
 export const setAdMobId = async () => {
   await AdMobInterstitial.setAdUnitID('ca-app-pub-7986828971010623/2507635264');
-  await AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]);
+  // await AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]);
 };
 
 export const showAdMob = async () => {

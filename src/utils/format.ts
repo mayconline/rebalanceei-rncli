@@ -136,9 +136,7 @@ export const getLengthTicketPerClass = (
 };
 
 export const getPositionAdBanner = (index: number, length: number) => {
-  return (index > 0 && index % 5 === 0) || (length <= 5 && index === length - 1)
-    ? true
-    : false;
+  return index % 6 === 0 || index === 0;
 };
 
 export const formatErrors = (error: string) =>

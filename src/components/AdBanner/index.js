@@ -6,14 +6,20 @@ import { useAuth } from '../../contexts/authContext';
 const AdBanner = () => {
   const { showBanner } = useAuth();
 
-  //ca-app-pub-3940256099942544/6300978111" //test ID
+  //adUnitID="ca-app-pub-3940256099942544/6300978111" //test ID
+  //testDevices={[AdMobBanner.simulatorId]}
 
+  //adUnitID="ca-app-pub-7986828971010623/8908202716" prod
   return showBanner ? (
-    <SafeAreaView style={{ alignSelf: 'center', marginVertical: 8 }}>
+    <SafeAreaView
+      style={{
+        alignSelf: 'center',
+        marginVertical: 8,
+      }}
+    >
       <AdMobBanner
         adSize="banner"
         adUnitID="ca-app-pub-7986828971010623/8908202716"
-        testDevices={[AdMobBanner.simulatorId]}
         onAdFailedToLoad={error => console.error(error)}
       />
     </SafeAreaView>

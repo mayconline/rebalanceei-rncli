@@ -32,6 +32,7 @@ const ListItem = ({
 
   return (
     <>
+      {showAdBanner && <AdBanner />}
       <Content>
         <TouchableOpacity
           accessibilityRole="button"
@@ -83,7 +84,6 @@ const ListItem = ({
           </Card>
         </TouchableOpacity>
       </Content>
-      {showAdBanner && <AdBanner />}
     </>
   );
 };
