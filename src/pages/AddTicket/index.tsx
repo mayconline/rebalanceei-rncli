@@ -91,6 +91,8 @@ const AddTicket = () => {
   ] = useMutation<IcreateTicket>(CREATE_TICKET);
 
   const handleSubmit = useCallback(async () => {
+    if (hasInvalidWallet) return navigation.navigate('Ticket');
+
     if (
       !ticketForm.symbol ||
       !ticketForm.name ||
@@ -130,7 +132,7 @@ const AddTicket = () => {
     } catch (err) {
       console.error(mutationError?.message + err);
     }
-  }, [ticketForm]);
+  }, [ticketForm, hasInvalidWallet]);
 
   const handleSetGrade = useCallback((grade: string) => {
     setTicketForm(ticketForm => ({ ...ticketForm, grade }));
@@ -246,7 +248,7 @@ const AddTicket = () => {
                 colors={gradient.darkToLightBlue}
                 onPress={handleSubmit}
                 loading={mutationLoading}
-                disabled={mutationLoading || hasInvalidWallet}
+                disabled={mutationLoading}
               >
                 {hasInvalidWallet ? 'Carteira não encontrada' : 'Adicionar'}
               </Button>
