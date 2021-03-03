@@ -41,7 +41,7 @@ const Empty = ({ openModal }: IEmpty) => {
           <Subtitle accessibilityRole="header">
             {hasInvalidWallet
               ? 'Não conseguimos carregar sua carteira.'
-              : ' Adicione um ativo dando uma nota para ele.'}
+              : 'Adicione um ativo dando uma nota para ele.'}
           </Subtitle>
           <Subtitle accessibilityRole="text">
             {hasInvalidWallet

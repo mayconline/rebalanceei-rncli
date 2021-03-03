@@ -6,6 +6,7 @@ import { GraphQLError } from 'graphql';
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     wallet: '5fa1d752a8c5892a48c69b35',
+    handleVerificationInvalidWallet: jest.fn(),
   }),
 }));
 
