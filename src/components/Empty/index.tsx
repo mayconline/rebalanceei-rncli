@@ -11,6 +11,8 @@ import {
 } from './styles';
 
 import ImageEmpty from '../../../assets/svg/ImageEmpty';
+import ImageEmptyWallet from '../../../assets/svg/ImageEmptyWallet';
+
 import Button from '../../components/Button';
 import { useAuth } from '../../contexts/authContext';
 
@@ -35,7 +37,7 @@ const Empty = ({ openModal }: IEmpty) => {
     <Wrapper>
       <Main>
         <Image>
-          <ImageEmpty />
+          {hasInvalidWallet ? <ImageEmptyWallet /> : <ImageEmpty />}
         </Image>
         <ContainerTitle>
           <Subtitle accessibilityRole="header">
