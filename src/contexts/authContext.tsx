@@ -43,12 +43,14 @@ interface IAuthContext {
   showBanner: boolean;
   wallet: string | null;
   walletName: string | null;
+  hasInvalidWallet: boolean;
   userID: string | null;
   plan: IPlan | null;
   statePlan: IStatePlan;
-  handleSetWallet(walletID: string, walletName: string): void;
+  handleSetWallet(walletID: string | null, walletName: string | null): void;
   handleSignIn(user: ISignIn): Promise<void>;
   handleSignOut(): Promise<void>;
+  handleVerificationInvalidWallet(isInvalid: boolean): void;
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
@@ -57,6 +59,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [signed, setSigned] = useState<boolean>(false);
   const [wallet, setWallet] = useState<string | null>(null);
   const [walletName, setWalletName] = useState<string | null>(null);
+  const [hasInvalidWallet, sethasInvalidWallet] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userID, setUserID] = useState<string | null>(null);
@@ -159,16 +162,26 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const handleSetWallet = useCallback(
-    async (walletID: string, walletName: string) => {
-      await AsyncStorage.multiSet([
-        ['@authWallet', walletID],
-        ['@authWalletName', walletName],
-      ]);
-      setWallet(walletID);
-      setWalletName(walletName);
+    async (walletID: string | null, walletName: string | null) => {
+      if (walletID && walletName) {
+        await AsyncStorage.multiSet([
+          ['@authWallet', walletID],
+          ['@authWalletName', walletName],
+        ]);
+        setWallet(walletID);
+        setWalletName(walletName);
+      } else {
+        await AsyncStorage.multiRemove(['@authWallet', '@authWalletName']);
+        setWallet(null);
+        setWalletName(null);
+      }
     },
     [],
   );
+
+  const handleVerificationInvalidWallet = useCallback(isInvalid => {
+    sethasInvalidWallet(isInvalid);
+  }, []);
 
   const handleVerificationPlan = useCallback(async (plan: IPlan) => {
     const hasSubscription = await validHasSubscription(plan);
@@ -217,8 +230,10 @@ export const AuthProvider: React.FC = ({ children }) => {
         signed,
         wallet,
         walletName,
+        hasInvalidWallet,
         showBanner,
         handleSetWallet,
+        handleVerificationInvalidWallet,
         handleSignIn,
         handleSignOut,
         loading,

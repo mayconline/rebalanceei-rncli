@@ -9,6 +9,7 @@ import { IWalletData, GET_WALLET_BY_USER } from '../../modals/WalletModal';
 import InputForm from '../InputForm';
 import TextError from '../TextError';
 import Button from '../Button';
+import { useAuth } from '../../contexts/authContext';
 
 interface IEditWallet {
   walletData?: IWalletData;
@@ -25,6 +26,7 @@ const EditWallet = ({
   handleResetEditWallet,
   onClose,
 }: IEditWallet) => {
+  const { handleSetWallet } = useAuth();
   const { gradient } = useContext(ThemeContext);
   const [wallet, setWallet] = useState<IWalletData>({} as IWalletData);
   const [focus, setFocus] = useState(0);
@@ -94,7 +96,7 @@ const EditWallet = ({
           },
         ],
       });
-
+      handleSetWallet(null, null);
       handleGoBack();
     } catch (err) {
       console.error(mutationDeleteError?.message + err);

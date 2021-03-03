@@ -5,12 +5,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 import { AddButtonProps, Button } from './styles';
 
-const AddButton: React.FC<AddButtonProps> = ({
-  onPress,
-  focused,
-  size,
-  mb,
-}) => {
+const AddButton = ({ onPress, focused, size, mb }: AddButtonProps) => {
   const { color, gradient } = useContext(ThemeContext);
 
   return (

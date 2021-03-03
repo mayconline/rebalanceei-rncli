@@ -1,7 +1,8 @@
 import styled, { css } from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
+import { TouchableOpacityProps } from 'react-native';
 
-export interface AddButtonProps {
+export interface AddButtonProps extends TouchableOpacityProps {
   onPress?(): void;
   focused?: boolean;
   size: number;

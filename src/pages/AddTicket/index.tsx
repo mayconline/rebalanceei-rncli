@@ -49,7 +49,7 @@ interface IcreateTicket {
 }
 
 const AddTicket = () => {
-  const { wallet } = useAuth();
+  const { wallet, hasInvalidWallet } = useAuth();
   const { color, gradient } = useContext(ThemeContext);
 
   const [ticketForm, setTicketForm] = useState<ITicketForm>({} as ITicketForm);
@@ -70,9 +70,10 @@ const AddTicket = () => {
   }, []);
 
   const HandleOpenSuggestionsModal = useCallback(() => {
+    if (hasInvalidWallet) return;
     setFocus(1);
     setHasSuggestions(true);
-  }, []);
+  }, [hasInvalidWallet]);
 
   const handleSelectTicket = useCallback((symbol: string, name: string) => {
     setTicketForm(ticketForm => ({
@@ -245,9 +246,9 @@ const AddTicket = () => {
                 colors={gradient.darkToLightBlue}
                 onPress={handleSubmit}
                 loading={mutationLoading}
-                disabled={mutationLoading}
+                disabled={mutationLoading || hasInvalidWallet}
               >
-                Adicionar
+                {hasInvalidWallet ? 'Carteira não encontrada' : 'Adicionar'}
               </Button>
             </Form>
           </FormContainer>

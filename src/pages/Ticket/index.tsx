@@ -46,7 +46,13 @@ interface IDataTickets {
 
 const Ticket = () => {
   const navigation = useNavigation();
-  const { wallet, plan, statePlan, handleSignOut } = useAuth();
+  const {
+    wallet,
+    plan,
+    statePlan,
+    handleSignOut,
+    handleVerificationInvalidWallet,
+  } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('grade');
   const [openModal, setOpenModal] = useState(!wallet ? true : false);
@@ -121,6 +127,15 @@ const Ticket = () => {
     }, [data, selectedFilter]),
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      const hasInvalidWallet =
+        queryError?.message === 'Wallet Not Found' || !wallet;
+
+      handleVerificationInvalidWallet(hasInvalidWallet);
+    }, [queryError]),
+  );
+
   const handleChangeFilter = useCallback((filterName: string) => {
     setSelectFilter(filterName);
   }, []);
@@ -142,7 +157,7 @@ const Ticket = () => {
           <TextError isTabs={true}>{queryError?.message}</TextError>
         )}
         {!hasTickets ? (
-          <Empty />
+          <Empty openModal={() => setOpenModal(true)} />
         ) : (
           <>
             <SubHeader

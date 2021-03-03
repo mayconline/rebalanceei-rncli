@@ -9,7 +9,7 @@ import { Wrapper, Wallet, Title, Icons, Menu, MenuBar } from './styles';
 import WalletModal from '../../modals/WalletModal';
 import MenuModal from '../../modals/MenuModal';
 
-const Header: React.FC = () => {
+const Header = () => {
   const { walletName } = useAuth();
   const { color, gradient } = useContext(ThemeContext);
 
