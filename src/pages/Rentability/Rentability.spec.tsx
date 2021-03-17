@@ -50,13 +50,13 @@ describe('Rentability Tab', () => {
     await act(async () => {
       const walletCost = findByA11yLabel(/Saldo aplicado na carteira/i);
       expect((await walletCost).props.children).toBe('R$ 16.900,63');
-      expect((await walletCost).props.style[0].color).toBe('#0D1F3C');
+      expect((await walletCost).props.style[0].color).toBe('#485068');
     });
 
     await act(async () => {
       const walletCurrentAmount = findByA11yLabel(/Saldo atual da carteira/i);
       expect((await walletCurrentAmount).props.children).toBe('R$ 18.816,10');
-      expect((await walletCurrentAmount).props.style[0].color).toBe('#0D1F3C');
+      expect((await walletCurrentAmount).props.style[0].color).toBe('#485068');
     });
 
     await act(async () => {
