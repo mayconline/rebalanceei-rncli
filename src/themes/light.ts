@@ -1,4 +1,5 @@
 export default {
+  name: 'LIGHT',
   color: {
     primary: '#2D9B28',
     secondary: '#FFF',

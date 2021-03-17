@@ -5,6 +5,8 @@ import React, {
   useContext,
   useCallback,
 } from 'react';
+import { StatusBar, useColorScheme } from 'react-native';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { useApolloClient } from '@apollo/client';
@@ -15,6 +17,8 @@ import {
   validHasSubscription,
 } from '../services/Iap';
 import { setLocalStorage } from '../utils/localStorage';
+import themes, { themeMode, Theme } from '../themes';
+import { ThemeProvider } from 'styled-components/native';
 
 interface ISignIn {
   _id: string;
@@ -51,11 +55,18 @@ interface IAuthContext {
   handleSignIn(user: ISignIn): Promise<void>;
   handleSignOut(): Promise<void>;
   handleVerificationInvalidWallet(isInvalid: boolean): void;
+  setSelectTheme(selectedTheme: 'LIGHT' | 'DARK'): void;
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 export const AuthProvider: React.FC = ({ children }) => {
+  const client = useApolloClient();
+  const { isConnected } = useNetInfo();
+  const deviceTheme = useColorScheme() as themeMode;
+
+  const defaultTheme: Theme = themes[deviceTheme] ?? themes.light;
+
   const [signed, setSigned] = useState<boolean>(false);
   const [wallet, setWallet] = useState<string | null>(null);
   const [walletName, setWalletName] = useState<string | null>(null);
@@ -65,10 +76,18 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [userID, setUserID] = useState<string | null>(null);
   const [plan, setPlan] = useState<IPlan | null>(null);
   const [statePlan, setStatePlan] = useState<IStatePlan>(null);
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
 
-  const client = useApolloClient();
-
-  const { isConnected } = useNetInfo();
+  const setSelectTheme = useCallback(
+    async (selectedTheme: 'LIGHT' | 'DARK') => {
+      if (selectedTheme === 'DARK') {
+        setTheme(themes.dark);
+      } else {
+        setTheme(themes.light);
+      }
+    },
+    [],
+  );
 
   const loadStorageData = useCallback(async () => {
     const [
@@ -236,6 +255,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         handleVerificationInvalidWallet,
         handleSignIn,
         handleSignOut,
+        setSelectTheme,
         loading,
         isConnected,
         userID,
@@ -243,7 +263,14 @@ export const AuthProvider: React.FC = ({ children }) => {
         statePlan,
       }}
     >
-      {children}
+      <ThemeProvider theme={theme}>
+        <StatusBar
+          barStyle={'default'}
+          translucent={true}
+          backgroundColor={theme.color.primary}
+        />
+        {children}
+      </ThemeProvider>
     </AuthContext.Provider>
   );
 };

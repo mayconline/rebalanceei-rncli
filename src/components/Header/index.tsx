@@ -3,6 +3,7 @@ import { Modal } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
 import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { Wrapper, Wallet, Title, Icons, Menu, MenuBar } from './styles';
 
@@ -10,8 +11,8 @@ import WalletModal from '../../modals/WalletModal';
 import MenuModal from '../../modals/MenuModal';
 
 const Header = () => {
-  const { walletName } = useAuth();
-  const { color, gradient } = useContext(ThemeContext);
+  const { walletName, setSelectTheme } = useAuth();
+  const { color, gradient, name } = useContext(ThemeContext);
 
   const [openModal, setOpenModal] = useState<'Wallet' | 'Menu' | null>(null);
 
@@ -30,6 +31,17 @@ const Header = () => {
             />
           </Wallet>
           <Icons>
+            <Menu
+              onPress={() =>
+                setSelectTheme(name === 'LIGHT' ? 'DARK' : 'LIGHT')
+              }
+            >
+              <MaterialCommunityIcons
+                name="theme-light-dark"
+                size={28}
+                color={color.activeText}
+              />
+            </Menu>
             <Menu onPress={() => setOpenModal('Menu')}>
               <Entypo
                 name="dots-three-vertical"

@@ -1,4 +1,5 @@
 export default {
+  name: 'DARK',
   color: {
     primary: '#131418',
     secondary: '#1E222B',

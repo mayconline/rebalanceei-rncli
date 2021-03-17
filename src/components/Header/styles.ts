@@ -34,6 +34,7 @@ export const Title = styled.Text`
 export const Icons = styled.View`
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 `;
 
 export const Menu = styled.TouchableOpacity`

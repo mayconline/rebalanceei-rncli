@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Wrapper = styled.SafeAreaView`
   flex: 1;
-  background-color: ${({ theme }) => theme.color.bgHeaderEmpty};
+  background-color: ${({ theme }) => theme.color.primary};
   justify-content: space-around;
 `;
 

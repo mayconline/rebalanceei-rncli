@@ -24,7 +24,6 @@ import {
   MenuIcon,
   MenuTitle,
 } from './styles';
-import { color } from 'react-native-reanimated';
 import { ThemeContext } from 'styled-components/native';
 
 const menuItens = [
