@@ -18,7 +18,7 @@ export const Icon = styled.TouchableOpacity`
 `;
 
 export const Title = styled.Text`
-  color: ${({ theme }) => theme.color.secondary};
+  color: ${({ theme }) => theme.color.activeText};
   font: 600 24px/32px 'TitilliumWeb-SemiBold';
   flex: 1;
   padding: 0 24px;

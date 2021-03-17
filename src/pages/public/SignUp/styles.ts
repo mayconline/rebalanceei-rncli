@@ -23,7 +23,7 @@ export const ContainerTitle = styled.View`
 `;
 
 export const Title = styled.Text`
-  color: ${({ theme }) => theme.color.secondary};
+  color: ${({ theme }) => theme.color.activeText};
   font: 600 24px/32px 'TitilliumWeb-SemiBold';
 `;
 
@@ -68,7 +68,7 @@ export const ContainerTextLink = styled.TouchableOpacity`
 `;
 
 export const TextLink = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
+  color: ${({ theme }) => theme.color.titleNotImport};
   font: 400 16px/24px 'TitilliumWeb-Regular';
   text-align: center;
 `;

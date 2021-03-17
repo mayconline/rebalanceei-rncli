@@ -41,7 +41,7 @@ export const CurrentTitle = styled.Text`
 `;
 
 export const PreviousAmount = styled.Text`
-  color: ${({ theme }) => theme.color.title};
+  color: ${({ theme }) => theme.color.subtitle};
   font: 400 16px/20px 'TitilliumWeb-Regular';
   padding-left: 8px;
   padding-top: 4px;
@@ -52,7 +52,7 @@ export const CurrentAmountContainer = styled.View`
 `;
 
 export const CurrentAmount = styled.Text`
-  color: ${({ theme }) => theme.color.title};
+  color: ${({ theme }) => theme.color.subtitle};
   font: 400 16px/20px 'TitilliumWeb-Regular';
   padding-left: 8px;
   padding-top: 4px;

@@ -74,7 +74,11 @@ const PlanModal = ({ onClose }: PlanModal) => {
             accessibilityLabel="Voltar"
             onPress={onClose}
           >
-            <AntDesign name="closecircleo" size={24} color={color.subtitle} />
+            <AntDesign
+              name="closecircleo"
+              size={24}
+              color={color.shadowBackdrop}
+            />
           </BackIcon>
         </ContainerTitle>
         {currentRole === 'USER' && (

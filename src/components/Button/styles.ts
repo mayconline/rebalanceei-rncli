@@ -21,6 +21,6 @@ export const ContainerButton = styled.TouchableOpacity<any>`
 
 export const TextButton = styled.Text<IButton>`
   color: ${({ theme, outlined }) =>
-    outlined ? theme.color.blue : theme.color.secondary};
+    outlined ? theme.color.blue : theme.color.activeText};
   font: 600 20px/28px 'TitilliumWeb-SemiBold';
 `;

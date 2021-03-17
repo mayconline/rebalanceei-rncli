@@ -22,7 +22,7 @@ export const BackIcon = styled.TouchableOpacity`
 `;
 
 export const Title = styled.Text`
-  color: ${({ theme }) => theme.color.secondary};
+  color: ${({ theme }) => theme.color.activeText};
   font: 600 24px/32px 'TitilliumWeb-SemiBold';
   text-align: center;
   flex: 1;
@@ -37,6 +37,6 @@ export const Container = styled.SafeAreaView`
 `;
 
 export const Question = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
+  color: ${({ theme }) => theme.color.shadowBackdrop};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;

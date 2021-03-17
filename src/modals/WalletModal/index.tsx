@@ -134,7 +134,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
         <AddWalletContainer>
           <BackButtonContainer onPress={onClose}>
             <BackIcon>
-              <AntDesign name="closecircleo" size={16} color={color.subtitle} />
+              <AntDesign name="closecircleo" size={16} color={color.title} />
             </BackIcon>
             <BackButton accessibilityRole="button">Fechar Modal</BackButton>
           </BackButtonContainer>

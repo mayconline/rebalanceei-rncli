@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { Modal } from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -24,6 +24,8 @@ import {
   MenuIcon,
   MenuTitle,
 } from './styles';
+import { color } from 'react-native-reanimated';
+import { ThemeContext } from 'styled-components/native';
 
 const menuItens = [
   {
@@ -63,6 +65,7 @@ interface MenuProps {
 }
 
 const MenuModal = ({ onClose }: MenuProps) => {
+  const { color } = useContext(ThemeContext);
   const { handleSignOut } = useAuth();
   const [openModal, setOpenModal] = useState<'User' | 'Help' | 'Plan' | null>(
     null,
@@ -98,7 +101,11 @@ const MenuModal = ({ onClose }: MenuProps) => {
             accessibilityLabel="Voltar"
             onPress={onClose}
           >
-            <AntDesign name="closecircleo" size={24} color="black" />
+            <AntDesign
+              name="closecircleo"
+              size={24}
+              color={color.shadowBackdrop}
+            />
           </BackIcon>
         </TitleContainer>
 
@@ -116,7 +123,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
                   accessibilityLabel={description}
                 >
                   <MenuIcon>
-                    <Icon name={icon} size={20} color={'#000'} />
+                    <Icon name={icon} size={20} color={color.shadowBackdrop} />
                   </MenuIcon>
                   <MenuTitle>{description}</MenuTitle>
                 </Menu>

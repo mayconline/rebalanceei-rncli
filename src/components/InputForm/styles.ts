@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 interface IFocusProps {
   autoFocus?: boolean;
   width?: number;
+  filled?: number;
 }
 
 export const Container = styled.View<IFocusProps>`
@@ -11,8 +12,8 @@ export const Container = styled.View<IFocusProps>`
   align-items: center;
   justify-content: space-between;
 
-  border-bottom-color: ${({ theme, autoFocus }) =>
-    !autoFocus ? theme.color.divider : theme.color.bgHeaderEmpty};
+  border-bottom-color: ${({ theme, autoFocus, filled }) =>
+    autoFocus || filled ? theme.color.bgHeaderEmpty : theme.color.divider};
   border-bottom-width: 1px;
 `;
 
@@ -21,8 +22,10 @@ export const InputGroup = styled.View`
 `;
 
 export const Label = styled.Text<IFocusProps>`
-  color: ${({ theme, autoFocus }) =>
-    !autoFocus ? theme.color.titleNotImport : theme.color.bgHeaderEmpty};
+  color: ${({ theme, autoFocus, filled }) =>
+    autoFocus || filled
+      ? theme.color.bgHeaderEmpty
+      : theme.color.titleNotImport};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;
 

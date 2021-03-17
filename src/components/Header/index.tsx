@@ -26,7 +26,7 @@ const Header = () => {
             <Entypo
               name="chevron-thin-down"
               size={20}
-              color={color.secondary}
+              color={color.activeText}
             />
           </Wallet>
           <Icons>
@@ -34,7 +34,7 @@ const Header = () => {
               <Entypo
                 name="dots-three-vertical"
                 size={20}
-                color={color.secondary}
+                color={color.activeText}
               />
             </Menu>
           </Icons>

@@ -18,7 +18,7 @@ export const ContainerTitle = styled.View`
 `;
 
 export const SubTitle = styled.Text`
-  color: ${({ theme }) => theme.color.secondary};
+  color: ${({ theme }) => theme.color.activeText};
   font: 400 28px/56px 'TitilliumWeb-Regular';
   opacity: 0.5;
   padding: 4px 20px;

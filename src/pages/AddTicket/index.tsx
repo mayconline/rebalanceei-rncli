@@ -160,7 +160,7 @@ const AddTicket = () => {
             {isEdit ? 'Alterar Ativo' : 'Adicionar Ativo'}
           </Title>
           <BackIcon onPress={handleGoBack}>
-            <AntDesign name="closecircleo" size={24} color={color.secondary} />
+            <AntDesign name="closecircleo" size={24} color={color.activeText} />
           </BackIcon>
         </ContainerTitle>
         <ImageAddTicket />

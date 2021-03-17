@@ -17,7 +17,7 @@ export const ContainerTitle = styled.View`
 `;
 
 export const SubTitle = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
+  color: ${({ theme }) => theme.color.title};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;
 
@@ -39,9 +39,9 @@ export const Filter = styled.TouchableOpacity`
 
 export const TextFilter = styled.Text<IFocused>`
   background-color: ${({ focused, theme }) =>
-    focused ? theme.color.bgFiltersActive : theme.color.secondary};
+    focused ? theme.color.bgFiltersActive : theme.color.bgFilterInactive};
   color: ${({ focused, theme }) =>
-    focused ? theme.color.blue : theme.color.subtitle};
+    focused ? theme.color.filterFocused : theme.color.filterDisabled};
   padding: 4px 16px;
   border-radius: 16px;
   font: 600 16px/24px 'TitilliumWeb-SemiBold';

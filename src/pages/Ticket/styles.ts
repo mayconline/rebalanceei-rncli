@@ -60,7 +60,7 @@ export const CardSubTitle = styled.Text`
   font-family: 'TitilliumWeb-Regular';
 `;
 export const Grade = styled.Text`
-  color: ${({ theme }) => theme.color.title};
+  color: ${({ theme }) => theme.color.subtitle};
   font-size: 16px;
   line-height: 24px;
   font-weight: 600;

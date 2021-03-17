@@ -19,12 +19,12 @@ export const ContainerTitle = styled.View`
 `;
 
 export const Title = styled.Text`
-  color: ${({ theme }) => theme.color.secondary};
+  color: ${({ theme }) => theme.color.activeText};
   font: 300 48px/56px 'TitilliumWeb-Regular';
 `;
 
 export const SubTitle = styled.Text`
-  color: ${({ theme }) => theme.color.secondary};
+  color: ${({ theme }) => theme.color.activeText};
   font: 400 28px/56px 'TitilliumWeb-Regular';
   opacity: 0.5;
 `;
@@ -35,7 +35,7 @@ export const ButtonContainer = styled.TouchableOpacity`
   align-items: center;
   padding: 12px;
   border-radius: 4px;
-  background-color: ${({ theme }) => theme.color.secondary};
+  background-color: ${({ theme }) => theme.color.activeText};
   border-radius: 24px;
   align-self: center;
   width: 80%;

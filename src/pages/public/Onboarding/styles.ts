@@ -63,7 +63,7 @@ export const StepContainer = styled.View`
 `;
 
 export const Step = styled.View`
-  background-color: ${({ theme }) => theme.color.secondary};
+  background-color: ${({ theme }) => theme.color.activeText};
   padding: 20px 20px 4px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
@@ -77,6 +77,6 @@ export const ContainerTextLink = styled.TouchableOpacity`
 `;
 
 export const TextLink = styled.Text`
-  color: ${({ theme }) => theme.color.secondary};
+  color: ${({ theme }) => theme.color.activeText};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;

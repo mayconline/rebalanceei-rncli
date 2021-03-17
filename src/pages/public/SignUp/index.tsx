@@ -119,7 +119,7 @@ const SignUp = () => {
           accessibilityLabel="Voltar"
           onPress={() => navigation.goBack()}
         >
-          <Entypo name="chevron-left" size={32} color={color.secondary} />
+          <Entypo name="chevron-left" size={32} color={color.activeText} />
         </Icon>
         <ContainerTitle>
           <Title accessibilityRole="header">Criar Conta</Title>
@@ -172,7 +172,7 @@ const SignUp = () => {
                 true: color.success,
               }}
               thumbColor={
-                account.checkTerms ? color.primary : color.titleNotImport
+                account.checkTerms ? color.bgHeaderEmpty : color.titleNotImport
               }
               ios_backgroundColor={color.titleNotImport}
               onValueChange={() =>

@@ -17,7 +17,7 @@ export const Button = styled(LinearGradient)<AddButtonProps | any>`
   justify-content: center;
   border: 3px solid
     ${({ focused, theme }) =>
-      focused ? theme.color.secondary : theme.color.blueLight};
+      focused ? theme.color.activeText : theme.color.blueLight};
 
   ${({ mb }) =>
     mb &&

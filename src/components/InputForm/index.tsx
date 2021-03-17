@@ -9,6 +9,7 @@ interface IInputProps extends TextInputProps {
   label: string;
   isSecure?: boolean;
   width?: number;
+  filled?: number;
 }
 
 const InputForm = ({
@@ -34,9 +35,13 @@ const InputForm = ({
   const [visiblePassword, setVisiblePassword] = useState(true);
 
   return (
-    <Container autoFocus={autoFocus} width={width}>
+    <Container autoFocus={autoFocus} width={width} filled={value?.length}>
       <InputGroup>
-        <Label accessibilityLabel={label} autoFocus={autoFocus}>
+        <Label
+          accessibilityLabel={label}
+          autoFocus={autoFocus}
+          filled={value?.length}
+        >
           {label}
         </Label>
         <TextInput

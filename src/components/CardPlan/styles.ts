@@ -34,7 +34,7 @@ export const CardPlanGroup = styled.View`
 export const CardPlanContainerDescription = styled.View``;
 
 export const CardPlanDescription = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
+  color: ${({ theme }) => theme.color.title};
   font: 400 16px/24px 'TitilliumWeb-Regular';
 `;
 

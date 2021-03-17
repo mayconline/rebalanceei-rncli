@@ -64,7 +64,7 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
             </Filter>
           ))}
         </ScrollView>
-        <FontAwesome5 name="sort-amount-up" size={24} color={color.subtitle} />
+        <FontAwesome5 name="sort-amount-up" size={24} color={color.title} />
       </FiltersContainer>
     </Wrapper>
   );

@@ -94,7 +94,7 @@ const AddWalletModal = ({
             accessibilityLabel="Voltar"
             onPress={handleGoBack}
           >
-            <Entypo name="chevron-left" size={32} color={color.secondary} />
+            <Entypo name="chevron-left" size={32} color={color.activeText} />
           </Icon>
           <Title accessibilityRole="header">
             {isEdit ? 'Alterar Carteira' : 'Criar Nova Carteira'}

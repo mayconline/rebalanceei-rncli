@@ -104,7 +104,7 @@ const privateRoute = () => {
           borderTopColor: color.divider,
           padding: 4,
         },
-        activeTintColor: color.secondary,
+        activeTintColor: color.activeText,
         inactiveTintColor: color.inactiveTabs,
         keyboardHidesTabBar: true,
       }}

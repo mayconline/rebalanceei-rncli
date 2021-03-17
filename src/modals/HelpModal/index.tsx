@@ -57,7 +57,7 @@ const HelpModal = ({ onClose }: IHelpModal) => {
           accessibilityLabel="Voltar"
           onPress={onClose}
         >
-          <AntDesign name="closecircleo" size={24} color={color.secondary} />
+          <AntDesign name="closecircleo" size={24} color={color.activeText} />
         </BackIcon>
       </ContainerTitle>
       <Image>

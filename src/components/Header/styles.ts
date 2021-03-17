@@ -23,7 +23,7 @@ export const Wallet = styled.TouchableOpacity`
 `;
 
 export const Title = styled.Text`
-  color: ${({ theme }) => theme.color.secondary};
+  color: ${({ theme }) => theme.color.activeText};
   font-size: 24px;
   font-weight: 600;
   line-height: 32px;

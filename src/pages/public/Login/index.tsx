@@ -91,7 +91,7 @@ const Login = () => {
           accessibilityLabel="Voltar"
           onPress={() => navigation.goBack()}
         >
-          <Entypo name="chevron-left" size={32} color={color.secondary} />
+          <Entypo name="chevron-left" size={32} color={color.activeText} />
         </Icon>
         <ContainerTitle>
           <Title accessibilityRole="header">Bem Vindo de Volta</Title>

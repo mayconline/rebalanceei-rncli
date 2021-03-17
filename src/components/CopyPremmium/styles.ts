@@ -15,7 +15,7 @@ export const ContainerPremmiumGroup = styled.View`
 export const ContainerDescription = styled.View``;
 
 export const Description = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
+  color: ${({ theme }) => theme.color.title};
   font: 400 16px/24px 'TitilliumWeb-Regular';
 `;
 

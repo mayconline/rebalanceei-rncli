@@ -63,7 +63,7 @@ export const CardSubTitle = styled.View`
   align-items: center;
 `;
 export const CurrentAmount = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
+  color: ${({ theme }) => theme.color.title};
   font: 400 16px/24px 'TitilliumWeb-Regular';
 `;
 export const VariationPercent = styled.Text<IPercentVariation>`
@@ -84,7 +84,7 @@ export const PercentTitle = styled.Text`
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;
 export const CurrentPercent = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
+  color: ${({ theme }) => theme.color.title};
   font: 400 16px/24px 'TitilliumWeb-Regular';
   align-self: flex-end;
 `;
@@ -95,7 +95,7 @@ export const AddWalletContainer = styled.View`
   padding: 8px 0;
 `;
 export const Label = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
+  color: ${({ theme }) => theme.color.title};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
   padding: 8px;
 `;
@@ -114,7 +114,7 @@ export const BackIcon = styled.View`
 `;
 
 export const BackButton = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
+  color: ${({ theme }) => theme.color.title};
   font: 400 16px/24px 'TitilliumWeb-Regular';
   margin-left: 4px;
 `;

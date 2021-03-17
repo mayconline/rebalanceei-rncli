@@ -19,7 +19,7 @@ const AddButton = ({ onPress, focused, size, mb }: AddButtonProps) => {
         <Feather
           name="plus"
           size={size / 2}
-          color={focused ? color.secondary : color.blueLight}
+          color={focused ? color.activeText : color.blueLight}
         />
       </Button>
     </TouchableOpacity>
