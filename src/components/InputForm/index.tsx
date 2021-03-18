@@ -76,7 +76,7 @@ const InputForm = ({
             testID={!visiblePassword ? 'eye-with-line' : 'eye'}
             name={!visiblePassword ? 'eye-with-line' : 'eye'}
             size={24}
-            color={!autoFocus ? color.titleNotImport : color.bgHeaderEmpty}
+            color={!autoFocus ? color.titleNotImport : color.success}
           />
         </InputIcon>
       )}

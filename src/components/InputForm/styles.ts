@@ -13,7 +13,7 @@ export const Container = styled.View<IFocusProps>`
   justify-content: space-between;
 
   border-bottom-color: ${({ theme, autoFocus, filled }) =>
-    autoFocus || filled ? theme.color.bgHeaderEmpty : theme.color.divider};
+    autoFocus || filled ? theme.color.success : theme.color.divider};
   border-bottom-width: 1px;
 `;
 
@@ -23,9 +23,7 @@ export const InputGroup = styled.View`
 
 export const Label = styled.Text<IFocusProps>`
   color: ${({ theme, autoFocus, filled }) =>
-    autoFocus || filled
-      ? theme.color.bgHeaderEmpty
-      : theme.color.titleNotImport};
+    autoFocus || filled ? theme.color.success : theme.color.titleNotImport};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;
 

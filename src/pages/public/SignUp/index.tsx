@@ -172,7 +172,7 @@ const SignUp = () => {
                 true: color.success,
               }}
               thumbColor={
-                account.checkTerms ? color.bgHeaderEmpty : color.titleNotImport
+                account.checkTerms ? color.success : color.titleNotImport
               }
               ios_backgroundColor={color.titleNotImport}
               onValueChange={() =>

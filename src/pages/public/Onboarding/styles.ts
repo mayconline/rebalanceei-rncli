@@ -48,7 +48,7 @@ export const Title = styled.Text`
 `;
 
 export const Subtitle = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
+  color: ${({ theme }) => theme.color.titleNotImport};
   font: 400 16px/24px 'TitilliumWeb-Regular';
   text-align: center;
 `;
@@ -63,7 +63,7 @@ export const StepContainer = styled.View`
 `;
 
 export const Step = styled.View`
-  background-color: ${({ theme }) => theme.color.activeText};
+  background-color: ${({ theme }) => theme.color.secondary};
   padding: 20px 20px 4px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;

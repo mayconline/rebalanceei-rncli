@@ -10,7 +10,7 @@ export default {
     activeText: '#FAFAFA',
     inactiveTabs: '#92929C',
     blueLight: '#EDF1F9',
-    bgHeaderEmpty: '#76AD74',
+    bgHeaderEmpty: '#131418',
     bgFilterInactive: '#131418',
     bgFiltersActive: '#131418',
     filterFocused: '#FAFAFA',
