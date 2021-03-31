@@ -89,6 +89,8 @@ const ETFTickets = [
   'XFIX11',
   'GOLD11',
   'XINA11',
+  'HASH11',
+  'QBTC11',
 ];
 
 export const isUnit = (symbol: string) =>
