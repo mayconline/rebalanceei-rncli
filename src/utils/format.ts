@@ -163,6 +163,8 @@ export const formatErrors = (error: string) =>
     'Failed SendGrid': 'Falha ao enviar o e-mail',
     'Response not successful: Received status code 400':
       'Nenhuma carteira selecionada',
+    'Response not successful: Received status code 500':
+      'Nenhuma carteira selecionada',
     'Network request failed': 'Falha de conexão com o servidor',
     'Payment is Cancelled.': 'Pagamento não realizado',
     'An unknown or unexpected error has occured. Please try again later.':

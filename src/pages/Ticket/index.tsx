@@ -130,7 +130,12 @@ const Ticket = () => {
   useFocusEffect(
     useCallback(() => {
       const hasInvalidWallet =
-        queryError?.message === 'Wallet Not Found' || !wallet;
+        queryError?.message === 'Wallet Not Found' ||
+        queryError?.message ===
+          'Response not successful: Received status code 400' ||
+        queryError?.message ===
+          'Response not successful: Received status code 500' ||
+        !wallet;
 
       handleVerificationInvalidWallet(hasInvalidWallet);
     }, [queryError]),
