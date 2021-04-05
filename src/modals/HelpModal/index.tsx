@@ -17,6 +17,7 @@ import ListTicket from '../../components/ListTicket';
 import ImageHelp from '../../../assets/svg/ImageHelp';
 import TextError from '../../components/TextError';
 import Loading from '../../components/Loading';
+import useAmplitude from '../../hooks/useAmplitude';
 
 interface IHelpModal {
   onClose(): void;
@@ -33,7 +34,14 @@ interface IGetQuestion {
 }
 
 const HelpModal = ({ onClose }: IHelpModal) => {
+  const { logEvent } = useAmplitude();
   const { color } = useContext(ThemeContext);
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Help Modal');
+    }, []),
+  );
 
   const [
     questions,

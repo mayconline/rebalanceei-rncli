@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useContext } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 
 import {
@@ -20,16 +20,26 @@ import {
 import Button from '../../../components/Button';
 import OnboardingImgTwo from '../../../../assets/svg/OnboardingImgTwo';
 import { setLocalStorage } from '../../../utils/localStorage';
+import useAmplitude from '../../../hooks/useAmplitude';
 
 const StepTwo = () => {
+  const { logEvent } = useAmplitude();
   const { gradient } = useContext(ThemeContext);
   const navigation = useNavigation();
 
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Onboarding Step Two');
+    }, []),
+  );
+
   const handleNext = () => {
+    logEvent('click on next button at Onboarding Step Two');
     navigation.navigate('StepThree');
   };
 
   const handleSkip = async () => {
+    logEvent('click on handleSkip at Onboarding Step Two');
     await setLocalStorage('@authFirstAccess', 'true');
     navigation.navigate('SignUp');
   };

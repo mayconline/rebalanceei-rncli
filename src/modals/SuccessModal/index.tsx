@@ -8,6 +8,8 @@ import { getLocalStorage, setLocalStorage } from '../../utils/localStorage';
 import { showAdMob } from '../../services/AdMob';
 import PlanModal from '../PlanModal';
 import { useAuth } from '../../contexts/authContext';
+import useAmplitude from '../../hooks/useAmplitude';
+import { useFocusEffect } from '@react-navigation/core';
 
 interface ISuccessModal {
   onClose(): void;
@@ -18,11 +20,18 @@ const SuccessModal: React.FC<ISuccessModal> = ({
   onClose,
   beforeModalClose,
 }) => {
+  const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const { showBanner } = useAuth();
 
   const [openModal, setOpenModal] = useState<'Plan' | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Success modal');
+    }, []),
+  );
 
   const getViewCount = useCallback(async () => {
     let viewCount = await getLocalStorage('@countView');
@@ -46,6 +55,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
       await showAdMob();
       setLoading(false);
       setOpenModal('Plan');
+      logEvent('show adMob interticial');
     } else {
       setLoading(false);
       beforeModalClose();

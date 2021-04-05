@@ -47,3 +47,5 @@ jest.mock('react-native-gesture-handler', () => {
     Directions: {},
   };
 });
+
+jest.mock('./hooks/useAmplitude', () => () => ({ logEvent: () => {} }));

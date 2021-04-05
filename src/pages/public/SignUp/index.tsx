@@ -1,6 +1,6 @@
 import React, { useContext, useState, useCallback } from 'react';
 import { Switch, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../../contexts/authContext';
@@ -29,6 +29,7 @@ import TextError from '../../../components/TextError';
 
 import { getTerms } from '../../../utils/Terms';
 import { setLocalStorage } from '../../../utils/localStorage';
+import useAmplitude from '../../../hooks/useAmplitude';
 
 interface IAccountRegister {
   email: string;
@@ -45,6 +46,7 @@ interface ICreateUser {
 }
 
 const SignUp = () => {
+  const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountRegister);
@@ -52,13 +54,23 @@ const SignUp = () => {
   const { handleSignIn } = useAuth();
   const navigation = useNavigation();
 
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open signUp');
+    }, []),
+  );
+
   const [
     createUser,
     { loading: mutationLoading, error: mutationError },
   ] = useMutation<ICreateUser, IAccountRegister>(CREATE_USER);
 
   const handleSubmit = () => {
-    if (!account.email || !account.password) return;
+    logEvent('click on submit at SignUp');
+    if (!account.email || !account.password) {
+      logEvent('not filled input at SignUp');
+      return;
+    }
     if (!account.checkTerms) {
       return Alert.alert(
         'Termos de Uso',
@@ -71,12 +83,7 @@ const SignUp = () => {
           {
             text: 'Continuar',
             style: 'destructive',
-            onPress: () => {
-              setAccount(account => ({
-                ...account,
-                checkTerms: !account.checkTerms,
-              }));
-            },
+            onPress: handleToogleSwitch,
           },
         ],
         { cancelable: false },
@@ -86,11 +93,16 @@ const SignUp = () => {
     createUser({
       variables: account,
     })
-      .then(
-        response =>
-          response?.data?.createUser && handleSignIn(response.data.createUser),
-      )
-      .catch(err => console.error(mutationError?.message + err));
+      .then(response => {
+        logEvent('successful create account');
+        return (
+          response?.data?.createUser && handleSignIn(response.data.createUser)
+        );
+      })
+      .catch(err => {
+        logEvent('error on create account');
+        console.error(mutationError?.message + err);
+      });
   };
 
   const handleSetEmail = useCallback(async (email: string) => {
@@ -111,13 +123,39 @@ const SignUp = () => {
     await setLocalStorage('@authPass', password);
   }, []);
 
+  const handleToogleSwitch = useCallback(() => {
+    setAccount(account => ({
+      ...account,
+      checkTerms: !account.checkTerms,
+    }));
+    logEvent('change toogle switch at Signup');
+  }, []);
+
+  const onEndInputEditing = useCallback(
+    (nextFocus: number, nameInput: string) => {
+      setFocus(nextFocus);
+      logEvent(`filled ${nameInput} input at SignUp`);
+    },
+    [],
+  );
+
+  const handleGoBack = useCallback(() => {
+    logEvent('click on backButton at SignUp');
+    navigation.goBack();
+  }, []);
+
+  const handleNavigate = useCallback((route: string) => {
+    logEvent(`click on Navigate to ${route} at SignUp`);
+    navigation.navigate(route);
+  }, []);
+
   return (
     <Wrapper>
       <Header>
         <Icon
           accessibilityRole="imagebutton"
           accessibilityLabel="Voltar"
-          onPress={() => navigation.goBack()}
+          onPress={handleGoBack}
         >
           <Entypo name="chevron-left" size={32} color={color.activeText} />
         </Icon>
@@ -141,7 +179,7 @@ const SignUp = () => {
               autoFocus={focus === 1}
               onFocus={() => setFocus(1)}
               onChangeText={handleSetEmail}
-              onEndEditing={() => setFocus(2)}
+              onEndEditing={() => onEndInputEditing(2, 'email')}
             />
           </FormRow>
 
@@ -156,7 +194,7 @@ const SignUp = () => {
               autoFocus={focus === 2}
               onFocus={() => setFocus(2)}
               onChangeText={handleSetPassword}
-              onEndEditing={() => setFocus(0)}
+              onEndEditing={() => onEndInputEditing(0, 'password')}
             />
           </FormRow>
 
@@ -175,12 +213,7 @@ const SignUp = () => {
                 account.checkTerms ? color.success : color.titleNotImport
               }
               ios_backgroundColor={color.titleNotImport}
-              onValueChange={() =>
-                setAccount(account => ({
-                  ...account,
-                  checkTerms: !account.checkTerms,
-                }))
-              }
+              onValueChange={handleToogleSwitch}
               value={account.checkTerms}
               accessibilityRole="switch"
             />
@@ -197,7 +230,7 @@ const SignUp = () => {
             Criar Conta
           </Button>
 
-          <ContainerTextLink onPress={() => navigation.navigate('Login')}>
+          <ContainerTextLink onPress={() => handleNavigate('Login')}>
             <TextLink>Já possui uma conta?</TextLink>
           </ContainerTextLink>
         </Form>

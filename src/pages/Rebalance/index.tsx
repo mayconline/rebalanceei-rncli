@@ -15,6 +15,7 @@ import Loading from '../../components/Loading';
 import TextError from '../../components/TextError';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
+import useAmplitude from '../../hooks/useAmplitude';
 
 const initialFilter = [
   {
@@ -48,12 +49,20 @@ interface IDataTickets {
 }
 
 const Rebalance = () => {
+  const { logEvent } = useAmplitude();
+
   const { wallet } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('targetAmount');
 
   const [rebalanceData, setRebalanceData] = useState<IRebalances[]>(
     [] as IRebalances[],
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Rebalance');
+    }, []),
   );
 
   const [

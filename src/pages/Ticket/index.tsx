@@ -21,6 +21,7 @@ import {
   IUpdateRole,
   UPDATE_ROLE,
 } from '../../modals/PlanModal/components/Free';
+import useAmplitude from '../../hooks/useAmplitude';
 
 const initialFilter = [
   {
@@ -45,6 +46,7 @@ interface IDataTickets {
 }
 
 const Ticket = () => {
+  const { logEvent } = useAmplitude();
   const navigation = useNavigation();
   const {
     wallet,
@@ -61,6 +63,12 @@ const Ticket = () => {
 
   const [updateRole, { error: mutationError }] = useMutation<IUpdateRole>(
     UPDATE_ROLE,
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Ticket');
+    }, []),
   );
 
   useFocusEffect(

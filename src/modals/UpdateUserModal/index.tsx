@@ -21,6 +21,7 @@ import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
+import useAmplitude from '../../hooks/useAmplitude';
 
 interface IUser {
   _id: string;
@@ -43,10 +44,17 @@ interface IUpdateUserModal {
 }
 
 const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
+  const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const [user, setUser] = useState({} as IUser);
   const { handleSignOut } = useAuth();
   const [focus, setFocus] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Update User Modal');
+    }, []),
+  );
 
   const [
     getUserByToken,
@@ -57,7 +65,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
 
   const [
     updateUser,
-    { data: dataMutation, loading: mutationLoading, error: mutationError },
+    { loading: mutationLoading, error: mutationError },
   ] = useMutation<IUpdateUser>(UPDATE_USER);
 
   useFocusEffect(
@@ -67,6 +75,8 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
   );
 
   const handleDisabledSubmit = useCallback(async () => {
+    logEvent('click on disabled account');
+
     try {
       Alert.alert(
         'Desativar Conta',
@@ -80,6 +90,8 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
             text: 'Continuar',
             style: 'destructive',
             onPress: async () => {
+              logEvent('successful disabled account');
+
               await updateUser({
                 variables: {
                   active: false,
@@ -97,11 +109,14 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
         { cancelable: false },
       );
     } catch (err) {
+      logEvent('error on disabled account');
       console.error(err);
     }
   }, []);
 
   const handleSubmit = useCallback(async () => {
+    logEvent('click on update account');
+
     try {
       await updateUser({
         variables: user,
@@ -111,8 +126,12 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
           },
         ],
       });
+
+      logEvent('successful update account');
+
       onClose();
     } catch (err) {
+      logEvent('error on update account');
       console.error(err);
     }
   }, [user]);
@@ -130,6 +149,14 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
       password,
     }));
   }, []);
+
+  const onEndInputEditing = useCallback(
+    (nextFocus: number, nameInput: string) => {
+      setFocus(nextFocus);
+      logEvent(`filled ${nameInput} input at Update User Modal`);
+    },
+    [],
+  );
 
   return queryLoading || mutationLoading ? (
     <Loading />
@@ -163,7 +190,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
                 autoFocus={focus === 1}
                 onFocus={() => setFocus(1)}
                 onChangeText={handleSetEmail}
-                onEndEditing={() => setFocus(2)}
+                onEndEditing={() => onEndInputEditing(2, 'email')}
               />
             </FormRow>
 
@@ -179,7 +206,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
                 autoFocus={focus === 2}
                 onFocus={() => setFocus(2)}
                 onChangeText={handleSetPassword}
-                onEndEditing={() => setFocus(0)}
+                onEndEditing={() => onEndInputEditing(0, 'password')}
                 onSubmitEditing={handleSubmit}
               />
             </FormRow>

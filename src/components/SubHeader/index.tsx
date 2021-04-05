@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useCallback, useContext, useRef } from 'react';
 import { ScrollView } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -13,6 +13,7 @@ import {
   TextFilter,
 } from './styles';
 import { formatFilter } from '../../utils/format';
+import useAmplitude from '../../hooks/useAmplitude';
 
 interface ISubHeaderProps {
   title: string;
@@ -34,9 +35,16 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
   onPress,
   children,
 }) => {
+  const { logEvent } = useAmplitude();
+
   const { color } = useContext(ThemeContext);
 
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const handleSelectFilter = useCallback((filterName: string) => {
+    onPress(filterName);
+    logEvent(`selected ${filterName}`);
+  }, []);
 
   return (
     <Wrapper>
@@ -57,7 +65,10 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
           }
         >
           {filters?.map(filter => (
-            <Filter key={filter.name} onPress={() => onPress(filter.name)}>
+            <Filter
+              key={filter.name}
+              onPress={() => handleSelectFilter(filter.name)}
+            >
               <TextFilter focused={filter.name === selectedFilter}>
                 {formatFilter(filter.name)}
               </TextFilter>

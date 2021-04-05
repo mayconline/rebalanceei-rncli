@@ -24,6 +24,7 @@ import AddWalletModal from '../AddWalletModal';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
 import { formatNumber } from '../../utils/format';
+import useAmplitude from '../../hooks/useAmplitude';
 
 interface IWalletProps {
   onClose(): void;
@@ -49,11 +50,19 @@ export interface IWalletData {
 }
 
 const WalletModal = ({ onClose }: IWalletProps) => {
+  const { logEvent } = useAmplitude();
+
   const { color } = useContext(ThemeContext);
   const { handleSetWallet, wallet } = useAuth();
   const [openModal, setOpenModal] = useState(false);
   const [editWallet, setEditWallet] = useState<IWalletData>({} as IWalletData);
   const [selectedWallet, setSelectedWallet] = useState<String | null>(wallet);
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Wallet Modal');
+    }, []),
+  );
 
   const [
     getWalletByUser,
@@ -72,6 +81,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
     (walletID: string, walletName: string) => {
       setSelectedWallet(walletID);
       handleSetWallet(walletID, walletName);
+      logEvent('click on select wallet');
       onClose();
     },
     [],
@@ -79,11 +89,13 @@ const WalletModal = ({ onClose }: IWalletProps) => {
 
   const handleAddWallet = useCallback(() => {
     setOpenModal(openModal => !openModal);
+    logEvent('click on add wallet');
   }, []);
 
   const handleEditWallet = useCallback((_id: string, description: string) => {
     setEditWallet({ _id, description });
     setOpenModal(openModal => !openModal);
+    logEvent('click on edit wallet');
   }, []);
 
   const handleResetEditWallet = useCallback(() => {

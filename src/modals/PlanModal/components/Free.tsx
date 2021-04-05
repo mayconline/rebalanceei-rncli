@@ -33,6 +33,8 @@ import {
   Subscription,
 } from 'react-native-iap';
 import { gql, useMutation } from '@apollo/client';
+import useAmplitude from '../../../hooks/useAmplitude';
+import { useFocusEffect } from '@react-navigation/core';
 
 export const listSku = Platform.select({
   android: ['rebalanceei_premium_mensal', 'rebalanceei_premium_anual'],
@@ -52,6 +54,8 @@ let purchaseUpdateSubscription: EmitterSubscription;
 let purchaseErrorSubscription: EmitterSubscription;
 
 const Free = ({ planName, handleSelectPlan }: IFree) => {
+  const { logEvent } = useAmplitude();
+
   const { userID, handleSignOut } = useAuth();
   const { gradient, color } = useContext(ThemeContext);
   const [loading, setLoading] = useState(true);
@@ -61,6 +65,12 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
   );
   const [subscriptions, setSubscriptions] = useState<Subscription[]>(
     [] as Subscription[],
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Plan Free Modal');
+    }, []),
   );
 
   const [
@@ -82,6 +92,8 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
         ],
       });
 
+      logEvent('successful updateRole at Plan Free Modal');
+
       Alert.alert(
         'Compra realizada com sucesso!',
         'Por favor entre novamente no aplicativo.',
@@ -97,6 +109,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
         { cancelable: false },
       );
     } catch (err) {
+      logEvent('error on updateRole at Plan Free Modal');
       console.error(mutationError?.message + err);
     }
   }, []);
@@ -110,8 +123,12 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
               !!res && setSubscriptions(res);
               !!res && setSkuID(res[0]);
               setLoading(false);
+              logEvent('view list at Plan Free Modal');
             })
-            .catch(err => console.error(err)),
+            .catch(err => {
+              logEvent('error on view list at Plan Free Moda');
+              console.error(err);
+            }),
         )
         .catch(err => console.error(err));
   }, []);
@@ -149,10 +166,13 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
             setLoading(false);
 
             await handleChangePlan(transactionData);
+
+            logEvent('successful subscribe at Plan Free Modal');
           } catch (err) {
             console.warn('ackErr', err);
             setErrorMessage(err);
             setLoading(false);
+            logEvent('error on subscribe at Plan Free Modal');
           }
         }
       },
@@ -162,6 +182,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       (error: PurchaseError) => {
         setErrorMessage(error.message);
         setLoading(false);
+        logEvent('error listener on subscribe at Plan Free Modal');
       },
     );
 

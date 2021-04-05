@@ -19,6 +19,7 @@ import Empty from '../../components/Empty';
 import Loading from '../../components/Loading';
 import TextError from '../../components/TextError';
 import AdBanner from '../../components/AdBanner';
+import useAmplitude from '../../hooks/useAmplitude';
 
 const initialFilter = [
   {
@@ -58,10 +59,17 @@ const randomDarkColor = () => {
 };
 
 const Chart = () => {
+  const { logEvent } = useAmplitude();
   const [dataGraph, setDataGraph] = useState<PieChartData[]>([]);
   const [selectedFilter, setSelectFilter] = useState<string>('Classe');
 
   const { wallet } = useAuth();
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Chart');
+    }, []),
+  );
 
   const [
     rebalances,

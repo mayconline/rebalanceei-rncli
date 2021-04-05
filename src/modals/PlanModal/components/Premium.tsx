@@ -9,17 +9,28 @@ import Button from '../../../components/Button';
 
 import { ContainerButtons, SubTitle } from '../styles';
 import { getLinkCancelPlan } from '../../../utils/CancelPlan';
+import useAmplitude from '../../../hooks/useAmplitude';
+import { useFocusEffect } from '@react-navigation/core';
 
 const Premium = () => {
+  const { logEvent } = useAmplitude();
   const { gradient, color } = useContext(ThemeContext);
   const { plan } = useAuth();
   const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Plan Premium Modal');
+    }, []),
+  );
 
   useEffect(() => {
     !!plan && setLoading(false);
   }, [plan]);
 
   const handleCancelSubscription = useCallback(() => {
+    logEvent('click on cancel plan');
+
     Alert.alert(
       'Deseja mesmo cancelar?',
       `Seu plano continuará ativo até o fim do ciclo contratado:
@@ -35,11 +46,14 @@ const Premium = () => {
         {
           text: 'Continuar',
           style: 'destructive',
-          onPress: () =>
-            getLinkCancelPlan(
+          onPress: () => {
+            logEvent('successful cancel plan');
+
+            return getLinkCancelPlan(
               String(plan?.packageName),
               String(plan?.productId),
-            ),
+            );
+          },
         },
       ],
       { cancelable: false },

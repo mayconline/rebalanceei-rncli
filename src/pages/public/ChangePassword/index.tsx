@@ -1,6 +1,10 @@
 import React, { useContext, useState, useCallback } from 'react';
 import { Modal, Platform } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
 
@@ -22,6 +26,7 @@ import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
 import SuccessModal from '../../../modals/SuccessModal';
+import useAmplitude from '../../../hooks/useAmplitude';
 
 interface IChangePassword {
   code: string;
@@ -37,6 +42,7 @@ interface IDataParamsForm {
 }
 
 const ChangePassword = () => {
+  const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IChangePassword);
@@ -46,13 +52,22 @@ const ChangePassword = () => {
   const params = route?.params as IDataParamsForm;
   const navigation = useNavigation();
 
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open ChangePassword');
+    }, []),
+  );
+
   const [
     resetPassword,
     { loading: mutationLoading, error: mutationError },
   ] = useMutation<ILogin>(RESET_PASSWORD);
 
   const handleSubmit = () => {
-    if (!account.code || !account.password || !params.email) return;
+    if (!account.code || !account.password || !params.email) {
+      logEvent('not filled input at ChangePassword');
+      return;
+    }
 
     resetPassword({
       variables: {
@@ -61,8 +76,14 @@ const ChangePassword = () => {
         password: account.password,
       },
     })
-      .then(response => !!response?.data?.resetPassword && setOpenModal(true))
-      .catch(err => console.error(mutationError?.message + err));
+      .then(response => {
+        logEvent('successful ChangePassword');
+        return !!response?.data?.resetPassword && setOpenModal(true);
+      })
+      .catch(err => {
+        logEvent('error on ChangePassword');
+        console.error(mutationError?.message + err);
+      });
   };
 
   const handleSetCode = useCallback(async (code: string) => {
@@ -79,6 +100,19 @@ const ChangePassword = () => {
     }));
   }, []);
 
+  const onEndInputEditing = useCallback(
+    (nextFocus: number, nameInput: string) => {
+      setFocus(nextFocus);
+      logEvent(`filled ${nameInput} input at ChangePassword`);
+    },
+    [],
+  );
+
+  const handleGoBack = useCallback(() => {
+    logEvent('click on backButton at ChangePassword');
+    navigation.goBack();
+  }, []);
+
   return (
     <>
       <Wrapper>
@@ -86,7 +120,7 @@ const ChangePassword = () => {
           <Icon
             accessibilityRole="imagebutton"
             accessibilityLabel="Voltar"
-            onPress={() => navigation.goBack()}
+            onPress={handleGoBack}
           >
             <Entypo name="chevron-left" size={32} color={color.activeText} />
           </Icon>
@@ -109,7 +143,7 @@ const ChangePassword = () => {
                 autoFocus={focus === 1}
                 onFocus={() => setFocus(1)}
                 onChangeText={handleSetCode}
-                onEndEditing={() => setFocus(2)}
+                onEndEditing={() => onEndInputEditing(2, 'code')}
               />
             </FormRow>
             <FormRow>
@@ -124,7 +158,7 @@ const ChangePassword = () => {
                 autoFocus={focus === 2}
                 onFocus={() => setFocus(2)}
                 onChangeText={handleSetPassword}
-                onEndEditing={() => setFocus(0)}
+                onEndEditing={() => onEndInputEditing(0, 'password')}
                 onSubmitEditing={handleSubmit}
               />
             </FormRow>

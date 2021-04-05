@@ -1,5 +1,9 @@
 import React, { useContext, useState, useCallback, useMemo } from 'react';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import {
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+} from '@react-navigation/native';
 import { Platform, Modal } from 'react-native';
 import { useAuth } from '../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
@@ -19,7 +23,6 @@ import ImageAddTicket from '../../../assets/svg/ImageAddTicket';
 import SuccessModal from '../../modals/SuccessModal';
 import { GET_TICKETS_BY_WALLET } from '../Ticket';
 import { GET_WALLET_BY_USER } from '../../modals/WalletModal';
-import { GET_WALLET_BY_ID } from '../../components/AmountWallet';
 import SuggestionsModal from '../../modals/SuggestionsModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -29,6 +32,7 @@ import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
 import { formatAveragePricePreview, formatTicket } from '../../utils/format';
+import useAmplitude from '../../hooks/useAmplitude';
 
 interface IDataParamsForm {
   ticket: ITickets;
@@ -49,6 +53,7 @@ interface IcreateTicket {
 }
 
 const AddTicket = () => {
+  const { logEvent } = useAmplitude();
   const { wallet, hasInvalidWallet } = useAuth();
   const { color, gradient } = useContext(ThemeContext);
 
@@ -63,6 +68,12 @@ const AddTicket = () => {
 
   const isEdit = useMemo(() => !!params?.ticket?._id, [params]);
 
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Add Ticket');
+    }, []),
+  );
+
   const handleGoBack = useCallback(() => {
     navigation.setParams({ ticket: null });
     navigation.goBack();
@@ -71,6 +82,7 @@ const AddTicket = () => {
 
   const HandleOpenSuggestionsModal = useCallback(() => {
     if (hasInvalidWallet) return;
+
     setFocus(1);
     setHasSuggestions(true);
   }, [hasInvalidWallet]);
@@ -91,7 +103,11 @@ const AddTicket = () => {
   ] = useMutation<IcreateTicket>(CREATE_TICKET);
 
   const handleSubmit = useCallback(async () => {
-    if (hasInvalidWallet) return navigation.navigate('Ticket');
+    if (hasInvalidWallet) {
+      logEvent('has invalid wallet at Add Ticket');
+
+      return navigation.navigate('Ticket');
+    }
 
     if (
       !ticketForm.symbol ||
@@ -100,8 +116,10 @@ const AddTicket = () => {
       !ticketForm.averagePrice ||
       !ticketForm.grade ||
       !wallet
-    )
+    ) {
+      logEvent('not filled input at Add Ticket');
       return;
+    }
 
     const dataTicket = {
       walletID: wallet,
@@ -126,10 +144,13 @@ const AddTicket = () => {
         ],
       });
 
+      logEvent('successful createTicket at Add Ticket');
+
       setTicketForm({} as ITicketForm);
       setFocus(0);
       setOpenModal(true);
     } catch (err) {
+      logEvent('error on createTicket at Add Ticket');
       console.error(mutationError?.message + err);
     }
   }, [ticketForm, hasInvalidWallet]);
@@ -151,6 +172,14 @@ const AddTicket = () => {
       averagePreview: preview,
     }));
   }, []);
+
+  const onEndInputEditing = useCallback(
+    (nextFocus: number, nameInput: string) => {
+      setFocus(nextFocus);
+      logEvent(`filled ${nameInput} input at Add Ticket`);
+    },
+    [],
+  );
 
   return (
     <>
@@ -207,7 +236,7 @@ const AddTicket = () => {
                   autoFocus={focus === 2}
                   onFocus={() => setFocus(2)}
                   onChangeText={handleSetGrade}
-                  onEndEditing={() => setFocus(3)}
+                  onEndEditing={() => onEndInputEditing(3, 'grade')}
                   width={30}
                 />
               </FormRow>
@@ -221,7 +250,7 @@ const AddTicket = () => {
                   autoFocus={focus === 3}
                   onFocus={() => setFocus(3)}
                   onChangeText={handleSetPrice}
-                  onEndEditing={() => setFocus(4)}
+                  onEndEditing={() => onEndInputEditing(4, 'averagePrice')}
                   width={60}
                 />
 
@@ -234,7 +263,7 @@ const AddTicket = () => {
                   autoFocus={focus === 4}
                   onFocus={() => setFocus(4)}
                   onChangeText={handleSetQuantity}
-                  onEndEditing={() => setFocus(0)}
+                  onEndEditing={() => onEndInputEditing(0, 'quantity')}
                   onSubmitEditing={handleSubmit}
                   width={30}
                 />

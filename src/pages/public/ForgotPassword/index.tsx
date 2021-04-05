@@ -1,6 +1,6 @@
 import React, { useContext, useState, useCallback } from 'react';
 import { Alert, Platform } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
 
@@ -20,6 +20,7 @@ import ImageRecoveryPassword from '../../../../assets/svg/ImageRecoveryPassword'
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
+import useAmplitude from '../../../hooks/useAmplitude';
 
 interface IAccountLogin {
   email: string;
@@ -30,11 +31,18 @@ interface ISendRecovery {
 }
 
 const ForgotPassword = () => {
+  const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountLogin);
 
   const navigation = useNavigation();
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open ForgotPassword');
+    }, []),
+  );
 
   const [
     sendRecovery,
@@ -42,7 +50,10 @@ const ForgotPassword = () => {
   ] = useMutation<ISendRecovery, IAccountLogin>(SEND_RECOVERY);
 
   const handleSubmit = () => {
-    if (!account.email) return;
+    if (!account.email) {
+      logEvent('not filled input at ForgotPassword');
+      return;
+    }
 
     sendRecovery({
       variables: account,
@@ -58,6 +69,9 @@ const ForgotPassword = () => {
                 text: 'Continuar',
                 style: 'destructive',
                 onPress: () => {
+                  logEvent(
+                    `click on Navigate to ChangePassword at ForgotPassword`,
+                  );
                   navigation.navigate('ChangePassword', {
                     email: account.email,
                   });
@@ -67,7 +81,10 @@ const ForgotPassword = () => {
             { cancelable: false },
           ),
       )
-      .catch(err => console.error(mutationError?.message + err));
+      .catch(err => {
+        logEvent('error on sendRecovery');
+        console.error(mutationError?.message + err);
+      });
   };
 
   const handleSetEmail = useCallback(async (email: string) => {
@@ -77,13 +94,26 @@ const ForgotPassword = () => {
     }));
   }, []);
 
+  const onEndInputEditing = useCallback(
+    (nextFocus: number, nameInput: string) => {
+      setFocus(nextFocus);
+      logEvent(`filled ${nameInput} input at ForgotPassword`);
+    },
+    [],
+  );
+
+  const handleGoBack = useCallback(() => {
+    logEvent('click on backButton at ForgotPassword');
+    navigation.goBack();
+  }, []);
+
   return (
     <Wrapper>
       <Header>
         <Icon
           accessibilityRole="imagebutton"
           accessibilityLabel="Voltar"
-          onPress={() => navigation.goBack()}
+          onPress={handleGoBack}
         >
           <Entypo name="chevron-left" size={32} color={color.activeText} />
         </Icon>
@@ -107,7 +137,8 @@ const ForgotPassword = () => {
               autoFocus={focus === 1}
               onFocus={() => setFocus(1)}
               onChangeText={handleSetEmail}
-              onEndEditing={() => setFocus(2)}
+              onEndEditing={() => onEndInputEditing(2, 'email')}
+              onSubmitEditing={handleSubmit}
             />
           </FormRow>
 

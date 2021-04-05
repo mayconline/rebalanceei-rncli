@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../../contexts/authContext';
@@ -26,6 +26,7 @@ import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
 import { setLocalStorage } from '../../../utils/localStorage';
+import useAmplitude from '../../../hooks/useAmplitude';
 
 interface IAccountLogin {
   email: string;
@@ -41,6 +42,7 @@ interface ILogin {
 }
 
 const Login = () => {
+  const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountLogin);
@@ -48,21 +50,35 @@ const Login = () => {
   const { handleSignIn } = useAuth();
   const navigation = useNavigation();
 
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Login');
+    }, []),
+  );
+
   const [
     login,
     { loading: mutationLoading, error: mutationError },
   ] = useMutation<ILogin, IAccountLogin>(LOGIN);
 
   const handleSubmit = () => {
-    if (!account.email || !account.password) return;
+    logEvent('click on submit at Login');
+    if (!account.email || !account.password) {
+      logEvent('not filled input at Login');
+      return;
+    }
 
     login({
       variables: account,
     })
-      .then(
-        response => response?.data?.login && handleSignIn(response.data.login),
-      )
-      .catch(err => console.error(mutationError?.message + err));
+      .then(response => {
+        logEvent('successful Login');
+        return response?.data?.login && handleSignIn(response.data.login);
+      })
+      .catch(err => {
+        logEvent('error on Login');
+        console.error(mutationError?.message + err);
+      });
   };
 
   const handleSetEmail = useCallback(async (email: string) => {
@@ -83,13 +99,31 @@ const Login = () => {
     await setLocalStorage('@authPass', password);
   }, []);
 
+  const onEndInputEditing = useCallback(
+    (nextFocus: number, nameInput: string) => {
+      setFocus(nextFocus);
+      logEvent(`filled ${nameInput} input at Login`);
+    },
+    [],
+  );
+
+  const handleGoBack = useCallback(() => {
+    logEvent('click on backButton at Login');
+    navigation.goBack();
+  }, []);
+
+  const handleNavigate = useCallback((route: string) => {
+    logEvent(`click on Navigate to ${route} at Login`);
+    navigation.navigate(route);
+  }, []);
+
   return (
     <Wrapper>
       <Header>
         <Icon
           accessibilityRole="imagebutton"
           accessibilityLabel="Voltar"
-          onPress={() => navigation.goBack()}
+          onPress={handleGoBack}
         >
           <Entypo name="chevron-left" size={32} color={color.activeText} />
         </Icon>
@@ -113,7 +147,7 @@ const Login = () => {
               autoFocus={focus === 1}
               onFocus={() => setFocus(1)}
               onChangeText={handleSetEmail}
-              onEndEditing={() => setFocus(2)}
+              onEndEditing={() => onEndInputEditing(2, 'email')}
             />
           </FormRow>
 
@@ -129,12 +163,12 @@ const Login = () => {
               autoFocus={focus === 2}
               onFocus={() => setFocus(2)}
               onChangeText={handleSetPassword}
-              onEndEditing={() => setFocus(0)}
+              onEndEditing={() => onEndInputEditing(0, 'password')}
               onSubmitEditing={handleSubmit}
             />
           </FormRow>
           <ContainerForgotPassword
-            onPress={() => navigation.navigate('ForgotPassword')}
+            onPress={() => handleNavigate('ForgotPassword')}
           >
             <TextForgotPassword>Esqueceu a senha?</TextForgotPassword>
           </ContainerForgotPassword>
@@ -150,7 +184,7 @@ const Login = () => {
             Entrar
           </Button>
 
-          <ContainerTextLink onPress={() => navigation.navigate('SignUp')}>
+          <ContainerTextLink onPress={() => handleNavigate('SignUp')}>
             <TextLink>Ainda não possui uma conta?</TextLink>
           </ContainerTextLink>
         </Form>

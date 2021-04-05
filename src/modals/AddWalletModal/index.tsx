@@ -21,6 +21,8 @@ import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
 import { GET_WALLET_BY_USER, IWalletData } from '../WalletModal';
 import EditWallet from '../../components/EditWallet';
+import useAmplitude from '../../hooks/useAmplitude';
+import { useFocusEffect } from '@react-navigation/core';
 
 interface IAddWalletModal {
   onClose(): void;
@@ -35,6 +37,8 @@ const AddWalletModal = ({
   walletData,
   handleResetEditWallet,
 }: IAddWalletModal) => {
+  const { logEvent } = useAmplitude();
+
   const { color, gradient } = useContext(ThemeContext);
   const [wallet, setWallet] = useState('');
   const [focus, setFocus] = useState(0);
@@ -43,13 +47,22 @@ const AddWalletModal = ({
 
   const isEdit = useMemo(() => !!walletData?._id, [walletData?._id]);
 
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Add Wallet');
+    }, []),
+  );
+
   const [
     createWallet,
     { loading: mutationLoading, error: mutationError },
   ] = useMutation(CREATE_WALLET);
 
   const handleSubmit = useCallback(async () => {
-    if (!wallet) return;
+    if (!wallet) {
+      logEvent('not filled input at Add Wallet');
+      return;
+    }
 
     try {
       const response = await createWallet({
@@ -68,10 +81,13 @@ const AddWalletModal = ({
         response?.data?.createWallet?.description,
       );
 
+      logEvent('successful createWallet at Add Wallet');
+
       setOpenModal(true);
       beforeModalClose();
       setWallet('');
     } catch (err) {
+      logEvent('error on createWallet at Add Wallet');
       console.error(mutationError?.message + err);
     }
   }, [wallet]);
@@ -84,6 +100,14 @@ const AddWalletModal = ({
     handleResetEditWallet && handleResetEditWallet();
     onClose();
   }, []);
+
+  const onEndInputEditing = useCallback(
+    (nextFocus: number, nameInput: string) => {
+      setFocus(nextFocus);
+      logEvent(`filled ${nameInput} input at Add Wallet`);
+    },
+    [],
+  );
 
   return (
     <>
@@ -121,7 +145,7 @@ const AddWalletModal = ({
                   autoFocus={focus === 1}
                   onFocus={() => setFocus(1)}
                   onChangeText={handleSetName}
-                  onEndEditing={() => setFocus(0)}
+                  onEndEditing={() => onEndInputEditing(0, 'walletDescription')}
                   onSubmitEditing={handleSubmit}
                 />
               </FormRow>

@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useCallback, useContext, useState } from 'react';
 import { Modal } from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -25,6 +25,8 @@ import {
   MenuTitle,
 } from './styles';
 import { ThemeContext } from 'styled-components/native';
+import useAmplitude from '../../hooks/useAmplitude';
+import { useFocusEffect } from '@react-navigation/core';
 
 const menuItens = [
   {
@@ -64,13 +66,23 @@ interface MenuProps {
 }
 
 const MenuModal = ({ onClose }: MenuProps) => {
+  const { logEvent } = useAmplitude();
+
   const { color } = useContext(ThemeContext);
   const { handleSignOut } = useAuth();
   const [openModal, setOpenModal] = useState<'User' | 'Help' | 'Plan' | null>(
     null,
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Menu Modal');
+    }, []),
+  );
+
   const handleClickMenu = (description: string) => {
+    logEvent(`click on ${description} at Menu Modal`);
+
     switch (description) {
       case 'Meus Dados':
         return setOpenModal('User');

@@ -15,6 +15,8 @@ import api from '../../services/api';
 import { useDebouncedCallback } from 'use-debounce';
 import ShadowBackdrop from '../../components/ShadowBackdrop';
 import InputForm from '../../components/InputForm';
+import useAmplitude from '../../hooks/useAmplitude';
+import { useFocusEffect } from '@react-navigation/core';
 
 interface ISuggestions {
   symbol: string;
@@ -30,15 +32,24 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
   onClose,
   handleSelectTicket,
 }) => {
+  const { logEvent } = useAmplitude();
   const { color } = useContext(ThemeContext);
   const [suggestions, setSuggestions] = useState<ISuggestions[] | null>([]);
   const [selectTicket, setSelectTicket] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Suggestion Modal');
+    }, []),
+  );
+
   const handleSuggestionsAutoComplete = useCallback((ticket: string) => {
     setLoading(true);
     setSelectTicket(ticket);
+
+    logEvent('open suggestion list at Suggestion Modal');
 
     displaySuggestionsAutoComplete.callback(ticket);
   }, []);
@@ -68,6 +79,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
 
   const handleSelectSuggest = useCallback((symbol: string, name: string) => {
     handleSelectTicket(symbol, name);
+    logEvent('click on selected ticket at Suggestion Modal');
     onClose();
   }, []);
 

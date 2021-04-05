@@ -10,6 +10,7 @@ import InputForm from '../InputForm';
 import TextError from '../TextError';
 import Button from '../Button';
 import { useAuth } from '../../contexts/authContext';
+import useAmplitude from '../../hooks/useAmplitude';
 
 interface IEditWallet {
   walletData?: IWalletData;
@@ -26,10 +27,18 @@ const EditWallet = ({
   handleResetEditWallet,
   onClose,
 }: IEditWallet) => {
+  const { logEvent } = useAmplitude();
+
   const { handleSetWallet } = useAuth();
   const { gradient } = useContext(ThemeContext);
   const [wallet, setWallet] = useState<IWalletData>({} as IWalletData);
   const [focus, setFocus] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Edit Wallet');
+    }, []),
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -61,7 +70,10 @@ const EditWallet = ({
   ] = useMutation<IDeleteWallet>(DELETE_WALLET);
 
   const handleEditSubmit = useCallback(async () => {
-    if (!wallet._id || !wallet.description) return;
+    if (!wallet._id || !wallet.description) {
+      logEvent('not filled input at Edit Wallet');
+      return;
+    }
 
     try {
       await updateWallet({
@@ -76,6 +88,8 @@ const EditWallet = ({
         ],
       });
 
+      logEvent('successful createWallet at Edit Wallet');
+
       handleGoBack();
     } catch (err) {
       console.error(mutationError?.message + err);
@@ -83,7 +97,10 @@ const EditWallet = ({
   }, [wallet]);
 
   const handleDeleteSubmit = useCallback(async () => {
-    if (!wallet._id) return;
+    if (!wallet._id) {
+      logEvent('not filled input at Delete Wallet');
+      return;
+    }
 
     try {
       await deleteWallet({
@@ -97,11 +114,22 @@ const EditWallet = ({
         ],
       });
       handleSetWallet(null, null);
+
+      logEvent('successful createWallet at Delete Wallet');
+
       handleGoBack();
     } catch (err) {
       console.error(mutationDeleteError?.message + err);
     }
   }, [wallet]);
+
+  const onEndInputEditing = useCallback(
+    (nextFocus: number, nameInput: string) => {
+      setFocus(nextFocus);
+      logEvent(`filled ${nameInput} input at Add Wallet`);
+    },
+    [],
+  );
 
   return (
     <Form>
@@ -117,7 +145,7 @@ const EditWallet = ({
           autoFocus={focus === 1}
           onFocus={() => setFocus(1)}
           onChangeText={handleSetName}
-          onEndEditing={() => setFocus(0)}
+          onEndEditing={() => onEndInputEditing(0, 'walletDescription')}
           onSubmitEditing={handleEditSubmit}
         />
       </FormRow>

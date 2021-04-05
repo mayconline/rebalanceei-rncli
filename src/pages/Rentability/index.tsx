@@ -16,6 +16,7 @@ import Empty from '../../components/Empty';
 import TextError from '../../components/TextError';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
+import useAmplitude from '../../hooks/useAmplitude';
 
 const initialFilter = [
   {
@@ -49,12 +50,19 @@ interface IDataTickets {
 }
 
 const Rentability = () => {
+  const { logEvent } = useAmplitude();
   const { wallet } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('currentAmount');
 
   const [rentabilityData, setRentabilityData] = useState<IGetRentability[]>(
     [] as IGetRentability[],
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      logEvent('open Rentability');
+    }, []),
   );
 
   const [
