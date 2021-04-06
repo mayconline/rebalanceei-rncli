@@ -1,16 +1,19 @@
-import React from 'react';
-import { SafeAreaView } from 'react-native';
-import { AdMobBanner } from 'react-native-admob';
-import { useAuth } from '../../contexts/authContext';
+//import React from 'react';
+//import { SafeAreaView } from 'react-native';
+//import { AdMobBanner } from 'react-native-admob';
+//import { useAuth } from '../../contexts/authContext';
 
 const AdBanner = () => {
-  const { showBanner } = useAuth();
+  //  const { showBanner } = useAuth();
 
   //adUnitID="ca-app-pub-3940256099942544/6300978111" //test ID
   //testDevices={[AdMobBanner.simulatorId]}
 
   //adUnitID="ca-app-pub-7986828971010623/8908202716" prod
-  return showBanner ? (
+
+  /*
+
+  showBanner ? (
     <SafeAreaView
       style={{
         alignSelf: 'center',
@@ -24,6 +27,8 @@ const AdBanner = () => {
       />
     </SafeAreaView>
   ) : null;
+  */
+  return null;
 };
 
 export default AdBanner;

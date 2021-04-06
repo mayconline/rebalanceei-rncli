@@ -30,12 +30,15 @@
         android:screenOrientation="portrait" 
         android:exported="true" />
        
-      <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+   
 
      <!-- Sample AdMob Test app ID: ca-app-pub-3940256099942544~3347511713 -->
-       <meta-data
+      <!--
+
+        <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-7986828971010623~5735244468"/>
+      --> 
     </application>
 
 </manifest>

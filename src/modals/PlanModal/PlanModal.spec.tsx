@@ -1,7 +1,7 @@
 import React from 'react';
 import PlanModal, { GET_USER_BY_TOKEN } from './index';
 import { render, fireEvent, act } from '../../utils/testProvider';
-import * as RNIap from 'react-native-iap';
+import * as RNIap from 'react-native-iap/src/index';
 import { Platform, Alert } from 'react-native';
 import * as CancelPlan from '../../utils/CancelPlan';
 
