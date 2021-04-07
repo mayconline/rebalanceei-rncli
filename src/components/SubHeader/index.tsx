@@ -43,7 +43,7 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
 
   const handleSelectFilter = useCallback((filterName: string) => {
     onPress(filterName);
-    logEvent(`selected ${filterName}`);
+    logEvent(`selected ${filterName} filter`);
   }, []);
 
   return (

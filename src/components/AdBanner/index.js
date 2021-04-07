@@ -9,7 +9,6 @@ const AdBanner = () => {
   //adUnitID="ca-app-pub-3940256099942544/6300978111" //test ID
   //testDevices={[AdMobBanner.simulatorId]}
 
-  //adUnitID="ca-app-pub-7986828971010623/8908202716" prod
   return showBanner ? (
     <SafeAreaView
       style={{
