@@ -48,6 +48,17 @@ interface IDataTickets {
   getRentability: IGetRentability[];
 }
 
+interface IWallet {
+  _id: string;
+  sumCostWallet: number;
+  sumAmountWallet: number;
+  percentRentabilityWallet: number;
+}
+
+interface IDataWallet {
+  getWalletById: IWallet;
+}
+
 const Rentability = () => {
   const { logEvent } = useAmplitude();
   const { wallet, handleSetLoading } = useAuth();
@@ -61,6 +72,20 @@ const Rentability = () => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Rentability');
+    }, []),
+  );
+
+  const [
+    getWalletById,
+    { data: dataWallet, loading: queryWalletLoading, error: queryWalletError },
+  ] = useLazyQuery<IDataWallet>(GET_WALLET_BY_ID, {
+    variables: { _id: wallet },
+    fetchPolicy: 'cache-first',
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      getWalletById();
     }, []),
   );
 
@@ -124,7 +149,13 @@ const Rentability = () => {
             data={rentabilityData}
             extraData={rentabilityData}
             keyExtractor={item => item._id}
-            ListHeaderComponent={<AmountWallet />}
+            ListHeaderComponent={
+              <AmountWallet
+                data={dataWallet}
+                queryLoading={queryWalletLoading}
+                queryError={queryWalletError}
+              />
+            }
             renderItem={({ item, index }) => (
               <ListItem
                 item={item}
@@ -153,6 +184,17 @@ export const GET_RENTABILITY = gql`
       currentAmount
       variationAmount
       variationPercent
+    }
+  }
+`;
+
+export const GET_WALLET_BY_ID = gql`
+  query getWalletById($_id: ID!) {
+    getWalletById(_id: $_id) {
+      _id
+      sumCostWallet
+      sumAmountWallet
+      percentRentabilityWallet
     }
   }
 `;

@@ -1,12 +1,13 @@
 import React from 'react';
-import Rentability, { GET_RENTABILITY } from './index';
-import { GET_WALLET_BY_ID } from '../../components/AmountWallet';
+import Rentability, { GET_RENTABILITY, GET_WALLET_BY_ID } from './index';
+
 import { act, render } from '../../utils/testProvider';
 import { GraphQLError } from 'graphql';
 
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     wallet: '5fa1d752a8c5892a48c69b35',
+    handleSetLoading: jest.fn(),
   }),
 }));
 
@@ -16,13 +17,14 @@ describe('Rentability Tab', () => {
       findByA11yRole,
       getAllByA11yLabel,
       findByA11yLabel,
+      getByText,
     } = render(<Rentability />, [
       SUCCESSFUL_GET_WALLET_BY_ID,
       SUCCESSFUL_LIST_RENTABILITY,
     ]);
 
-    const title = await findByA11yRole('header');
-    expect(title).toHaveProperty('children', ['Variação da carteira']);
+    await findByA11yRole('header');
+    getByText('Variação da carteira');
 
     const symbolItemOne = getAllByA11yLabel(/Código do Ativo/i)[0];
     expect(symbolItemOne).toHaveProperty('children', ['MGLU3']);

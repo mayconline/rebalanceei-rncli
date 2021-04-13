@@ -10,6 +10,7 @@ const mockedhandleSignOut = jest.fn();
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     handleSignOut: mockedhandleSignOut,
+    handleSetLoading: jest.fn(),
   }),
 }));
 
@@ -21,6 +22,7 @@ describe('Menu Modal', () => {
       findByA11yRole,
       getByA11yRole,
       getAllByA11yRole,
+      findAllByA11yRole,
     } = render(<MenuModal onClose={mockedOnClose} />);
 
     const title = await findByA11yRole('header');
@@ -37,7 +39,8 @@ describe('Menu Modal', () => {
 
     const myPlan = getByText(/Meu Plano Atual/i);
     act(() => fireEvent.press(myPlan));
-    await findByText('Meu Plano Atual');
+    const titlePlan = await findAllByA11yRole('header');
+    expect(titlePlan[1]).toHaveProperty('children', ['Meu Plano Atual']);
 
     const terms = getByText(/Termos de Uso/i);
     act(() => fireEvent.press(terms));

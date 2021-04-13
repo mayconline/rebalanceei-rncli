@@ -7,6 +7,7 @@ jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     wallet: '5fa1d752a8c5892a48c69b35',
     handleVerificationInvalidWallet: jest.fn(),
+    handleSetLoading: jest.fn(),
   }),
 }));
 
@@ -18,12 +19,13 @@ describe('Ticket Tab', () => {
       findByA11yRole,
       getAllByA11yRole,
       getAllByA11yLabel,
+      getByText,
       setParams,
       navigate,
     } = render(<Ticket />, [SUCCESSFUL_LIST_TICKETS]);
 
-    const title = await findByA11yRole('header');
-    expect(title).toHaveProperty('children', ['Meus Ativos']);
+    await findByA11yRole('header');
+    getByText('Meus Ativos');
 
     const listItems = getAllByA11yRole('button');
     expect(listItems).toHaveLength(5);
@@ -68,14 +70,15 @@ describe('Ticket Tab', () => {
   });
 
   it('should render empty component', async () => {
-    const { findByA11yRole, getByA11yRole, navigate } = render(<Ticket />, [
-      EMPTY_LIST_TICKETS,
-    ]);
+    const {
+      findByA11yRole,
+      getByA11yRole,
+      getByText,
+      navigate,
+    } = render(<Ticket />, [EMPTY_LIST_TICKETS]);
 
-    const title = await findByA11yRole('header');
-    expect(title).toHaveProperty('children', [
-      'Adicione um ativo dando uma nota para ele.',
-    ]);
+    await findByA11yRole('header');
+    getByText('Adicione um ativo dando uma nota para ele.');
 
     const subTitle = getByA11yRole('text');
     expect(subTitle).toHaveProperty('children', [

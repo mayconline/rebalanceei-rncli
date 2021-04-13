@@ -11,6 +11,7 @@ const mockedAlert = (Alert.alert = jest.fn());
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     handleSignOut: mockedHandleSignOut,
+    handleSetLoading: jest.fn(),
   }),
 }));
 

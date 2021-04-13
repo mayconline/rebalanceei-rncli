@@ -11,6 +11,7 @@ const mockedHandleSignIn = jest.fn();
 jest.mock('../../../contexts/authContext', () => ({
   useAuth: () => ({
     handleSignIn: mockedHandleSignIn,
+    handleSetLoading: jest.fn(),
   }),
 }));
 

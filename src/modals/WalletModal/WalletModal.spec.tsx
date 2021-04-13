@@ -9,6 +9,7 @@ const mockedHandleSetWallet = jest.fn();
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     handleSetWallet: mockedHandleSetWallet,
+    handleSetLoading: jest.fn(),
   }),
 }));
 

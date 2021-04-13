@@ -30,15 +30,15 @@ jest.mock('../../contexts/authContext', () => ({
       packageName: 'com.rebalanceei',
       transactionId: '12121221',
     },
+    handleSetLoading: jest.fn(),
   }),
 }));
 
 describe('PlanModal', () => {
   it('should successfully list current plan and options premium', async () => {
-    const { findByA11yRole, findByText } = render(
-      <PlanModal onClose={mockedOnClose} />,
-      [SUCCESSFUL_GET_ROLE_USER],
-    );
+    const { findByA11yRole } = render(<PlanModal onClose={mockedOnClose} />, [
+      SUCCESSFUL_GET_ROLE_USER,
+    ]);
 
     const title = await findByA11yRole('header');
     expect(title).toHaveProperty('children', ['Meu Plano Atual']);
@@ -67,7 +67,7 @@ describe('PlanModal', () => {
       /\*Seu Plano será renovado automáticamente na data da renovação./i,
     );
 
-    expect(title[1]).toHaveProperty('children', ['Premium']);
+    getByText('Premium');
     getByText(/^\+ Carteiras ilimitadas$/i);
     getByText(/^\+ Ativos ilimitados$/i);
     getByText(/^\+ Sem Anúncios$/i);

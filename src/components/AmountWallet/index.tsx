@@ -1,9 +1,7 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components/native';
-import { useFocusEffect } from '@react-navigation/native';
 import { ActivityIndicator } from 'react-native';
-import { useLazyQuery, gql } from '@apollo/client';
-import { useAuth } from '../../contexts/authContext';
+import { ApolloError } from '@apollo/client';
 import {
   Wrapper,
   Card,
@@ -17,7 +15,6 @@ import {
   CurrentAmount,
   VariationAmount,
 } from './styles';
-
 import { formatNumber, formatPercent } from '../../utils/format';
 import TextError from '../TextError';
 
@@ -28,28 +25,22 @@ interface IWallet {
   percentRentabilityWallet: number;
 }
 
-interface IDataTickets {
+interface IDataWallet {
   getWalletById: IWallet;
 }
 
-const AmountWallet = () => {
+interface IAmountWalletProps {
+  data?: IDataWallet;
+  queryLoading?: boolean;
+  queryError?: ApolloError;
+}
+
+const AmountWallet = ({
+  data,
+  queryLoading,
+  queryError,
+}: IAmountWalletProps) => {
   const { color, gradient } = useContext(ThemeContext);
-
-  const { wallet } = useAuth();
-
-  const [
-    getWalletById,
-    { data, loading: queryLoading, error: queryError },
-  ] = useLazyQuery<IDataTickets>(GET_WALLET_BY_ID, {
-    variables: { _id: wallet },
-    fetchPolicy: 'cache-first',
-  });
-
-  useFocusEffect(
-    useCallback(() => {
-      getWalletById();
-    }, []),
-  );
 
   const isPositive = data && data?.getWalletById?.percentRentabilityWallet > 0;
 
@@ -100,16 +91,5 @@ const AmountWallet = () => {
     </Wrapper>
   );
 };
-
-export const GET_WALLET_BY_ID = gql`
-  query getWalletById($_id: ID!) {
-    getWalletById(_id: $_id) {
-      _id
-      sumCostWallet
-      sumAmountWallet
-      percentRentabilityWallet
-    }
-  }
-`;
 
 export default AmountWallet;

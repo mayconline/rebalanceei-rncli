@@ -6,17 +6,20 @@ import { GraphQLError } from 'graphql';
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     wallet: '5fa1d752a8c5892a48c69b35',
+    handleSetLoading: jest.fn(),
   }),
 }));
 
 describe('Rebalance Tab', () => {
   it('should successfully list rebalances', async () => {
-    const { findByA11yRole, getAllByA11yLabel } = render(<Rebalance />, [
-      SUCCESSFUL_LIST_REBALANCES,
-    ]);
+    const {
+      findByA11yRole,
+      getAllByA11yLabel,
+      getByText,
+    } = render(<Rebalance />, [SUCCESSFUL_LIST_REBALANCES]);
 
-    const title = await findByA11yRole('header');
-    expect(title).toHaveProperty('children', ['Rebalancear']);
+    await findByA11yRole('header');
+    getByText('Rebalancear');
 
     const symbolItemOne = getAllByA11yLabel(/Código do Ativo/i)[0];
     expect(symbolItemOne).toHaveProperty('children', ['IRBR3']);

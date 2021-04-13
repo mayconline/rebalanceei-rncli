@@ -2,6 +2,8 @@ import { renderHook, act } from '@testing-library/react-hooks';
 import { useAuth, AuthProvider } from './authContext';
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 
+jest.mock('react-native/Libraries/Modal/Modal', () => () => null);
+
 const multiGetSpy = jest.spyOn(mockAsyncStorage, 'multiGet');
 const multiRemoveSpy = jest.spyOn(mockAsyncStorage, 'multiRemove');
 const multiSetSpy = jest.spyOn(mockAsyncStorage, 'multiSet');
@@ -38,7 +40,7 @@ describe('Auth Context', () => {
     ]);
 
     expect(result.current.signed).toBeTruthy();
-    expect(result.current.loading).toBeFalsy();
+    expect(result.current.loading).toBeTruthy();
   });
 
   it('should get data storage when app init', async () => {

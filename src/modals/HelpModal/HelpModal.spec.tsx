@@ -5,6 +5,12 @@ import { GraphQLError } from 'graphql';
 
 const mockedOnClose = jest.fn();
 
+jest.mock('../../contexts/authContext', () => ({
+  useAuth: () => ({
+    handleSetLoading: jest.fn(),
+  }),
+}));
+
 describe('HelpModal', () => {
   it('should successfully list questions', async () => {
     const { findByText, getByText } = render(
