@@ -16,8 +16,8 @@ import Collapse from '../../components/Collapse';
 import ListTicket from '../../components/ListTicket';
 import ImageHelp from '../../../assets/svg/ImageHelp';
 import TextError from '../../components/TextError';
-import Loading from '../../components/Loading';
 import useAmplitude from '../../hooks/useAmplitude';
+import { useAuth } from '../../contexts/authContext';
 
 interface IHelpModal {
   onClose(): void;
@@ -36,6 +36,7 @@ interface IGetQuestion {
 const HelpModal = ({ onClose }: IHelpModal) => {
   const { logEvent } = useAmplitude();
   const { color } = useContext(ThemeContext);
+  const { handleSetLoading } = useAuth();
 
   useFocusEffect(
     useCallback(() => {
@@ -54,9 +55,13 @@ const HelpModal = ({ onClose }: IHelpModal) => {
     }, []),
   );
 
-  return queryLoading ? (
-    <Loading />
-  ) : (
+  useFocusEffect(
+    useCallback(() => {
+      handleSetLoading(queryLoading);
+    }, [queryLoading]),
+  );
+
+  return (
     <Wrapper>
       <ContainerTitle>
         <Title accessibilityRole="header">Precisa de Ajuda?</Title>

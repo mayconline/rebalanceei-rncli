@@ -16,7 +16,6 @@ import {
   getLengthTicketPerClass,
 } from '../../utils/format';
 import Empty from '../../components/Empty';
-import Loading from '../../components/Loading';
 import TextError from '../../components/TextError';
 import AdBanner from '../../components/AdBanner';
 import useAmplitude from '../../hooks/useAmplitude';
@@ -63,7 +62,7 @@ const Chart = () => {
   const [dataGraph, setDataGraph] = useState<PieChartData[]>([]);
   const [selectedFilter, setSelectFilter] = useState<string>('Classe');
 
-  const { wallet } = useAuth();
+  const { wallet, handleSetLoading } = useAuth();
 
   useFocusEffect(
     useCallback(() => {
@@ -79,7 +78,11 @@ const Chart = () => {
     fetchPolicy: 'cache-and-network',
   });
 
-  const hasTickets = wallet && !queryLoading && !!data?.rebalances.length;
+  useFocusEffect(
+    useCallback(() => {
+      handleSetLoading(queryLoading);
+    }, [queryLoading]),
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -104,7 +107,7 @@ const Chart = () => {
 
       return setDataGraph(formatedPie);
     }
-  }, [hasTickets]);
+  }, [data]);
 
   const eachClassChart = useCallback(() => {
     if (data?.rebalances) {
@@ -129,7 +132,7 @@ const Chart = () => {
 
       return setDataGraph(formatedPie);
     }
-  }, [hasTickets]);
+  }, [data]);
 
   useFocusEffect(
     useCallback(() => {
@@ -181,15 +184,16 @@ const Chart = () => {
     setSelectFilter(filterName);
   }, []);
 
-  return queryLoading ? (
-    <Loading />
-  ) : (
+  const hasEmptyTickets =
+    !wallet || (!queryLoading && data?.rebalances?.length === 0);
+
+  return (
     <Wrapper>
       <Header />
       {!!queryError && (
         <TextError isTabs={true}>{queryError?.message}</TextError>
       )}
-      {!hasTickets ? (
+      {hasEmptyTickets ? (
         <Empty />
       ) : (
         <>

@@ -12,7 +12,6 @@ import { getPositionAdBanner } from '../../utils/format';
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
 import Empty from '../../components/Empty';
-import Loading from '../../components/Loading';
 import TextError from '../../components/TextError';
 import WalletModal from '../../modals/WalletModal';
 import ListTicket from '../../components/ListTicket';
@@ -54,10 +53,11 @@ const Ticket = () => {
     statePlan,
     handleSignOut,
     handleVerificationInvalidWallet,
+    handleSetLoading,
   } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('grade');
-  const [openModal, setOpenModal] = useState(!wallet ? true : false);
+  const [openModal, setOpenModal] = useState(false);
 
   const [ticketData, setTicketData] = useState<ITickets[]>([] as ITickets[]);
 
@@ -119,6 +119,12 @@ const Ticket = () => {
 
   useFocusEffect(
     useCallback(() => {
+      handleSetLoading(queryLoading);
+    }, [queryLoading]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
       getTicketsByWallet();
     }, []),
   );
@@ -158,18 +164,17 @@ const Ticket = () => {
     navigation.navigate('AddTicket', { ticket: item });
   }, []);
 
-  const hasTickets = wallet && !queryLoading && !!ticketData.length;
+  const hasEmptyTickets =
+    !wallet || (!queryLoading && ticketData?.length === 0);
 
-  return queryLoading ? (
-    <Loading />
-  ) : (
+  return (
     <>
       <Wrapper>
         <Header />
         {!!queryError && (
           <TextError isTabs={true}>{queryError?.message}</TextError>
         )}
-        {!hasTickets ? (
+        {hasEmptyTickets ? (
           <Empty openModal={() => setOpenModal(true)} />
         ) : (
           <>

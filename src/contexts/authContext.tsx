@@ -5,7 +5,7 @@ import React, {
   useContext,
   useCallback,
 } from 'react';
-import { StatusBar, useColorScheme } from 'react-native';
+import { Modal, StatusBar, useColorScheme } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNetInfo } from '@react-native-community/netinfo';
@@ -19,6 +19,7 @@ import {
 import { setLocalStorage } from '../utils/localStorage';
 import themes, { themeMode, Theme } from '../themes';
 import { ThemeProvider } from 'styled-components/native';
+import Loading from '../components/Loading';
 
 interface ISignIn {
   _id: string;
@@ -56,6 +57,7 @@ interface IAuthContext {
   handleSignOut(): Promise<void>;
   handleVerificationInvalidWallet(isInvalid: boolean): void;
   setSelectTheme(selectedTheme: 'LIGHT' | 'DARK'): void;
+  handleSetLoading(state: boolean): void;
 }
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
@@ -72,7 +74,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [walletName, setWalletName] = useState<string | null>(null);
   const [hasInvalidWallet, sethasInvalidWallet] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [userID, setUserID] = useState<string | null>(null);
   const [plan, setPlan] = useState<IPlan | null>(null);
   const [statePlan, setStatePlan] = useState<IStatePlan>(null);
@@ -89,7 +91,12 @@ export const AuthProvider: React.FC = ({ children }) => {
     [],
   );
 
+  const handleSetLoading = useCallback(async (state: boolean) => {
+    setLoading(state);
+  }, []);
+
   const loadStorageData = useCallback(async () => {
+    setLoading(true);
     const [
       storageRole,
       storageToken,
@@ -114,10 +121,6 @@ export const AuthProvider: React.FC = ({ children }) => {
       await handleVerificationPlan(JSON.parse(storagePlan[1]));
     }
 
-    if (storageToken[1]) {
-      setSigned(true);
-    }
-
     if (storageWallet[1] && storageWalletName[1]) {
       setWallet(storageWallet[1]);
       setWalletName(storageWalletName[1]);
@@ -127,7 +130,9 @@ export const AuthProvider: React.FC = ({ children }) => {
       setUserID(storageID[1]);
     }
 
-    setLoading(false);
+    if (storageToken[1]) {
+      setSigned(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -136,7 +141,6 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const handleSignIn = useCallback(async (userLogin: ISignIn) => {
     setLoading(true);
-
     try {
       const { token, role, _id, plan } = userLogin;
 
@@ -151,11 +155,8 @@ export const AuthProvider: React.FC = ({ children }) => {
 
       setUserID(_id);
       setSigned(true);
-
-      setLoading(false);
     } catch (err) {
       handleSignOut();
-      setLoading(false);
     }
   }, []);
 
@@ -177,6 +178,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     setWalletName(null);
     setPlan(null);
     setUserID(null);
+    setLoading(false);
     setSigned(false);
   }, []);
 
@@ -256,6 +258,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         handleSignIn,
         handleSignOut,
         setSelectTheme,
+        handleSetLoading,
         loading,
         isConnected,
         userID,
@@ -269,6 +272,18 @@ export const AuthProvider: React.FC = ({ children }) => {
           translucent={true}
           backgroundColor={theme.color.primary}
         />
+
+        {loading && (
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={loading}
+            statusBarTranslucent={true}
+          >
+            <Loading />
+          </Modal>
+        )}
+
         {children}
       </ThemeProvider>
     </AuthContext.Provider>

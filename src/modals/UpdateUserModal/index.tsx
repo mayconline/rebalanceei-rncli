@@ -17,7 +17,6 @@ import {
 } from './styles';
 import ImageProfile from '../../../assets/svg/ImageProfile';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
@@ -47,7 +46,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
   const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const [user, setUser] = useState({} as IUser);
-  const { handleSignOut } = useAuth();
+  const { handleSignOut, handleSetLoading } = useAuth();
   const [focus, setFocus] = useState(0);
 
   useFocusEffect(
@@ -158,9 +157,14 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
     [],
   );
 
-  return queryLoading || mutationLoading ? (
-    <Loading />
-  ) : (
+  useFocusEffect(
+    useCallback(() => {
+      handleSetLoading(queryLoading);
+      handleSetLoading(mutationLoading);
+    }, [queryLoading]),
+  );
+
+  return (
     <>
       <Wrapper>
         <ContainerTitle>

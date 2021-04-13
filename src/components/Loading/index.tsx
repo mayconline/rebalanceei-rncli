@@ -12,7 +12,7 @@ import {
 
 import LoadingImage from '../../../assets/svg/LoadingImage';
 
-const Loading: React.FC = () => {
+const Loading = () => {
   return (
     <Wrapper>
       <Header>

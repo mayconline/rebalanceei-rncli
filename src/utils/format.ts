@@ -170,4 +170,6 @@ export const formatErrors = (error: string) =>
     'An unknown or unexpected error has occured. Please try again later.':
       'Pagamento recusado',
     'You already own this item.': 'Sua conta google já possui esta assinatura',
+    'Billing is unavailable. This may be a problem with your device, or the Play Store may be down.':
+      'Houve uma falha ao se conectar a google play.',
   }[error]);

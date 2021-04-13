@@ -47,7 +47,7 @@ const Login = () => {
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountLogin);
 
-  const { handleSignIn } = useAuth();
+  const { handleSignIn, handleSetLoading } = useAuth();
   const navigation = useNavigation();
 
   useFocusEffect(
@@ -78,6 +78,7 @@ const Login = () => {
       .catch(err => {
         logEvent('error on Login');
         console.error(mutationError?.message + err);
+        handleSetLoading(false);
       });
   };
 
@@ -116,6 +117,12 @@ const Login = () => {
     logEvent(`click on Navigate to ${route} at Login`);
     navigation.navigate(route);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      mutationLoading && handleSetLoading(true);
+    }, [mutationLoading]),
+  );
 
   return (
     <Wrapper>

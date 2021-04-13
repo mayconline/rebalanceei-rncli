@@ -51,7 +51,7 @@ const SignUp = () => {
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountRegister);
 
-  const { handleSignIn } = useAuth();
+  const { handleSignIn, handleSetLoading } = useAuth();
   const navigation = useNavigation();
 
   useFocusEffect(
@@ -148,6 +148,12 @@ const SignUp = () => {
     logEvent(`click on Navigate to ${route} at SignUp`);
     navigation.navigate(route);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      mutationLoading && handleSetLoading(true);
+    }, [mutationLoading]),
+  );
 
   return (
     <Wrapper>

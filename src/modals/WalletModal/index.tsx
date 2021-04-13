@@ -18,7 +18,6 @@ import {
 
 import AddButton from '../../components/AddButton';
 import ShadowBackdrop from '../../components/ShadowBackdrop';
-import Loading from '../../components/Loading';
 import TextError from '../../components/TextError';
 import AddWalletModal from '../AddWalletModal';
 import ListTicket from '../../components/ListTicket';
@@ -53,7 +52,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
   const { logEvent } = useAmplitude();
 
   const { color } = useContext(ThemeContext);
-  const { handleSetWallet, wallet } = useAuth();
+  const { handleSetWallet, wallet, handleSetLoading } = useAuth();
   const [openModal, setOpenModal] = useState(false);
   const [editWallet, setEditWallet] = useState<IWalletData>({} as IWalletData);
   const [selectedWallet, setSelectedWallet] = useState<String | null>(wallet);
@@ -70,6 +69,12 @@ const WalletModal = ({ onClose }: IWalletProps) => {
   ] = useLazyQuery<IDataWallet>(GET_WALLET_BY_USER, {
     fetchPolicy: 'cache-first',
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      handleSetLoading(queryLoading);
+    }, [queryLoading]),
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -102,9 +107,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
     setEditWallet({} as IWalletData);
   }, []);
 
-  return queryLoading ? (
-    <Loading />
-  ) : (
+  return (
     <>
       <ShadowBackdrop />
       <Wrapper>

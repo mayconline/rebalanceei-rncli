@@ -8,11 +8,10 @@ import { Wrapper, ScrollView, ContainerTitle, BackIcon, Title } from './styles';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import Loading from '../../components/Loading';
 import TextError from '../../components/TextError';
 import Free from './components/Free';
 import Premium from './components/Premium';
-import { IPlan } from '../../contexts/authContext';
+import { IPlan, useAuth } from '../../contexts/authContext';
 
 export interface IUser {
   _id: string;
@@ -39,6 +38,7 @@ const PlanModal = ({ onClose }: PlanModal) => {
   });
 
   const currentRole = data?.getUserByToken?.role;
+  const { handleSetLoading } = useAuth();
 
   const { color } = useContext(ThemeContext);
   const [planName, setPlanName] = useState<IPlanName>(null);
@@ -61,9 +61,13 @@ const PlanModal = ({ onClose }: PlanModal) => {
     setPlanName(plan);
   }, []);
 
-  return queryLoading ? (
-    <Loading />
-  ) : (
+  useFocusEffect(
+    useCallback(() => {
+      handleSetLoading(queryLoading);
+    }, [queryLoading]),
+  );
+
+  return (
     <Wrapper>
       <ScrollView>
         {!!queryError && <TextError>{queryError?.message}</TextError>}

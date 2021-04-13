@@ -11,7 +11,6 @@ import { getPositionAdBanner } from '../../utils/format';
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
 import Empty from '../../components/Empty';
-import Loading from '../../components/Loading';
 import TextError from '../../components/TextError';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
@@ -51,7 +50,7 @@ interface IDataTickets {
 const Rebalance = () => {
   const { logEvent } = useAmplitude();
 
-  const { wallet } = useAuth();
+  const { wallet, handleSetLoading } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('targetAmount');
 
@@ -75,6 +74,12 @@ const Rebalance = () => {
 
   useFocusEffect(
     useCallback(() => {
+      handleSetLoading(queryLoading);
+    }, [queryLoading]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
       rebalances();
     }, []),
   );
@@ -92,17 +97,16 @@ const Rebalance = () => {
     setSelectFilter(filterName);
   }, []);
 
-  const hasTickets = wallet && !queryLoading && !!rebalanceData.length;
+  const hasEmptyTickets =
+    !wallet || (!queryLoading && rebalanceData?.length === 0);
 
-  return queryLoading ? (
-    <Loading />
-  ) : (
+  return (
     <Wrapper>
       <Header />
       {!!queryError && (
         <TextError isTabs={true}>{queryError?.message}</TextError>
       )}
-      {!hasTickets ? (
+      {hasEmptyTickets ? (
         <Empty />
       ) : (
         <>
