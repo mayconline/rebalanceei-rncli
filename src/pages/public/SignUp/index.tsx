@@ -102,6 +102,7 @@ const SignUp = () => {
       .catch(err => {
         logEvent('error on create account');
         console.error(mutationError?.message + err);
+        handleSetLoading(false);
       });
   };
 
