@@ -5,6 +5,12 @@ import * as localStorage from '../../../utils/localStorage';
 
 const mockedGetLocalStorage = jest.spyOn(localStorage, 'getLocalStorage');
 
+jest.mock('../../../contexts/authContext', () => ({
+  useAuth: () => ({
+    handleSetLoading: jest.fn(),
+  }),
+}));
+
 describe('Welcome Page', () => {
   it('should display correct page view on first access', async () => {
     const { getByText, findByText, navigate } = render(<Welcome />);

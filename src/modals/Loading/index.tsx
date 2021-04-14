@@ -1,28 +1,31 @@
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
-
+import LottieView from 'lottie-react-native';
 import {
   Wrapper,
-  Header,
   Image,
   ContainerTitle,
   SubTitle,
   Footer,
+  LootieContainer,
 } from './styles';
-
 import LoadingImage from '../../../assets/svg/LoadingImage';
 
 const Loading = () => {
   return (
     <Wrapper>
-      <Header>
-        <ActivityIndicator size="large" color="#fff" />
-      </Header>
+      <LootieContainer>
+        <LottieView
+          source={require('../../../assets/looties/loading-lootie.json')}
+          autoPlay
+          loop={true}
+        />
+      </LootieContainer>
 
       <Footer>
         <Image>
           <LoadingImage />
         </Image>
+
         <ContainerTitle>
           <SubTitle>Carregando ...</SubTitle>
         </ContainerTitle>

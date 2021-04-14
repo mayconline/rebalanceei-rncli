@@ -6,8 +6,8 @@ export const Wrapper = styled.SafeAreaView`
   justify-content: space-around;
 `;
 
-export const Header = styled.View`
-  justify-content: space-between;
+export const LootieContainer = styled.View`
+  min-height: 200px;
 `;
 
 export const Image = styled.View`

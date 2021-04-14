@@ -19,7 +19,7 @@ import {
 import { setLocalStorage } from '../utils/localStorage';
 import themes, { themeMode, Theme } from '../themes';
 import { ThemeProvider } from 'styled-components/native';
-import Loading from '../components/Loading';
+import Loading from '../modals/Loading';
 
 interface ISignIn {
   _id: string;
@@ -97,41 +97,45 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const loadStorageData = useCallback(async () => {
     setLoading(true);
-    const [
-      storageRole,
-      storageToken,
-      storageWallet,
-      storageWalletName,
-      storageID,
-      storagePlan,
-    ] = await AsyncStorage.multiGet([
-      '@authRole',
-      '@authToken',
-      '@authWallet',
-      '@authWalletName',
-      '@authID',
-      '@authPlan',
-    ]);
+    try {
+      const [
+        storageRole,
+        storageToken,
+        storageWallet,
+        storageWalletName,
+        storageID,
+        storagePlan,
+      ] = await AsyncStorage.multiGet([
+        '@authRole',
+        '@authToken',
+        '@authWallet',
+        '@authWalletName',
+        '@authID',
+        '@authPlan',
+      ]);
 
-    if (storageRole[1] === 'USER') {
-      setShowBanner(true);
-    }
+      if (storageRole[1] === 'USER') {
+        setShowBanner(true);
+      }
 
-    if (storageRole[1] === 'PREMIUM' && storagePlan[1]) {
-      await handleVerificationPlan(JSON.parse(storagePlan[1]));
-    }
+      if (storageRole[1] === 'PREMIUM' && storagePlan[1]) {
+        await handleVerificationPlan(JSON.parse(storagePlan[1]));
+      }
 
-    if (storageWallet[1] && storageWalletName[1]) {
-      setWallet(storageWallet[1]);
-      setWalletName(storageWalletName[1]);
-    }
+      if (storageWallet[1] && storageWalletName[1]) {
+        setWallet(storageWallet[1]);
+        setWalletName(storageWalletName[1]);
+      }
 
-    if (storageID[1]) {
-      setUserID(storageID[1]);
-    }
+      if (storageID[1]) {
+        setUserID(storageID[1]);
+      }
 
-    if (storageToken[1]) {
-      setSigned(true);
+      if (storageToken[1]) {
+        setSigned(true);
+      }
+    } catch (err) {
+      setLoading(false);
     }
   }, []);
 
