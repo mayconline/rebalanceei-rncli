@@ -100,6 +100,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
                     query: GET_USER_BY_TOKEN,
                   },
                 ],
+                awaitRefetchQueries: true,
               });
               handleSignOut();
             },
@@ -124,6 +125,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
             query: GET_USER_BY_TOKEN,
           },
         ],
+        awaitRefetchQueries: true,
       });
 
       logEvent('successful update account');

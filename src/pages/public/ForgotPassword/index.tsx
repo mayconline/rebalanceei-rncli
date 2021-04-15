@@ -7,13 +7,13 @@ import { ThemeContext } from 'styled-components/native';
 import {
   Wrapper,
   FormContainer,
-  ContainerTitle,
   Image,
   Header,
   Icon,
   Title,
   Form,
   FormRow,
+  ContainerButtons,
 } from './styles';
 import Entypo from 'react-native-vector-icons/Entypo';
 import ImageRecoveryPassword from '../../../../assets/svg/ImageRecoveryPassword';
@@ -117,9 +117,8 @@ const ForgotPassword = () => {
         >
           <Entypo name="chevron-left" size={32} color={color.activeText} />
         </Icon>
-        <ContainerTitle>
-          <Title accessibilityRole="header">Recuperar Senha</Title>
-        </ContainerTitle>
+
+        <Title accessibilityRole="header">Recuperar Senha</Title>
       </Header>
       <Image>
         <ImageRecoveryPassword />
@@ -144,14 +143,16 @@ const ForgotPassword = () => {
 
           {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
-          <Button
-            colors={gradient.darkToLightBlue}
-            onPress={handleSubmit}
-            loading={mutationLoading}
-            disabled={mutationLoading}
-          >
-            Recuperar Senha
-          </Button>
+          <ContainerButtons>
+            <Button
+              colors={gradient.darkToLightBlue}
+              onPress={handleSubmit}
+              loading={mutationLoading}
+              disabled={mutationLoading}
+            >
+              Recuperar Senha
+            </Button>
+          </ContainerButtons>
         </Form>
       </FormContainer>
     </Wrapper>

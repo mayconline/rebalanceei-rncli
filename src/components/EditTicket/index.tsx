@@ -1,13 +1,11 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Platform } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
 import { useMutation, gql } from '@apollo/client';
-import { FormContainer, Form, FormRow, ContainerButtons } from './styles';
+import { Form, FormRow, ContainerButtons } from './styles';
 
 import { ITickets, GET_TICKETS_BY_WALLET } from '../../pages/Ticket';
 import { GET_WALLET_BY_USER } from '../../modals/WalletModal';
-import { GET_WALLET_BY_ID } from '../AmountWallet';
 
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Button from '../Button';
@@ -70,8 +68,8 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
   );
 
   const handleGoBack = useCallback(() => {
-    navigation.setParams({ ticket: null });
     setTicketForm({} as IDataForm);
+    navigation.setParams({ ticket: null });
   }, []);
 
   const [
@@ -119,6 +117,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
             query: GET_WALLET_BY_USER,
           },
         ],
+        awaitRefetchQueries: true,
       });
 
       logEvent('successful editTicket at Edit Ticket');
@@ -152,6 +151,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
             query: GET_WALLET_BY_USER,
           },
         ],
+        awaitRefetchQueries: true,
       });
 
       logEvent('successful deleteTicket at Delete Ticket');
@@ -190,89 +190,87 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
   );
 
   return (
-    <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
-      <Form>
-        <FormRow>
-          <InputForm
-            label="Ativo Selecionado"
-            value={formatTicket(ticketForm.symbol)}
-            defaultValue={formatTicket(ticketForm.symbol)}
-            maxLength={10}
-            editable={false}
-            width={60}
-          />
+    <Form>
+      <FormRow>
+        <InputForm
+          label="Ativo Selecionado"
+          value={formatTicket(ticketForm.symbol)}
+          defaultValue={formatTicket(ticketForm.symbol)}
+          maxLength={10}
+          editable={false}
+          width={60}
+        />
 
-          <InputForm
-            label="Dê uma Nota"
-            value={ticketForm.grade}
-            defaultValue={ticketForm.grade}
-            placeholder="0 a 100"
-            maxLength={3}
-            keyboardType="number-pad"
-            autoFocus={focus === 2}
-            onFocus={() => setFocus(2)}
-            onChangeText={handleSetGrade}
-            onEndEditing={() => onEndInputEditing(3, 'grade')}
-            width={30}
-          />
-        </FormRow>
-        <FormRow>
-          <InputForm
-            label="Preço Médio"
-            value={ticketForm.averagePreview}
-            defaultValue={ticketForm.averagePreview}
-            placeholder="Preço Médio de Compra"
-            keyboardType="number-pad"
-            autoFocus={focus === 3}
-            onFocus={() => setFocus(3)}
-            onChangeText={handleSetPrice}
-            onEndEditing={() => onEndInputEditing(4, 'averagePrice')}
-            width={60}
-          />
+        <InputForm
+          label="Dê uma Nota"
+          value={ticketForm.grade}
+          defaultValue={ticketForm.grade}
+          placeholder="0 a 100"
+          maxLength={3}
+          keyboardType="number-pad"
+          autoFocus={focus === 2}
+          onFocus={() => setFocus(2)}
+          onChangeText={handleSetGrade}
+          onEndEditing={() => onEndInputEditing(3, 'grade')}
+          width={30}
+        />
+      </FormRow>
+      <FormRow>
+        <InputForm
+          label="Preço Médio"
+          value={ticketForm.averagePreview}
+          defaultValue={ticketForm.averagePreview}
+          placeholder="Preço Médio de Compra"
+          keyboardType="number-pad"
+          autoFocus={focus === 3}
+          onFocus={() => setFocus(3)}
+          onChangeText={handleSetPrice}
+          onEndEditing={() => onEndInputEditing(4, 'averagePrice')}
+          width={60}
+        />
 
-          <InputForm
-            label="Quantidade"
-            value={ticketForm.quantity}
-            defaultValue={ticketForm.quantity}
-            placeholder="9999"
-            keyboardType="number-pad"
-            returnKeyType="send"
-            autoFocus={focus === 4}
-            onFocus={() => setFocus(4)}
-            onChangeText={handleSetQuantity}
-            onEndEditing={() => onEndInputEditing(0, 'quantity')}
-            onSubmitEditing={handleSubmit}
-            width={30}
-          />
-        </FormRow>
+        <InputForm
+          label="Quantidade"
+          value={ticketForm.quantity}
+          defaultValue={ticketForm.quantity}
+          placeholder="9999"
+          keyboardType="number-pad"
+          returnKeyType="send"
+          autoFocus={focus === 4}
+          onFocus={() => setFocus(4)}
+          onChangeText={handleSetQuantity}
+          onEndEditing={() => onEndInputEditing(0, 'quantity')}
+          onSubmitEditing={handleSubmit}
+          width={30}
+        />
+      </FormRow>
 
-        {!!mutationError && <TextError>{mutationError?.message}</TextError>}
+      {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
-        {!!mutationDeleteError && (
-          <TextError>{mutationDeleteError?.message}</TextError>
-        )}
+      {!!mutationDeleteError && (
+        <TextError>{mutationDeleteError?.message}</TextError>
+      )}
 
-        <ContainerButtons>
-          <Button
-            colors={gradient.lightToDarkRed}
-            onPress={handleDeleteSubmit}
-            loading={mutationDeleteLoading}
-            disabled={mutationDeleteLoading}
-          >
-            Deletar
-          </Button>
+      <ContainerButtons>
+        <Button
+          colors={gradient.lightToDarkRed}
+          onPress={handleDeleteSubmit}
+          loading={mutationDeleteLoading}
+          disabled={mutationDeleteLoading}
+        >
+          Deletar
+        </Button>
 
-          <Button
-            colors={gradient.darkToLightBlue}
-            onPress={handleSubmit}
-            loading={mutationLoading}
-            disabled={mutationLoading}
-          >
-            Alterar
-          </Button>
-        </ContainerButtons>
-      </Form>
-    </FormContainer>
+        <Button
+          colors={gradient.darkToLightBlue}
+          onPress={handleSubmit}
+          loading={mutationLoading}
+          disabled={mutationLoading}
+        >
+          Alterar
+        </Button>
+      </ContainerButtons>
+    </Form>
   );
 };
 

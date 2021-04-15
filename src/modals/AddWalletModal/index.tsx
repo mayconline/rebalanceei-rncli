@@ -1,5 +1,5 @@
-import React, { useContext, useState, useCallback, useMemo } from 'react';
-import { Platform, Modal } from 'react-native';
+import React, { useContext, useState, useCallback } from 'react';
+import { Platform } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { useMutation, gql } from '@apollo/client';
@@ -12,10 +12,11 @@ import {
   Title,
   Form,
   FormRow,
+  Image,
+  ContainerButtons,
 } from './styles';
 
 import ImageAddTicket from '../../../assets/svg/ImageAddTicket';
-import SuccessModal from '../../modals/SuccessModal';
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
@@ -39,13 +40,12 @@ const AddWalletModal = ({
 }: IAddWalletModal) => {
   const { logEvent } = useAmplitude();
 
+  const { handleSetWallet, handleSetLoading } = useAuth();
   const { color, gradient } = useContext(ThemeContext);
   const [wallet, setWallet] = useState('');
   const [focus, setFocus] = useState(0);
-  const [openModal, setOpenModal] = useState(false);
-  const { handleSetWallet } = useAuth();
 
-  const isEdit = useMemo(() => !!walletData?._id, [walletData?._id]);
+  const isEdit = !!walletData?._id;
 
   useFocusEffect(
     useCallback(() => {
@@ -57,6 +57,12 @@ const AddWalletModal = ({
     createWallet,
     { loading: mutationLoading, error: mutationError },
   ] = useMutation(CREATE_WALLET);
+
+  useFocusEffect(
+    useCallback(() => {
+      mutationLoading && handleSetLoading(true);
+    }, [mutationLoading]),
+  );
 
   const handleSubmit = useCallback(async () => {
     if (!wallet) {
@@ -74,7 +80,11 @@ const AddWalletModal = ({
             query: GET_WALLET_BY_USER,
           },
         ],
+        awaitRefetchQueries: true,
       });
+
+      setWallet('');
+      beforeModalClose();
 
       handleSetWallet(
         response?.data?.createWallet?._id,
@@ -82,13 +92,10 @@ const AddWalletModal = ({
       );
 
       logEvent('successful createWallet at Add Wallet');
-
-      setOpenModal(true);
-      beforeModalClose();
-      setWallet('');
     } catch (err) {
       logEvent('error on createWallet at Add Wallet');
       console.error(mutationError?.message + err);
+      handleSetLoading(false);
     }
   }, [wallet]);
 
@@ -124,7 +131,10 @@ const AddWalletModal = ({
             {isEdit ? 'Alterar Carteira' : 'Criar Nova Carteira'}
           </Title>
         </ContainerTitle>
-        <ImageAddTicket />
+        <Image>
+          <ImageAddTicket />
+        </Image>
+
         <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
           {isEdit ? (
             <EditWallet
@@ -154,32 +164,20 @@ const AddWalletModal = ({
                 <TextError>{mutationError?.message}</TextError>
               )}
 
-              <Button
-                colors={gradient.darkToLightBlue}
-                onPress={handleSubmit}
-                loading={mutationLoading}
-                disabled={mutationLoading}
-              >
-                Adicionar Carteira
-              </Button>
+              <ContainerButtons>
+                <Button
+                  colors={gradient.darkToLightBlue}
+                  onPress={handleSubmit}
+                  loading={mutationLoading}
+                  disabled={mutationLoading}
+                >
+                  Adicionar Carteira
+                </Button>
+              </ContainerButtons>
             </Form>
           )}
         </FormContainer>
       </Wrapper>
-
-      {openModal && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal}
-          statusBarTranslucent={false}
-        >
-          <SuccessModal
-            onClose={() => setOpenModal(false)}
-            beforeModalClose={onClose}
-          />
-        </Modal>
-      )}
     </>
   );
 };

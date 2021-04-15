@@ -11,7 +11,7 @@ import { ThemeContext } from 'styled-components/native';
 import {
   Wrapper,
   FormContainer,
-  ContainerTitle,
+  ContainerButtons,
   Image,
   Header,
   Icon,
@@ -124,9 +124,8 @@ const ChangePassword = () => {
           >
             <Entypo name="chevron-left" size={32} color={color.activeText} />
           </Icon>
-          <ContainerTitle>
-            <Title accessibilityRole="header">Nova Senha</Title>
-          </ContainerTitle>
+
+          <Title accessibilityRole="header">Nova Senha</Title>
         </Header>
         <Image>
           <ImageRecoveryPassword />
@@ -163,14 +162,17 @@ const ChangePassword = () => {
               />
             </FormRow>
             {!!mutationError && <TextError>{mutationError?.message}</TextError>}
-            <Button
-              colors={gradient.darkToLightBlue}
-              onPress={handleSubmit}
-              loading={mutationLoading}
-              disabled={mutationLoading}
-            >
-              Alterar Senha
-            </Button>
+
+            <ContainerButtons>
+              <Button
+                colors={gradient.darkToLightBlue}
+                onPress={handleSubmit}
+                loading={mutationLoading}
+                disabled={mutationLoading}
+              >
+                Alterar Senha
+              </Button>
+            </ContainerButtons>
           </Form>
         </FormContainer>
       </Wrapper>

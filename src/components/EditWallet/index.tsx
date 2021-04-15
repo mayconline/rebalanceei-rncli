@@ -29,7 +29,11 @@ const EditWallet = ({
 }: IEditWallet) => {
   const { logEvent } = useAmplitude();
 
-  const { handleSetWallet } = useAuth();
+  const {
+    handleSetWallet,
+    handleSetLoading,
+    wallet: currentWallet,
+  } = useAuth();
   const { gradient } = useContext(ThemeContext);
   const [wallet, setWallet] = useState<IWalletData>({} as IWalletData);
   const [focus, setFocus] = useState(0);
@@ -54,9 +58,11 @@ const EditWallet = ({
   }, []);
 
   const handleGoBack = useCallback(() => {
-    handleResetEditWallet && handleResetEditWallet();
     setWallet({} as IWalletData);
+    handleResetEditWallet && handleResetEditWallet();
+
     onClose();
+    handleSetLoading(false);
   }, []);
 
   const [
@@ -68,6 +74,18 @@ const EditWallet = ({
     deleteWallet,
     { loading: mutationDeleteLoading, error: mutationDeleteError },
   ] = useMutation<IDeleteWallet>(DELETE_WALLET);
+
+  useFocusEffect(
+    useCallback(() => {
+      mutationLoading && handleSetLoading(true);
+    }, [mutationLoading]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      mutationDeleteLoading && handleSetLoading(true);
+    }, [mutationDeleteLoading]),
+  );
 
   const handleEditSubmit = useCallback(async () => {
     if (!wallet._id || !wallet.description) {
@@ -86,13 +104,17 @@ const EditWallet = ({
             query: GET_WALLET_BY_USER,
           },
         ],
+        awaitRefetchQueries: true,
       });
 
-      logEvent('successful createWallet at Edit Wallet');
+      if (currentWallet === wallet._id)
+        handleSetWallet(wallet._id, wallet.description);
 
       handleGoBack();
+      logEvent('successful createWallet at Edit Wallet');
     } catch (err) {
       console.error(mutationError?.message + err);
+      handleSetLoading(false);
     }
   }, [wallet]);
 
@@ -112,14 +134,17 @@ const EditWallet = ({
             query: GET_WALLET_BY_USER,
           },
         ],
+        awaitRefetchQueries: true,
       });
-      handleSetWallet(null, null);
 
-      logEvent('successful createWallet at Delete Wallet');
+      if (currentWallet === wallet._id) handleSetWallet(null, null);
 
       handleGoBack();
+
+      logEvent('successful createWallet at Delete Wallet');
     } catch (err) {
       console.error(mutationDeleteError?.message + err);
+      handleSetLoading(false);
     }
   }, [wallet]);
 

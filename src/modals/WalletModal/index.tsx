@@ -84,8 +84,9 @@ const WalletModal = ({ onClose }: IWalletProps) => {
 
   const handleSelectWallet = useCallback(
     (walletID: string, walletName: string) => {
-      setSelectedWallet(walletID);
       handleSetWallet(walletID, walletName);
+      setSelectedWallet(walletID);
+
       logEvent('click on select wallet');
       onClose();
     },

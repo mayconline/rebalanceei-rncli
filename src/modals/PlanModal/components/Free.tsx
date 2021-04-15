@@ -90,6 +90,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
             query: GET_USER_BY_TOKEN,
           },
         ],
+        awaitRefetchQueries: true,
       });
 
       logEvent('successful updateRole at Plan Free Modal');

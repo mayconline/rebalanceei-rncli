@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback, useMemo } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import {
   useRoute,
   useNavigation,
@@ -18,6 +18,8 @@ import {
   SuggestButton,
   SuggestButtonText,
   BackIcon,
+  Image,
+  ContainerButtons,
 } from './styles';
 import ImageAddTicket from '../../../assets/svg/ImageAddTicket';
 import SuccessModal from '../../modals/SuccessModal';
@@ -66,7 +68,7 @@ const AddTicket = () => {
   const params = route?.params as IDataParamsForm;
   const navigation = useNavigation();
 
-  const isEdit = useMemo(() => !!params?.ticket?._id, [params]);
+  const isEdit = !!params?.ticket?._id;
 
   useFocusEffect(
     useCallback(() => {
@@ -75,9 +77,9 @@ const AddTicket = () => {
   );
 
   const handleGoBack = useCallback(() => {
+    setTicketForm({} as ITicketForm);
     navigation.setParams({ ticket: null });
     navigation.goBack();
-    setTicketForm({} as ITicketForm);
   }, []);
 
   const HandleOpenSuggestionsModal = useCallback(() => {
@@ -142,6 +144,7 @@ const AddTicket = () => {
             query: GET_WALLET_BY_USER,
           },
         ],
+        awaitRefetchQueries: true,
       });
 
       logEvent('successful createTicket at Add Ticket');
@@ -192,17 +195,18 @@ const AddTicket = () => {
             <AntDesign name="closecircleo" size={24} color={color.activeText} />
           </BackIcon>
         </ContainerTitle>
-        <ImageAddTicket />
 
-        {isEdit ? (
-          <EditTicket
-            ticket={params?.ticket}
-            openModal={() => setOpenModal(true)}
-          />
-        ) : (
-          <FormContainer
-            behavior={Platform.OS == 'ios' ? 'padding' : 'position'}
-          >
+        <Image>
+          <ImageAddTicket />
+        </Image>
+
+        <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
+          {isEdit ? (
+            <EditTicket
+              ticket={params?.ticket}
+              openModal={() => setOpenModal(true)}
+            />
+          ) : (
             <Form>
               <FormRow>
                 <SuggestButton onPress={HandleOpenSuggestionsModal}>
@@ -273,17 +277,19 @@ const AddTicket = () => {
                 <TextError>{mutationError?.message}</TextError>
               )}
 
-              <Button
-                colors={gradient.darkToLightBlue}
-                onPress={handleSubmit}
-                loading={mutationLoading}
-                disabled={mutationLoading}
-              >
-                {hasInvalidWallet ? 'Carteira não encontrada' : 'Adicionar'}
-              </Button>
+              <ContainerButtons>
+                <Button
+                  colors={gradient.darkToLightBlue}
+                  onPress={handleSubmit}
+                  loading={mutationLoading}
+                  disabled={mutationLoading}
+                >
+                  {hasInvalidWallet ? 'Carteira não encontrada' : 'Adicionar'}
+                </Button>
+              </ContainerButtons>
             </Form>
-          </FormContainer>
-        )}
+          )}
+        </FormContainer>
       </Wrapper>
 
       {openModal && (

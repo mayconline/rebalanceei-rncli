@@ -1,10 +1,5 @@
 import styled from 'styled-components/native';
 
-export const FormContainer = styled.KeyboardAvoidingView`
-  flex: 1;
-  max-height: 316px;
-`;
-
 export const Form = styled.View`
   background-color: ${({ theme }) => theme.color.secondary};
   padding: 20px 20px 4px;

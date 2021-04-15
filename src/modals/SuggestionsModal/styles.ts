@@ -39,26 +39,6 @@ export const SuggestionText = styled.Text`
   font: 400 16px/24px 'TitilliumWeb-Regular';
 `;
 
-export const InputGroup = styled.View`
-  align-self: center;
-  width: 100%;
-`;
-
-export const Label = styled.Text`
-  color: ${({ theme }) => theme.color.titleNotImport};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
-`;
-
-export const Input = styled.TextInput`
-  color: ${({ theme }) => theme.color.title};
-  height: 32px;
-  font: 400 16px/24px 'TitilliumWeb-Regular';
-  border-bottom-color: ${({ theme, autoFocus }) =>
-    !autoFocus ? theme.color.divider : theme.color.blue};
-  border-bottom-width: 1px;
-  opacity: ${({ editable = true }) => (!editable ? 0.4 : 1)};
-`;
-
 export const BackButtonContainer = styled.TouchableOpacity`
   align-items: center;
   padding: 12px;
