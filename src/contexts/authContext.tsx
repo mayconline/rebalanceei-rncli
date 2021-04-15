@@ -133,6 +133,8 @@ export const AuthProvider: React.FC = ({ children }) => {
 
       if (storageToken[1]) {
         setSigned(true);
+      } else {
+        setLoading(false);
       }
     } catch (err) {
       setLoading(false);

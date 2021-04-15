@@ -16,23 +16,14 @@ import {
 import RebalanceeiLogo from '../../../../assets/svg/RebalanceeiLogo';
 import { getLocalStorage } from '../../../utils/localStorage';
 import useAmplitude from '../../../hooks/useAmplitude';
-import { useAuth } from '../../../contexts/authContext';
 
 const Welcome = () => {
   const { logEvent } = useAmplitude();
   const navigation = useNavigation();
 
-  const { handleSetLoading } = useAuth();
-
   useFocusEffect(
     useCallback(() => {
       logEvent('open Welcome');
-    }, []),
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      handleSetLoading(false);
     }, []),
   );
 
