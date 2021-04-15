@@ -27,6 +27,7 @@ import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
 import SuccessModal from '../../../modals/SuccessModal';
 import useAmplitude from '../../../hooks/useAmplitude';
+import { useAuth } from '../../../contexts/authContext';
 
 interface IChangePassword {
   code: string;
@@ -42,6 +43,7 @@ interface IDataParamsForm {
 }
 
 const ChangePassword = () => {
+  const { handleSetLoading } = useAuth();
   const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
@@ -62,6 +64,12 @@ const ChangePassword = () => {
     resetPassword,
     { loading: mutationLoading, error: mutationError },
   ] = useMutation<ILogin>(RESET_PASSWORD);
+
+  useFocusEffect(
+    useCallback(() => {
+      handleSetLoading(mutationLoading);
+    }, [mutationLoading]),
+  );
 
   const handleSubmit = () => {
     if (!account.code || !account.password || !params.email) {

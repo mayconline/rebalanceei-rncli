@@ -3,6 +3,12 @@ import ChangePassword, { RESET_PASSWORD } from './index';
 import { render, fireEvent, waitFor, act } from '../../../utils/testProvider';
 import { GraphQLError } from 'graphql';
 
+jest.mock('../../../contexts/authContext', () => ({
+  useAuth: () => ({
+    handleSetLoading: jest.fn(),
+  }),
+}));
+
 describe('ChangePassword Page', () => {
   it('should successfully reset password', async () => {
     const {

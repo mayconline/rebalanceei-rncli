@@ -21,6 +21,7 @@ import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
 import useAmplitude from '../../../hooks/useAmplitude';
+import { useAuth } from '../../../contexts/authContext';
 
 interface IAccountLogin {
   email: string;
@@ -31,6 +32,7 @@ interface ISendRecovery {
 }
 
 const ForgotPassword = () => {
+  const { handleSetLoading } = useAuth();
   const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
@@ -48,6 +50,12 @@ const ForgotPassword = () => {
     sendRecovery,
     { loading: mutationLoading, error: mutationError },
   ] = useMutation<ISendRecovery, IAccountLogin>(SEND_RECOVERY);
+
+  useFocusEffect(
+    useCallback(() => {
+      handleSetLoading(mutationLoading);
+    }, [mutationLoading]),
+  );
 
   const handleSubmit = () => {
     if (!account.email) {

@@ -6,6 +6,12 @@ import { GraphQLError } from 'graphql';
 
 const mockedAlert = (Alert.alert = jest.fn());
 
+jest.mock('../../../contexts/authContext', () => ({
+  useAuth: () => ({
+    handleSetLoading: jest.fn(),
+  }),
+}));
+
 describe('ForgotPassword Page', () => {
   it('should successfully send recovery', async () => {
     const {
