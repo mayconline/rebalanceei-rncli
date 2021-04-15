@@ -22,11 +22,18 @@ export const Wrapper = styled.SafeAreaView`
   elevation: 5;
 `;
 
+export const TitleContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 4px;
+`;
+
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
   font: 600 16px/20px 'TitilliumWeb-SemiBold';
-  align-self: center;
+  text-align: center;
   margin: 8px;
+  flex: 1;
 `;
 
 export const Content = styled.View`
@@ -91,7 +98,7 @@ export const CurrentPercent = styled.Text`
 export const AddWalletContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 8px 0;
 `;
 export const Label = styled.Text`
@@ -104,20 +111,7 @@ export const AddButtonContainer = styled.TouchableOpacity`
   flex-direction: row;
 `;
 
-export const BackButtonContainer = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const BackIcon = styled.View`
-  margin-top: 2px;
-`;
-
-export const BackButton = styled.Text`
-  color: ${({ theme }) => theme.color.title};
-  font: 400 16px/24px 'TitilliumWeb-Regular';
-  margin-left: 4px;
-`;
+export const BackIcon = styled.TouchableOpacity``;
 
 export const WalletRadioSelect = styled.View<RadioProps>`
   width: 24px;

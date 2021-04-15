@@ -10,10 +10,9 @@ import {
   Title,
   AddWalletContainer,
   Label,
-  BackButtonContainer,
-  BackButton,
   BackIcon,
   AddButtonContainer,
+  TitleContainer,
 } from './styles';
 
 import AddButton from '../../components/AddButton';
@@ -112,7 +111,21 @@ const WalletModal = ({ onClose }: IWalletProps) => {
     <>
       <ShadowBackdrop />
       <Wrapper>
-        <Title accessibilityRole="header">Carteiras</Title>
+        <TitleContainer>
+          <Title accessibilityRole="header">Carteiras</Title>
+          <BackIcon
+            accessibilityRole="imagebutton"
+            accessibilityLabel="Voltar"
+            onPress={onClose}
+          >
+            <AntDesign
+              name="closecircleo"
+              size={24}
+              color={color.shadowBackdrop}
+            />
+          </BackIcon>
+        </TitleContainer>
+
         <ListTicket
           data={data?.getWalletByUser}
           extraData={!!queryLoading}
@@ -148,16 +161,9 @@ const WalletModal = ({ onClose }: IWalletProps) => {
         {!!queryError && <TextError>{queryError?.message}</TextError>}
 
         <AddWalletContainer>
-          <BackButtonContainer onPress={onClose}>
-            <BackIcon>
-              <AntDesign name="closecircleo" size={16} color={color.title} />
-            </BackIcon>
-            <BackButton accessibilityRole="button">Fechar Modal</BackButton>
-          </BackButtonContainer>
-
           <AddButtonContainer onPress={() => handleAddWallet()}>
             <Label accessibilityRole="button">Adicionar Carteira</Label>
-            <AddButton size={40} />
+            <AddButton size={40} onPress={() => handleAddWallet()} />
           </AddButtonContainer>
         </AddWalletContainer>
       </Wrapper>

@@ -74,7 +74,7 @@ describe('Wallet Modal', () => {
     expect(radioOptionTwo.props.accessibilityState.selected).toBeFalsy();
 
     const buttons = getAllByA11yRole('button');
-    expect(buttons).toHaveLength(4);
+    expect(buttons).toHaveLength(3);
 
     act(() => fireEvent.press(radioOptionOne));
     expect(mockedHandleSetWallet).toHaveBeenCalledWith(
@@ -99,20 +99,18 @@ describe('Wallet Modal', () => {
   });
 
   it('should buttons work correctly', async () => {
-    const { getAllByA11yRole, getByText } = render(
+    const { getByA11yRole, getAllByA11yRole, getByText } = render(
       <WalletModal onClose={mockedOnClose} />,
       [EMPTY_LIST_WALLET],
     );
 
-    const addButton = getAllByA11yRole('button')[1];
+    const addButton = getByA11yRole('button');
     expect(addButton).toHaveProperty('children', ['Adicionar Carteira']);
 
     act(() => fireEvent.press(addButton));
     getByText(/Criar Nova Carteira/i);
 
-    const closeButton = getAllByA11yRole('button')[0];
-    expect(closeButton).toHaveProperty('children', ['Fechar Modal']);
-
+    const closeButton = getAllByA11yRole('imagebutton')[0];
     act(() => fireEvent.press(closeButton));
     expect(mockedOnClose).toHaveBeenCalledTimes(1);
   });
