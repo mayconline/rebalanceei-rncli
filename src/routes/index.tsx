@@ -7,9 +7,9 @@ import PublicRoute from './publicRoute';
 import Offline from '../components/Offline';
 
 const Routes = () => {
-  const { signed, isConnected } = useAuth();
+  const { signed, isConnected, loading } = useAuth();
 
-  if (!isConnected) return <Offline />;
+  if (!isConnected && !loading) return <Offline />;
 
   return signed ? <PrivateRoute /> : <PublicRoute />;
 };
