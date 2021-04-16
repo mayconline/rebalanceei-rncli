@@ -9,7 +9,7 @@ import { showAdMob } from '../../services/AdMob';
 import PlanModal from '../PlanModal';
 import { useAuth } from '../../contexts/authContext';
 import useAmplitude from '../../hooks/useAmplitude';
-import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface ISuccessModal {
   onClose(): void;

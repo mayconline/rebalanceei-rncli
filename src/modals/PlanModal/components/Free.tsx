@@ -34,7 +34,7 @@ import {
 } from 'react-native-iap';
 import { gql, useMutation } from '@apollo/client';
 import useAmplitude from '../../../hooks/useAmplitude';
-import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const listSku = Platform.select({
   android: ['rebalanceei_premium_mensal', 'rebalanceei_premium_anual'],

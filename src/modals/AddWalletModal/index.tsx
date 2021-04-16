@@ -23,7 +23,7 @@ import TextError from '../../components/TextError';
 import { GET_WALLET_BY_USER, IWalletData } from '../WalletModal';
 import EditWallet from '../../components/EditWallet';
 import useAmplitude from '../../hooks/useAmplitude';
-import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface IAddWalletModal {
   onClose(): void;

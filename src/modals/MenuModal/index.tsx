@@ -26,7 +26,7 @@ import {
 } from './styles';
 import { ThemeContext } from 'styled-components/native';
 import useAmplitude from '../../hooks/useAmplitude';
-import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect } from '@react-navigation/native';
 
 const menuItens = [
   {

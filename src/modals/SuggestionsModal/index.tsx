@@ -16,7 +16,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import ShadowBackdrop from '../../components/ShadowBackdrop';
 import InputForm from '../../components/InputForm';
 import useAmplitude from '../../hooks/useAmplitude';
-import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface ISuggestions {
   symbol: string;

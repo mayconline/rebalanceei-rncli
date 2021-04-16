@@ -10,7 +10,7 @@ import Button from '../../../components/Button';
 import { ContainerButtons, SubTitle } from '../styles';
 import { getLinkCancelPlan } from '../../../utils/CancelPlan';
 import useAmplitude from '../../../hooks/useAmplitude';
-import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Premium = () => {
   const { logEvent } = useAmplitude();
