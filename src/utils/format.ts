@@ -174,3 +174,13 @@ export const formatErrors = (error: string) =>
     'Billing is unavailable. This may be a problem with your device, or the Play Store may be down.':
       'Houve uma falha ao se conectar a google play.',
   }[error]);
+
+export const openPlanModalOnError = async (errorMessage?: string) => {
+  if (!errorMessage?.length) return false;
+
+  const openPlanModal =
+    errorMessage === 'Tickets limited to 16 items' ||
+    errorMessage === 'Wallet limited to 2 items';
+
+  return openPlanModal;
+};

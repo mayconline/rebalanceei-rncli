@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback, useRef } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import {
   useRoute,
   useNavigation,
@@ -33,8 +33,13 @@ import { ITickets } from '../Ticket';
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
-import { formatAveragePricePreview, formatTicket } from '../../utils/format';
+import {
+  formatAveragePricePreview,
+  formatTicket,
+  openPlanModalOnError,
+} from '../../utils/format';
 import useAmplitude from '../../hooks/useAmplitude';
+import PlanModal from '../../modals/PlanModal';
 
 interface IDataParamsForm {
   ticket: ITickets;
@@ -56,21 +61,19 @@ interface IcreateTicket {
 
 const AddTicket = () => {
   const { logEvent } = useAmplitude();
-  const { wallet, hasInvalidWallet } = useAuth();
+  const { wallet, hasInvalidWallet, handleSetLoading } = useAuth();
   const { color, gradient } = useContext(ThemeContext);
 
   const [ticketForm, setTicketForm] = useState<ITicketForm>({} as ITicketForm);
   const [focus, setFocus] = useState(0);
   const [hasSuggestions, setHasSuggestions] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState<'SUCCESS' | 'PLAN' | null>(null);
 
   const route = useRoute();
   const params = route?.params as IDataParamsForm;
   const navigation = useNavigation();
 
   const isEdit = !!params?.ticket?._id;
-
-  const errorMessageRef = useRef<string | undefined | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -79,7 +82,6 @@ const AddTicket = () => {
   );
 
   const handleGoBack = useCallback(() => {
-    errorMessageRef.current = null;
     setTicketForm({} as ITicketForm);
     navigation.setParams({ ticket: null });
     navigation.goBack();
@@ -106,6 +108,12 @@ const AddTicket = () => {
     createTicket,
     { loading: mutationLoading, error: mutationError },
   ] = useMutation<IcreateTicket>(CREATE_TICKET);
+
+  useFocusEffect(
+    useCallback(() => {
+      mutationLoading && handleSetLoading(true);
+    }, [mutationLoading]),
+  );
 
   const handleSubmit = useCallback(async () => {
     if (hasInvalidWallet) {
@@ -154,12 +162,13 @@ const AddTicket = () => {
 
       setTicketForm({} as ITicketForm);
       setFocus(0);
-      setOpenModal(true);
+      setOpenModal('SUCCESS');
     } catch (err) {
       logEvent('error on createTicket at Add Ticket');
-
-      errorMessageRef.current = mutationError?.message;
       console.error(mutationError?.message + err);
+
+      handleSetLoading(false);
+      openPlanModalOnError(mutationError?.message) && setOpenModal('PLAN');
     }
   }, [ticketForm, hasInvalidWallet]);
 
@@ -209,7 +218,7 @@ const AddTicket = () => {
           {isEdit ? (
             <EditTicket
               ticket={params?.ticket}
-              openModal={() => setOpenModal(true)}
+              openModal={() => setOpenModal('SUCCESS')}
             />
           ) : (
             <Form>
@@ -278,8 +287,8 @@ const AddTicket = () => {
                 />
               </FormRow>
 
-              {!!mutationError?.message && errorMessageRef?.current && (
-                <TextError>{errorMessageRef?.current}</TextError>
+              {!!mutationError?.message && (
+                <TextError>{mutationError?.message}</TextError>
               )}
 
               <ContainerButtons>
@@ -297,17 +306,28 @@ const AddTicket = () => {
         </FormContainer>
       </Wrapper>
 
-      {openModal && (
+      {openModal === 'SUCCESS' && (
         <Modal
           animationType="slide"
           transparent={true}
-          visible={openModal}
+          visible={openModal === 'SUCCESS'}
           statusBarTranslucent={false}
         >
           <SuccessModal
-            onClose={() => setOpenModal(false)}
+            onClose={() => setOpenModal(null)}
             beforeModalClose={() => navigation.goBack()}
           />
+        </Modal>
+      )}
+
+      {openModal === 'PLAN' && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={openModal === 'PLAN'}
+          statusBarTranslucent={true}
+        >
+          <PlanModal onClose={() => setOpenModal(null)} />
         </Modal>
       )}
 

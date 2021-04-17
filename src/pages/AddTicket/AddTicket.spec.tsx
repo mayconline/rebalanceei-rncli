@@ -13,6 +13,7 @@ const apiMock = new MockAdapter(api);
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     wallet: '5fa1d752a8c5892a48c69b35',
+    handleSetLoading: jest.fn(),
   }),
 }));
 
@@ -218,7 +219,7 @@ describe('AddTicket Tab', () => {
 
     await act(async () => fireEvent.press(submitButton));
 
-    //await act(async () => getByText(/Ativo já existe na carteira./i));
+    await act(async () => getByText(/Ativo já existe na carteira./i));
   });
 
   it('should throw error on edit ticket', async () => {
