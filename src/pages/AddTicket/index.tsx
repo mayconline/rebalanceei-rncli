@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useRef } from 'react';
 import {
   useRoute,
   useNavigation,
@@ -70,6 +70,8 @@ const AddTicket = () => {
 
   const isEdit = !!params?.ticket?._id;
 
+  const errorMessageRef = useRef<string | undefined | null>(null);
+
   useFocusEffect(
     useCallback(() => {
       logEvent('open Add Ticket');
@@ -77,6 +79,7 @@ const AddTicket = () => {
   );
 
   const handleGoBack = useCallback(() => {
+    errorMessageRef.current = null;
     setTicketForm({} as ITicketForm);
     navigation.setParams({ ticket: null });
     navigation.goBack();
@@ -154,6 +157,8 @@ const AddTicket = () => {
       setOpenModal(true);
     } catch (err) {
       logEvent('error on createTicket at Add Ticket');
+
+      errorMessageRef.current = mutationError?.message;
       console.error(mutationError?.message + err);
     }
   }, [ticketForm, hasInvalidWallet]);
@@ -273,8 +278,8 @@ const AddTicket = () => {
                 />
               </FormRow>
 
-              {!!mutationError && (
-                <TextError>{mutationError?.message}</TextError>
+              {!!mutationError?.message && errorMessageRef?.current && (
+                <TextError>{errorMessageRef?.current}</TextError>
               )}
 
               <ContainerButtons>
