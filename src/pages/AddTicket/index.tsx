@@ -168,7 +168,11 @@ const AddTicket = () => {
       console.error(mutationError?.message + err);
 
       handleSetLoading(false);
-      openPlanModalOnError(mutationError?.message) && setOpenModal('PLAN');
+
+      if (openPlanModalOnError(mutationError?.message)) {
+        setOpenModal('PLAN');
+        console.log('Tickets limited to 16 items');
+      }
     }
   }, [ticketForm, hasInvalidWallet]);
 

@@ -175,7 +175,7 @@ export const formatErrors = (error: string) =>
       'Houve uma falha ao se conectar a google play.',
   }[error]);
 
-export const openPlanModalOnError = async (errorMessage?: string) => {
+export const openPlanModalOnError = (errorMessage?: string) => {
   if (!errorMessage?.length) return false;
 
   const openPlanModal =
