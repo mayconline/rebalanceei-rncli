@@ -1,6 +1,5 @@
 import styled from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
-import { getClassTicket } from '../../utils/format';
 
 export const Wrapper = styled.View`
   flex: 1;
@@ -21,8 +20,7 @@ export const Card = styled(LinearGradient)<any>`
   margin: 4px 0;
   border-radius: 30px;
   padding: 8px 20px;
-  border-left-color: ${({ theme, ticket }) =>
-    theme.color[getClassTicket(ticket)]};
+  border-left-color: ${({ theme, classSymbol }) => theme.color[classSymbol]};
   border-left-width: 2px;
 `;
 

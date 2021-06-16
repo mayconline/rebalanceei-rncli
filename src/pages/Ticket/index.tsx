@@ -38,6 +38,7 @@ export interface ITickets {
   quantity: number;
   averagePrice: number;
   grade: number;
+  classSymbol: string;
 }
 
 interface IDataTickets {
@@ -224,6 +225,7 @@ export const GET_TICKETS_BY_WALLET = gql`
       quantity
       averagePrice
       grade
+      classSymbol
     }
   }
 `;

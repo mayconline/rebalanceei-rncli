@@ -39,10 +39,7 @@ const ListItem = ({
           accessibilityLabel={`Editar ativo ${item.symbol}`}
           onPress={() => handleOpenEditModal(item)}
         >
-          <Card
-            colors={gradient.lightToGray}
-            ticket={formatTicket(item.symbol)}
-          >
+          <Card colors={gradient.lightToGray} classSymbol={item.classSymbol}>
             <MaterialCommunityIcons
               name="circle-edit-outline"
               size={28}
