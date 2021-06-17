@@ -65,6 +65,7 @@ describe('Ticket Tab', () => {
         name: 'Companhia de Saneamento do Paraná - SANEPAR',
         quantity: 174,
         symbol: 'SAPR4.SA',
+        classSymbol: 'Ação',
       },
     });
   });
@@ -116,6 +117,7 @@ const SUCCESSFUL_LIST_TICKETS = {
           name: 'Companhia de Saneamento do Paraná - SANEPAR',
           quantity: 174,
           symbol: 'SAPR4.SA',
+          classSymbol: 'Ação',
         },
         {
           __typename: 'Ticket',
@@ -125,6 +127,7 @@ const SUCCESSFUL_LIST_TICKETS = {
           name: 'Porto Seguro S.A.',
           quantity: 14,
           symbol: 'PSSA3.SA',
+          classSymbol: 'Ação',
         },
         {
           __typename: 'Ticket',
@@ -134,6 +137,7 @@ const SUCCESSFUL_LIST_TICKETS = {
           name: 'Itausa Investimentos ITAU SA',
           quantity: 78,
           symbol: 'ITSA4.SA',
+          classSymbol: 'Ação',
         },
         {
           __typename: 'Ticket',
@@ -143,6 +147,7 @@ const SUCCESSFUL_LIST_TICKETS = {
           name: 'Engie Brasil Energia S.A.',
           quantity: 19,
           symbol: 'EGIE3.SA',
+          classSymbol: 'Ação',
         },
         {
           __typename: 'Ticket',
@@ -153,6 +158,7 @@ const SUCCESSFUL_LIST_TICKETS = {
             'CTEEP - Companhia de Transmissão de Energia Elétrica Paulista S.A.',
           quantity: 45,
           symbol: 'TRPL4.SA',
+          classSymbol: 'Ação',
         },
       ],
     },
