@@ -49,34 +49,11 @@ export const formatFilter = (filter: string) =>
     targetPercent: 'Porcentagem',
     costAmount: 'Saldo Aplicado',
     variationPercent: 'Rentabilidade',
+    TICKET: 'Ativo',
+    CLASS: 'Classe',
+    SECTOR: 'Setor',
+    INDUSTRY: 'Segmento',
   }[filter]);
-
-interface IGetgetLengthTicketPerClass {
-  name: string;
-  percent: number;
-}
-
-export const getLengthTicketPerClass = (
-  items: IGetgetLengthTicketPerClass[],
-) => {
-  let unicClass: string[] = [];
-
-  items.map(item => {
-    if (!unicClass.includes(item.name)) {
-      return unicClass.push(item.name);
-    }
-  });
-
-  const countClass = unicClass.map(unic => ({
-    name: unic,
-    count: items.filter(item => item.name === unic).length,
-    percent: items
-      .filter(item => item.name === unic)
-      .reduce((acc, cur) => acc + cur.percent, 0),
-  }));
-
-  return countClass;
-};
 
 export const getPositionAdBanner = (index: number, length: number) => {
   return index % 6 === 0 || index === 0;

@@ -10,11 +10,7 @@ import { Wrapper, Content, ContainerGraph } from './styles';
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
 
-import {
-  formatTicket,
-  getClassTicket,
-  getLengthTicketPerClass,
-} from '../../utils/format';
+import { formatTicket } from '../../utils/format';
 import Empty from '../../components/Empty';
 import TextError from '../../components/TextError';
 import AdBanner from '../../components/AdBanner';
@@ -22,45 +18,33 @@ import useAmplitude from '../../hooks/useAmplitude';
 
 const initialFilter = [
   {
-    name: 'Ativo',
+    name: 'TICKET',
   },
   {
-    name: 'Classe',
+    name: 'CLASS',
+  },
+  {
+    name: 'INDUSTRY',
+  },
+  {
+    name: 'SECTOR',
   },
 ];
-interface IRebalances {
+interface IReports {
   _id: string;
-  symbol: string;
-  currentPercent: number;
+  key: string;
+  value: number;
+  color: string;
 }
 
-interface IDataTickets {
-  rebalances: IRebalances[];
+interface IDataReports {
+  getReportsByType: IReports[];
 }
-
-const randomDarkColor = () => {
-  var lum = -0.25;
-  var hex = String(
-    '#' + Math.random().toString(16).slice(2, 8).toUpperCase(),
-  ).replace(/[^0-9a-f]/gi, '');
-  if (hex.length < 6) {
-    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-  }
-  var rgb = '#',
-    c,
-    i;
-  for (i = 0; i < 3; i++) {
-    c = parseInt(hex.substr(i * 2, 2), 16);
-    c = Math.round(Math.min(Math.max(0, c + c * lum), 255)).toString(16);
-    rgb += ('00' + c).substr(c.length);
-  }
-  return rgb;
-};
 
 const Chart = () => {
   const { logEvent } = useAmplitude();
   const [dataGraph, setDataGraph] = useState<PieChartData[]>([]);
-  const [selectedFilter, setSelectFilter] = useState<string>('Classe');
+  const [selectedFilter, setSelectFilter] = useState<string>('CLASS');
 
   const { wallet, handleSetLoading } = useAuth();
 
@@ -71,10 +55,10 @@ const Chart = () => {
   );
 
   const [
-    rebalances,
+    getReportsByType,
     { data, loading: queryLoading, error: queryError },
-  ] = useLazyQuery<IDataTickets>(REBALANCES, {
-    variables: { walletID: wallet, sort: 'currentPercent' },
+  ] = useLazyQuery<IDataReports>(GET_REPORTS_BY_TYPE, {
+    variables: { walletID: wallet, type: selectedFilter },
     fetchPolicy: 'cache-and-network',
   });
 
@@ -86,64 +70,31 @@ const Chart = () => {
 
   useFocusEffect(
     useCallback(() => {
-      rebalances();
+      getReportsByType();
     }, []),
   );
 
-  const eachTicketChart = useCallback(() => {
-    if (data?.rebalances) {
-      let formatedPie: PieChartData[] = data.rebalances.map(item => ({
-        value: Number(item.currentPercent.toFixed(1)),
-        svg: {
-          fill: randomDarkColor(),
-        },
-        key: formatTicket(item.symbol),
-        arc: {
-          outerRadius: '100%',
-          cornerRadius: 4,
-          padAngle: 0.01,
-        },
-      }));
-
-      return setDataGraph(formatedPie);
-    }
-  }, [data]);
-
-  const eachClassChart = useCallback(() => {
-    if (data?.rebalances) {
-      let formatedClass = data.rebalances.map(item => ({
-        name: getClassTicket(formatTicket(item.symbol)),
-        percent: item.currentPercent,
-      }));
-
-      let dataChart = getLengthTicketPerClass(formatedClass);
-
-      let formatedPie: PieChartData[] = dataChart.map(item => ({
-        value: Number(item.percent.toFixed(1)),
-        svg: {
-          fill: randomDarkColor(),
-        },
-        key: item.name,
-        arc: {
-          outerRadius: '100%',
-          cornerRadius: 8,
-        },
-      }));
-
-      return setDataGraph(formatedPie);
-    }
-  }, [data]);
-
   useFocusEffect(
     useCallback(() => {
-      selectedFilter === 'Classe' && eachClassChart();
-    }, [selectedFilter, eachClassChart]),
-  );
+      if (data?.getReportsByType) {
+        const formatedPie: PieChartData[] = data?.getReportsByType?.map(
+          item => ({
+            value: Number(item.value.toFixed(1)),
+            svg: {
+              fill: item.color,
+            },
+            key: formatTicket(item.key),
+            arc: {
+              outerRadius: '100%',
+              cornerRadius: 4,
+              padAngle: 0.01,
+            },
+          }),
+        );
 
-  useFocusEffect(
-    useCallback(() => {
-      selectedFilter === 'Ativo' && eachTicketChart();
-    }, [selectedFilter, eachTicketChart]),
+        return setDataGraph(formatedPie);
+      }
+    }, [data, selectedFilter]),
   );
 
   const Labels = ({ slices }: { slices?: any }) => {
@@ -185,7 +136,7 @@ const Chart = () => {
   }, []);
 
   const hasEmptyTickets =
-    !wallet || (!queryLoading && data?.rebalances?.length === 0);
+    !wallet || (!queryLoading && data?.getReportsByType?.length === 0);
 
   return (
     <Wrapper>
@@ -224,12 +175,13 @@ const Chart = () => {
   );
 };
 
-export const REBALANCES = gql`
-  query rebalances($walletID: ID!, $sort: SortRebalance!) {
-    rebalances(walletID: $walletID, sort: $sort) {
+export const GET_REPORTS_BY_TYPE = gql`
+  query getReportsByType($walletID: ID!, $type: Type!) {
+    getReportsByType(walletID: $walletID, type: $type) {
       _id
-      symbol
-      currentPercent
+      key
+      value
+      color
     }
   }
 `;
