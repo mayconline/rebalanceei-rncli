@@ -5,7 +5,15 @@ import { useAuth } from '../../contexts/authContext';
 import { useLazyQuery, gql } from '@apollo/client';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { Wrapper, Content, ContainerGraph } from './styles';
+import {
+  Wrapper,
+  Content,
+  ContainerGraph,
+  ContainerList,
+  ContainerLegend,
+  LegendList,
+  TextList,
+} from './styles';
 
 import Header from '../../components/Header';
 import SubHeader from '../../components/SubHeader';
@@ -15,6 +23,7 @@ import Empty from '../../components/Empty';
 import TextError from '../../components/TextError';
 import AdBanner from '../../components/AdBanner';
 import useAmplitude from '../../hooks/useAmplitude';
+import ListTicket from '../../components/ListTicket';
 
 const initialFilter = [
   {
@@ -167,7 +176,24 @@ const Chart = () => {
                 <Labels />
               </PieChart>
             </ContainerGraph>
+
             <AdBanner />
+
+            <ListTicket
+              data={dataGraph}
+              extraData={dataGraph}
+              keyExtractor={item => item.key}
+              renderItem={({ item }) => (
+                <ContainerList key={item.key}>
+                  <ContainerLegend>
+                    <LegendList color={item.svg.fill} />
+                    <TextList>{item.key}</TextList>
+                  </ContainerLegend>
+
+                  <TextList>{`${item.value.toFixed(1)}%`}</TextList>
+                </ContainerList>
+              )}
+            />
           </Content>
         </>
       )}
