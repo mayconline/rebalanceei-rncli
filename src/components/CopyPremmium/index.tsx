@@ -22,6 +22,7 @@ const CopyPremmium = ({ isPremmium = false }: ICopyPremmium) => (
       <ContainerDescription>
         <Description>+ Carteiras ilimitadas</Description>
         <Description>+ Ativos ilimitados</Description>
+        <Description>+ Gráficos exclusivos</Description>
         <Description>+ Sem Anúncios</Description>
         <Description>+ Todos os Benefícios do app</Description>
       </ContainerDescription>

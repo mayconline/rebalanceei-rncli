@@ -42,7 +42,7 @@ export const TextFilter = styled.Text<IFocused>`
     focused ? theme.color.bgFiltersActive : theme.color.bgFilterInactive};
   color: ${({ focused, theme }) =>
     focused ? theme.color.filterFocused : theme.color.filterDisabled};
-  padding: 4px 16px;
+  padding: 4px 12px;
   border-radius: 16px;
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;

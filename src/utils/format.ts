@@ -55,6 +55,8 @@ export const formatFilter = (filter: string) =>
     INDUSTRY: 'Segmento',
   }[filter]);
 
+export const PREMIUM_FILTER = ['SECTOR', 'INDUSTRY'];
+
 export const getPositionAdBanner = (index: number, length: number) => {
   return index % 6 === 0 || index === 0;
 };
