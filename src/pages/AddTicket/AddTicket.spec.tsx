@@ -19,20 +19,13 @@ jest.mock('../../contexts/authContext', () => ({
 
 describe('AddTicket Tab', () => {
   it('should successfully create ticket', async () => {
-    apiMock.onGet('/autoc?').reply(200, {
-      ResultSet: {
-        Query: 'sapr4',
-        Result: [
-          {
-            symbol: 'SAPR4.SA',
-            name: 'Companhia de Saneamento do Paraná - SANEPAR',
-            exch: 'SAO',
-            type: 'S',
-            exchDisp: 'São Paulo',
-            typeDisp: 'Ação',
-          },
-        ],
-      },
+    apiMock.onGet('/search?').reply(200, {
+      quotes: [
+        {
+          symbol: 'SAPR4.SA',
+          longname: 'Companhia de Saneamento do Paraná - SANEPAR',
+        },
+      ],
     });
 
     const {
