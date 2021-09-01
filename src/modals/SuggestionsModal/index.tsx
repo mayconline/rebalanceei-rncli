@@ -20,7 +20,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 interface ISuggestions {
   symbol: string;
-  name: string;
+  longname: string;
 }
 
 interface ISuggestionsProps {
@@ -56,23 +56,26 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
 
   const displaySuggestionsAutoComplete = useDebouncedCallback(
     async (ticket: string) => {
-      const response = await api.get('/autoc?', {
-        params: {
-          query: ticket,
-          region: 1,
-          lang: 'ptbr',
-        },
-      });
+      try {
+        const response = await api.get('/search?', {
+          params: {
+            q: ticket,
+          },
+        });
 
-      let suggest = response?.data?.ResultSet?.Result;
+        let suggest = response?.data?.quotes;
 
-      if (!suggest.length) {
+        if (!suggest.length) {
+          setLoading(false);
+          setError(true);
+        }
+
+        setSuggestions(suggest);
+        setLoading(false);
+      } catch (err) {
         setLoading(false);
         setError(true);
       }
-
-      setSuggestions(suggest);
-      setLoading(false);
     },
     300,
   );
@@ -105,7 +108,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
               <SuggestionItem key={suggestion.symbol}>
                 <SuggestionButton
                   onPress={() =>
-                    handleSelectSuggest(suggestion.symbol, suggestion.name)
+                    handleSelectSuggest(suggestion.symbol, suggestion.longname)
                   }
                 >
                   <SuggestionText
@@ -113,7 +116,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
                     numberOfLines={1}
                     ellipsizeMode="tail"
                   >
-                    {suggestion.symbol}- {suggestion.name}
+                    {suggestion.symbol}- {suggestion.longname}
                   </SuggestionText>
                 </SuggestionButton>
               </SuggestionItem>
