@@ -21,6 +21,7 @@ import { useFocusEffect } from '@react-navigation/native';
 interface ISuggestions {
   symbol: string;
   longname: string;
+  shortname: string;
 }
 
 interface ISuggestionsProps {
@@ -108,7 +109,12 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
               <SuggestionItem key={suggestion.symbol}>
                 <SuggestionButton
                   onPress={() =>
-                    handleSelectSuggest(suggestion.symbol, suggestion.longname)
+                    handleSelectSuggest(
+                      suggestion?.symbol,
+                      !!suggestion?.longname
+                        ? suggestion?.longname
+                        : suggestion?.shortname,
+                    )
                   }
                 >
                   <SuggestionText
