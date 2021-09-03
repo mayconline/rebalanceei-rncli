@@ -4,6 +4,7 @@ import { render, fireEvent, act } from '../../utils/testProvider';
 import * as RNIap from 'react-native-iap/src/index';
 import { Platform, Alert } from 'react-native';
 import * as CancelPlan from '../../utils/CancelPlan';
+import { formatDate } from '../../utils/format';
 
 const purchaseListener = jest.spyOn(RNIap, 'purchaseUpdatedListener');
 purchaseListener.mockImplementationOnce(jest.fn());
@@ -62,7 +63,7 @@ describe('PlanModal', () => {
     await findByText(/Premium Mensal - Ativo/i);
     getByText(/R\$ 9,90 \/ Mês/i);
     getByText(/^Data da Renovação$/i);
-    getByText(/22\/02\/2021 às 04:27:35/i);
+    getByText(formatDate(1613978855335));
     getByText(
       /\*Seu Plano será renovado automáticamente na data da renovação./i,
     );
