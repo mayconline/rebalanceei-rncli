@@ -1,5 +1,36 @@
 {
-  "extends": [
-    "config:base"
-  ]
+  "extends": ["config:base"],
+  "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "devDependencies (non-major)",
+      "groupSlug": "dev-dependencies"
+    },
+    {
+      "matchDepTypes": ["dependencies-patch"],
+      "matchUpdateTypes": ["patch"],
+      "groupName": "dependencies patch",
+      "groupSlug": "dependencies-patch"
+    },
+    {
+      "matchDepTypes": ["dependencies-minor"],
+      "matchUpdateTypes": ["minor"],
+      "groupName": "dependencies minor",
+      "groupSlug": "dependencies-minor"
+    },
+    {
+      "matchDepTypes": ["peerDependencies"],
+      "matchUpdateTypes": ["patch"],
+      "groupName": "peerDependencies patch",
+      "groupSlug": "peerDependencies-patch"
+    },
+    {
+      "matchDepTypes": ["peerDependencies"],
+      "matchUpdateTypes": ["minor"],
+      "groupName": "peerDependencies minor",
+      "groupSlug": "peerDependencies-minor"
+    }
+  ],
+  "separateMajorMinor": true
 }
