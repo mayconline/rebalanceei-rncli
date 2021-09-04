@@ -103,3 +103,10 @@ export const openPlanModalOnError = (errorMessage?: string) => {
 
   return openPlanModal;
 };
+
+export const formatDate = (dateNumber: number) => {
+  const date = new Date(dateNumber).toLocaleDateString();
+  const time = new Date(dateNumber).toLocaleTimeString();
+
+  return `${date} às ${time}`;
+};

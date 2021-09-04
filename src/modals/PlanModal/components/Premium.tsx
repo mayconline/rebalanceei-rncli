@@ -11,6 +11,7 @@ import { ContainerButtons, SubTitle } from '../styles';
 import { getLinkCancelPlan } from '../../../utils/CancelPlan';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
+import { formatDate } from '../../../utils/format';
 
 const Premium = () => {
   const { logEvent } = useAmplitude();
@@ -61,13 +62,6 @@ const Premium = () => {
 
     return;
   }, [plan]);
-
-  const formatDate = (dateNumber: number) => {
-    const date = new Date(dateNumber).toLocaleDateString();
-    const time = new Date(dateNumber).toLocaleTimeString();
-
-    return `${date} às ${time}`;
-  };
 
   return loading ? (
     <ActivityIndicator size="large" color={color.bgHeaderEmpty} />
