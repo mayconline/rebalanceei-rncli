@@ -8,7 +8,8 @@
     "start": "react-native start",
     "test": "jest --coverage=false",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "dev": "npx react-native run-android"
+    "dev": "npx react-native run-android",
+    "prod": "npx react-native run-android --variant=release"
   },
   "dependencies": {
     "@amplitude/react-native": "2.4.0",
