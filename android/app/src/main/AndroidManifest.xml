@@ -1,41 +1,21 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.rebalanceei">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.rebalanceei">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.INTERNET" />
 
-    <application
-      android:name=".MainApplication"
-      android:label="@string/app_name"
-      android:icon="@mipmap/ic_launcher"
-      android:roundIcon="@mipmap/ic_launcher_round"
-      android:allowBackup="false"
-      android:theme="@style/AppTheme">
+  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="false" android:theme="@style/AppTheme">
 
-     <activity
-        android:name=".SplashActivity"
-        android:theme="@style/SplashTheme"
-        android:label="@string/app_name">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-      </activity>
+    <activity android:name=".SplashActivity" android:theme="@style/SplashTheme" android:label="@string/app_name">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
 
-      <activity
-        android:name=".MainActivity"
-        android:label="@string/app_name"
-        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
-        android:launchMode="singleTask"
-        android:windowSoftInputMode="adjustResize" 
-        android:screenOrientation="portrait" 
-        android:exported="true" />
-       
-      <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+    <activity android:name=".MainActivity" android:label="@string/app_name" android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode" android:launchMode="singleTask" android:windowSoftInputMode="adjustResize" android:screenOrientation="portrait" android:exported="true" />
 
-     <!-- Sample AdMob Test app ID: ca-app-pub-3940256099942544~3347511713 -->
-       <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-7986828971010623~5735244468"/>
-    </application>
+
+    <!-- Sample AdMob Test app ID: ca-app-pub-3940256099942544~3347511713 -->
+    <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-7986828971010623~5735244468"/>
+  </application>
 
 </manifest>
