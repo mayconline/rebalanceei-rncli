@@ -38,7 +38,7 @@
     "react-native-svg-charts": "5.4.0",
     "react-native-vector-icons": "7.1.0",
     "styled-components": "5.2.3",
-    "use-debounce": "5.2.1"
+    "use-debounce": "7.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.15.5",
