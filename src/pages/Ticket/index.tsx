@@ -103,7 +103,7 @@ const Ticket = () => {
               );
             }
           });
-        } catch (err) {
+        } catch (err: any) {
           console.error(mutationError?.message + err);
         }
       }

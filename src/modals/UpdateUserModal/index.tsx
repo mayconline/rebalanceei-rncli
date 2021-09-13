@@ -108,7 +108,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
         ],
         { cancelable: false },
       );
-    } catch (err) {
+    } catch (err: any) {
       logEvent('error on disabled account');
       console.error(err);
     }
@@ -131,7 +131,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
       logEvent('successful update account');
 
       onClose();
-    } catch (err) {
+    } catch (err: any) {
       logEvent('error on update account');
       console.error(err);
     }

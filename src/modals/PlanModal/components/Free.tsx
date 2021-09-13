@@ -109,7 +109,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
         ],
         { cancelable: false },
       );
-    } catch (err) {
+    } catch (err: any) {
       logEvent('error on updateRole at Plan Free Modal');
       console.error(mutationError?.message + err);
     }
@@ -169,7 +169,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
             await handleChangePlan(transactionData);
 
             logEvent('successful subscribe at Plan Free Modal');
-          } catch (err) {
+          } catch (err: any) {
             console.warn('ackErr', err);
             setErrorMessage(err);
             setLoading(false);

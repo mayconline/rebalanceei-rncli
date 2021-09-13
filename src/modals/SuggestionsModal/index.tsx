@@ -73,7 +73,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
 
         setSuggestions(suggest);
         setLoading(false);
-      } catch (err) {
+      } catch (err: any) {
         setLoading(false);
         setError(true);
       }
