@@ -10,7 +10,7 @@ const useAmplitude = () => {
   const logEvent = (event: string) => {
     try {
       return ampInstance.logEvent(event);
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
     }
   };

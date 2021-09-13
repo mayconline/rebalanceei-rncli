@@ -163,7 +163,7 @@ const AddTicket = () => {
       setTicketForm({} as ITicketForm);
       setFocus(0);
       setOpenModal('SUCCESS');
-    } catch (err) {
+    } catch (err: any) {
       logEvent('error on createTicket at Add Ticket');
       console.error(mutationError?.message + err);
 

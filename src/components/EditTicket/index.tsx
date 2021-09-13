@@ -124,7 +124,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
 
       handleGoBack();
       openModal();
-    } catch (err) {
+    } catch (err: any) {
       logEvent('error on editTicket at Edit Ticket');
       console.error(mutationError?.message + err);
     }
@@ -157,7 +157,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
       logEvent('successful deleteTicket at Delete Ticket');
       handleGoBack();
       openModal();
-    } catch (err) {
+    } catch (err: any) {
       logEvent('error on deleteTicket at Delete Ticket');
       console.error(mutationDeleteError?.message + err);
     }

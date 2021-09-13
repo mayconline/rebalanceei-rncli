@@ -12,7 +12,7 @@ export const conectionStore = async () => {
   try {
     await initConnection();
     await flushFailedPurchasesCachedAsPendingAndroid();
-  } catch (err) {
+  } catch (err: any) {
     console.error('not connection to store' + err);
   }
 };
@@ -20,7 +20,7 @@ export const conectionStore = async () => {
 export const getListSubscriptions = async (listSku: string[]) => {
   try {
     return await getSubscriptions(listSku);
-  } catch (err) {
+  } catch (err: any) {
     console.error('failed fetch list subscription' + err);
   }
 };
@@ -35,7 +35,7 @@ export const requestSubscribe = async (sku: string, userID: string) => {
       undefined,
       userID,
     );
-  } catch (err) {
+  } catch (err: any) {
     console.error('errRequest', err.message);
   }
 };

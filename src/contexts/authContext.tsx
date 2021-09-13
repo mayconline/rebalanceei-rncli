@@ -44,7 +44,7 @@ export interface IPlan {
 interface IAuthContext {
   signed: boolean;
   loading: boolean;
-  isConnected: boolean;
+  isConnected: boolean | null;
   showBanner: boolean;
   wallet: string | null;
   walletName: string | null;
@@ -136,7 +136,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       } else {
         setLoading(false);
       }
-    } catch (err) {
+    } catch (err: any) {
       setLoading(false);
     }
   }, []);
@@ -161,7 +161,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
       setUserID(_id);
       setSigned(true);
-    } catch (err) {
+    } catch (err: any) {
       handleSignOut();
     }
   }, []);

@@ -92,7 +92,7 @@ const AddWalletModal = ({
       );
 
       logEvent('successful createWallet at Add Wallet');
-    } catch (err) {
+    } catch (err: any) {
       logEvent('error on createWallet at Add Wallet');
       console.error(mutationError?.message + err);
       handleSetLoading(false);

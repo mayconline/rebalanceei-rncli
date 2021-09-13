@@ -27,7 +27,7 @@ export const Label = styled.Text<IFocusProps>`
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;
 
-export const TextInput = styled.TextInput`
+export const TextCustomInput = styled.TextInput`
   color: ${({ theme }) => theme.color.title};
   height: 40px;
   font: 400 16px/24px 'TitilliumWeb-Regular';

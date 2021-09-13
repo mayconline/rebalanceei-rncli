@@ -112,7 +112,7 @@ const EditWallet = ({
 
       handleGoBack();
       logEvent('successful createWallet at Edit Wallet');
-    } catch (err) {
+    } catch (err: any) {
       console.error(mutationError?.message + err);
       handleSetLoading(false);
     }
@@ -142,7 +142,7 @@ const EditWallet = ({
       handleGoBack();
 
       logEvent('successful createWallet at Delete Wallet');
-    } catch (err) {
+    } catch (err: any) {
       console.error(mutationDeleteError?.message + err);
       handleSetLoading(false);
     }
