@@ -52,7 +52,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
 
     logEvent('open suggestion list at Suggestion Modal');
 
-    displaySuggestionsAutoComplete.callback(ticket);
+    displaySuggestionsAutoComplete(ticket);
   }, []);
 
   const displaySuggestionsAutoComplete = useDebouncedCallback(
