@@ -65,7 +65,6 @@ const privateRoute = () => {
 
   return (
     <Tab.Navigator
-      lazy={true}
       screenOptions={({ route, navigation }) => ({
         tabBarIcon: ({ color, size, focused }) => {
           if (route.name === 'AddTicket') {
@@ -97,17 +96,22 @@ const privateRoute = () => {
             </Label>
           );
         },
-      })}
-      tabBarOptions={{
-        style: {
+        tabBarHideOnKeyboard: true,
+        tabBarActiveTintColor: color.activeText,
+        tabBarInactiveTintColor: color.inactiveTabs,
+        tabBarItemStyle: {
           backgroundColor: color.primary,
           borderTopColor: color.divider,
           padding: 4,
         },
-        activeTintColor: color.activeText,
-        inactiveTintColor: color.inactiveTabs,
-        keyboardHidesTabBar: true,
-      }}
+        tabBarStyle: [
+          {
+            display: 'flex',
+          },
+          null,
+        ],
+        headerShown: false,
+      })}
     >
       <Tab.Screen
         name="Ticket"
