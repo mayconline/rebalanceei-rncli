@@ -1,11 +1,11 @@
-import React, { useContext, useCallback, useState } from 'react';
+import React, { useContext, useCallback, useState, useEffect } from 'react';
 import { Modal } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import { Wrapper, ContainerTitle, Title, LootieContainer } from './styles';
 import LottieView from 'lottie-react-native';
 import Button from '../../components/Button';
 import { getLocalStorage, setLocalStorage } from '../../utils/localStorage';
-import { showAdMob } from '../../services/AdMob';
+import { useInterstitialAd, INTER_ID } from '../../services/AdMob';
 import PlanModal from '../PlanModal';
 import { useAuth } from '../../contexts/authContext';
 import useAmplitude from '../../hooks/useAmplitude';
@@ -23,15 +23,33 @@ const SuccessModal: React.FC<ISuccessModal> = ({
   const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const { showBanner } = useAuth();
+  const { adLoaded, show, adShowing, adDismissed } = useInterstitialAd(
+    INTER_ID,
+  );
 
   const [openModal, setOpenModal] = useState<'Plan' | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [openAD, setOpenAd] = useState<boolean>(false);
 
   useFocusEffect(
     useCallback(() => {
       logEvent('open Success modal');
     }, []),
   );
+
+  useEffect(() => {
+    if (adLoaded && !!openAD) {
+      show();
+    }
+  }, [adLoaded, openAD]);
+
+  useEffect(() => {
+    if (!adShowing && adDismissed) {
+      setLoading(false);
+      setOpenModal('Plan');
+    }
+    () => setOpenAd(false);
+  }, [adShowing, adDismissed]);
 
   const getViewCount = useCallback(async () => {
     let viewCount = await getLocalStorage('@countView');
@@ -51,10 +69,8 @@ const SuccessModal: React.FC<ISuccessModal> = ({
     setLoading(true);
     const viewCount = await setViewCount();
 
-    if (showBanner && viewCount % 8 === 0) {
-      await showAdMob();
-      setLoading(false);
-      setOpenModal('Plan');
+    if (showBanner && viewCount % 3 === 0) {
+      setOpenAd(true);
       logEvent('show adMob interticial');
     } else {
       setLoading(false);

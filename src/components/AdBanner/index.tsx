@@ -1,13 +1,10 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native';
-import { AdMobBanner } from 'react-native-admob';
 import { useAuth } from '../../contexts/authContext';
+import { BannerAd, BannerAdSize, BANNER_ID } from '../../services/AdMob';
 
 const AdBanner = () => {
   const { showBanner } = useAuth();
-
-  //adUnitID="ca-app-pub-3940256099942544/6300978111" //test ID
-  //testDevices={[AdMobBanner.simulatorId]}
 
   return showBanner ? (
     <SafeAreaView
@@ -16,9 +13,9 @@ const AdBanner = () => {
         marginVertical: 8,
       }}
     >
-      <AdMobBanner
-        adSize="banner"
-        adUnitID="ca-app-pub-7986828971010623/8908202716"
+      <BannerAd
+        size={BannerAdSize.BANNER}
+        unitId={BANNER_ID}
         onAdFailedToLoad={error => console.error(error)}
       />
     </SafeAreaView>
