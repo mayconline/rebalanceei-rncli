@@ -1413,7 +1413,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@react-native-admob/admob@^1.1.1":
+"@react-native-admob/admob@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@react-native-admob/admob/-/admob-1.1.1.tgz#845a3274378f59db12853fb84f5a6185ff5f7479"
   integrity sha512-ccwbIQeYqvB7DG59W1cUDum76//NXCKxXPQB6G/g3g29xd1ym62ZjG5RP9on/7uBIkejLtsivqhN8BpCLrAviA==
