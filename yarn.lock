@@ -1413,10 +1413,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@react-native-admob/admob@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@react-native-admob/admob/-/admob-1.1.1.tgz#845a3274378f59db12853fb84f5a6185ff5f7479"
-  integrity sha512-ccwbIQeYqvB7DG59W1cUDum76//NXCKxXPQB6G/g3g29xd1ym62ZjG5RP9on/7uBIkejLtsivqhN8BpCLrAviA==
+"@react-native-admob/admob@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@react-native-admob/admob/-/admob-1.1.0.tgz#dbb906d97ba66b2f99402866542ec007d963a8e5"
+  integrity sha512-JjXWD/JusWqiFtmCR59IGriwbYxPQmQ/XzD9q/325tXDBTM47x1bynVwA5k2E0rEhVpQVTXh9vuEJMdAutBk6Q==
 
 "@react-native-async-storage/async-storage@1.15.1":
   version "1.15.1"
