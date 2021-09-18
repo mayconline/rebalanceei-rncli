@@ -1,10 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  EmitterSubscription,
-  Platform,
-} from 'react-native';
+import { ActivityIndicator, Alert } from 'react-native';
 import { useAuth } from '../../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
 
@@ -19,26 +14,15 @@ import TextError from '../../../components/TextError';
 
 import {
   calculateInitialRenewSubscription,
-  conectionStore,
-  getListSubscriptions,
-  requestSubscribe,
-} from '../../../services/Iap';
-import {
-  endConnection,
-  finishTransaction,
-  PurchaseError,
-  purchaseErrorListener,
-  purchaseUpdatedListener,
-  SubscriptionPurchase,
+  useIAP,
+  listSku,
   Subscription,
-} from 'react-native-iap';
+  Purchase,
+} from '../../../services/Iap';
+
 import { gql, useMutation } from '@apollo/client';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
-
-export const listSku = Platform.select({
-  android: ['rebalanceei_premium_mensal', 'rebalanceei_premium_anual'],
-});
 
 export interface IUpdateRole {
   updateRole: IUser;
@@ -50,22 +34,24 @@ interface IFree {
   handleSelectPlan(plan: IPlanName): void;
 }
 
-let purchaseUpdateSubscription: EmitterSubscription;
-let purchaseErrorSubscription: EmitterSubscription;
-
 const Free = ({ planName, handleSelectPlan }: IFree) => {
   const { logEvent } = useAmplitude();
 
-  const { userID, handleSignOut } = useAuth();
+  const {
+    connected,
+    subscriptions,
+    getSubscriptions,
+    finishTransaction,
+    currentPurchase,
+    currentPurchaseError,
+    requesSubscription,
+  } = useIAP();
+
+  const { handleSignOut } = useAuth();
   const { gradient, color } = useContext(ThemeContext);
   const [loading, setLoading] = useState(true);
-  const [skuID, setSkuID] = useState<Subscription>({} as Subscription);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(
-    undefined,
-  );
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>(
-    [] as Subscription[],
-  );
+  const [skuID, setSkuID] = useState<Subscription>();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   useFocusEffect(
     useCallback(() => {
@@ -116,27 +102,22 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
   }, []);
 
   useEffect(() => {
-    !!listSku &&
-      conectionStore()
-        .then(() =>
-          getListSubscriptions(listSku)
-            .then(res => {
-              !!res && setSubscriptions(res);
-              !!res && setSkuID(res[0]);
-              setLoading(false);
-              logEvent('view list at Plan Free Modal');
-            })
-            .catch(err => {
-              logEvent('error on view list at Plan Free Moda');
-              console.error(err);
-            }),
-        )
-        .catch(err => console.error(err));
-  }, []);
+    if (!!listSku.length && connected) {
+      getSubscriptions(listSku);
+    }
+  }, [getSubscriptions, listSku, connected]);
 
   useEffect(() => {
-    purchaseUpdateSubscription = purchaseUpdatedListener(
-      async (purchase: SubscriptionPurchase) => {
+    if (!!subscriptions.length) {
+      setSkuID(subscriptions[0]);
+    }
+
+    setLoading(false);
+  }, [subscriptions]);
+
+  useEffect(() => {
+    const checkCurrentPurchase = async (purchase?: Purchase): Promise<void> => {
+      if (purchase) {
         const receipt = purchase.transactionReceipt;
 
         if (receipt) {
@@ -162,7 +143,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
               transactionId: purchase?.transactionId,
             };
 
-            await finishTransaction(purchase, false);
+            await finishTransaction(purchase);
 
             setLoading(false);
 
@@ -176,35 +157,35 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
             logEvent('error on subscribe at Plan Free Modal');
           }
         }
-      },
-    );
-
-    purchaseErrorSubscription = purchaseErrorListener(
-      (error: PurchaseError) => {
-        setErrorMessage(error.message);
-        setLoading(false);
-        logEvent('error listener on subscribe at Plan Free Modal');
-      },
-    );
-
-    return () => {
-      purchaseUpdateSubscription?.remove();
-      purchaseErrorSubscription?.remove();
-      endConnection();
+      }
     };
-  }, [skuID]);
+
+    checkCurrentPurchase(currentPurchase);
+  }, [currentPurchase, finishTransaction]);
+
+  useEffect(() => {
+    if (!!currentPurchaseError) {
+      setErrorMessage(currentPurchaseError.message);
+      setLoading(false);
+    }
+  }, [currentPurchaseError]);
 
   const handlePurchaseSubscription = useCallback(async () => {
     setLoading(true);
 
-    !!skuID && !!userID && (await requestSubscribe(skuID.productId, userID));
-  }, [skuID, userID]);
+    if (!!skuID) {
+      await requesSubscription(skuID.productId);
+    }
+  }, [skuID]);
 
-  const handleChangeOptionPlan = useCallback(async (sku, duration) => {
-    !!sku && setSkuID(sku);
-    !!duration && handleSelectPlan(duration);
-    setErrorMessage(undefined);
-  }, []);
+  const handleChangeOptionPlan = useCallback(
+    async (sku: Subscription, duration: any) => {
+      !!sku && setSkuID(sku);
+      !!duration && handleSelectPlan(duration);
+      setErrorMessage(undefined);
+    },
+    [],
+  );
 
   return loading ? (
     <ActivityIndicator size="large" color={color.bgHeaderEmpty} />

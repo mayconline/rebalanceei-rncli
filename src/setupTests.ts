@@ -12,6 +12,7 @@ jest.mock('./services/AdMob', () => ({
   BannerAd: () => null,
 }));
 
+jest.mock('react-native-iap', () => null);
 jest.mock('@react-native-community/netinfo', () => mockRNCNetInfo);
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage);
 jest.mock('react-native-reanimated', () => {
