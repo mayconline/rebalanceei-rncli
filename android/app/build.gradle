@@ -184,6 +184,13 @@ android {
 
         }
     }
+
+    //temporary update fix bug androidx.browser
+    configurations.all {
+            resolutionStrategy {
+                force 'androidx.browser:browser:1.3.0'
+            }
+        }
 }
 
 dependencies {
