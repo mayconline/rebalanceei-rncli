@@ -132,6 +132,7 @@ android {
         versionCode 14
         versionName "1.3.2"
         multiDexEnabled true
+        missingDimensionStrategy 'store', 'play'
     }
     splits {
         abi {
@@ -194,7 +195,7 @@ android {
 }
 
 dependencies {
-    def billing_version = "3.0.0"
+    def billing_version = "4.0.0"
     
     implementation "com.android.billingclient:billing:$billing_version"
 

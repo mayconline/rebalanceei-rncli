@@ -1,50 +1,16 @@
 import {
-  initConnection,
-  getSubscriptions,
-  requestSubscription,
-  flushFailedPurchasesCachedAsPendingAndroid,
+  withIAPContext,
+  useIAP,
   getAvailablePurchases,
+  Subscription as SubscriptionType,
+  Purchase as PurchaseType,
 } from 'react-native-iap';
-
 import { IPlan } from '../contexts/authContext';
 
-export const conectionStore = async () => {
-  try {
-    await initConnection();
-    await flushFailedPurchasesCachedAsPendingAndroid();
-  } catch (err: any) {
-    console.error('not connection to store' + err);
-  }
-};
-
-export const getListSubscriptions = async (listSku: string[]) => {
-  try {
-    return await getSubscriptions(listSku);
-  } catch (err: any) {
-    console.error('failed fetch list subscription' + err);
-  }
-};
-
-export const requestSubscribe = async (sku: string, userID: string) => {
-  try {
-    return await requestSubscription(
-      sku,
-      true,
-      undefined,
-      undefined,
-      undefined,
-      userID,
-    );
-  } catch (err: any) {
-    console.error('errRequest', err.message);
-  }
-};
-
-export const restoreSubscription = async () => {
-  const purchases = await getAvailablePurchases();
-
-  return purchases;
-};
+export const listSku = [
+  'rebalanceei_premium_mensal',
+  'rebalanceei_premium_anual',
+];
 
 export const validHasSubscription = async (plan?: IPlan) => {
   if (!plan) return false;
@@ -164,3 +130,14 @@ export const calculateInitialRenewSubscription = async (
     };
   }
 };
+
+export const restoreSubscription = async () => {
+  const purchases = await getAvailablePurchases();
+
+  return purchases;
+};
+
+export type Subscription = SubscriptionType;
+export type Purchase = PurchaseType;
+
+export { withIAPContext, useIAP };

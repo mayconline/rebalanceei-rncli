@@ -1,19 +1,9 @@
 import React from 'react';
 import PlanModal, { GET_USER_BY_TOKEN } from './index';
 import { render, fireEvent, act } from '../../utils/testProvider';
-import * as RNIap from 'react-native-iap/src/index';
-import { Platform, Alert } from 'react-native';
+import { Alert } from 'react-native';
 import * as CancelPlan from '../../utils/CancelPlan';
 import { formatDate } from '../../utils/format';
-
-const purchaseListener = jest.spyOn(RNIap, 'purchaseUpdatedListener');
-purchaseListener.mockImplementationOnce(jest.fn());
-
-const purchaseErrorListener = jest.spyOn(RNIap, 'purchaseErrorListener');
-purchaseErrorListener.mockImplementationOnce(jest.fn());
-
-const endConnection = jest.spyOn(RNIap, 'endConnection');
-endConnection.mockImplementationOnce(jest.fn());
 
 const mockedOnClose = jest.fn();
 const mockedAlert = (Alert.alert = jest.fn());
@@ -35,19 +25,80 @@ jest.mock('../../contexts/authContext', () => ({
   }),
 }));
 
+const SUBSCRIPTIONS_MOCK = [
+  {
+    description: 'Premium Mensal',
+    localizedPrice: 'R$ 9,90',
+    productId: 'rebalanceei_premium_mensal',
+    subscriptionPeriodAndroid: 'P1M',
+  },
+  {
+    description: 'Premium Anual',
+    localizedPrice: 'R$ 89,90',
+    productId: 'rebalanceei_premium_anual',
+    subscriptionPeriodAndroid: 'P1Y',
+  },
+];
+
+const MOCKED_REQUEST_SUB = jest.fn();
+
+jest.mock('../../services/Iap', () => ({
+  listSku: ['rebalanceei_premium_mensal', 'rebalanceei_premium_anual'],
+  useIAP: (): Record<string, unknown> => ({
+    connected: true,
+    subscriptions: SUBSCRIPTIONS_MOCK,
+    getSubscriptions: jest.fn(),
+    requesSubscription: MOCKED_REQUEST_SUB,
+    finishTransaction: jest.fn(),
+  }),
+}));
+
 describe('PlanModal', () => {
   it('should successfully list current plan and options premium', async () => {
-    const { findByA11yRole } = render(<PlanModal onClose={mockedOnClose} />, [
+    const {
+      findByA11yRole,
+      getByText,
+      getAllByText,
+      getByA11yRole,
+    } = render(<PlanModal onClose={mockedOnClose} />, [
       SUCCESSFUL_GET_ROLE_USER,
     ]);
 
     const title = await findByA11yRole('header');
     expect(title).toHaveProperty('children', ['Meu Plano Atual']);
+
+    getByText(/Plano Básico - Ativo/i);
+    getByText(/Grátis/i);
+    getByText(/^\+ Até 2 Carteiras$/i);
+    getByText(/^\+ Até 16 Ativos em cada carteira$/i);
+
+    getByText('Torne-se Premium');
+    getByText(/^\+ Carteiras ilimitadas$/i);
+    getByText(/^\+ Ativos ilimitados$/i);
+    getByText(/^\+ Gráficos exclusivos$/i);
+    getByText(/^\+ Sem Anúncios$/i);
+    getByText(/^\+ Todos os benefícios do app$/i);
+
+    getByText(/Premium Anual/i);
+    getByText(/Menos de R\$ 7,50 \/ Mês/i);
+
+    getByText(/Premium Mensal/i);
+    getByText(/R\$ 9,90 \/ Mês/i);
+
+    getAllByText(/Gráficos exclusivos/i);
+    getAllByText(/Renovação automática/i);
+
+    const submitButton = getByA11yRole('button');
+    expect(submitButton).toHaveProperty('children', ['Assine já !']);
+
+    await act(async () => fireEvent.press(submitButton));
+    expect(MOCKED_REQUEST_SUB).toHaveBeenCalledTimes(1);
+    expect(MOCKED_REQUEST_SUB).toHaveBeenLastCalledWith(
+      'rebalanceei_premium_mensal',
+    );
   });
 
   it('should successfully list current plan premium', async () => {
-    Platform.OS = 'android';
-
     const {
       findAllByA11yRole,
       findByText,
@@ -71,6 +122,7 @@ describe('PlanModal', () => {
     getByText('Premium');
     getByText(/^\+ Carteiras ilimitadas$/i);
     getByText(/^\+ Ativos ilimitados$/i);
+    getByText(/^\+ Gráficos exclusivos$/i);
     getByText(/^\+ Sem Anúncios$/i);
     getByText(/^\+ Todos os benefícios do app$/i);
 
