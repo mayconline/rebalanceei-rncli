@@ -23,9 +23,14 @@ const SuccessModal: React.FC<ISuccessModal> = ({
   const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const { showBanner } = useAuth();
-  const { adLoaded, show, adShowing, adDismissed } = useInterstitialAd(
-    INTER_ID,
-  );
+  const {
+    adLoaded,
+    show,
+    adShowing,
+    adDismissed,
+    adLoadError,
+    adPresentError,
+  } = useInterstitialAd(INTER_ID);
 
   const [openModal, setOpenModal] = useState<'Plan' | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -51,6 +56,13 @@ const SuccessModal: React.FC<ISuccessModal> = ({
     () => setOpenAd(false);
   }, [adShowing, adDismissed]);
 
+  useEffect(() => {
+    if (!!adLoadError || !!adPresentError) {
+      setLoading(false);
+    }
+    () => setOpenAd(false);
+  }, [adLoadError, adPresentError]);
+
   const getViewCount = useCallback(async () => {
     let viewCount = await getLocalStorage('@countView');
     return viewCount ? Number(viewCount) : 0;
@@ -69,7 +81,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
     setLoading(true);
     const viewCount = await setViewCount();
 
-    if (showBanner && viewCount % 3 === 0) {
+    if (showBanner && viewCount % 8 === 0) {
       setOpenAd(true);
       logEvent('show adMob interticial');
     } else {
