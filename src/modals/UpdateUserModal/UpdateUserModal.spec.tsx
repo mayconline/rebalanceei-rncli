@@ -23,6 +23,7 @@ describe('Update User Modal', () => {
       getByText,
       getByPlaceholderText,
       getByDisplayValue,
+      findByPlaceholderText,
     } = render(<UpdateUserModal onClose={mockedOnClose} />, [
       SUCCESSFUL_GET_USER_BY_TOKEN,
       SUCCESSFUL_UPDATE_USER,
@@ -33,7 +34,8 @@ describe('Update User Modal', () => {
     expect(title).toHaveProperty('children', ['Alterar Usuário']);
 
     getByText(/E-mail/i);
-    const inputEmail = getByPlaceholderText(/meuemail@teste.com.br/i);
+    const inputEmail = await findByPlaceholderText(/meuemail@teste.com.br/i);
+
     expect(inputEmail.props.defaultValue).toBe('test@test.com');
 
     fireEvent.changeText(inputEmail, 'testeupdate@teste.com');

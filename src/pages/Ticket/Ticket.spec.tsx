@@ -17,6 +17,7 @@ describe('Ticket Tab', () => {
   it('should successfully list tickets', async () => {
     const {
       findByA11yRole,
+      findAllByA11yLabel,
       getAllByA11yRole,
       getAllByA11yLabel,
       getByText,
@@ -27,10 +28,7 @@ describe('Ticket Tab', () => {
     await findByA11yRole('header');
     getByText('Meus Ativos');
 
-    const listItems = getAllByA11yRole('button');
-    expect(listItems).toHaveLength(5);
-
-    const symbolItemOne = getAllByA11yLabel(/Código do Ativo/i)[0];
+    const symbolItemOne = (await findAllByA11yLabel(/Código do Ativo/i))[0];
     expect(symbolItemOne).toHaveProperty('children', ['SAPR4']);
 
     const nameItemOne = getAllByA11yLabel(/Nome do Ativo/i)[0];
@@ -54,6 +52,9 @@ describe('Ticket Tab', () => {
     )[0];
     expect(gradeItemOne).toHaveProperty('children', ['6']);
 
+    const listItems = getAllByA11yRole('button');
+    expect(listItems).toHaveLength(5);
+
     act(() => fireEvent.press(listItems[0]));
     expect(setParams).toHaveBeenCalledTimes(1);
     expect(navigate).toHaveBeenCalledWith('AddTicket', {
@@ -74,12 +75,12 @@ describe('Ticket Tab', () => {
     const {
       findByA11yRole,
       getByA11yRole,
-      getByText,
+      findByText,
       navigate,
     } = render(<Ticket />, [EMPTY_LIST_TICKETS]);
 
     await findByA11yRole('header');
-    getByText('Adicione um ativo dando uma nota para ele.');
+    await findByText('Adicione um ativo dando uma nota para ele.');
 
     const subTitle = getByA11yRole('text');
     expect(subTitle).toHaveProperty('children', [
