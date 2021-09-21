@@ -113,7 +113,7 @@ const Login = () => {
     navigation.goBack();
   }, []);
 
-  const handleNavigate = useCallback((route: string) => {
+  const handleNavigate = useCallback((route: 'SignUp' | 'ForgotPassword') => {
     logEvent(`click on Navigate to ${route} at Login`);
     navigation.navigate(route);
   }, []);

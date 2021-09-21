@@ -145,7 +145,7 @@ const SignUp = () => {
     navigation.goBack();
   }, []);
 
-  const handleNavigate = useCallback((route: string) => {
+  const handleNavigate = useCallback((route: 'Login') => {
     logEvent(`click on Navigate to ${route} at SignUp`);
     navigation.navigate(route);
   }, []);
