@@ -60,6 +60,7 @@ describe('PlanModal', () => {
       getByText,
       getAllByText,
       getByA11yRole,
+      findByText,
     } = render(<PlanModal onClose={mockedOnClose} />, [
       SUCCESSFUL_GET_ROLE_USER,
     ]);
@@ -67,7 +68,7 @@ describe('PlanModal', () => {
     const title = await findByA11yRole('header');
     expect(title).toHaveProperty('children', ['Meu Plano Atual']);
 
-    getByText(/Plano Básico - Ativo/i);
+    await findByText(/Plano Básico - Ativo/i);
     getByText(/Grátis/i);
     getByText(/^\+ Até 2 Carteiras$/i);
     getByText(/^\+ Até 16 Ativos em cada carteira$/i);

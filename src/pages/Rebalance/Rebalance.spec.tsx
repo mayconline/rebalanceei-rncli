@@ -15,13 +15,14 @@ describe('Rebalance Tab', () => {
     const {
       findByA11yRole,
       getAllByA11yLabel,
+      findAllByA11yLabel,
       getByText,
     } = render(<Rebalance />, [SUCCESSFUL_LIST_REBALANCES]);
 
     await findByA11yRole('header');
     getByText('Rebalancear');
 
-    const symbolItemOne = getAllByA11yLabel(/Código do Ativo/i)[0];
+    const symbolItemOne = (await findAllByA11yLabel(/Código do Ativo/i))[0];
     expect(symbolItemOne).toHaveProperty('children', ['IRBR3']);
 
     const nameItemOne = getAllByA11yLabel(/Nome do Ativo/i)[0];
