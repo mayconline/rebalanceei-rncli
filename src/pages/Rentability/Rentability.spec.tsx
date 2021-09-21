@@ -18,6 +18,7 @@ describe('Rentability Tab', () => {
       getAllByA11yLabel,
       findByA11yLabel,
       getByText,
+      findAllByA11yLabel,
     } = render(<Rentability />, [
       SUCCESSFUL_GET_WALLET_BY_ID,
       SUCCESSFUL_LIST_RENTABILITY,
@@ -26,7 +27,7 @@ describe('Rentability Tab', () => {
     await findByA11yRole('header');
     getByText('Variação da carteira');
 
-    const symbolItemOne = getAllByA11yLabel(/Código do Ativo/i)[0];
+    const symbolItemOne = (await findAllByA11yLabel(/Código do Ativo/i))[0];
     expect(symbolItemOne).toHaveProperty('children', ['MGLU3']);
 
     const nameItemOne = getAllByA11yLabel(/Nome do Ativo/i)[0];
