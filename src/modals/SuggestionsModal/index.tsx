@@ -113,7 +113,9 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
                       suggestion?.symbol,
                       !!suggestion?.longname
                         ? suggestion?.longname
-                        : suggestion?.shortname,
+                        : !!suggestion?.shortname
+                        ? suggestion?.shortname
+                        : suggestion?.symbol,
                     )
                   }
                 >

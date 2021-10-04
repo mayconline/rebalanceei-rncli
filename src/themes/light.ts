@@ -25,6 +25,7 @@ export default {
     ETF: '#69A1E5',
     BDR: '#8980F5',
     Outros: '#7EBCE6',
+    Cripto: '#F7DD70',
   },
   gradient: {
     darkToLightGreen: ['#31AD2C', '#2D9B28'],
