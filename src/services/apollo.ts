@@ -18,6 +18,11 @@ const httpLink = createHttpLink({
 const authErrorLink = onError(({ graphQLErrors, operation, forward }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(async ({ message, extensions }) => {
+      if (message === 'Network request failed') {
+        await AsyncStorage.removeItem('@authToken');
+        resetCaches();
+      }
+
       if (message === 'Context creation failed: Token Invalid or Expired') {
         const [storageEmail, storagePass] = await AsyncStorage.multiGet([
           '@authEmail',

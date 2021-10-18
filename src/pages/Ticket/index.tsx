@@ -53,14 +53,13 @@ const Ticket = () => {
     plan,
     statePlan,
     handleSignOut,
-    handleVerificationInvalidWallet,
     handleSetLoading,
   } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('grade');
   const [openModal, setOpenModal] = useState(false);
 
-  const [ticketData, setTicketData] = useState<ITickets[]>([] as ITickets[]);
+  const [ticketData, setTicketData] = useState<ITickets[]>();
 
   const [updateRole, { error: mutationError }] = useMutation<IUpdateRole>(
     UPDATE_ROLE,
@@ -126,8 +125,8 @@ const Ticket = () => {
 
   useFocusEffect(
     useCallback(() => {
-      getTicketsByWallet();
-    }, []),
+      !data?.getTicketsByWallet && getTicketsByWallet();
+    }, [data?.getTicketsByWallet]),
   );
 
   useFocusEffect(
@@ -142,20 +141,6 @@ const Ticket = () => {
     }, [data, selectedFilter]),
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      const hasInvalidWallet =
-        queryError?.message === 'Wallet Not Found' ||
-        queryError?.message ===
-          'Response not successful: Received status code 400' ||
-        queryError?.message ===
-          'Response not successful: Received status code 500' ||
-        !wallet;
-
-      handleVerificationInvalidWallet(hasInvalidWallet);
-    }, [queryError]),
-  );
-
   const handleChangeFilter = useCallback((filterName: string) => {
     setSelectFilter(filterName);
   }, []);
@@ -165,8 +150,7 @@ const Ticket = () => {
     navigation.navigate('AddTicket', { ticket: item });
   }, []);
 
-  const hasEmptyTickets =
-    !wallet || (!queryLoading && ticketData?.length === 0);
+  const hasEmptyTickets = !wallet || (!queryLoading && !ticketData?.length);
 
   return (
     <>
@@ -181,7 +165,7 @@ const Ticket = () => {
           <>
             <SubHeader
               title="Meus Ativos"
-              count={ticketData.length}
+              count={ticketData?.length!}
               filters={initialFilter}
               selectedFilter={selectedFilter}
               onPress={handleChangeFilter}
@@ -193,7 +177,7 @@ const Ticket = () => {
               renderItem={({ item, index }) => (
                 <ListItem
                   item={item}
-                  showAdBanner={getPositionAdBanner(index, ticketData.length)}
+                  showAdBanner={getPositionAdBanner(index, ticketData?.length!)}
                   handleOpenEditModal={handleOpenEditModal}
                 />
               )}
@@ -209,7 +193,12 @@ const Ticket = () => {
           visible={openModal}
           statusBarTranslucent={true}
         >
-          <WalletModal onClose={() => setOpenModal(false)} />
+          <WalletModal
+            onClose={() => {
+              setOpenModal(false);
+              getTicketsByWallet();
+            }}
+          />
         </Modal>
       )}
     </>

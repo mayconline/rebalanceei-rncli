@@ -77,8 +77,8 @@ const WalletModal = ({ onClose }: IWalletProps) => {
 
   useFocusEffect(
     useCallback(() => {
-      getWalletByUser();
-    }, []),
+      !data?.getWalletByUser && getWalletByUser();
+    }, [data?.getWalletByUser]),
   );
 
   const handleSelectWallet = useCallback(

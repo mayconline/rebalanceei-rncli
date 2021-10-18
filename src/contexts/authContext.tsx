@@ -52,10 +52,12 @@ interface IAuthContext {
   userID: string | null;
   plan: IPlan | null;
   statePlan: IStatePlan;
+  hasServerFailed: boolean;
   handleSetWallet(walletID: string | null, walletName: string | null): void;
   handleSignIn(user: ISignIn): Promise<void>;
   handleSignOut(): Promise<void>;
   handleVerificationInvalidWallet(isInvalid: boolean): void;
+  handleVerificationServerFailed(isInvalid: boolean): void;
   setSelectTheme(selectedTheme: 'LIGHT' | 'DARK'): void;
   handleSetLoading(state: boolean): void;
 }
@@ -73,6 +75,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [wallet, setWallet] = useState<string | null>(null);
   const [walletName, setWalletName] = useState<string | null>(null);
   const [hasInvalidWallet, sethasInvalidWallet] = useState(false);
+  const [hasServerFailed, setHasServerFailed] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [loading, setLoading] = useState(false);
   const [userID, setUserID] = useState<string | null>(null);
@@ -186,6 +189,8 @@ export const AuthProvider: React.FC = ({ children }) => {
     setUserID(null);
     setLoading(false);
     setSigned(false);
+    setHasServerFailed(false);
+    sethasInvalidWallet(false);
   }, []);
 
   const handleSetWallet = useCallback(
@@ -208,6 +213,10 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const handleVerificationInvalidWallet = useCallback(isInvalid => {
     sethasInvalidWallet(isInvalid);
+  }, []);
+
+  const handleVerificationServerFailed = useCallback(isInvalid => {
+    setHasServerFailed(isInvalid);
   }, []);
 
   const handleVerificationPlan = useCallback(async (plan: IPlan) => {
@@ -261,6 +270,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         showBanner,
         handleSetWallet,
         handleVerificationInvalidWallet,
+        handleVerificationServerFailed,
         handleSignIn,
         handleSignOut,
         setSelectTheme,
@@ -270,6 +280,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         userID,
         plan,
         statePlan,
+        hasServerFailed,
       }}
     >
       <ThemeProvider theme={theme}>
