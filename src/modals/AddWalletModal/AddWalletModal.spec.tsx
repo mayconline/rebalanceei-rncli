@@ -109,9 +109,9 @@ describe('Add Wallet Modal', () => {
     const {
       findByA11yRole,
       getAllByA11yRole,
-      getByText,
       getByPlaceholderText,
       getByDisplayValue,
+      findByText,
     } = render(
       <AddWalletModal
         beforeModalClose={mockedbeforeModalClose}
@@ -128,9 +128,9 @@ describe('Add Wallet Modal', () => {
     const title = await findByA11yRole('header');
     expect(title).toHaveProperty('children', ['Alterar Carteira']);
 
-    getByText(/Nome da Carteira/i);
+    await findByText(/Nome da Carteira/i);
     const inputWallet = getByPlaceholderText(/Minha Nova Carteira/i);
-    getByDisplayValue('My Wallet');
+    expect(inputWallet.props.defaultValue).toBe('My Wallet');
 
     fireEvent.changeText(inputWallet, 'My Edit Wallet');
     getByDisplayValue('My Edit Wallet');
@@ -146,7 +146,7 @@ describe('Add Wallet Modal', () => {
   });
 
   it('should successfully delete wallet', async () => {
-    const { findAllByA11yRole } = render(
+    const { findAllByA11yRole, findByText, getByPlaceholderText } = render(
       <AddWalletModal
         beforeModalClose={mockedbeforeModalClose}
         onClose={mockedOnClose}
@@ -158,6 +158,10 @@ describe('Add Wallet Modal', () => {
       />,
       [SUCCESSFUL_DELETE_WALLET, SUCCESSFUL_LIST_WALLET],
     );
+
+    await findByText(/Nome da Carteira/i);
+    const inputWallet = getByPlaceholderText(/Minha Nova Carteira/i);
+    expect(inputWallet.props.defaultValue).toBe('My Wallet');
 
     const submitButton = await findAllByA11yRole('button');
     expect(submitButton[0]).toHaveProperty('children', ['Deletar']);

@@ -1,4 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
+import { ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 import { useMutation, gql } from '@apollo/client';
@@ -34,7 +35,7 @@ const EditWallet = ({
     handleSetLoading,
     wallet: currentWallet,
   } = useAuth();
-  const { gradient } = useContext(ThemeContext);
+  const { gradient, color } = useContext(ThemeContext);
   const [wallet, setWallet] = useState<IWalletData>({} as IWalletData);
   const [focus, setFocus] = useState(0);
 
@@ -159,20 +160,24 @@ const EditWallet = ({
   return (
     <Form>
       <FormRow>
-        <InputForm
-          label="Nome da Carteira"
-          value={wallet.description}
-          defaultValue={wallet.description}
-          placeholder="Minha Nova Carteira"
-          autoCompleteType="off"
-          maxLength={80}
-          keyboardType="email-address"
-          autoFocus={focus === 1}
-          onFocus={() => setFocus(1)}
-          onChangeText={handleSetName}
-          onEndEditing={() => onEndInputEditing(0, 'walletDescription')}
-          onSubmitEditing={handleEditSubmit}
-        />
+        {!wallet?._id ? (
+          <ActivityIndicator size="small" color={color.bgHeaderEmpty} />
+        ) : (
+          <InputForm
+            label="Nome da Carteira"
+            value={wallet.description}
+            defaultValue={wallet.description}
+            placeholder="Minha Nova Carteira"
+            autoCompleteType="off"
+            maxLength={80}
+            keyboardType="email-address"
+            autoFocus={focus === 1}
+            onFocus={() => setFocus(1)}
+            onChangeText={handleSetName}
+            onEndEditing={() => onEndInputEditing(0, 'walletDescription')}
+            onSubmitEditing={handleEditSubmit}
+          />
+        )}
       </FormRow>
 
       {!!mutationError && <TextError>{mutationError?.message}</TextError>}
