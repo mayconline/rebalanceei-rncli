@@ -23,7 +23,7 @@ describe('Update User Modal', () => {
       getByText,
       getByPlaceholderText,
       getByDisplayValue,
-      findByPlaceholderText,
+      findByText,
     } = render(<UpdateUserModal onClose={mockedOnClose} />, [
       SUCCESSFUL_GET_USER_BY_TOKEN,
       SUCCESSFUL_UPDATE_USER,
@@ -33,10 +33,9 @@ describe('Update User Modal', () => {
     const title = await findByA11yRole('header');
     expect(title).toHaveProperty('children', ['Alterar Usuário']);
 
-    getByText(/E-mail/i);
-    const inputEmail = await findByPlaceholderText(/meuemail@teste.com.br/i);
-
-    expect(inputEmail.props.defaultValue).toBe('test@test.com');
+    await findByText(/E-mail/i);
+    const inputEmail = getByPlaceholderText(/meuemail@teste.com.br/i);
+    expect(inputEmail.props.defaultValue).toBe('exemple@test.com');
 
     fireEvent.changeText(inputEmail, 'testeupdate@teste.com');
     getByDisplayValue('testeupdate@teste.com');
@@ -85,6 +84,7 @@ describe('Update User Modal', () => {
       findAllByA11yRole,
       getByText,
       getByPlaceholderText,
+      findByText,
     } = render(<UpdateUserModal onClose={mockedOnClose} />, [
       SUCCESSFUL_GET_USER_BY_TOKEN,
       INVALID_UPDATE_USER,
@@ -92,7 +92,10 @@ describe('Update User Modal', () => {
 
     const submitButton = await findAllByA11yRole('button');
 
+    await findByText(/E-mail/i);
     const inputEmail = getByPlaceholderText(/meuemail@teste.com.br/i);
+    expect(inputEmail.props.defaultValue).toBe('exemple@test.com');
+
     fireEvent.changeText(inputEmail, 'testeupdate@teste.com');
 
     await act(async () => fireEvent.press(submitButton[1]));
@@ -142,7 +145,7 @@ const SUCCESSFUL_GET_USER_BY_TOKEN = {
     data: {
       getUserByToken: {
         _id: '5fa1d103a8c5892a48c69b31',
-        email: 'test@test.com',
+        email: 'exemple@test.com',
         role: 'USER',
         checkTerms: true,
         active: true,

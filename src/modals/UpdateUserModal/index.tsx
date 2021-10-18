@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Platform, Alert } from 'react-native';
+import { Platform, Alert, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
@@ -46,7 +46,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
   const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const [user, setUser] = useState({} as IUser);
-  const { handleSignOut, handleSetLoading } = useAuth();
+  const { handleSignOut } = useAuth();
   const [focus, setFocus] = useState(0);
 
   useFocusEffect(
@@ -159,32 +159,27 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
     [],
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      handleSetLoading(queryLoading);
-      handleSetLoading(mutationLoading);
-    }, [queryLoading]),
-  );
-
   return (
-    <>
-      <Wrapper>
-        <ContainerTitle>
-          <Title accessibilityRole="header">Alterar Usuário</Title>
-          <BackIcon
-            accessibilityRole="imagebutton"
-            accessibilityLabel="Voltar"
-            onPress={onClose}
-          >
-            <AntDesign name="closecircleo" size={24} color={color.activeText} />
-          </BackIcon>
-        </ContainerTitle>
-        <Image>
-          <ImageProfile />
-        </Image>
-        <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
-          <Form>
-            <FormRow>
+    <Wrapper>
+      <ContainerTitle>
+        <Title accessibilityRole="header">Alterar Usuário</Title>
+        <BackIcon
+          accessibilityRole="imagebutton"
+          accessibilityLabel="Voltar"
+          onPress={onClose}
+        >
+          <AntDesign name="closecircleo" size={24} color={color.activeText} />
+        </BackIcon>
+      </ContainerTitle>
+      <Image>
+        <ImageProfile />
+      </Image>
+      <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
+        <Form>
+          <FormRow>
+            {!data ? (
+              <ActivityIndicator size="small" color={color.bgHeaderEmpty} />
+            ) : (
               <InputForm
                 label="E-mail"
                 value={user.email}
@@ -198,51 +193,51 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
                 onChangeText={handleSetEmail}
                 onEndEditing={() => onEndInputEditing(2, 'email')}
               />
-            </FormRow>
+            )}
+          </FormRow>
 
-            <FormRow>
-              <InputForm
-                label="Nova Senha"
-                value={user.password}
-                isSecure
-                placeholder="Caso queira alterar"
-                autoCompleteType="password"
-                maxLength={32}
-                returnKeyType="send"
-                autoFocus={focus === 2}
-                onFocus={() => setFocus(2)}
-                onChangeText={handleSetPassword}
-                onEndEditing={() => onEndInputEditing(0, 'password')}
-                onSubmitEditing={handleSubmit}
-              />
-            </FormRow>
+          <FormRow>
+            <InputForm
+              label="Nova Senha"
+              value={user.password}
+              isSecure
+              placeholder="Caso queira alterar"
+              autoCompleteType="password"
+              maxLength={32}
+              returnKeyType="send"
+              autoFocus={focus === 2}
+              onFocus={() => setFocus(2)}
+              onChangeText={handleSetPassword}
+              onEndEditing={() => onEndInputEditing(0, 'password')}
+              onSubmitEditing={handleSubmit}
+            />
+          </FormRow>
 
-            {!!mutationError && <TextError>{mutationError?.message}</TextError>}
-            {!!queryError && <TextError>{queryError?.message}</TextError>}
+          {!!mutationError && <TextError>{mutationError?.message}</TextError>}
+          {!!queryError && <TextError>{queryError?.message}</TextError>}
 
-            <ContainerButtons>
-              <Button
-                colors={gradient.lightToDarkRed}
-                onPress={handleDisabledSubmit}
-                loading={mutationLoading}
-                disabled={mutationLoading}
-              >
-                Desativar
-              </Button>
+          <ContainerButtons>
+            <Button
+              colors={gradient.lightToDarkRed}
+              onPress={handleDisabledSubmit}
+              loading={mutationLoading}
+              disabled={mutationLoading}
+            >
+              Desativar
+            </Button>
 
-              <Button
-                colors={gradient.darkToLightBlue}
-                onPress={handleSubmit}
-                loading={mutationLoading}
-                disabled={mutationLoading}
-              >
-                Alterar
-              </Button>
-            </ContainerButtons>
-          </Form>
-        </FormContainer>
-      </Wrapper>
-    </>
+            <Button
+              colors={gradient.darkToLightBlue}
+              onPress={handleSubmit}
+              loading={mutationLoading}
+              disabled={mutationLoading}
+            >
+              Alterar
+            </Button>
+          </ContainerButtons>
+        </Form>
+      </FormContainer>
+    </Wrapper>
   );
 };
 

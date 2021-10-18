@@ -1,4 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
+import { ActivityIndicator } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
 import { useMutation, gql } from '@apollo/client';
@@ -40,7 +41,7 @@ interface IEditWalletModal {
 const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
   const { logEvent } = useAmplitude();
 
-  const { gradient } = useContext(ThemeContext);
+  const { gradient, color } = useContext(ThemeContext);
   const { wallet } = useAuth();
   const navigation = useNavigation();
 
@@ -191,60 +192,65 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
 
   return (
     <Form>
-      <FormRow>
-        <InputForm
-          label="Ativo Selecionado"
-          value={formatTicket(ticketForm.symbol)}
-          defaultValue={formatTicket(ticketForm.symbol)}
-          maxLength={10}
-          editable={false}
-          width={60}
-        />
+      {!ticketForm.symbol ? (
+        <ActivityIndicator size="small" color={color.bgHeaderEmpty} />
+      ) : (
+        <>
+          <FormRow>
+            <InputForm
+              label="Ativo Selecionado"
+              value={formatTicket(ticketForm.symbol)}
+              defaultValue={formatTicket(ticketForm.symbol)}
+              maxLength={10}
+              editable={false}
+              width={60}
+            />
 
-        <InputForm
-          label="Dê uma Nota"
-          value={ticketForm.grade}
-          defaultValue={ticketForm.grade}
-          placeholder="0 a 100"
-          maxLength={3}
-          keyboardType="number-pad"
-          autoFocus={focus === 2}
-          onFocus={() => setFocus(2)}
-          onChangeText={handleSetGrade}
-          onEndEditing={() => onEndInputEditing(3, 'grade')}
-          width={30}
-        />
-      </FormRow>
-      <FormRow>
-        <InputForm
-          label="Preço Médio"
-          value={ticketForm.averagePreview}
-          defaultValue={ticketForm.averagePreview}
-          placeholder="Preço Médio de Compra"
-          keyboardType="number-pad"
-          autoFocus={focus === 3}
-          onFocus={() => setFocus(3)}
-          onChangeText={handleSetPrice}
-          onEndEditing={() => onEndInputEditing(4, 'averagePrice')}
-          width={60}
-        />
+            <InputForm
+              label="Dê uma Nota"
+              value={ticketForm.grade}
+              defaultValue={ticketForm.grade}
+              placeholder="0 a 100"
+              maxLength={3}
+              keyboardType="number-pad"
+              autoFocus={focus === 2}
+              onFocus={() => setFocus(2)}
+              onChangeText={handleSetGrade}
+              onEndEditing={() => onEndInputEditing(3, 'grade')}
+              width={30}
+            />
+          </FormRow>
+          <FormRow>
+            <InputForm
+              label="Preço Médio"
+              value={ticketForm.averagePreview}
+              defaultValue={ticketForm.averagePreview}
+              placeholder="Preço Médio de Compra"
+              keyboardType="number-pad"
+              autoFocus={focus === 3}
+              onFocus={() => setFocus(3)}
+              onChangeText={handleSetPrice}
+              onEndEditing={() => onEndInputEditing(4, 'averagePrice')}
+              width={60}
+            />
 
-        <InputForm
-          label="Quantidade"
-          value={ticketForm.quantity}
-          defaultValue={ticketForm.quantity}
-          placeholder="9999"
-          keyboardType="number-pad"
-          returnKeyType="send"
-          autoFocus={focus === 4}
-          onFocus={() => setFocus(4)}
-          onChangeText={handleSetQuantity}
-          onEndEditing={() => onEndInputEditing(0, 'quantity')}
-          onSubmitEditing={handleSubmit}
-          width={30}
-        />
-      </FormRow>
-
+            <InputForm
+              label="Quantidade"
+              value={ticketForm.quantity}
+              defaultValue={ticketForm.quantity}
+              placeholder="9999"
+              keyboardType="number-pad"
+              returnKeyType="send"
+              autoFocus={focus === 4}
+              onFocus={() => setFocus(4)}
+              onChangeText={handleSetQuantity}
+              onEndEditing={() => onEndInputEditing(0, 'quantity')}
+              onSubmitEditing={handleSubmit}
+              width={30}
+            />
+          </FormRow>
+        </>
+      )}
       {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
       {!!mutationDeleteError && (

@@ -203,31 +203,35 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       {!!mutationError && <TextError>{mutationError?.message}</TextError>}
       {!!errorMessage && <TextError>{errorMessage}</TextError>}
 
-      {subscriptions?.map(subscription => (
-        <CardPlan
-          key={subscription.productId}
-          title={subscription.description}
-          descriptions={
-            subscription.subscriptionPeriodAndroid === 'P1M'
-              ? ['📊 Gráficos exclusivos', '✔ Renovação automática']
-              : [
-                  '📊 Gráficos exclusivos',
-                  '💰 Menos de R$ 7,50 / Mês',
-                  '✔ Renovação automática',
-                ]
-          }
-          plan={`${subscription.localizedPrice} / ${
-            subscription.subscriptionPeriodAndroid === 'P1M' ? 'Mês' : 'Ano'
-          }`}
-          active={planName === subscription.subscriptionPeriodAndroid}
-          onPress={() =>
-            handleChangeOptionPlan(
-              subscription,
-              subscription.subscriptionPeriodAndroid,
-            )
-          }
-        />
-      ))}
+      {!!subscriptions?.length ? (
+        subscriptions?.map(subscription => (
+          <CardPlan
+            key={subscription.productId}
+            title={subscription.description}
+            descriptions={
+              subscription.subscriptionPeriodAndroid === 'P1M'
+                ? ['📊 Gráficos exclusivos', '✔ Renovação automática']
+                : [
+                    '📊 Gráficos exclusivos',
+                    '💰 Menos de R$ 7,50 / Mês',
+                    '✔ Renovação automática',
+                  ]
+            }
+            plan={`${subscription.localizedPrice} / ${
+              subscription.subscriptionPeriodAndroid === 'P1M' ? 'Mês' : 'Ano'
+            }`}
+            active={planName === subscription.subscriptionPeriodAndroid}
+            onPress={() =>
+              handleChangeOptionPlan(
+                subscription,
+                subscription.subscriptionPeriodAndroid,
+              )
+            }
+          />
+        ))
+      ) : (
+        <ActivityIndicator size="large" color={color.bgHeaderEmpty} />
+      )}
 
       <ContainerButtons>
         <Button
