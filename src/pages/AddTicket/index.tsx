@@ -61,7 +61,8 @@ interface IcreateTicket {
 
 const AddTicket = () => {
   const { logEvent } = useAmplitude();
-  const { wallet, hasInvalidWallet, handleSetLoading } = useAuth();
+  const { wallet, handleSetLoading } = useAuth();
+
   const { color, gradient } = useContext(ThemeContext);
 
   const [ticketForm, setTicketForm] = useState<ITicketForm>({} as ITicketForm);
@@ -88,11 +89,11 @@ const AddTicket = () => {
   }, []);
 
   const HandleOpenSuggestionsModal = useCallback(() => {
-    if (hasInvalidWallet) return;
+    if (!wallet) return;
 
     setFocus(1);
     setHasSuggestions(true);
-  }, [hasInvalidWallet]);
+  }, [wallet]);
 
   const handleSelectTicket = useCallback((symbol: string, name: string) => {
     setTicketForm(ticketForm => ({
@@ -116,7 +117,7 @@ const AddTicket = () => {
   );
 
   const handleSubmit = useCallback(async () => {
-    if (hasInvalidWallet) {
+    if (!wallet) {
       logEvent('has invalid wallet at Add Ticket');
 
       return navigation.navigate('Ticket');
@@ -127,8 +128,7 @@ const AddTicket = () => {
       !ticketForm.name ||
       !ticketForm.quantity ||
       !ticketForm.averagePrice ||
-      !ticketForm.grade ||
-      !wallet
+      !ticketForm.grade
     ) {
       logEvent('not filled input at Add Ticket');
       return;
@@ -174,7 +174,7 @@ const AddTicket = () => {
         console.log('Tickets limited to 16 items');
       }
     }
-  }, [ticketForm, hasInvalidWallet]);
+  }, [ticketForm, wallet]);
 
   const handleSetGrade = useCallback((grade: string) => {
     setTicketForm(ticketForm => ({ ...ticketForm, grade }));
@@ -302,7 +302,7 @@ const AddTicket = () => {
                   loading={mutationLoading}
                   disabled={mutationLoading}
                 >
-                  {hasInvalidWallet ? 'Carteira não encontrada' : 'Adicionar'}
+                  {!wallet ? 'Carteira não encontrada' : 'Adicionar'}
                 </Button>
               </ContainerButtons>
             </Form>
