@@ -90,9 +90,8 @@ export const TargetPercent = styled.Text<IFormatStatus>`
 `;
 
 export const AmountContainer = styled.View`
-  align-items: center;
-  width: 35%;
-  margin-right: -12px;
+  align-items: flex-end;
+  width: 45%;
 `;
 
 export const Amount = styled.Text<IFormatStatus>`

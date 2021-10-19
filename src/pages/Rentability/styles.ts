@@ -68,7 +68,8 @@ export const CardSubTitleLegend = styled.Text`
 `;
 
 export const AmountContainer = styled.View`
-  align-items: center;
+  align-items: flex-end;
+  width: 45%;
 `;
 
 export const Amount = styled.Text<IformatNumber>`

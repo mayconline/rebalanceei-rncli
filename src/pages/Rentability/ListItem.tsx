@@ -87,6 +87,8 @@ const ListItem = ({
               accessibilityLabel="Saldo atual do ativo"
               accessibilityValue={{ now: item.currentAmount }}
               variation={item.variationPercent}
+              numberOfLines={1}
+              ellipsizeMode="tail"
             >
               {formatNumber(item.currentAmount)}
             </Amount>

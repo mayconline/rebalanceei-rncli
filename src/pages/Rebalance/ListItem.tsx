@@ -101,6 +101,8 @@ const ListItem = ({
               accessibilityLabel="Valor para rebalancear o ativo na carteira"
               accessibilityValue={{ now: item.targetAmount }}
               status={item.status}
+              numberOfLines={1}
+              ellipsizeMode="tail"
             >
               {formatNumber(item.targetAmount)}
             </Amount>
