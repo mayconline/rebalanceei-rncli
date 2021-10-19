@@ -107,7 +107,7 @@ const Rebalance = () => {
         <TextError isTabs={true}>{queryError?.message}</TextError>
       )}
       {hasEmptyTickets ? (
-        <Empty />
+        <Empty errorMessage={queryError?.message} />
       ) : (
         <>
           <SubHeader

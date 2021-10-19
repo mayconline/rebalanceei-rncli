@@ -160,7 +160,10 @@ const Ticket = () => {
           <TextError isTabs={true}>{queryError?.message}</TextError>
         )}
         {hasEmptyTickets ? (
-          <Empty openModal={() => setOpenModal(true)} />
+          <Empty
+            openModal={() => setOpenModal(true)}
+            errorMessage={queryError?.message}
+          />
         ) : (
           <>
             <SubHeader

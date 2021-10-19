@@ -135,7 +135,7 @@ const Rentability = () => {
         <TextError isTabs={true}>{queryError?.message}</TextError>
       )}
       {hasEmptyTickets ? (
-        <Empty />
+        <Empty errorMessage={queryError?.message} />
       ) : (
         <>
           <SubHeader

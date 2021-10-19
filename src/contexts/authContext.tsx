@@ -48,16 +48,12 @@ interface IAuthContext {
   showBanner: boolean;
   wallet: string | null;
   walletName: string | null;
-  hasInvalidWallet: boolean;
   userID: string | null;
   plan: IPlan | null;
   statePlan: IStatePlan;
-  hasServerFailed: boolean;
   handleSetWallet(walletID: string | null, walletName: string | null): void;
   handleSignIn(user: ISignIn): Promise<void>;
   handleSignOut(): Promise<void>;
-  handleVerificationInvalidWallet(isInvalid: boolean): void;
-  handleVerificationServerFailed(isInvalid: boolean): void;
   setSelectTheme(selectedTheme: 'LIGHT' | 'DARK'): void;
   handleSetLoading(state: boolean): void;
 }
@@ -74,8 +70,6 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [signed, setSigned] = useState<boolean>(false);
   const [wallet, setWallet] = useState<string | null>(null);
   const [walletName, setWalletName] = useState<string | null>(null);
-  const [hasInvalidWallet, sethasInvalidWallet] = useState(false);
-  const [hasServerFailed, setHasServerFailed] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [loading, setLoading] = useState(false);
   const [userID, setUserID] = useState<string | null>(null);
@@ -189,8 +183,6 @@ export const AuthProvider: React.FC = ({ children }) => {
     setUserID(null);
     setLoading(false);
     setSigned(false);
-    setHasServerFailed(false);
-    sethasInvalidWallet(false);
   }, []);
 
   const handleSetWallet = useCallback(
@@ -210,14 +202,6 @@ export const AuthProvider: React.FC = ({ children }) => {
     },
     [],
   );
-
-  const handleVerificationInvalidWallet = useCallback(isInvalid => {
-    sethasInvalidWallet(isInvalid);
-  }, []);
-
-  const handleVerificationServerFailed = useCallback(isInvalid => {
-    setHasServerFailed(isInvalid);
-  }, []);
 
   const handleVerificationPlan = useCallback(async (plan: IPlan) => {
     const hasSubscription = await validHasSubscription(plan);
@@ -266,11 +250,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         signed,
         wallet,
         walletName,
-        hasInvalidWallet,
         showBanner,
         handleSetWallet,
-        handleVerificationInvalidWallet,
-        handleVerificationServerFailed,
         handleSignIn,
         handleSignOut,
         setSelectTheme,
@@ -280,7 +261,6 @@ export const AuthProvider: React.FC = ({ children }) => {
         userID,
         plan,
         statePlan,
-        hasServerFailed,
       }}
     >
       <ThemeProvider theme={theme}>

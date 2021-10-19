@@ -16,25 +16,30 @@ import ImageOffline from '../../../assets/svg/ImageOffline';
 
 import Button from '../../components/Button';
 import { useAuth } from '../../contexts/authContext';
+import useWalletMonitor from '../../hooks/useWalletMonitor';
 
 interface IEmpty {
   openModal?(): void;
+  errorMessage?: string;
 }
 
-const Empty = ({ openModal }: IEmpty) => {
-  const { hasInvalidWallet, hasServerFailed, handleSignOut } = useAuth();
+const Empty = ({ openModal, errorMessage }: IEmpty) => {
+  const { handleSignOut, wallet } = useAuth();
+  const { hasInvalidWallet, hasServerFailed } = useWalletMonitor(errorMessage);
   const { gradient } = useContext(ThemeContext);
   const navigation = useNavigation();
 
   const handlePressAction = useCallback(() => {
-    if (hasServerFailed) return handleSignOut();
-
-    if (!openModal) return navigation.navigate('Ticket');
-
-    if (hasInvalidWallet && !!openModal) return openModal();
-
-    return navigation.navigate('AddTicket');
-  }, [hasInvalidWallet]);
+    if (hasServerFailed) {
+      return handleSignOut();
+    } else if (!openModal) {
+      return navigation.navigate('Ticket');
+    } else if (hasInvalidWallet && !!openModal) {
+      return openModal();
+    } else if (!hasInvalidWallet && !hasServerFailed && !!wallet) {
+      return navigation.navigate('AddTicket');
+    } else return;
+  }, [hasInvalidWallet, hasServerFailed, wallet]);
 
   return (
     <Wrapper>
