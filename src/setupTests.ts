@@ -2,7 +2,6 @@ import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/asy
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js';
 
 jest.mock('./services/AdMob', () => ({
-  initializeAdMob: () => null,
   useInterstitialAd: () => ({
     adLoaded: false,
     show: false,
