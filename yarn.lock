@@ -1777,10 +1777,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.11.tgz#2f4c6e10bee0786abff4604e39a37ded6f3980ce"
   integrity sha512-rQfMIGSR/1r/SyN87+VD8xHHzDYeHaJq6elOSCAD+0iLagXkSI2pfA0LmSXP21uw5i3em7GkkRjfJ8wpqWXZNw==
 
-"@react-native-community/netinfo@7.1.6":
-  version "7.1.6"
-  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-7.1.6.tgz#b1c5c7e93559eb2d3d493c9aac14cd45554a9261"
-  integrity sha512-FsBpEpMaFRwWz+Z2HWcYP2wBN7wooTIuvnOvY5EBJwrJIu15UnTaSGT4ABhdMSP8I0loI75mJxuXVQ+BwR5UTg==
+"@react-native-community/netinfo@7.1.7":
+  version "7.1.7"
+  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-7.1.7.tgz#10e96922c90a0ff9755dcfbfc92a9d83ec45cd87"
+  integrity sha512-QCEuvbTAD7vyCsSsgbWedhTfXlClp4TVHVWYYMjnN7nz6xgZbSp+MI3oo7X5C4JlDHpRm/Q+63hsCgAqKt3WVA==
 
 "@react-native-community/progress-bar-android@1.0.4":
   version "1.0.4"
@@ -7032,10 +7032,10 @@ react-native-gesture-handler@2.1.0:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
-react-native-iap@7.5.1:
-  version "7.5.1"
-  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-7.5.1.tgz#ae41084fcf95d775ad84107e654a61d110e1bcb0"
-  integrity sha512-yZroot5Sz6kTCteaHy50+34i1sipWFYp9leP1QojxaTNxmBcMWagQ8ifFHhRhwb6SKaGFBTKoy+A1doalw+FnQ==
+react-native-iap@7.5.3:
+  version "7.5.3"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-7.5.3.tgz#b9aa86ac23ddca266347c002b70d0613467974e9"
+  integrity sha512-l63gILOZGA6uZrOD/3kSztW/yxps7xtxlVK+x+QhTyGqrcNWAcOA6BdJ4Rozhpgo5TMdOfP8SbeXpJpMMGzIPg==
   dependencies:
     dooboolab-welcome "1.3.2"
 
