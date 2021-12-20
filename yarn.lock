@@ -1610,10 +1610,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@react-native-admob/admob@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@react-native-admob/admob/-/admob-1.5.0.tgz#96b6d4f92c31cc1f8fd6c517063084f66fa22e26"
-  integrity sha512-ET81kAtmvKZ/Sj+hFk5taExd6VYRTjLiWamFkAb7QkX8bhueMnb7kkF6Re8pIH4i3O7uasxMutKzMDmJzKqvlA==
+"@react-native-admob/admob@1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@react-native-admob/admob/-/admob-1.5.1.tgz#f8ab3b2816e7c0f703d602f7a176a6d720a92eb7"
+  integrity sha512-PBraWBIuwXV8iGIFSxQb9avLcj+rvHTNTEiA4UZZ73iWaJi6OCXXvI9SSLRW7CR8x6AoYu/sXnGe2I8lJzYSEA==
   dependencies:
     use-deep-compare-effect "^1.8.1"
 
@@ -1777,10 +1777,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.11.tgz#2f4c6e10bee0786abff4604e39a37ded6f3980ce"
   integrity sha512-rQfMIGSR/1r/SyN87+VD8xHHzDYeHaJq6elOSCAD+0iLagXkSI2pfA0LmSXP21uw5i3em7GkkRjfJ8wpqWXZNw==
 
-"@react-native-community/netinfo@7.1.4":
-  version "7.1.4"
-  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-7.1.4.tgz#611e4e0644d300e2e8b24f41cef05bdb26a078ad"
-  integrity sha512-78zQ4e9k36eGIityJCDd6W9bLg28QbHcbKyj/0vHU6rdUclCdeChZsCOtiLZ21l2q9j4F6bvoP8N5W53o3Jduw==
+"@react-native-community/netinfo@7.1.6":
+  version "7.1.6"
+  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-7.1.6.tgz#b1c5c7e93559eb2d3d493c9aac14cd45554a9261"
+  integrity sha512-FsBpEpMaFRwWz+Z2HWcYP2wBN7wooTIuvnOvY5EBJwrJIu15UnTaSGT4ABhdMSP8I0loI75mJxuXVQ+BwR5UTg==
 
 "@react-native-community/progress-bar-android@1.0.4":
   version "1.0.4"
@@ -4481,10 +4481,10 @@ graphql-tag@^2.12.3:
   dependencies:
     tslib "^2.1.0"
 
-graphql@16.1.0:
-  version "16.1.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.1.0.tgz#83bebeae6e119766d04966f09de9305be7fd44e5"
-  integrity sha512-+PIjmhqGHMIxtnlEirRXDHIzs0cAHAozKG5M2w2N4TnS8VzCxO3bbv1AW9UTeycBfl2QsPduxcVrBvANFKQhiw==
+graphql@16.2.0:
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.2.0.tgz#de3150e80f1fc009590b92a9d16ab1b46e12b656"
+  integrity sha512-MuQd7XXrdOcmfwuLwC2jNvx0n3rxIuNYOxUtiee5XOmfrWo613ar2U8pE7aHAKh8VwfpifubpD9IP+EdEAEOsA==
 
 has-bigints@^1.0.1:
   version "1.0.1"
@@ -7044,10 +7044,10 @@ react-native-linear-gradient@2.5.6:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
 
-react-native-reanimated@2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.3.0.tgz#5d3bbcd140ab8ad47ac30d873635c7f1c3d06d4f"
-  integrity sha512-MSW2Uzj+Chd6qGS1gqNeF/U2l+xk44cD0PnNbU3v1paDI2/HAlzPhMtEy2WWtz83RZ4FtDuI/0o935SjJ7iSYg==
+react-native-reanimated@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.3.1.tgz#c7abad48f9e6c84610b0d5e270088ecd61750382"
+  integrity sha512-nzjVqwkB8eeyPKT2KoiA9EEz17ZMFSGMoOTC17Z9b5nE2Z4ZHjHM5EKhY0TlwzXFUuJAE9PhOfxF0wIO/maZSA==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.10.4"
     "@types/invariant" "^2.2.35"
@@ -7124,10 +7124,10 @@ react-native-vector-icons@9.0.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@0.66.3:
-  version "0.66.3"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.66.3.tgz#25c7c4c7d81867326b3eb7a36f0fe6a61fa4104e"
-  integrity sha512-B/dQpuvta9YvF5MihDWefoGlTvxzUHK5X5RjdrXHAu/ihTehJXxEA+m6z/tufp1ZUMDjU+tMZK6gnehzCuYfzw==
+react-native@0.66.4:
+  version "0.66.4"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.66.4.tgz#bf89a5fb18bd23046d889fb4de4ea2822a4d7805"
+  integrity sha512-9vx5dlSfQlKbbDtr8+xMon6qsmSu7jvjdXWZpEKh3XVKpUidbbODv7048gwVKX8YAel1egeR7hN8vzSeI6ssTw==
   dependencies:
     "@jest/create-cache-key-function" "^27.0.1"
     "@react-native-community/cli" "^6.0.0"
