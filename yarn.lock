@@ -1610,10 +1610,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@react-native-admob/admob@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@react-native-admob/admob/-/admob-2.0.0.tgz#303e8fc719c2fc0c1cd7046d31c8508f84986abf"
-  integrity sha512-pZlFbrgdkVWTHqWatBSbk37SPI4xszJMWlVLiipvAYztfycmEHpEcCLrdQTicjiDj/K5ddBKmLqGfg3i4wTP5Q==
+"@react-native-admob/admob@1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@react-native-admob/admob/-/admob-1.5.1.tgz#f8ab3b2816e7c0f703d602f7a176a6d720a92eb7"
+  integrity sha512-PBraWBIuwXV8iGIFSxQb9avLcj+rvHTNTEiA4UZZ73iWaJi6OCXXvI9SSLRW7CR8x6AoYu/sXnGe2I8lJzYSEA==
   dependencies:
     use-deep-compare-effect "^1.8.1"
 
@@ -7044,7 +7044,7 @@ react-native-linear-gradient@2.5.6:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
 
-react-native-reanimated@2.3.1:
+react-native-reanimated@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.3.1.tgz#c7abad48f9e6c84610b0d5e270088ecd61750382"
   integrity sha512-nzjVqwkB8eeyPKT2KoiA9EEz17ZMFSGMoOTC17Z9b5nE2Z4ZHjHM5EKhY0TlwzXFUuJAE9PhOfxF0wIO/maZSA==
