@@ -1,5 +1,6 @@
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
-import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js';
+
+require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests();
 
 jest.mock('./services/AdMob', () => ({
   useInterstitialAd: () => ({
@@ -10,18 +11,31 @@ jest.mock('./services/AdMob', () => ({
   }),
   BannerAd: () => null,
 }));
+jest.mock('@react-native-community/netinfo', () => {
+  const defaultState = {
+    type: 'cellular',
+    isConnected: true,
+    isInternetReachable: true,
+    details: {
+      isConnectionExpensive: true,
+      cellularGeneration: '3g',
+    },
+  };
 
-jest.mock('react-native-iap', () => null);
-jest.mock('@react-native-community/netinfo', () => mockRNCNetInfo);
-jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage);
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
+  const RNCNetInfoMock = {
+    configure: jest.fn(),
+    fetch: jest.fn(),
+    addEventListener: jest.fn(),
+    useNetInfo: jest.fn(),
+  };
 
-  // The mock for `call` immediately calls the callback which is incorrect
-  // So we override it with a no-op
-  Reanimated.default.call = () => {};
+  RNCNetInfoMock.fetch.mockResolvedValue(defaultState);
+  RNCNetInfoMock.useNetInfo.mockReturnValue(defaultState);
+  RNCNetInfoMock.addEventListener.mockReturnValue(jest.fn());
 
-  return Reanimated;
+  return RNCNetInfoMock;
 });
+jest.mock('react-native-iap', () => null);
+jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage);
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 jest.mock('./hooks/useAmplitude', () => () => ({ logEvent: () => {} }));
