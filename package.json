@@ -15,7 +15,7 @@
   "dependencies": {
     "@amplitude/react-native": "2.6.0",
     "@apollo/client": "3.5.6",
-    "@react-native-admob/admob": "1.5.1",
+    "@react-native-admob/admob": "2.0.0",
     "@react-native-async-storage/async-storage": "1.15.14",
     "@react-native-community/masked-view": "0.1.11",
     "@react-native-community/netinfo": "7.1.7",
