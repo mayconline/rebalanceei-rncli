@@ -48,7 +48,7 @@ jest.mock('../../services/Iap', () => ({
     connected: true,
     subscriptions: SUBSCRIPTIONS_MOCK,
     getSubscriptions: jest.fn(),
-    requesSubscription: MOCKED_REQUEST_SUB,
+    requestSubscription: MOCKED_REQUEST_SUB,
     finishTransaction: jest.fn(),
   }),
 }));
