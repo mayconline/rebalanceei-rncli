@@ -44,7 +44,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     finishTransaction,
     currentPurchase,
     currentPurchaseError,
-    requesSubscription,
+    requestSubscription,
   } = useIAP();
 
   const { handleSignOut } = useAuth();
@@ -174,7 +174,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     setLoading(true);
 
     if (!!skuID) {
-      await requesSubscription(skuID.productId);
+      await requestSubscription(skuID.productId);
     }
   }, [skuID]);
 
