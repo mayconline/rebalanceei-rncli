@@ -15,8 +15,8 @@ jest.mock('../../contexts/authContext', () => ({
       transactionDate: 1612968855335,
       renewDate: 1613978855335,
       description: 'Premium Mensal',
-      localizedPrice: 'R$ 9,90',
-      productId: 'rebalanceei_premium_mensal',
+      localizedPrice: 'R$ 19,99',
+      productId: 'rebalanceei_premium_mensal_22',
       subscriptionPeriodAndroid: 'P1M',
       packageName: 'com.rebalanceei',
       transactionId: '12121221',
@@ -28,7 +28,7 @@ jest.mock('../../contexts/authContext', () => ({
 const SUBSCRIPTIONS_MOCK = [
   {
     description: 'Premium Mensal',
-    localizedPrice: 'R$ 9,90',
+    localizedPrice: 'R$ 19,99',
     productId: 'rebalanceei_premium_mensal',
     subscriptionPeriodAndroid: 'P1M',
   },
@@ -43,7 +43,7 @@ const SUBSCRIPTIONS_MOCK = [
 const MOCKED_REQUEST_SUB = jest.fn();
 
 jest.mock('../../services/Iap', () => ({
-  listSku: ['rebalanceei_premium_mensal', 'rebalanceei_premium_anual'],
+  listSku: ['rebalanceei_premium_mensal_22', 'rebalanceei_premium_anual'],
   useIAP: (): Record<string, unknown> => ({
     connected: true,
     subscriptions: SUBSCRIPTIONS_MOCK,
@@ -81,10 +81,10 @@ describe('PlanModal', () => {
     getByText(/^\+ Todos os benefícios do app$/i);
 
     getByText(/Premium Anual/i);
-    getByText(/Menos de R\$ 7,50 \/ Mês/i);
+    getByText(/Preço Promocional/i);
 
     getByText(/Premium Mensal/i);
-    getByText(/R\$ 9,90 \/ Mês/i);
+    getByText(/R\$ 19,99 \/ Mês/i);
 
     getAllByText(/Gráficos exclusivos/i);
     getAllByText(/Renovação automática/i);
@@ -113,7 +113,7 @@ describe('PlanModal', () => {
     expect(title[0]).toHaveProperty('children', ['Meu Plano Atual']);
 
     await findByText(/Premium Mensal - Ativo/i);
-    getByText(/R\$ 9,90 \/ Mês/i);
+    getByText(/R\$ 19,99 \/ Mês/i);
     getByText(/^Data da Renovação$/i);
     getByText(formatDate(1613978855335));
     getByText(
@@ -145,7 +145,7 @@ describe('PlanModal', () => {
     expect(mockedLinkCancelPlan).toHaveBeenCalledTimes(1);
     expect(mockedLinkCancelPlan).toHaveBeenCalledWith(
       'com.rebalanceei',
-      'rebalanceei_premium_mensal',
+      'rebalanceei_premium_mensal_22',
     );
   });
 });
