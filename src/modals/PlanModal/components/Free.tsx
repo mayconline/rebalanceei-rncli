@@ -210,10 +210,11 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
             title={subscription.description}
             descriptions={
               subscription.subscriptionPeriodAndroid === 'P1M'
-                ? ['📊 Gráficos exclusivos', '✔ Renovação automática']
+                ? ['📊 Recursos exclusivos', '✔ Renovação automática']
                 : [
-                    '📊 Gráficos exclusivos',
-                    '💰 Menos de R$ 7,50 / Mês',
+                    '📊 Recursos exclusivos',
+                    '💰 Preço Promocional',
+                    '⏲️ Até Fevereiro / 2022',
                     '✔ Renovação automática',
                   ]
             }
