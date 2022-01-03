@@ -25,7 +25,7 @@ const useWalletMonitor = (message?: string) => {
       case 'Response not successful: Received status code 500':
         return sethasInvalidWallet(true);
       default:
-        return;
+        return sethasInvalidWallet(false);
     }
   }, [message]);
 
