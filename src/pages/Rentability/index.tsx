@@ -16,6 +16,7 @@ import TextError from '../../components/TextError';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
 import useAmplitude from '../../hooks/useAmplitude';
+import Earning from '../Earning';
 
 const initialFilter = [
   {
@@ -31,6 +32,8 @@ const initialFilter = [
     name: 'variationPercent',
   },
 ];
+
+const initialMenuTitles = ['Carteira', 'Proventos'];
 
 export interface IGetRentability {
   _id: string;
@@ -64,6 +67,9 @@ const Rentability = () => {
   const { wallet, handleSetLoading } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('currentAmount');
+  const [selectedMenu, setSelectedMenu] = useState<'Carteira' | 'Proventos'>(
+    'Carteira',
+  );
 
   const [rentabilityData, setRentabilityData] = useState<IGetRentability[]>(
     [] as IGetRentability[],
@@ -125,10 +131,14 @@ const Rentability = () => {
     setSelectFilter(filterName);
   }, []);
 
+  const handleChangeMenu = useCallback((menu: 'Carteira' | 'Proventos') => {
+    setSelectedMenu(menu);
+  }, []);
+
   const hasEmptyTickets =
     !wallet || (!queryLoading && rentabilityData?.length === 0);
 
-  return (
+  return selectedMenu === 'Carteira' ? (
     <Wrapper>
       <Header />
       {!!queryError && (
@@ -144,6 +154,9 @@ const Rentability = () => {
             filters={initialFilter}
             selectedFilter={selectedFilter}
             onPress={handleChangeFilter}
+            menuTitles={initialMenuTitles}
+            handleChangeMenu={handleChangeMenu}
+            selectedMenu={selectedMenu}
           />
           <ListTicket
             data={rentabilityData}
@@ -169,6 +182,12 @@ const Rentability = () => {
         </>
       )}
     </Wrapper>
+  ) : (
+    <Earning
+      handleChangeMenu={handleChangeMenu}
+      initialMenuTitles={initialMenuTitles}
+      selectedMenu={selectedMenu}
+    />
   );
 };
 

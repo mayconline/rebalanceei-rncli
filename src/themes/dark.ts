@@ -26,6 +26,8 @@ export default {
     BDR: '#8980F5',
     Outros: '#7EBCE6',
     Cripto: '#F7DD70',
+    bgMenuSubheaderActive: '#1E222B',
+    bgMenuSubheaderInative: '#131418',
   },
   gradient: {
     darkToLightGreen: ['#131418', '#131418'],

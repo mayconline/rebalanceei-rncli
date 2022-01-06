@@ -53,9 +53,11 @@ export const formatFilter = (filter: string) =>
     CLASS: 'Classe',
     SECTOR: 'Setor',
     INDUSTRY: 'Segmento',
+    amount: 'Valor',
+    month: 'Mês',
   }[filter]);
 
-export const PREMIUM_FILTER = ['SECTOR', 'INDUSTRY'];
+export const PREMIUM_FILTER = ['SECTOR', 'INDUSTRY', 'EARNING'];
 
 export const getPositionAdBanner = (index: number, length: number) => {
   return index % 6 === 0 || index === 0;
@@ -110,3 +112,19 @@ export const formatDate = (dateNumber: number) => {
 
   return `${date} às ${time}`;
 };
+
+export const formatMonth = (month: number) =>
+  ({
+    1: 'Janeiro',
+    2: 'Fevereiro',
+    3: 'Março',
+    4: 'Abril',
+    5: 'Maio',
+    6: 'Junho',
+    7: 'Julho',
+    8: 'Agosto',
+    9: 'Setembro',
+    10: 'Outubro',
+    11: 'Novembro',
+    12: 'Dezembro',
+  }[month]);

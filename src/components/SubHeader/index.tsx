@@ -11,6 +11,8 @@ import {
   FiltersContainer,
   Filter,
   TextFilter,
+  MenuButton,
+  MenuButtonText,
 } from './styles';
 import { formatFilter, PREMIUM_FILTER } from '../../utils/format';
 import useAmplitude from '../../hooks/useAmplitude';
@@ -23,6 +25,9 @@ interface ISubHeaderProps {
   filters?: IFilters[];
   selectedFilter?: string;
   onPress(filter: string): void;
+  handleChangeMenu?(menu: string): void;
+  menuTitles?: string[];
+  selectedMenu?: string;
 }
 
 interface IFilters {
@@ -36,6 +41,9 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
   selectedFilter,
   onPress,
   children,
+  handleChangeMenu,
+  menuTitles,
+  selectedMenu,
 }) => {
   const { logEvent } = useAmplitude();
   const { showBanner } = useAuth();
@@ -63,8 +71,20 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
     <>
       <Wrapper>
         <ContainerTitle>
-          <Title accessibilityRole="header">{title}</Title>
-          <SubTitle>{count} Itens</SubTitle>
+          {!!menuTitles?.length && handleChangeMenu ? (
+            menuTitles?.map(menu => (
+              <MenuButton key={menu} onPress={() => handleChangeMenu(menu)}>
+                <MenuButtonText focused={menu === selectedMenu}>
+                  {menu}
+                </MenuButtonText>
+              </MenuButton>
+            ))
+          ) : (
+            <>
+              <Title accessibilityRole="header">{title}</Title>
+              <SubTitle>{count} Itens</SubTitle>
+            </>
+          )}
         </ContainerTitle>
 
         {children}

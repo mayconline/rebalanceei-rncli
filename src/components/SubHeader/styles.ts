@@ -46,3 +46,22 @@ export const TextFilter = styled.Text<IFocused>`
   border-radius: 16px;
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;
+
+export const MenuButton = styled.TouchableOpacity`
+  flex: 1;
+`;
+
+export const MenuButtonText = styled.Text<IFocused>`
+  background-color: ${({ focused, theme }) =>
+    focused
+      ? theme.color.bgMenuSubheaderActive
+      : theme.color.bgMenuSubheaderInative};
+  color: ${({ focused, theme }) =>
+    focused ? theme.color.filterFocused : theme.color.filterDisabled};
+
+  border-radius: ${({ focused }) => (focused ? '40px' : '20px')};
+
+  padding: 16px;
+  margin: -16px -16px 0;
+  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+`;
