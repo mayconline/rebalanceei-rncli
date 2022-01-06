@@ -64,4 +64,6 @@ export const MenuButtonText = styled.Text<IFocused>`
   padding: 16px;
   margin: -16px -16px 0;
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  align-items: center;
+  justify-content: center;
 `;

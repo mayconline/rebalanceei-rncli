@@ -57,7 +57,7 @@ export const formatFilter = (filter: string) =>
     month: 'Mês',
   }[filter]);
 
-export const PREMIUM_FILTER = ['SECTOR', 'INDUSTRY', 'EARNING'];
+export const PREMIUM_FILTER = ['SECTOR', 'INDUSTRY', 'Proventos'];
 
 export const getPositionAdBanner = (index: number, length: number) => {
   return index % 6 === 0 || index === 0;

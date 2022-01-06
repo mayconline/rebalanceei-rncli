@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useRef, useState } from 'react';
 import { Modal, ScrollView } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Wrapper,
   ContainerTitle,
@@ -56,11 +56,25 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
   const handleSelectFilter = useCallback((filterName: string) => {
     logEvent(`selected ${filterName} filter`);
 
-    if (PREMIUM_FILTER.includes(filterName) && showBanner) {
+    if (verifyPremiumFilter(filterName)) {
       setOpenModal('Plan');
     } else {
       onPress(filterName);
     }
+  }, []);
+
+  const handleSelectMenu = useCallback((menu: string) => {
+    logEvent(`selected ${menu} menu`);
+
+    if (verifyPremiumFilter(menu)) {
+      setOpenModal('Plan');
+    } else {
+      handleChangeMenu && handleChangeMenu(menu);
+    }
+  }, []);
+
+  const verifyPremiumFilter = useCallback((filterName: string) => {
+    return PREMIUM_FILTER.includes(filterName) && showBanner;
   }, []);
 
   const handleClosePlanModal = useCallback(async () => {
@@ -73,11 +87,18 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
         <ContainerTitle>
           {!!menuTitles?.length && handleChangeMenu ? (
             menuTitles?.map(menu => (
-              <MenuButton key={menu} onPress={() => handleChangeMenu(menu)}>
+              <MenuButton key={menu} onPress={() => handleSelectMenu(menu)}>
                 <MenuButtonText
                   focused={menu === selectedMenu}
                   accessibilityRole="header"
                 >
+                  {menu === 'Proventos' && (
+                    <MaterialCommunityIcons
+                      name="crown"
+                      size={20}
+                      color={color.blue}
+                    />
+                  )}
                   {menu}
                 </MenuButtonText>
               </MenuButton>
