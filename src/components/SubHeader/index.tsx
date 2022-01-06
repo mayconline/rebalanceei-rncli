@@ -74,7 +74,10 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
           {!!menuTitles?.length && handleChangeMenu ? (
             menuTitles?.map(menu => (
               <MenuButton key={menu} onPress={() => handleChangeMenu(menu)}>
-                <MenuButtonText focused={menu === selectedMenu}>
+                <MenuButtonText
+                  focused={menu === selectedMenu}
+                  accessibilityRole="header"
+                >
                   {menu}
                 </MenuButtonText>
               </MenuButton>

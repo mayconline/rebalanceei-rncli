@@ -14,7 +14,7 @@ jest.mock('../../contexts/authContext', () => ({
 describe('Rentability Tab', () => {
   it('should successfully list rentability', async () => {
     const {
-      findByA11yRole,
+      findAllByA11yRole,
       getAllByA11yLabel,
       findByA11yLabel,
       getByText,
@@ -24,8 +24,9 @@ describe('Rentability Tab', () => {
       SUCCESSFUL_LIST_RENTABILITY,
     ]);
 
-    await findByA11yRole('header');
-    getByText('Variação da carteira');
+    await findAllByA11yRole('header');
+    getByText('Carteira');
+    getByText('Proventos');
 
     const symbolItemOne = (await findAllByA11yLabel(/Código do Ativo/i))[0];
     expect(symbolItemOne).toHaveProperty('children', ['MGLU3']);
