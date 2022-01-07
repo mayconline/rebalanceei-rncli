@@ -7046,10 +7046,10 @@ react-native-gesture-handler@2.1.0:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
-react-native-iap@7.5.3:
-  version "7.5.3"
-  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-7.5.3.tgz#b9aa86ac23ddca266347c002b70d0613467974e9"
-  integrity sha512-l63gILOZGA6uZrOD/3kSztW/yxps7xtxlVK+x+QhTyGqrcNWAcOA6BdJ4Rozhpgo5TMdOfP8SbeXpJpMMGzIPg==
+react-native-iap@7.5.5:
+  version "7.5.5"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-7.5.5.tgz#63557cebab6e42b6b3a505c54b116dfda232e474"
+  integrity sha512-5m/zJJbN8W8/dDzIwveXApqi5nFfytBgb3ftCgOSEEkgcdZPomyyE2CoK9ntia8mrQOmoIuUlvDdkegqBW/5Pg==
   dependencies:
     dooboolab-welcome "1.3.2"
 
