@@ -193,7 +193,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
   return (
     <Form>
       {!ticketForm.symbol ? (
-        <ActivityIndicator size="small" color={color.bgHeaderEmpty} />
+        <ActivityIndicator size="small" color={color.filterDisabled} />
       ) : (
         <>
           <FormRow>

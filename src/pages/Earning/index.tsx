@@ -18,6 +18,7 @@ import useAmplitude from '../../hooks/useAmplitude';
 import EditEarningModal from '../../modals/EditEarningModal';
 
 import YearFilter from '../../components/YearFilter';
+import AmountEarning, { IDataSumEarning } from '../../components/AmountEarning';
 
 const initialFilter = [
   {
@@ -79,6 +80,14 @@ const Earning = ({
     fetchPolicy: 'cache-first',
   });
 
+  const [
+    getSumEarning,
+    { data: dataSumEarning, loading: querySumLoading, error: querySumError },
+  ] = useLazyQuery<IDataSumEarning>(GET_SUM_EARNING, {
+    variables: { walletID: wallet, year: currentYear },
+    fetchPolicy: 'cache-first',
+  });
+
   useFocusEffect(
     useCallback(() => {
       handleSetLoading(queryLoading);
@@ -89,6 +98,12 @@ const Earning = ({
     useCallback(() => {
       !data?.getEarningByWallet && getEarningByWallet();
     }, [data?.getEarningByWallet]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      !dataSumEarning?.getSumEarning && getSumEarning();
+    }, [dataSumEarning?.getSumEarning]),
   );
 
   useFocusEffect(
@@ -151,6 +166,13 @@ const Earning = ({
               data={earningData}
               extraData={earningData}
               keyExtractor={item => item._id}
+              ListHeaderComponent={
+                <AmountEarning
+                  data={dataSumEarning}
+                  queryLoading={querySumLoading}
+                  queryError={querySumError}
+                />
+              }
               renderItem={({ item }) => (
                 <ListItem
                   item={item}
@@ -189,6 +211,15 @@ export const GET_EARNING_BY_WALLET = gql`
       year
       month
       amount
+    }
+  }
+`;
+
+export const GET_SUM_EARNING = gql`
+  query getSumEarning($walletID: ID!, $year: Int!) {
+    getSumEarning(walletID: $walletID, year: $year) {
+      sumCurrentYear
+      sumOldYear
     }
   }
 `;

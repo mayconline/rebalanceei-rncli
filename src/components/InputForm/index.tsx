@@ -16,6 +16,7 @@ interface IInputProps extends TextInputProps {
   isSecure?: boolean;
   width?: number;
   filled?: number;
+  autoCompleteType?: string;
 }
 
 const InputForm = ({

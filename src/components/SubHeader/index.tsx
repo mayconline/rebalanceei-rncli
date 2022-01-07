@@ -3,6 +3,7 @@ import { Modal, ScrollView } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {
   Wrapper,
   ContainerTitle,
@@ -92,13 +93,16 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
                   focused={menu === selectedMenu}
                   accessibilityRole="header"
                 >
-                  {menu === 'Proventos' && (
-                    <MaterialCommunityIcons
-                      name="crown"
-                      size={20}
-                      color={color.blue}
-                    />
-                  )}
+                  <FontAwesome5
+                    name={menu === 'Proventos' ? 'donate' : 'wallet'}
+                    size={20}
+                    color={
+                      menu === selectedMenu
+                        ? color.filterFocused
+                        : color.filterDisabled
+                    }
+                  />
+                  {'   '}
                   {menu}
                 </MenuButtonText>
               </MenuButton>

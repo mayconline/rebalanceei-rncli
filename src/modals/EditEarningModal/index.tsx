@@ -22,7 +22,11 @@ import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
 import useAmplitude from '../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
-import { GET_EARNING_BY_WALLET, IEarning } from '../../pages/Earning';
+import {
+  GET_EARNING_BY_WALLET,
+  GET_SUM_EARNING,
+  IEarning,
+} from '../../pages/Earning';
 import {
   formatAveragePricePreview,
   formatMonth,
@@ -93,6 +97,18 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
           {
             query: GET_EARNING_BY_WALLET,
             variables: { walletID: wallet, year },
+          },
+          {
+            query: GET_SUM_EARNING,
+            variables: { walletID: wallet, year },
+          },
+          {
+            query: GET_SUM_EARNING,
+            variables: { walletID: wallet, year: year + 1 },
+          },
+          {
+            query: GET_SUM_EARNING,
+            variables: { walletID: wallet, year: year - 1 },
           },
         ],
         awaitRefetchQueries: true,

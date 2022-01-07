@@ -178,7 +178,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
         <Form>
           <FormRow>
             {!data ? (
-              <ActivityIndicator size="small" color={color.bgHeaderEmpty} />
+              <ActivityIndicator size="small" color={color.filterDisabled} />
             ) : (
               <InputForm
                 label="E-mail"

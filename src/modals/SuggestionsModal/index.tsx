@@ -102,7 +102,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
         />
 
         {loading ? (
-          <ActivityIndicator size="large" color={color.titleNotImport} />
+          <ActivityIndicator size="large" color={color.filterDisabled} />
         ) : !!suggestions?.length ? (
           <SuggestionList>
             {suggestions?.map(suggestion => (

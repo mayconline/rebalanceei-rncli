@@ -161,7 +161,7 @@ const EditWallet = ({
     <Form>
       <FormRow>
         {!wallet?._id ? (
-          <ActivityIndicator size="small" color={color.bgHeaderEmpty} />
+          <ActivityIndicator size="small" color={color.filterDisabled} />
         ) : (
           <InputForm
             label="Nome da Carteira"

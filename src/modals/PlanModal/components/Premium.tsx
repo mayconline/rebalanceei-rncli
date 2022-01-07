@@ -64,7 +64,7 @@ const Premium = () => {
   }, [plan]);
 
   return loading ? (
-    <ActivityIndicator size="large" color={color.bgHeaderEmpty} />
+    <ActivityIndicator size="large" color={color.filterDisabled} />
   ) : (
     <>
       <CardPlan

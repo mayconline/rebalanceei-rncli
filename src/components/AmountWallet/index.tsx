@@ -45,7 +45,7 @@ const AmountWallet = ({
   const isPositive = data && data?.getWalletById?.percentRentabilityWallet > 0;
 
   return queryLoading ? (
-    <ActivityIndicator size="small" color={color.bgHeaderEmpty} />
+    <ActivityIndicator size="small" color={color.filterDisabled} />
   ) : (
     <Wrapper>
       {!!queryError && (
