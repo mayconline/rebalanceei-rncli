@@ -134,8 +134,8 @@ android {
         applicationId "com.rebalanceei"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 18
-        versionName "1.5.2"
+        versionCode 19
+        versionName "1.6.0"
         multiDexEnabled true
         missingDimensionStrategy 'store', 'play'
     }

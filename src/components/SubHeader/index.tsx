@@ -2,8 +2,6 @@ import React, { useCallback, useContext, useRef, useState } from 'react';
 import { Modal, ScrollView } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Entypo from 'react-native-vector-icons/Entypo';
 import {
   Wrapper,
   ContainerTitle,
