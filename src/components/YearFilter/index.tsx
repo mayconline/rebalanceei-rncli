@@ -20,7 +20,11 @@ const YearFilter = ({ currentYear, setCurrentYear }: IYearFilter) => {
 
   return (
     <ContainerYearFilter>
-      <Pressable onPressIn={() => setCurrentYear(current => current - 1)}>
+      <Pressable
+        onPress={() => setCurrentYear(current => current - 1)}
+        accessibilityRole="button"
+        accessibilityLabel="Ano Anterior"
+      >
         <MaterialCommunityIcons
           name="chevron-left-circle"
           size={32}
@@ -29,18 +33,22 @@ const YearFilter = ({ currentYear, setCurrentYear }: IYearFilter) => {
       </Pressable>
 
       <YearContainer>
-        <YearText>{currentYear}</YearText>
-        <YearSubtitle
-          accessibilityLabel="Observação"
+        <YearText
+          accessibilityLabel="Ano Selecionado"
           accessibilityValue={{
-            text: `Ano Selecionado`,
+            now: currentYear,
           }}
         >
-          Ano selecionado
-        </YearSubtitle>
+          {currentYear}
+        </YearText>
+        <YearSubtitle>Ano selecionado</YearSubtitle>
       </YearContainer>
 
-      <Pressable onPressIn={() => setCurrentYear(current => current + 1)}>
+      <Pressable
+        onPress={() => setCurrentYear(current => current + 1)}
+        accessibilityRole="button"
+        accessibilityLabel="Próximo Ano"
+      >
         <MaterialCommunityIcons
           name="chevron-right-circle"
           size={32}
