@@ -3,23 +3,18 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 
 import {
-  Wrapper,
   StepContainer,
   Step,
   ContainerIndicator,
   StepIndicator,
   ContainerTitle,
-  Image,
-  Header,
   Title,
   Subtitle,
-  ContainerTextLink,
-  TextLink,
 } from './styles';
 
 import Button from '../../../components/Button';
+import LayoutPublic from '../../../components/LayoutPublic';
 import OnboardingImgThree from '../../../../assets/svg/OnboardingImgThree';
-import { setLocalStorage } from '../../../utils/localStorage';
 import useAmplitude from '../../../hooks/useAmplitude';
 
 const StepThree = () => {
@@ -35,20 +30,11 @@ const StepThree = () => {
 
   const handleNext = async () => {
     logEvent('click on start button at Onboarding Step Three');
-    await setLocalStorage('@authFirstAccess', 'true');
     navigation.navigate('SignUp');
   };
 
   return (
-    <Wrapper>
-      <Header>
-        <ContainerTextLink onPress={handleNext}>
-          <TextLink>Pular</TextLink>
-        </ContainerTextLink>
-      </Header>
-      <Image>
-        <OnboardingImgThree />
-      </Image>
+    <LayoutPublic img={OnboardingImgThree} routeName="StepThree">
       <StepContainer>
         <Step>
           <ContainerIndicator>
@@ -68,7 +54,7 @@ const StepThree = () => {
           </Button>
         </Step>
       </StepContainer>
-    </Wrapper>
+    </LayoutPublic>
   );
 };
 

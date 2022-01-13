@@ -3,19 +3,6 @@ interface IStepIndicator {
   active?: boolean;
 }
 
-export const Wrapper = styled.SafeAreaView`
-  flex: 1;
-  background-color: ${({ theme }) => theme.color.bgHeaderEmpty};
-`;
-
-export const Header = styled.View`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-`;
-
 export const Icon = styled.TouchableOpacity`
   padding: 0 24px 0 12px;
 `;
@@ -53,10 +40,6 @@ export const Subtitle = styled.Text`
   text-align: center;
 `;
 
-export const Image = styled.View`
-  height: 240px;
-`;
-
 export const StepContainer = styled.View`
   flex: 1;
   max-height: 316px;
@@ -69,14 +52,4 @@ export const Step = styled.View`
   border-top-right-radius: 20px;
   min-height: 500px;
   width: 100%;
-`;
-
-export const ContainerTextLink = styled.TouchableOpacity`
-  align-items: center;
-  padding: 0 16px;
-`;
-
-export const TextLink = styled.Text`
-  color: ${({ theme }) => theme.color.activeText};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;

@@ -1,25 +1,14 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Alert, Platform } from 'react-native';
+import { Alert } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
-
-import {
-  Wrapper,
-  FormContainer,
-  Image,
-  Header,
-  Icon,
-  Title,
-  Form,
-  FormRow,
-  ContainerButtons,
-} from './styles';
-import Entypo from 'react-native-vector-icons/Entypo';
+import { FormRow, ContainerButtons } from './styles';
 import ImageRecoveryPassword from '../../../../assets/svg/ImageRecoveryPassword';
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
+import LayoutPublic from '../../../components/LayoutPublic';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useAuth } from '../../../contexts/authContext';
 
@@ -34,7 +23,7 @@ interface ISendRecovery {
 const ForgotPassword = () => {
   const { handleSetLoading } = useAuth();
   const { logEvent } = useAmplitude();
-  const { color, gradient } = useContext(ThemeContext);
+  const { gradient } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountLogin);
 
@@ -110,60 +99,41 @@ const ForgotPassword = () => {
     [],
   );
 
-  const handleGoBack = useCallback(() => {
-    logEvent('click on backButton at ForgotPassword');
-    navigation.goBack();
-  }, []);
-
   return (
-    <Wrapper>
-      <Header>
-        <Icon
-          accessibilityRole="imagebutton"
-          accessibilityLabel="Voltar"
-          onPress={handleGoBack}
+    <LayoutPublic
+      img={ImageRecoveryPassword}
+      title="Recuperar Senha"
+      routeName="ForgotPassword"
+    >
+      <FormRow>
+        <InputForm
+          label="E-mail"
+          value={account.email}
+          placeholder="meuemail@teste.com.br"
+          autoCompleteType="email"
+          maxLength={80}
+          keyboardType="email-address"
+          autoFocus={focus === 1}
+          onFocus={() => setFocus(1)}
+          onChangeText={handleSetEmail}
+          onEndEditing={() => onEndInputEditing(2, 'email')}
+          onSubmitEditing={handleSubmit}
+        />
+      </FormRow>
+
+      {!!mutationError && <TextError>{mutationError?.message}</TextError>}
+
+      <ContainerButtons>
+        <Button
+          colors={gradient.darkToLightBlue}
+          onPress={handleSubmit}
+          loading={mutationLoading}
+          disabled={mutationLoading}
         >
-          <Entypo name="chevron-left" size={32} color={color.activeText} />
-        </Icon>
-
-        <Title accessibilityRole="header">Recuperar Senha</Title>
-      </Header>
-      <Image>
-        <ImageRecoveryPassword />
-      </Image>
-      <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
-        <Form>
-          <FormRow>
-            <InputForm
-              label="E-mail"
-              value={account.email}
-              placeholder="meuemail@teste.com.br"
-              autoCompleteType="email"
-              maxLength={80}
-              keyboardType="email-address"
-              autoFocus={focus === 1}
-              onFocus={() => setFocus(1)}
-              onChangeText={handleSetEmail}
-              onEndEditing={() => onEndInputEditing(2, 'email')}
-              onSubmitEditing={handleSubmit}
-            />
-          </FormRow>
-
-          {!!mutationError && <TextError>{mutationError?.message}</TextError>}
-
-          <ContainerButtons>
-            <Button
-              colors={gradient.darkToLightBlue}
-              onPress={handleSubmit}
-              loading={mutationLoading}
-              disabled={mutationLoading}
-            >
-              Recuperar Senha
-            </Button>
-          </ContainerButtons>
-        </Form>
-      </FormContainer>
-    </Wrapper>
+          Recuperar Senha
+        </Button>
+      </ContainerButtons>
+    </LayoutPublic>
   );
 };
 

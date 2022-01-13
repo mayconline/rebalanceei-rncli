@@ -3,23 +3,18 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 
 import {
-  Wrapper,
   StepContainer,
   Step,
   ContainerIndicator,
   StepIndicator,
   ContainerTitle,
-  Image,
-  Header,
   Title,
   Subtitle,
-  ContainerTextLink,
-  TextLink,
 } from './styles';
 
 import Button from '../../../components/Button';
+import LayoutPublic from '../../../components/LayoutPublic';
 import OnboardingImgTwo from '../../../../assets/svg/OnboardingImgTwo';
-import { setLocalStorage } from '../../../utils/localStorage';
 import useAmplitude from '../../../hooks/useAmplitude';
 
 const StepTwo = () => {
@@ -38,22 +33,8 @@ const StepTwo = () => {
     navigation.navigate('StepThree');
   };
 
-  const handleSkip = async () => {
-    logEvent('click on handleSkip at Onboarding Step Two');
-    await setLocalStorage('@authFirstAccess', 'true');
-    navigation.navigate('SignUp');
-  };
-
   return (
-    <Wrapper>
-      <Header>
-        <ContainerTextLink onPress={handleSkip}>
-          <TextLink>Pular</TextLink>
-        </ContainerTextLink>
-      </Header>
-      <Image>
-        <OnboardingImgTwo />
-      </Image>
+    <LayoutPublic img={OnboardingImgTwo} routeName="StepTwo">
       <StepContainer>
         <Step>
           <ContainerIndicator>
@@ -73,7 +54,7 @@ const StepTwo = () => {
           </Button>
         </Step>
       </StepContainer>
-    </Wrapper>
+    </LayoutPublic>
   );
 };
 

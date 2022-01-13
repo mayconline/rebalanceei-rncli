@@ -6,26 +6,18 @@ import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../../contexts/authContext';
 
 import {
-  Wrapper,
-  FormContainer,
-  ContainerTitle,
-  Image,
-  Header,
-  Icon,
-  Title,
-  Form,
   FormRow,
   ContainerTextLink,
   TextLink,
   ContainerTerms,
   TextTermsLink,
 } from './styles';
-import Entypo from 'react-native-vector-icons/Entypo';
 import ImageRegister from '../../../../assets/svg/ImageRegister';
 
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
+import LayoutPublic from '../../../components/LayoutPublic';
 
 import { getTerms } from '../../../utils/Terms';
 import { setLocalStorage } from '../../../utils/localStorage';
@@ -140,11 +132,6 @@ const SignUp = () => {
     [],
   );
 
-  const handleGoBack = useCallback(() => {
-    logEvent('click on backButton at SignUp');
-    navigation.goBack();
-  }, []);
-
   const handleNavigate = useCallback((route: 'Login') => {
     logEvent(`click on Navigate to ${route} at SignUp`);
     navigation.navigate(route);
@@ -157,92 +144,71 @@ const SignUp = () => {
   );
 
   return (
-    <Wrapper>
-      <Header>
-        <Icon
-          accessibilityRole="imagebutton"
-          accessibilityLabel="Voltar"
-          onPress={handleGoBack}
-        >
-          <Entypo name="chevron-left" size={32} color={color.activeText} />
-        </Icon>
-        <ContainerTitle>
-          <Title accessibilityRole="header">Criar Conta</Title>
-        </ContainerTitle>
-      </Header>
-      <Image>
-        <ImageRegister />
-      </Image>
-      <FormContainer behavior={'padding'}>
-        <Form>
-          <FormRow>
-            <InputForm
-              label="E-mail"
-              value={account.email}
-              placeholder="meuemail@teste.com.br"
-              autoCompleteType="email"
-              maxLength={80}
-              keyboardType="email-address"
-              autoFocus={focus === 1}
-              onFocus={() => setFocus(1)}
-              onChangeText={handleSetEmail}
-              onEndEditing={() => onEndInputEditing(2, 'email')}
-            />
-          </FormRow>
+    <LayoutPublic img={ImageRegister} title="Criar Conta" routeName="SignUp">
+      <FormRow>
+        <InputForm
+          label="E-mail"
+          value={account.email}
+          placeholder="meuemail@teste.com.br"
+          autoCompleteType="email"
+          maxLength={80}
+          keyboardType="email-address"
+          autoFocus={focus === 1}
+          onFocus={() => setFocus(1)}
+          onChangeText={handleSetEmail}
+          onEndEditing={() => onEndInputEditing(2, 'email')}
+        />
+      </FormRow>
 
-          <FormRow>
-            <InputForm
-              label="Senha"
-              value={account.password}
-              isSecure
-              placeholder="********"
-              autoCompleteType="password"
-              maxLength={32}
-              autoFocus={focus === 2}
-              onFocus={() => setFocus(2)}
-              onChangeText={handleSetPassword}
-              onEndEditing={() => onEndInputEditing(0, 'password')}
-            />
-          </FormRow>
+      <FormRow>
+        <InputForm
+          label="Senha"
+          value={account.password}
+          isSecure
+          placeholder="********"
+          autoCompleteType="password"
+          maxLength={32}
+          autoFocus={focus === 2}
+          onFocus={() => setFocus(2)}
+          onChangeText={handleSetPassword}
+          onEndEditing={() => onEndInputEditing(0, 'password')}
+        />
+      </FormRow>
 
-          <FormRow>
-            <ContainerTerms onPress={getTerms}>
-              <TextTermsLink>
-                Aceito os Termos de Uso e Política de Privacidade
-              </TextTermsLink>
-            </ContainerTerms>
-            <Switch
-              trackColor={{
-                false: color.inactiveTabs,
-                true: color.success,
-              }}
-              thumbColor={
-                account.checkTerms ? color.success : color.titleNotImport
-              }
-              ios_backgroundColor={color.titleNotImport}
-              onValueChange={handleToogleSwitch}
-              value={account.checkTerms}
-              accessibilityRole="switch"
-            />
-          </FormRow>
+      <FormRow>
+        <ContainerTerms onPress={getTerms}>
+          <TextTermsLink>
+            Aceito os Termos de Uso e Política de Privacidade
+          </TextTermsLink>
+        </ContainerTerms>
+        <Switch
+          trackColor={{
+            false: color.inactiveTabs,
+            true: color.success,
+          }}
+          thumbColor={account.checkTerms ? color.success : color.titleNotImport}
+          ios_backgroundColor={color.titleNotImport}
+          onValueChange={handleToogleSwitch}
+          value={account.checkTerms}
+          accessibilityRole="switch"
+        />
+      </FormRow>
 
-          {!!mutationError && <TextError>{mutationError?.message}</TextError>}
+      {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
-          <Button
-            colors={gradient.darkToLightBlue}
-            onPress={handleSubmit}
-            loading={mutationLoading}
-            disabled={mutationLoading}
-          >
-            Criar Conta
-          </Button>
+      <Button
+        colors={gradient.darkToLightBlue}
+        onPress={handleSubmit}
+        loading={mutationLoading}
+        disabled={mutationLoading}
+      >
+        Criar Conta
+      </Button>
 
-          <ContainerTextLink onPress={() => handleNavigate('Login')}>
-            <TextLink>Já possui uma conta?</TextLink>
-          </ContainerTextLink>
-        </Form>
-      </FormContainer>
-    </Wrapper>
+      <ContainerTextLink onPress={() => handleNavigate('Login')}>
+        <TextLink>Já possui uma conta?</TextLink>
+      </ContainerTextLink>
+    </LayoutPublic>
   );
 };
 

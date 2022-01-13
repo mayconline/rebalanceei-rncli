@@ -5,26 +5,20 @@ import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../../contexts/authContext';
 
 import {
-  Wrapper,
-  FormContainer,
-  ContainerTitle,
-  Image,
-  Header,
-  Icon,
-  Title,
-  Form,
   FormRow,
   ContainerTextLink,
   TextLink,
   ContainerForgotPassword,
   TextForgotPassword,
 } from './styles';
-import Entypo from 'react-native-vector-icons/Entypo';
+
 import ImageLogin from '../../../../assets/svg/ImageLogin';
 
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
+import LayoutPublic from '../../../components/LayoutPublic';
+
 import { setLocalStorage } from '../../../utils/localStorage';
 import useAmplitude from '../../../hooks/useAmplitude';
 
@@ -43,7 +37,7 @@ interface ILogin {
 
 const Login = () => {
   const { logEvent } = useAmplitude();
-  const { color, gradient } = useContext(ThemeContext);
+  const { gradient } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountLogin);
 
@@ -108,11 +102,6 @@ const Login = () => {
     [],
   );
 
-  const handleGoBack = useCallback(() => {
-    logEvent('click on backButton at Login');
-    navigation.goBack();
-  }, []);
-
   const handleNavigate = useCallback((route: 'SignUp' | 'ForgotPassword') => {
     logEvent(`click on Navigate to ${route} at Login`);
     navigation.navigate(route);
@@ -125,78 +114,57 @@ const Login = () => {
   );
 
   return (
-    <Wrapper>
-      <Header>
-        <Icon
-          accessibilityRole="imagebutton"
-          accessibilityLabel="Voltar"
-          onPress={handleGoBack}
-        >
-          <Entypo name="chevron-left" size={32} color={color.activeText} />
-        </Icon>
-        <ContainerTitle>
-          <Title accessibilityRole="header">Bem Vindo de Volta</Title>
-        </ContainerTitle>
-      </Header>
-      <Image>
-        <ImageLogin />
-      </Image>
-      <FormContainer behavior={'padding'}>
-        <Form>
-          <FormRow>
-            <InputForm
-              label="E-mail"
-              value={account.email}
-              placeholder="meuemail@teste.com.br"
-              autoCompleteType="email"
-              maxLength={80}
-              keyboardType="email-address"
-              autoFocus={focus === 1}
-              onFocus={() => setFocus(1)}
-              onChangeText={handleSetEmail}
-              onEndEditing={() => onEndInputEditing(2, 'email')}
-            />
-          </FormRow>
+    <LayoutPublic img={ImageLogin} title="Bem Vindo de Volta" routeName="Login">
+      <FormRow>
+        <InputForm
+          label="E-mail"
+          value={account.email}
+          placeholder="meuemail@teste.com.br"
+          autoCompleteType="email"
+          maxLength={80}
+          keyboardType="email-address"
+          autoFocus={focus === 1}
+          onFocus={() => setFocus(1)}
+          onChangeText={handleSetEmail}
+          onEndEditing={() => onEndInputEditing(2, 'email')}
+        />
+      </FormRow>
 
-          <FormRow>
-            <InputForm
-              label="Senha"
-              value={account.password}
-              isSecure
-              placeholder="********"
-              autoCompleteType="password"
-              maxLength={32}
-              returnKeyType="send"
-              autoFocus={focus === 2}
-              onFocus={() => setFocus(2)}
-              onChangeText={handleSetPassword}
-              onEndEditing={() => onEndInputEditing(0, 'password')}
-              onSubmitEditing={handleSubmit}
-            />
-          </FormRow>
-          <ContainerForgotPassword
-            onPress={() => handleNavigate('ForgotPassword')}
-          >
-            <TextForgotPassword>Esqueceu a senha?</TextForgotPassword>
-          </ContainerForgotPassword>
+      <FormRow>
+        <InputForm
+          label="Senha"
+          value={account.password}
+          isSecure
+          placeholder="********"
+          autoCompleteType="password"
+          maxLength={32}
+          returnKeyType="send"
+          autoFocus={focus === 2}
+          onFocus={() => setFocus(2)}
+          onChangeText={handleSetPassword}
+          onEndEditing={() => onEndInputEditing(0, 'password')}
+          onSubmitEditing={handleSubmit}
+        />
+      </FormRow>
+      <ContainerForgotPassword onPress={() => handleNavigate('ForgotPassword')}>
+        <TextForgotPassword>Esqueceu a senha?</TextForgotPassword>
+      </ContainerForgotPassword>
 
-          {!!mutationError && <TextError>{mutationError?.message}</TextError>}
+      {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
-          <Button
-            colors={gradient.darkToLightBlue}
-            onPress={handleSubmit}
-            loading={mutationLoading}
-            disabled={mutationLoading}
-          >
-            Entrar
-          </Button>
+      <Button
+        colors={gradient.darkToLightBlue}
+        onPress={handleSubmit}
+        loading={mutationLoading}
+        disabled={mutationLoading}
+      >
+        Entrar
+      </Button>
 
-          <ContainerTextLink onPress={() => handleNavigate('SignUp')}>
-            <TextLink>Ainda não possui uma conta?</TextLink>
-          </ContainerTextLink>
-        </Form>
-      </FormContainer>
-    </Wrapper>
+      <ContainerTextLink onPress={() => handleNavigate('SignUp')}>
+        <TextLink>Ainda não possui uma conta?</TextLink>
+      </ContainerTextLink>
+    </LayoutPublic>
   );
 };
 

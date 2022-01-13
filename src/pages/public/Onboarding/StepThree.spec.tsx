@@ -29,8 +29,6 @@ describe('Onboarding StepThree', () => {
     const nextButton = await findByText(/Vamos Começar/i);
     fireEvent.press(nextButton);
 
-    expect(mockedSetLocalStorage).toHaveBeenCalledTimes(2);
-
     expect(navigate).toBeCalledWith('SignUp');
   });
 });

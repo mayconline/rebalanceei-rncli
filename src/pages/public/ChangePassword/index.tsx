@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Modal, Platform } from 'react-native';
+import { Modal } from 'react-native';
 import {
   useFocusEffect,
   useNavigation,
@@ -8,23 +8,14 @@ import {
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
 
-import {
-  Wrapper,
-  FormContainer,
-  ContainerButtons,
-  Image,
-  Header,
-  Icon,
-  Title,
-  Form,
-  FormRow,
-} from './styles';
-import Entypo from 'react-native-vector-icons/Entypo';
+import { ContainerButtons, FormRow } from './styles';
+
 import ImageRecoveryPassword from '../../../../assets/svg/ImageRecoveryPassword';
 
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
+import LayoutPublic from '../../../components/LayoutPublic';
 import SuccessModal from '../../../modals/SuccessModal';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useAuth } from '../../../contexts/authContext';
@@ -45,7 +36,7 @@ interface IDataParamsForm {
 const ChangePassword = () => {
   const { handleSetLoading } = useAuth();
   const { logEvent } = useAmplitude();
-  const { color, gradient } = useContext(ThemeContext);
+  const { gradient } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IChangePassword);
   const [openModal, setOpenModal] = useState(false);
@@ -116,74 +107,54 @@ const ChangePassword = () => {
     [],
   );
 
-  const handleGoBack = useCallback(() => {
-    logEvent('click on backButton at ChangePassword');
-    navigation.goBack();
-  }, []);
-
   return (
     <>
-      <Wrapper>
-        <Header>
-          <Icon
-            accessibilityRole="imagebutton"
-            accessibilityLabel="Voltar"
-            onPress={handleGoBack}
+      <LayoutPublic
+        img={ImageRecoveryPassword}
+        title="Nova Senha"
+        routeName="ChangePassword"
+      >
+        <FormRow>
+          <InputForm
+            label="Code"
+            value={account.code}
+            placeholder="999999"
+            maxLength={6}
+            autoFocus={focus === 1}
+            onFocus={() => setFocus(1)}
+            onChangeText={handleSetCode}
+            onEndEditing={() => onEndInputEditing(2, 'code')}
+          />
+        </FormRow>
+        <FormRow>
+          <InputForm
+            label="Nova Senha"
+            value={account.password}
+            isSecure
+            placeholder="********"
+            autoCompleteType="password"
+            maxLength={32}
+            returnKeyType="send"
+            autoFocus={focus === 2}
+            onFocus={() => setFocus(2)}
+            onChangeText={handleSetPassword}
+            onEndEditing={() => onEndInputEditing(0, 'password')}
+            onSubmitEditing={handleSubmit}
+          />
+        </FormRow>
+        {!!mutationError && <TextError>{mutationError?.message}</TextError>}
+
+        <ContainerButtons>
+          <Button
+            colors={gradient.darkToLightBlue}
+            onPress={handleSubmit}
+            loading={mutationLoading}
+            disabled={mutationLoading}
           >
-            <Entypo name="chevron-left" size={32} color={color.activeText} />
-          </Icon>
-
-          <Title accessibilityRole="header">Nova Senha</Title>
-        </Header>
-        <Image>
-          <ImageRecoveryPassword />
-        </Image>
-
-        <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
-          <Form>
-            <FormRow>
-              <InputForm
-                label="Code"
-                value={account.code}
-                placeholder="999999"
-                maxLength={6}
-                autoFocus={focus === 1}
-                onFocus={() => setFocus(1)}
-                onChangeText={handleSetCode}
-                onEndEditing={() => onEndInputEditing(2, 'code')}
-              />
-            </FormRow>
-            <FormRow>
-              <InputForm
-                label="Nova Senha"
-                value={account.password}
-                isSecure
-                placeholder="********"
-                autoCompleteType="password"
-                maxLength={32}
-                returnKeyType="send"
-                autoFocus={focus === 2}
-                onFocus={() => setFocus(2)}
-                onChangeText={handleSetPassword}
-                onEndEditing={() => onEndInputEditing(0, 'password')}
-                onSubmitEditing={handleSubmit}
-              />
-            </FormRow>
-            {!!mutationError && <TextError>{mutationError?.message}</TextError>}
-
-            <ContainerButtons>
-              <Button
-                colors={gradient.darkToLightBlue}
-                onPress={handleSubmit}
-                loading={mutationLoading}
-                disabled={mutationLoading}
-              >
-                Alterar Senha
-              </Button>
-            </ContainerButtons>
-          </Form>
-        </FormContainer>
-      </Wrapper>
+            Alterar Senha
+          </Button>
+        </ContainerButtons>
+      </LayoutPublic>
 
       {openModal && (
         <Modal
