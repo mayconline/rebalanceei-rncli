@@ -15,7 +15,7 @@ import ImageRecoveryPassword from '../../../../assets/svg/ImageRecoveryPassword'
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
-import LayoutPublic from '../../../components/LayoutPublic';
+import LayoutForm from '../../../components/LayoutForm';
 import SuccessModal from '../../../modals/SuccessModal';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useAuth } from '../../../contexts/authContext';
@@ -109,7 +109,7 @@ const ChangePassword = () => {
 
   return (
     <>
-      <LayoutPublic
+      <LayoutForm
         img={ImageRecoveryPassword}
         title="Nova Senha"
         routeName="ChangePassword"
@@ -154,7 +154,7 @@ const ChangePassword = () => {
             Alterar Senha
           </Button>
         </ContainerButtons>
-      </LayoutPublic>
+      </LayoutForm>
 
       {openModal && (
         <Modal

@@ -18,7 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import useAmplitude from '../../hooks/useAmplitude';
 import { setLocalStorage } from '../../utils/localStorage';
 
-interface LayoutPublicProps {
+interface LayoutFormProps {
   children?: any;
   img?: any;
   title?: string;
@@ -27,12 +27,12 @@ interface LayoutPublicProps {
 
 const OnboardingRoutes = ['StepOne', 'StepTwo', 'StepThree'];
 
-const LayoutPublic = ({
+const LayoutForm = ({
   children,
   img: IMG,
   title,
   routeName,
-}: LayoutPublicProps) => {
+}: LayoutFormProps) => {
   const { color } = useContext(ThemeContext);
   const navigation = useNavigation();
   const { logEvent } = useAmplitude();
@@ -89,4 +89,4 @@ const LayoutPublic = ({
   );
 };
 
-export default memo(LayoutPublic);
+export default memo(LayoutForm);

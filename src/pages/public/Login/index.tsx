@@ -17,7 +17,7 @@ import ImageLogin from '../../../../assets/svg/ImageLogin';
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
-import LayoutPublic from '../../../components/LayoutPublic';
+import LayoutForm from '../../../components/LayoutForm';
 
 import { setLocalStorage } from '../../../utils/localStorage';
 import useAmplitude from '../../../hooks/useAmplitude';
@@ -114,7 +114,7 @@ const Login = () => {
   );
 
   return (
-    <LayoutPublic img={ImageLogin} title="Bem Vindo de Volta" routeName="Login">
+    <LayoutForm img={ImageLogin} title="Bem Vindo de Volta" routeName="Login">
       <FormRow>
         <InputForm
           label="E-mail"
@@ -164,7 +164,7 @@ const Login = () => {
       <ContainerTextLink onPress={() => handleNavigate('SignUp')}>
         <TextLink>Ainda não possui uma conta?</TextLink>
       </ContainerTextLink>
-    </LayoutPublic>
+    </LayoutForm>
   );
 };
 

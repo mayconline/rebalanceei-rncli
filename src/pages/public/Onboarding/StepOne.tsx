@@ -13,7 +13,7 @@ import {
 } from './styles';
 
 import Button from '../../../components/Button';
-import LayoutPublic from '../../../components/LayoutPublic';
+import LayoutForm from '../../../components/LayoutForm';
 import OnboardingImgOne from '../../../../assets/svg/OnboardingImgOne';
 import useAmplitude from '../../../hooks/useAmplitude';
 
@@ -34,7 +34,7 @@ const StepOne = () => {
   };
 
   return (
-    <LayoutPublic img={OnboardingImgOne} routeName="StepOne">
+    <LayoutForm img={OnboardingImgOne} routeName="StepOne">
       <StepContainer>
         <Step>
           <ContainerIndicator>
@@ -53,7 +53,7 @@ const StepOne = () => {
           </Button>
         </Step>
       </StepContainer>
-    </LayoutPublic>
+    </LayoutForm>
   );
 };
 

@@ -17,7 +17,7 @@ import ImageRegister from '../../../../assets/svg/ImageRegister';
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
-import LayoutPublic from '../../../components/LayoutPublic';
+import LayoutForm from '../../../components/LayoutForm';
 
 import { getTerms } from '../../../utils/Terms';
 import { setLocalStorage } from '../../../utils/localStorage';
@@ -144,7 +144,7 @@ const SignUp = () => {
   );
 
   return (
-    <LayoutPublic img={ImageRegister} title="Criar Conta" routeName="SignUp">
+    <LayoutForm img={ImageRegister} title="Criar Conta" routeName="SignUp">
       <FormRow>
         <InputForm
           label="E-mail"
@@ -208,7 +208,7 @@ const SignUp = () => {
       <ContainerTextLink onPress={() => handleNavigate('Login')}>
         <TextLink>Já possui uma conta?</TextLink>
       </ContainerTextLink>
-    </LayoutPublic>
+    </LayoutForm>
   );
 };
 

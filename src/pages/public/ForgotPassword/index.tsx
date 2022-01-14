@@ -8,7 +8,7 @@ import ImageRecoveryPassword from '../../../../assets/svg/ImageRecoveryPassword'
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
-import LayoutPublic from '../../../components/LayoutPublic';
+import LayoutForm from '../../../components/LayoutForm';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useAuth } from '../../../contexts/authContext';
 
@@ -100,7 +100,7 @@ const ForgotPassword = () => {
   );
 
   return (
-    <LayoutPublic
+    <LayoutForm
       img={ImageRecoveryPassword}
       title="Recuperar Senha"
       routeName="ForgotPassword"
@@ -133,7 +133,7 @@ const ForgotPassword = () => {
           Recuperar Senha
         </Button>
       </ContainerButtons>
-    </LayoutPublic>
+    </LayoutForm>
   );
 };
 
