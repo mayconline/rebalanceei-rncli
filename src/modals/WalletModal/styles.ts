@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export interface RadioProps {
   selected?: boolean;
@@ -8,7 +9,7 @@ export interface IPercentVariation {
   value: number;
 }
 
-export const Wrapper = styled.SafeAreaView`
+export const Wrapper = styled(SafeAreaView)`
   background-color: ${({ theme }) => theme.color.secondary};
   padding: 20px 20px 4px;
   border-top-left-radius: 20px;

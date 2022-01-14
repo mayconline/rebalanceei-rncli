@@ -4,11 +4,6 @@ interface ILegendList {
   color: string;
 }
 
-export const Wrapper = styled.View`
-  flex: 1;
-  background-color: ${({ theme }) => theme.color.primary};
-`;
-
 export const Content = styled.View`
   background-color: ${({ theme }) => theme.color.secondary};
   padding: 0 12px;

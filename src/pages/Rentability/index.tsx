@@ -3,20 +3,16 @@ import { useAuth } from '../../contexts/authContext';
 import { useLazyQuery, gql } from '@apollo/client';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { Wrapper } from './styles';
-
 import { getArraySortByParams } from '../../utils/sort';
 import { getPositionAdBanner } from '../../utils/format';
 
-import Header from '../../components/Header';
-import SubHeader from '../../components/SubHeader';
 import AmountWallet from '../../components/AmountWallet';
-import Empty from '../../components/Empty';
-import TextError from '../../components/TextError';
+
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
-import useAmplitude from '../../hooks/useAmplitude';
+
 import Earning from '../Earning';
+import LayoutTab from '../../components/LayoutTab';
 
 const initialFilter = [
   {
@@ -63,8 +59,7 @@ interface IDataWallet {
 }
 
 const Rentability = () => {
-  const { logEvent } = useAmplitude();
-  const { wallet, handleSetLoading } = useAuth();
+  const { wallet } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('currentAmount');
   const [selectedMenu, setSelectedMenu] = useState<'Carteira' | 'Proventos'>(
@@ -73,12 +68,6 @@ const Rentability = () => {
 
   const [rentabilityData, setRentabilityData] = useState<IGetRentability[]>(
     [] as IGetRentability[],
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      logEvent('open Rentability');
-    }, []),
   );
 
   const [
@@ -102,12 +91,6 @@ const Rentability = () => {
     variables: { walletID: wallet, sort: 'currentAmount' },
     fetchPolicy: 'cache-and-network',
   });
-
-  useFocusEffect(
-    useCallback(() => {
-      handleSetLoading(queryLoading);
-    }, [queryLoading]),
-  );
 
   useFocusEffect(
     useCallback(() => {
@@ -139,49 +122,39 @@ const Rentability = () => {
     !wallet || (!queryLoading && rentabilityData?.length === 0);
 
   return selectedMenu === 'Carteira' ? (
-    <Wrapper>
-      <Header />
-      {!!queryError && (
-        <TextError isTabs={true}>{queryError?.message}</TextError>
-      )}
-      {hasEmptyTickets ? (
-        <Empty errorMessage={queryError?.message} />
-      ) : (
-        <>
-          <SubHeader
-            title="Variação da carteira"
-            count={rentabilityData.length}
-            filters={initialFilter}
-            selectedFilter={selectedFilter}
-            onPress={handleChangeFilter}
-            menuTitles={initialMenuTitles}
-            handleChangeMenu={handleChangeMenu}
-            selectedMenu={selectedMenu}
+    <LayoutTab
+      title="Variação da carteira"
+      routeName="Rentability"
+      count={rentabilityData.length}
+      initialFilter={initialFilter}
+      selectedFilter={selectedFilter}
+      handleChangeFilter={handleChangeFilter}
+      hasEmptyTickets={hasEmptyTickets}
+      queryError={queryError}
+      queryLoading={queryLoading}
+      menuTitles={initialMenuTitles}
+      handleChangeMenu={handleChangeMenu}
+      selectedMenu={selectedMenu}
+    >
+      <ListTicket
+        data={rentabilityData}
+        extraData={rentabilityData}
+        keyExtractor={item => item._id}
+        ListHeaderComponent={
+          <AmountWallet
+            data={dataWallet}
+            queryLoading={queryWalletLoading}
+            queryError={queryWalletError}
           />
-          <ListTicket
-            data={rentabilityData}
-            extraData={rentabilityData}
-            keyExtractor={item => item._id}
-            ListHeaderComponent={
-              <AmountWallet
-                data={dataWallet}
-                queryLoading={queryWalletLoading}
-                queryError={queryWalletError}
-              />
-            }
-            renderItem={({ item, index }) => (
-              <ListItem
-                item={item}
-                showAdBanner={getPositionAdBanner(
-                  index,
-                  rentabilityData.length,
-                )}
-              />
-            )}
+        }
+        renderItem={({ item, index }) => (
+          <ListItem
+            item={item}
+            showAdBanner={getPositionAdBanner(index, rentabilityData.length)}
           />
-        </>
-      )}
-    </Wrapper>
+        )}
+      />
+    </LayoutTab>
   ) : (
     <Earning
       handleChangeMenu={handleChangeMenu}

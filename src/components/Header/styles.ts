@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import LinearGradient from 'react-native-linear-gradient';
 
 export const Wrapper = styled(LinearGradient)<any>`
-  min-height: 100px;
+  min-height: 12%;
 `;
 
 export const MenuBar = styled.SafeAreaView`
@@ -10,25 +10,20 @@ export const MenuBar = styled.SafeAreaView`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding-top: 12px;
 `;
 
 export const Wallet = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  padding: 4px 16px;
-  margin-left: 8px;
+  padding: 4% 8%;
   justify-content: space-between;
   max-width: 70%;
 `;
 
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.activeText};
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 32px;
-  font-family: 'TitilliumWeb-SemiBold';
-  margin-right: 8px;
+  font: 600 24px/32px 'TitilliumWeb-SemiBold';
+  margin-right: 4%;
 `;
 
 export const Icons = styled.View`
@@ -38,5 +33,5 @@ export const Icons = styled.View`
 `;
 
 export const Menu = styled.TouchableOpacity`
-  padding: 0 16px;
+  padding: 0 24px;
 `;

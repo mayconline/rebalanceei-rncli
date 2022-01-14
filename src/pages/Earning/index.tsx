@@ -3,22 +3,17 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Modal } from 'react-native';
 import { useAuth } from '../../contexts/authContext';
 import { useLazyQuery, gql } from '@apollo/client';
-import { Wrapper } from './styles';
 
 import { getArraySortByParams } from '../../utils/sort';
 
-import Header from '../../components/Header';
-import SubHeader from '../../components/SubHeader';
-import Empty from '../../components/Empty';
-import TextError from '../../components/TextError';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
 
 import useAmplitude from '../../hooks/useAmplitude';
 import EditEarningModal from '../../modals/EditEarningModal';
 
-import YearFilter from '../../components/YearFilter';
 import AmountEarning, { IDataSumEarning } from '../../components/AmountEarning';
+import LayoutTab from '../../components/LayoutTab';
 
 const initialFilter = [
   {
@@ -90,12 +85,6 @@ const Earning = ({
 
   useFocusEffect(
     useCallback(() => {
-      handleSetLoading(queryLoading);
-    }, [queryLoading]),
-  );
-
-  useFocusEffect(
-    useCallback(() => {
       !data?.getEarningByWallet && getEarningByWallet();
     }, [data?.getEarningByWallet]),
   );
@@ -134,55 +123,41 @@ const Earning = ({
 
   return (
     <>
-      <Wrapper>
-        <Header />
-        {!!queryError && (
-          <TextError isTabs={true}>{queryError?.message}</TextError>
-        )}
-        {hasEmptyTickets ? (
-          <Empty
-            openModal={() => setOpenModal(true)}
-            errorMessage={queryError?.message}
-          />
-        ) : (
-          <>
-            <SubHeader
-              title="Proventos Recebidos"
-              count={earningData?.length!}
-              filters={initialFilter}
-              selectedFilter={selectedFilter}
-              onPress={handleChangeFilter}
-              menuTitles={initialMenuTitles}
-              handleChangeMenu={handleChangeMenu}
-              selectedMenu={selectedMenu}
-            >
-              <YearFilter
-                currentYear={currentYear}
-                setCurrentYear={setCurrentYear}
-              />
-            </SubHeader>
-
-            <ListTicket
-              data={earningData}
-              extraData={earningData}
-              keyExtractor={item => item._id}
-              ListHeaderComponent={
-                <AmountEarning
-                  data={dataSumEarning}
-                  queryLoading={querySumLoading}
-                  queryError={querySumError}
-                />
-              }
-              renderItem={({ item }) => (
-                <ListItem
-                  item={item}
-                  handleOpenEditEarningModal={handleOpenEditEarningModal}
-                />
-              )}
+      <LayoutTab
+        title="Proventos Recebidos"
+        routeName="Earning"
+        count={earningData?.length!}
+        initialFilter={initialFilter}
+        selectedFilter={selectedFilter}
+        handleChangeFilter={handleChangeFilter}
+        hasEmptyTickets={hasEmptyTickets}
+        queryError={queryError}
+        menuTitles={initialMenuTitles}
+        handleChangeMenu={handleChangeMenu}
+        selectedMenu={selectedMenu}
+        currentYear={currentYear}
+        setCurrentYear={setCurrentYear}
+        queryLoading={queryLoading}
+      >
+        <ListTicket
+          data={earningData}
+          extraData={earningData}
+          keyExtractor={item => item._id}
+          ListHeaderComponent={
+            <AmountEarning
+              data={dataSumEarning}
+              queryLoading={querySumLoading}
+              queryError={querySumError}
             />
-          </>
-        )}
-      </Wrapper>
+          }
+          renderItem={({ item }) => (
+            <ListItem
+              item={item}
+              handleOpenEditEarningModal={handleOpenEditEarningModal}
+            />
+          )}
+        />
+      </LayoutTab>
 
       {openModal && (
         <Modal

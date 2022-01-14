@@ -6,7 +6,6 @@ import { useLazyQuery, gql } from '@apollo/client';
 import { useFocusEffect } from '@react-navigation/native';
 
 import {
-  Wrapper,
   Content,
   ContainerGraph,
   ContainerList,
@@ -15,15 +14,12 @@ import {
   TextList,
 } from './styles';
 
-import Header from '../../components/Header';
-import SubHeader from '../../components/SubHeader';
-
 import { formatTicket } from '../../utils/format';
-import Empty from '../../components/Empty';
-import TextError from '../../components/TextError';
+
 import AdBanner from '../../components/AdBanner';
 import useAmplitude from '../../hooks/useAmplitude';
 import ListTicket from '../../components/ListTicket';
+import LayoutTab from '../../components/LayoutTab';
 
 const initialFilter = [
   {
@@ -70,12 +66,6 @@ const Chart = () => {
     variables: { walletID: wallet, type: selectedFilter },
     fetchPolicy: 'cache-and-network',
   });
-
-  useFocusEffect(
-    useCallback(() => {
-      handleSetLoading(queryLoading);
-    }, [queryLoading]),
-  );
 
   useFocusEffect(
     useCallback(() => {
@@ -148,56 +138,49 @@ const Chart = () => {
     !wallet || (!queryLoading && data?.getReportsByType?.length === 0);
 
   return (
-    <Wrapper>
-      <Header />
-      {!!queryError && (
-        <TextError isTabs={true}>{queryError?.message}</TextError>
-      )}
-      {hasEmptyTickets ? (
-        <Empty errorMessage={queryError?.message} />
-      ) : (
-        <>
-          <SubHeader
-            title="Gráficos"
-            count={dataGraph.length}
-            filters={initialFilter}
-            selectedFilter={selectedFilter}
-            onPress={handleChangeFilter}
-          />
-          <Content>
-            <ContainerGraph>
-              <PieChart
-                style={{ flex: 1 }}
-                data={dataGraph}
-                valueAccessor={({ item }: { item?: any }) => item.value}
-                outerRadius={'92%'}
-                innerRadius={'48%'}
-              >
-                <Labels />
-              </PieChart>
-            </ContainerGraph>
+    <LayoutTab
+      title="Gráficos"
+      routeName="Chart"
+      count={dataGraph.length}
+      initialFilter={initialFilter}
+      selectedFilter={selectedFilter}
+      handleChangeFilter={handleChangeFilter}
+      hasEmptyTickets={hasEmptyTickets}
+      queryError={queryError}
+      queryLoading={queryLoading}
+    >
+      <Content>
+        <ContainerGraph>
+          <PieChart
+            style={{ flex: 1 }}
+            data={dataGraph}
+            valueAccessor={({ item }: { item?: any }) => item.value}
+            outerRadius={'92%'}
+            innerRadius={'48%'}
+          >
+            <Labels />
+          </PieChart>
+        </ContainerGraph>
 
-            <AdBanner />
+        <AdBanner />
 
-            <ListTicket
-              data={dataGraph}
-              extraData={dataGraph}
-              keyExtractor={item => item.key}
-              renderItem={({ item }) => (
-                <ContainerList key={item.key}>
-                  <ContainerLegend>
-                    <LegendList color={item.svg.fill} />
-                    <TextList>{item.key}</TextList>
-                  </ContainerLegend>
+        <ListTicket
+          data={dataGraph}
+          extraData={dataGraph}
+          keyExtractor={item => item.key}
+          renderItem={({ item }) => (
+            <ContainerList key={item.key}>
+              <ContainerLegend>
+                <LegendList color={item.svg.fill} />
+                <TextList>{item.key}</TextList>
+              </ContainerLegend>
 
-                  <TextList>{`${item.value.toFixed(1)}%`}</TextList>
-                </ContainerList>
-              )}
-            />
-          </Content>
-        </>
-      )}
-    </Wrapper>
+              <TextList>{`${item.value.toFixed(1)}%`}</TextList>
+            </ContainerList>
+          )}
+        />
+      </Content>
+    </LayoutTab>
   );
 };
 

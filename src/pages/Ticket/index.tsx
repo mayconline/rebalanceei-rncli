@@ -1,26 +1,19 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Alert, Modal } from 'react-native';
+import { Alert } from 'react-native';
 import { useAuth } from '../../contexts/authContext';
 import { useLazyQuery, gql, useMutation } from '@apollo/client';
-
-import { Wrapper } from './styles';
 
 import { getArraySortByParams } from '../../utils/sort';
 import { getPositionAdBanner } from '../../utils/format';
 
-import Header from '../../components/Header';
-import SubHeader from '../../components/SubHeader';
-import Empty from '../../components/Empty';
-import TextError from '../../components/TextError';
-import WalletModal from '../../modals/WalletModal';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
 import {
   IUpdateRole,
   UPDATE_ROLE,
 } from '../../modals/PlanModal/components/Free';
-import useAmplitude from '../../hooks/useAmplitude';
+import LayoutTab from '../../components/LayoutTab';
 
 const initialFilter = [
   {
@@ -46,7 +39,6 @@ interface IDataTickets {
 }
 
 const Ticket = () => {
-  const { logEvent } = useAmplitude();
   const navigation = useNavigation();
   const {
     wallet,
@@ -57,18 +49,10 @@ const Ticket = () => {
   } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('grade');
-  const [openModal, setOpenModal] = useState(false);
-
   const [ticketData, setTicketData] = useState<ITickets[]>();
 
   const [updateRole, { error: mutationError }] = useMutation<IUpdateRole>(
     UPDATE_ROLE,
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      logEvent('open Ticket');
-    }, []),
   );
 
   useFocusEffect(
@@ -119,12 +103,6 @@ const Ticket = () => {
 
   useFocusEffect(
     useCallback(() => {
-      handleSetLoading(queryLoading);
-    }, [queryLoading]),
-  );
-
-  useFocusEffect(
-    useCallback(() => {
       !data?.getTicketsByWallet && getTicketsByWallet();
     }, [data?.getTicketsByWallet]),
   );
@@ -153,58 +131,30 @@ const Ticket = () => {
   const hasEmptyTickets = !wallet || (!queryLoading && !ticketData?.length);
 
   return (
-    <>
-      <Wrapper>
-        <Header />
-        {!!queryError && (
-          <TextError isTabs={true}>{queryError?.message}</TextError>
-        )}
-        {hasEmptyTickets ? (
-          <Empty
-            openModal={() => setOpenModal(true)}
-            errorMessage={queryError?.message}
+    <LayoutTab
+      title="Meus Ativos"
+      routeName="Ticket"
+      count={ticketData?.length!}
+      initialFilter={initialFilter}
+      selectedFilter={selectedFilter}
+      handleChangeFilter={handleChangeFilter}
+      hasEmptyTickets={hasEmptyTickets}
+      queryError={queryError}
+      queryLoading={queryLoading}
+    >
+      <ListTicket
+        data={ticketData}
+        extraData={ticketData}
+        keyExtractor={item => item._id}
+        renderItem={({ item, index }) => (
+          <ListItem
+            item={item}
+            showAdBanner={getPositionAdBanner(index, ticketData?.length!)}
+            handleOpenEditModal={handleOpenEditModal}
           />
-        ) : (
-          <>
-            <SubHeader
-              title="Meus Ativos"
-              count={ticketData?.length!}
-              filters={initialFilter}
-              selectedFilter={selectedFilter}
-              onPress={handleChangeFilter}
-            />
-            <ListTicket
-              data={ticketData}
-              extraData={ticketData}
-              keyExtractor={item => item._id}
-              renderItem={({ item, index }) => (
-                <ListItem
-                  item={item}
-                  showAdBanner={getPositionAdBanner(index, ticketData?.length!)}
-                  handleOpenEditModal={handleOpenEditModal}
-                />
-              )}
-            />
-          </>
         )}
-      </Wrapper>
-
-      {openModal && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal}
-          statusBarTranslucent={true}
-        >
-          <WalletModal
-            onClose={() => {
-              setOpenModal(false);
-              getTicketsByWallet();
-            }}
-          />
-        </Modal>
-      )}
-    </>
+      />
+    </LayoutTab>
   );
 };
 

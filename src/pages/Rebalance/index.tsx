@@ -3,18 +3,12 @@ import { useAuth } from '../../contexts/authContext';
 import { useLazyQuery, gql } from '@apollo/client';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { Wrapper } from './styles';
-
 import { getArraySortByParams } from '../../utils/sort';
 import { getPositionAdBanner } from '../../utils/format';
 
-import Header from '../../components/Header';
-import SubHeader from '../../components/SubHeader';
-import Empty from '../../components/Empty';
-import TextError from '../../components/TextError';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
-import useAmplitude from '../../hooks/useAmplitude';
+import LayoutTab from '../../components/LayoutTab';
 
 const initialFilter = [
   {
@@ -48,20 +42,12 @@ interface IDataTickets {
 }
 
 const Rebalance = () => {
-  const { logEvent } = useAmplitude();
-
   const { wallet, handleSetLoading } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('targetAmount');
 
   const [rebalanceData, setRebalanceData] = useState<IRebalances[]>(
     [] as IRebalances[],
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      logEvent('open Rebalance');
-    }, []),
   );
 
   const [
@@ -71,12 +57,6 @@ const Rebalance = () => {
     variables: { walletID: wallet, sort: 'targetAmount' },
     fetchPolicy: 'cache-and-network',
   });
-
-  useFocusEffect(
-    useCallback(() => {
-      handleSetLoading(queryLoading);
-    }, [queryLoading]),
-  );
 
   useFocusEffect(
     useCallback(() => {
@@ -97,40 +77,32 @@ const Rebalance = () => {
     setSelectFilter(filterName);
   }, []);
 
-  const hasEmptyTickets =
-    !wallet || (!queryLoading && rebalanceData?.length === 0);
+  const hasEmptyTickets = !wallet || (!queryLoading && !rebalanceData?.length);
 
   return (
-    <Wrapper>
-      <Header />
-      {!!queryError && (
-        <TextError isTabs={true}>{queryError?.message}</TextError>
-      )}
-      {hasEmptyTickets ? (
-        <Empty errorMessage={queryError?.message} />
-      ) : (
-        <>
-          <SubHeader
-            title="Rebalancear"
-            count={rebalanceData.length}
-            filters={initialFilter}
-            selectedFilter={selectedFilter}
-            onPress={handleChangeFilter}
+    <LayoutTab
+      title="Rebalancear"
+      routeName="Rebalance"
+      count={rebalanceData.length}
+      initialFilter={initialFilter}
+      selectedFilter={selectedFilter}
+      handleChangeFilter={handleChangeFilter}
+      hasEmptyTickets={hasEmptyTickets}
+      queryError={queryError}
+      queryLoading={queryLoading}
+    >
+      <ListTicket
+        data={rebalanceData}
+        extraData={rebalanceData}
+        keyExtractor={item => item._id}
+        renderItem={({ item, index }) => (
+          <ListItem
+            item={item}
+            showAdBanner={getPositionAdBanner(index, rebalanceData.length)}
           />
-          <ListTicket
-            data={rebalanceData}
-            extraData={rebalanceData}
-            keyExtractor={item => item._id}
-            renderItem={({ item, index }) => (
-              <ListItem
-                item={item}
-                showAdBanner={getPositionAdBanner(index, rebalanceData.length)}
-              />
-            )}
-          />
-        </>
-      )}
-    </Wrapper>
+        )}
+      />
+    </LayoutTab>
   );
 };
 
