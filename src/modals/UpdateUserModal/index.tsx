@@ -1,26 +1,16 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Platform, Alert, ActivityIndicator } from 'react-native';
+import { Alert, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
 import { useMutation, useLazyQuery, gql } from '@apollo/client';
-import {
-  Wrapper,
-  Image,
-  FormContainer,
-  ContainerTitle,
-  BackIcon,
-  Title,
-  Form,
-  FormRow,
-  ContainerButtons,
-} from './styles';
+import { FormRow, ContainerButtons } from './styles';
 import ImageProfile from '../../../assets/svg/ImageProfile';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
 import useAmplitude from '../../hooks/useAmplitude';
+import LayoutForm from '../../components/LayoutForm';
 
 interface IUser {
   _id: string;
@@ -48,12 +38,6 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
   const [user, setUser] = useState({} as IUser);
   const { handleSignOut } = useAuth();
   const [focus, setFocus] = useState(0);
-
-  useFocusEffect(
-    useCallback(() => {
-      logEvent('open Update User Modal');
-    }, []),
-  );
 
   const [
     getUserByToken,
@@ -160,84 +144,72 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
   );
 
   return (
-    <Wrapper>
-      <ContainerTitle>
-        <Title accessibilityRole="header">Alterar Usuário</Title>
-        <BackIcon
-          accessibilityRole="imagebutton"
-          accessibilityLabel="Voltar"
-          onPress={onClose}
+    <LayoutForm
+      img={ImageProfile}
+      title="Alterar Usuário"
+      routeName="UpdateUserModal"
+      goBack={onClose}
+    >
+      <FormRow>
+        {!data ? (
+          <ActivityIndicator size="small" color={color.filterDisabled} />
+        ) : (
+          <InputForm
+            label="E-mail"
+            value={user.email}
+            defaultValue={data?.getUserByToken?.email}
+            placeholder="meuemail@teste.com.br"
+            autoCompleteType="email"
+            maxLength={80}
+            keyboardType="email-address"
+            autoFocus={focus === 1}
+            onFocus={() => setFocus(1)}
+            onChangeText={handleSetEmail}
+            onEndEditing={() => onEndInputEditing(2, 'email')}
+          />
+        )}
+      </FormRow>
+
+      <FormRow>
+        <InputForm
+          label="Nova Senha"
+          value={user.password}
+          isSecure
+          placeholder="Caso queira alterar"
+          autoCompleteType="password"
+          maxLength={32}
+          returnKeyType="send"
+          autoFocus={focus === 2}
+          onFocus={() => setFocus(2)}
+          onChangeText={handleSetPassword}
+          onEndEditing={() => onEndInputEditing(0, 'password')}
+          onSubmitEditing={handleSubmit}
+        />
+      </FormRow>
+
+      {!!mutationError && <TextError>{mutationError?.message}</TextError>}
+      {!!queryError && <TextError>{queryError?.message}</TextError>}
+
+      <ContainerButtons>
+        <Button
+          colors={gradient.lightToDarkRed}
+          onPress={handleDisabledSubmit}
+          loading={mutationLoading}
+          disabled={mutationLoading}
         >
-          <AntDesign name="closecircleo" size={24} color={color.activeText} />
-        </BackIcon>
-      </ContainerTitle>
-      <Image>
-        <ImageProfile />
-      </Image>
-      <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
-        <Form>
-          <FormRow>
-            {!data ? (
-              <ActivityIndicator size="small" color={color.filterDisabled} />
-            ) : (
-              <InputForm
-                label="E-mail"
-                value={user.email}
-                defaultValue={data?.getUserByToken?.email}
-                placeholder="meuemail@teste.com.br"
-                autoCompleteType="email"
-                maxLength={80}
-                keyboardType="email-address"
-                autoFocus={focus === 1}
-                onFocus={() => setFocus(1)}
-                onChangeText={handleSetEmail}
-                onEndEditing={() => onEndInputEditing(2, 'email')}
-              />
-            )}
-          </FormRow>
+          Desativar
+        </Button>
 
-          <FormRow>
-            <InputForm
-              label="Nova Senha"
-              value={user.password}
-              isSecure
-              placeholder="Caso queira alterar"
-              autoCompleteType="password"
-              maxLength={32}
-              returnKeyType="send"
-              autoFocus={focus === 2}
-              onFocus={() => setFocus(2)}
-              onChangeText={handleSetPassword}
-              onEndEditing={() => onEndInputEditing(0, 'password')}
-              onSubmitEditing={handleSubmit}
-            />
-          </FormRow>
-
-          {!!mutationError && <TextError>{mutationError?.message}</TextError>}
-          {!!queryError && <TextError>{queryError?.message}</TextError>}
-
-          <ContainerButtons>
-            <Button
-              colors={gradient.lightToDarkRed}
-              onPress={handleDisabledSubmit}
-              loading={mutationLoading}
-              disabled={mutationLoading}
-            >
-              Desativar
-            </Button>
-
-            <Button
-              colors={gradient.darkToLightBlue}
-              onPress={handleSubmit}
-              loading={mutationLoading}
-              disabled={mutationLoading}
-            >
-              Alterar
-            </Button>
-          </ContainerButtons>
-        </Form>
-      </FormContainer>
-    </Wrapper>
+        <Button
+          colors={gradient.darkToLightBlue}
+          onPress={handleSubmit}
+          loading={mutationLoading}
+          disabled={mutationLoading}
+        >
+          Alterar
+        </Button>
+      </ContainerButtons>
+    </LayoutForm>
   );
 };
 

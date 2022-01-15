@@ -4,21 +4,14 @@ import {
   useNavigation,
   useFocusEffect,
 } from '@react-navigation/native';
-import { Platform, Modal } from 'react-native';
+import { Modal } from 'react-native';
 import { useAuth } from '../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
 import { useMutation, gql } from '@apollo/client';
 import {
-  Wrapper,
-  FormContainer,
-  ContainerTitle,
-  Title,
-  Form,
   FormRow,
   SuggestButton,
   SuggestButtonText,
-  BackIcon,
-  Image,
   ContainerButtons,
 } from './styles';
 import ImageAddTicket from '../../../assets/svg/ImageAddTicket';
@@ -27,7 +20,6 @@ import { GET_TICKETS_BY_WALLET } from '../Ticket';
 import { GET_WALLET_BY_USER } from '../../modals/WalletModal';
 import SuggestionsModal from '../../modals/SuggestionsModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import EditTicket from '../../components/EditTicket';
 import { ITickets } from '../Ticket';
 import Button from '../../components/Button';
@@ -40,6 +32,7 @@ import {
 } from '../../utils/format';
 import useAmplitude from '../../hooks/useAmplitude';
 import PlanModal from '../../modals/PlanModal';
+import LayoutForm from '../../components/LayoutForm';
 
 interface IDataParamsForm {
   ticket: ITickets;
@@ -75,12 +68,6 @@ const AddTicket = () => {
   const navigation = useNavigation();
 
   const isEdit = !!params?.ticket?._id;
-
-  useFocusEffect(
-    useCallback(() => {
-      logEvent('open Add Ticket');
-    }, []),
-  );
 
   const handleGoBack = useCallback(() => {
     setTicketForm({} as ITicketForm);
@@ -171,7 +158,6 @@ const AddTicket = () => {
 
       if (openPlanModalOnError(mutationError?.message)) {
         setOpenModal('PLAN');
-        console.log('Tickets limited to 16 items');
       }
     }
   }, [ticketForm, wallet]);
@@ -204,111 +190,101 @@ const AddTicket = () => {
 
   return (
     <>
-      <Wrapper>
-        <ContainerTitle>
-          <Title accessibilityRole="header">
-            {isEdit ? 'Alterar Ativo' : 'Adicionar Ativo'}
-          </Title>
-          <BackIcon onPress={handleGoBack}>
-            <AntDesign name="closecircleo" size={24} color={color.activeText} />
-          </BackIcon>
-        </ContainerTitle>
-
-        <Image>
-          <ImageAddTicket />
-        </Image>
-
-        <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
-          {isEdit ? (
-            <EditTicket
-              ticket={params?.ticket}
-              openModal={() => setOpenModal('SUCCESS')}
-            />
-          ) : (
-            <Form>
-              <FormRow>
-                <SuggestButton onPress={HandleOpenSuggestionsModal}>
-                  <MaterialCommunityIcons
-                    name="file-document-edit-outline"
-                    size={24}
-                    color={color.titleNotImport}
-                  />
-                  <SuggestButtonText accessibilityRole="button">
-                    Clique para Buscar e Selecione um Ativo
-                  </SuggestButtonText>
-                </SuggestButton>
-              </FormRow>
-              <FormRow>
-                <InputForm
-                  label="Ativo Selecionado"
-                  value={formatTicket(ticketForm.preview)}
-                  placeholder="Nenhum ativo selecionado"
-                  autoCompleteType="off"
-                  maxLength={10}
-                  editable={false}
-                  width={60}
+      <LayoutForm
+        img={ImageAddTicket}
+        title={isEdit ? 'Alterar Ativo' : 'Adicionar Ativo'}
+        routeName="AddTicket"
+        goBack={handleGoBack}
+      >
+        {isEdit ? (
+          <EditTicket
+            ticket={params?.ticket}
+            openModal={() => setOpenModal('SUCCESS')}
+          />
+        ) : (
+          <>
+            <FormRow>
+              <SuggestButton onPress={HandleOpenSuggestionsModal}>
+                <MaterialCommunityIcons
+                  name="file-document-edit-outline"
+                  size={24}
+                  color={color.titleNotImport}
                 />
+                <SuggestButtonText accessibilityRole="button">
+                  Clique para Buscar e Selecione um Ativo
+                </SuggestButtonText>
+              </SuggestButton>
+            </FormRow>
+            <FormRow>
+              <InputForm
+                label="Ativo Selecionado"
+                value={formatTicket(ticketForm.preview)}
+                placeholder="Nenhum ativo selecionado"
+                autoCompleteType="off"
+                maxLength={10}
+                editable={false}
+                width={60}
+              />
 
-                <InputForm
-                  label="Dê uma Nota"
-                  value={ticketForm.grade}
-                  placeholder="0 a 100"
-                  maxLength={3}
-                  keyboardType="number-pad"
-                  autoFocus={focus === 2}
-                  onFocus={() => setFocus(2)}
-                  onChangeText={handleSetGrade}
-                  onEndEditing={() => onEndInputEditing(3, 'grade')}
-                  width={30}
-                />
-              </FormRow>
+              <InputForm
+                label="Dê uma Nota"
+                value={ticketForm.grade}
+                placeholder="0 a 100"
+                maxLength={3}
+                keyboardType="number-pad"
+                autoFocus={focus === 2}
+                onFocus={() => setFocus(2)}
+                onChangeText={handleSetGrade}
+                onEndEditing={() => onEndInputEditing(3, 'grade')}
+                width={30}
+              />
+            </FormRow>
 
-              <FormRow>
-                <InputForm
-                  label="Preço Médio"
-                  value={ticketForm.averagePreview}
-                  placeholder="Preço Médio de Compra"
-                  keyboardType="number-pad"
-                  autoFocus={focus === 3}
-                  onFocus={() => setFocus(3)}
-                  onChangeText={handleSetPrice}
-                  onEndEditing={() => onEndInputEditing(4, 'averagePrice')}
-                  width={60}
-                />
+            <FormRow>
+              <InputForm
+                label="Preço Médio"
+                value={ticketForm.averagePreview}
+                placeholder="Preço Médio de Compra"
+                keyboardType="number-pad"
+                autoFocus={focus === 3}
+                onFocus={() => setFocus(3)}
+                onChangeText={handleSetPrice}
+                onEndEditing={() => onEndInputEditing(4, 'averagePrice')}
+                width={60}
+              />
 
-                <InputForm
-                  label="Quantidade"
-                  value={ticketForm.quantity}
-                  placeholder="9999"
-                  keyboardType="number-pad"
-                  returnKeyType="send"
-                  autoFocus={focus === 4}
-                  onFocus={() => setFocus(4)}
-                  onChangeText={handleSetQuantity}
-                  onEndEditing={() => onEndInputEditing(0, 'quantity')}
-                  onSubmitEditing={handleSubmit}
-                  width={30}
-                />
-              </FormRow>
+              <InputForm
+                label="Quantidade"
+                value={ticketForm.quantity}
+                placeholder="9999"
+                keyboardType="number-pad"
+                returnKeyType="send"
+                autoFocus={focus === 4}
+                onFocus={() => setFocus(4)}
+                onChangeText={handleSetQuantity}
+                onEndEditing={() => onEndInputEditing(0, 'quantity')}
+                onSubmitEditing={handleSubmit}
+                width={30}
+              />
+            </FormRow>
 
-              {!!mutationError?.message && (
-                <TextError>{mutationError?.message}</TextError>
-              )}
+            {!!mutationError?.message && (
+              <TextError>{mutationError?.message}</TextError>
+            )}
 
-              <ContainerButtons>
-                <Button
-                  colors={gradient.darkToLightBlue}
-                  onPress={handleSubmit}
-                  loading={mutationLoading}
-                  disabled={mutationLoading}
-                >
-                  {!wallet ? 'Carteira não encontrada' : 'Adicionar'}
-                </Button>
-              </ContainerButtons>
-            </Form>
-          )}
-        </FormContainer>
-      </Wrapper>
+            <ContainerButtons>
+              <Button
+                colors={gradient.darkToLightBlue}
+                onPress={handleSubmit}
+                loading={mutationLoading}
+                disabled={mutationLoading}
+              >
+                {!wallet ? 'Carteira não encontrada' : 'Adicionar'}
+              </Button>
+            </ContainerButtons>
+          </>
+        )}
+      </LayoutForm>
 
       {openModal === 'SUCCESS' && (
         <Modal

@@ -1,20 +1,8 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Platform } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
-import Entypo from 'react-native-vector-icons/Entypo';
 import { useMutation, gql } from '@apollo/client';
 import { useAuth } from '../../contexts/authContext';
-import {
-  Wrapper,
-  FormContainer,
-  ContainerTitle,
-  Icon,
-  Title,
-  Form,
-  FormRow,
-  Image,
-  ContainerButtons,
-} from './styles';
+import { FormRow, ContainerButtons } from './styles';
 
 import ImageAddTicket from '../../../assets/svg/ImageAddTicket';
 import Button from '../../components/Button';
@@ -32,6 +20,7 @@ import {
   formatMonth,
   formatNumber,
 } from '../../utils/format';
+import LayoutForm from '../../components/LayoutForm';
 
 interface IEditEarningModal {
   onClose(): void;
@@ -49,15 +38,9 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
   const { logEvent } = useAmplitude();
 
   const { handleSetLoading, wallet } = useAuth();
-  const { color, gradient } = useContext(ThemeContext);
+  const { gradient } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
   const [amount, setAmount] = useState<IAmount>();
-
-  useFocusEffect(
-    useCallback(() => {
-      logEvent('open Edit Earning Modal');
-    }, []),
-  );
 
   const [
     updateEarning,
@@ -142,54 +125,39 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
   }, []);
 
   return (
-    <>
-      <Wrapper>
-        <ContainerTitle>
-          <Icon
-            accessibilityRole="imagebutton"
-            accessibilityLabel="Voltar"
-            onPress={handleGoBack}
-          >
-            <Entypo name="chevron-left" size={32} color={color.activeText} />
-          </Icon>
-          <Title accessibilityRole="header">Lançamento Manual</Title>
-        </ContainerTitle>
-        <Image>
-          <ImageAddTicket />
-        </Image>
+    <LayoutForm
+      img={ImageAddTicket}
+      title="Lançamento Manual"
+      routeName="EditEarningModal"
+      goBack={onClose}
+    >
+      <FormRow>
+        <InputForm
+          label={`Total de ${formatMonth(earningData?.month)}`}
+          value={amount?.preview}
+          defaultValue={formatNumber(earningData?.amount)}
+          placeholder="R$ 0000,00"
+          keyboardType="number-pad"
+          autoFocus={focus === 1}
+          onFocus={() => setFocus(1)}
+          onChangeText={handleSetAmount}
+          onSubmitEditing={handleSubmit}
+        />
+      </FormRow>
 
-        <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
-          <Form>
-            <FormRow>
-              <InputForm
-                label={`Total de ${formatMonth(earningData?.month)}`}
-                value={amount?.preview}
-                defaultValue={formatNumber(earningData?.amount)}
-                placeholder="R$ 0000,00"
-                keyboardType="number-pad"
-                autoFocus={focus === 1}
-                onFocus={() => setFocus(1)}
-                onChangeText={handleSetAmount}
-                onSubmitEditing={handleSubmit}
-              />
-            </FormRow>
+      {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
-            {!!mutationError && <TextError>{mutationError?.message}</TextError>}
-
-            <ContainerButtons>
-              <Button
-                colors={gradient.darkToLightBlue}
-                onPress={handleSubmit}
-                loading={mutationLoading}
-                disabled={mutationLoading}
-              >
-                Alterar Valor
-              </Button>
-            </ContainerButtons>
-          </Form>
-        </FormContainer>
-      </Wrapper>
-    </>
+      <ContainerButtons>
+        <Button
+          colors={gradient.darkToLightBlue}
+          onPress={handleSubmit}
+          loading={mutationLoading}
+          disabled={mutationLoading}
+        >
+          Alterar Valor
+        </Button>
+      </ContainerButtons>
+    </LayoutForm>
   );
 };
 

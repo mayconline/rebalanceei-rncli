@@ -5,8 +5,8 @@ type HeaderProps = {
 };
 
 export const Header = styled.View<HeaderProps>`
-  margin-top: 8px;
-  margin-bottom: 20px;
+  margin-top: 4%;
+  margin-bottom: 2%;
   flex-direction: row;
   align-items: center;
   justify-content: ${({ hasOnboardingRoutes }) =>
@@ -28,6 +28,7 @@ export const ContainerTitle = styled.View`
 `;
 export const Image = styled.View`
   height: 32%;
+  margin-top: 8%;
 `;
 
 export const ContainerTextLink = styled.TouchableOpacity`

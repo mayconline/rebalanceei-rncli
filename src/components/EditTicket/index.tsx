@@ -3,7 +3,7 @@ import { ActivityIndicator } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
 import { useMutation, gql } from '@apollo/client';
-import { Form, FormRow, ContainerButtons } from './styles';
+import { FormRow, ContainerButtons } from './styles';
 
 import { ITickets, GET_TICKETS_BY_WALLET } from '../../pages/Ticket';
 import { GET_WALLET_BY_USER } from '../../modals/WalletModal';
@@ -47,12 +47,6 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
 
   const [ticketForm, setTicketForm] = useState<IDataForm>({} as IDataForm);
   const [focus, setFocus] = useState(0);
-
-  useFocusEffect(
-    useCallback(() => {
-      logEvent('open Edit Ticket');
-    }, []),
-  );
 
   useFocusEffect(
     useCallback(() => {
@@ -191,7 +185,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
   );
 
   return (
-    <Form>
+    <>
       {!ticketForm.symbol ? (
         <ActivityIndicator size="small" color={color.filterDisabled} />
       ) : (
@@ -276,7 +270,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
           Alterar
         </Button>
       </ContainerButtons>
-    </Form>
+    </>
   );
 };
 

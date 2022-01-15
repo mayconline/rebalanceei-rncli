@@ -42,7 +42,7 @@ interface IDataTickets {
 }
 
 const Rebalance = () => {
-  const { wallet, handleSetLoading } = useAuth();
+  const { wallet } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('targetAmount');
 

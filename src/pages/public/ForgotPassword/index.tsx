@@ -29,12 +29,6 @@ const ForgotPassword = () => {
 
   const navigation = useNavigation();
 
-  useFocusEffect(
-    useCallback(() => {
-      logEvent('open ForgotPassword');
-    }, []),
-  );
-
   const [
     sendRecovery,
     { loading: mutationLoading, error: mutationError },

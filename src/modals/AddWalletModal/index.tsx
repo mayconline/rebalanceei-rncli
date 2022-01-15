@@ -1,20 +1,8 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Platform } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
-import Entypo from 'react-native-vector-icons/Entypo';
 import { useMutation, gql } from '@apollo/client';
 import { useAuth } from '../../contexts/authContext';
-import {
-  Wrapper,
-  FormContainer,
-  ContainerTitle,
-  Icon,
-  Title,
-  Form,
-  FormRow,
-  Image,
-  ContainerButtons,
-} from './styles';
+import { FormRow, ContainerButtons } from './styles';
 
 import ImageAddTicket from '../../../assets/svg/ImageAddTicket';
 import Button from '../../components/Button';
@@ -24,6 +12,7 @@ import { GET_WALLET_BY_USER, IWalletData } from '../WalletModal';
 import EditWallet from '../../components/EditWallet';
 import useAmplitude from '../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
+import LayoutForm from '../../components/LayoutForm';
 
 interface IAddWalletModal {
   onClose(): void;
@@ -41,17 +30,11 @@ const AddWalletModal = ({
   const { logEvent } = useAmplitude();
 
   const { handleSetWallet, handleSetLoading } = useAuth();
-  const { color, gradient } = useContext(ThemeContext);
+  const { gradient } = useContext(ThemeContext);
   const [wallet, setWallet] = useState('');
   const [focus, setFocus] = useState(0);
 
   const isEdit = !!walletData?._id;
-
-  useFocusEffect(
-    useCallback(() => {
-      logEvent('open Add Wallet');
-    }, []),
-  );
 
   const [
     createWallet,
@@ -118,66 +101,51 @@ const AddWalletModal = ({
 
   return (
     <>
-      <Wrapper>
-        <ContainerTitle>
-          <Icon
-            accessibilityRole="imagebutton"
-            accessibilityLabel="Voltar"
-            onPress={handleGoBack}
-          >
-            <Entypo name="chevron-left" size={32} color={color.activeText} />
-          </Icon>
-          <Title accessibilityRole="header">
-            {isEdit ? 'Alterar Carteira' : 'Criar Nova Carteira'}
-          </Title>
-        </ContainerTitle>
-        <Image>
-          <ImageAddTicket />
-        </Image>
+      <LayoutForm
+        img={ImageAddTicket}
+        title={isEdit ? 'Alterar Carteira' : 'Criar Nova Carteira'}
+        routeName="AddWalletModal"
+        goBack={handleGoBack}
+      >
+        {isEdit ? (
+          <EditWallet
+            walletData={walletData}
+            handleResetEditWallet={handleResetEditWallet}
+            onClose={onClose}
+          />
+        ) : (
+          <>
+            <FormRow>
+              <InputForm
+                label="Nome da Carteira"
+                value={wallet}
+                placeholder="Minha Nova Carteira"
+                autoCompleteType="off"
+                maxLength={80}
+                keyboardType="email-address"
+                autoFocus={focus === 1}
+                onFocus={() => setFocus(1)}
+                onChangeText={handleSetName}
+                onEndEditing={() => onEndInputEditing(0, 'walletDescription')}
+                onSubmitEditing={handleSubmit}
+              />
+            </FormRow>
 
-        <FormContainer behavior={Platform.OS == 'ios' ? 'padding' : 'position'}>
-          {isEdit ? (
-            <EditWallet
-              walletData={walletData}
-              handleResetEditWallet={handleResetEditWallet}
-              onClose={onClose}
-            />
-          ) : (
-            <Form>
-              <FormRow>
-                <InputForm
-                  label="Nome da Carteira"
-                  value={wallet}
-                  placeholder="Minha Nova Carteira"
-                  autoCompleteType="off"
-                  maxLength={80}
-                  keyboardType="email-address"
-                  autoFocus={focus === 1}
-                  onFocus={() => setFocus(1)}
-                  onChangeText={handleSetName}
-                  onEndEditing={() => onEndInputEditing(0, 'walletDescription')}
-                  onSubmitEditing={handleSubmit}
-                />
-              </FormRow>
+            {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
-              {!!mutationError && (
-                <TextError>{mutationError?.message}</TextError>
-              )}
-
-              <ContainerButtons>
-                <Button
-                  colors={gradient.darkToLightBlue}
-                  onPress={handleSubmit}
-                  loading={mutationLoading}
-                  disabled={mutationLoading}
-                >
-                  Adicionar Carteira
-                </Button>
-              </ContainerButtons>
-            </Form>
-          )}
-        </FormContainer>
-      </Wrapper>
+            <ContainerButtons>
+              <Button
+                colors={gradient.darkToLightBlue}
+                onPress={handleSubmit}
+                loading={mutationLoading}
+                disabled={mutationLoading}
+              >
+                Adicionar Carteira
+              </Button>
+            </ContainerButtons>
+          </>
+        )}
+      </LayoutForm>
     </>
   );
 };

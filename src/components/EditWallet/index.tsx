@@ -4,7 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 import { useMutation, gql } from '@apollo/client';
 
-import { Form, FormRow, ContainerButtons } from './styles';
+import { FormRow, ContainerButtons } from './styles';
 
 import { IWalletData, GET_WALLET_BY_USER } from '../../modals/WalletModal';
 import InputForm from '../InputForm';
@@ -38,12 +38,6 @@ const EditWallet = ({
   const { gradient, color } = useContext(ThemeContext);
   const [wallet, setWallet] = useState<IWalletData>({} as IWalletData);
   const [focus, setFocus] = useState(0);
-
-  useFocusEffect(
-    useCallback(() => {
-      logEvent('open Edit Wallet');
-    }, []),
-  );
 
   useFocusEffect(
     useCallback(() => {
@@ -158,7 +152,7 @@ const EditWallet = ({
   );
 
   return (
-    <Form>
+    <>
       <FormRow>
         {!wallet?._id ? (
           <ActivityIndicator size="small" color={color.filterDisabled} />
@@ -205,7 +199,7 @@ const EditWallet = ({
           Alterar
         </Button>
       </ContainerButtons>
-    </Form>
+    </>
   );
 };
 

@@ -173,7 +173,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
           animationType="slide"
           transparent={true}
           visible={openModal}
-          statusBarTranslucent={true}
+          statusBarTranslucent={false}
         >
           <AddWalletModal
             onClose={handleAddWallet}

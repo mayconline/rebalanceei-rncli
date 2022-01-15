@@ -14,7 +14,7 @@ import {
   FormContainer,
   Form,
 } from './styles';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import useAmplitude from '../../hooks/useAmplitude';
 import { setLocalStorage } from '../../utils/localStorage';
 
@@ -23,6 +23,7 @@ interface LayoutFormProps {
   img?: any;
   title?: string;
   routeName: string;
+  goBack?: () => void;
 }
 
 const OnboardingRoutes = ['StepOne', 'StepTwo', 'StepThree'];
@@ -32,14 +33,22 @@ const LayoutForm = ({
   img: IMG,
   title,
   routeName,
+  goBack,
 }: LayoutFormProps) => {
   const { color } = useContext(ThemeContext);
   const navigation = useNavigation();
   const { logEvent } = useAmplitude();
 
+  useFocusEffect(
+    useCallback(() => {
+      logEvent(`open ${routeName}`);
+    }, []),
+  );
+
   const handleGoBack = useCallback(() => {
     logEvent(`click on backButton at ${routeName}`);
-    navigation.goBack();
+
+    goBack ? goBack() : navigation.goBack();
   }, []);
 
   const hasOnboardingRoutes = OnboardingRoutes.includes(routeName);

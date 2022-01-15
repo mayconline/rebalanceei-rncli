@@ -150,7 +150,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
           animationType="slide"
           transparent={true}
           visible={openModal === 'User'}
-          statusBarTranslucent={true}
+          statusBarTranslucent={false}
         >
           <UpdateUserModal onClose={() => setOpenModal(null)} />
         </Modal>

@@ -40,13 +40,7 @@ interface IDataTickets {
 
 const Ticket = () => {
   const navigation = useNavigation();
-  const {
-    wallet,
-    plan,
-    statePlan,
-    handleSignOut,
-    handleSetLoading,
-  } = useAuth();
+  const { wallet, plan, statePlan, handleSignOut } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('grade');
   const [ticketData, setTicketData] = useState<ITickets[]>();

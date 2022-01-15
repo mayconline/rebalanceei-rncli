@@ -48,7 +48,7 @@ const Earning = ({
 }: IEarningList) => {
   const { logEvent } = useAmplitude();
 
-  const { wallet, handleSetLoading } = useAuth();
+  const { wallet } = useAuth();
 
   const [selectedFilter, setSelectFilter] = useState<string>('month');
 
@@ -59,12 +59,6 @@ const Earning = ({
   const [earningData, setEarningData] = useState<IEarning[]>();
   const [editEarningData, setEditEarningData] = useState<IEarning>(
     {} as IEarning,
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      logEvent('open Earning');
-    }, []),
   );
 
   const [
@@ -164,7 +158,7 @@ const Earning = ({
           animationType="slide"
           transparent={true}
           visible={openModal}
-          statusBarTranslucent={true}
+          statusBarTranslucent={false}
         >
           <EditEarningModal
             onClose={() => {
