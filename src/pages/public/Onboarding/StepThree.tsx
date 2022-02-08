@@ -16,6 +16,7 @@ import Button from '../../../components/Button';
 import LayoutForm from '../../../components/LayoutForm';
 import OnboardingImgThree from '../../../../assets/svg/OnboardingImgThree';
 import useAmplitude from '../../../hooks/useAmplitude';
+import { setLocalStorage } from '../../../utils/localStorage';
 
 const StepThree = () => {
   const { logEvent } = useAmplitude();
@@ -30,6 +31,7 @@ const StepThree = () => {
 
   const handleNext = async () => {
     logEvent('click on start button at Onboarding Step Three');
+    await setLocalStorage('@authFirstAccess', 'true');
     navigation.navigate('SignUp');
   };
 

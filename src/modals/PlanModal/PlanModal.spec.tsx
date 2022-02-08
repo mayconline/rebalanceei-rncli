@@ -29,13 +29,13 @@ const SUBSCRIPTIONS_MOCK = [
   {
     description: 'Premium Mensal',
     localizedPrice: 'R$ 19,99',
-    productId: 'rebalanceei_premium_mensal',
+    productId: 'rebalanceei_premium_mensal_22',
     subscriptionPeriodAndroid: 'P1M',
   },
   {
     description: 'Premium Anual',
-    localizedPrice: 'R$ 89,90',
-    productId: 'rebalanceei_premium_anual',
+    localizedPrice: 'R$ 189,90',
+    productId: 'rebalanceei_premium_anual_22',
     subscriptionPeriodAndroid: 'P1Y',
   },
 ];
@@ -43,7 +43,7 @@ const SUBSCRIPTIONS_MOCK = [
 const MOCKED_REQUEST_SUB = jest.fn();
 
 jest.mock('../../services/Iap', () => ({
-  listSku: ['rebalanceei_premium_mensal_22', 'rebalanceei_premium_anual'],
+  listSku: ['rebalanceei_premium_mensal_22', 'rebalanceei_premium_anual_22'],
   useIAP: (): Record<string, unknown> => ({
     connected: true,
     subscriptions: SUBSCRIPTIONS_MOCK,
@@ -81,7 +81,8 @@ describe('PlanModal', () => {
     getByText(/^\+ Todos os benefícios do app$/i);
 
     getByText(/Premium Anual/i);
-    getByText(/Preço Promocional/i);
+    getByText(/20% off/i);
+    getByText(/Por tempo limitado/i);
 
     getByText(/Premium Mensal/i);
     getByText(/R\$ 19,99 \/ Mês/i);
@@ -95,7 +96,7 @@ describe('PlanModal', () => {
     await act(async () => fireEvent.press(submitButton));
     expect(MOCKED_REQUEST_SUB).toHaveBeenCalledTimes(1);
     expect(MOCKED_REQUEST_SUB).toHaveBeenLastCalledWith(
-      'rebalanceei_premium_mensal',
+      'rebalanceei_premium_mensal_22',
     );
   });
 
