@@ -213,8 +213,8 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
                 ? ['📊 Recursos exclusivos', '✔ Renovação automática']
                 : [
                     '📊 Recursos exclusivos',
-                    '💰 Preço Promocional',
-                    '⏲️ Até Fevereiro / 2022',
+                    '💰 20% off',
+                    '⏲️ Por tempo limitado',
                     '✔ Renovação automática',
                   ]
             }
