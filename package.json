@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.17.9",
+    "@babel/plugin-transform-named-capturing-groups-regex": "^7.16.8",
     "@babel/runtime": "7.17.9",
     "@react-native-community/eslint-config": "3.0.1",
     "@testing-library/jest-native": "4.0.4",
