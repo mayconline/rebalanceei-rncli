@@ -31,7 +31,7 @@ import { useFocusEffect } from '@react-navigation/native';
 const menuItens = [
   {
     lib: MaterialCommunityIcons,
-    icon: 'face-profile',
+    icon: 'face-man-profile',
     description: 'Meus Dados',
   },
   {
