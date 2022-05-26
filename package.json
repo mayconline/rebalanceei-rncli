@@ -6,7 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "test": "jest --coverage=false",
+    "test": "jest --coverage=false --maxWorkers=50%",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "dev": "npx react-native run-android",
     "prod": "npx react-native run-android --variant=release",
