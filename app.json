@@ -1,4 +1,7 @@
 {
   "name": "rebalanceei",
-  "displayName": "rebalanceei"
+  "displayName": "rebalanceei",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-7986828971010623~5735244468"
+  }
 }
