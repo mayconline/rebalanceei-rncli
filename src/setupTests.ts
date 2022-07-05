@@ -5,7 +5,6 @@ require('react-native-reanimated/lib/reanimated2/jestUtils').setUpTests();
 jest.mock('./services/AdMob', () => ({
   useInterstitialAd: () => ({
     isLoaded: false,
-    isShowing: false,
     isClosed: false,
     error: false,
     load: () => null,

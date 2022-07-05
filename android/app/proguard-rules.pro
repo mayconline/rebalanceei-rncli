@@ -97,3 +97,10 @@
 #react-native-reanimated
 -keep class com.swmansion.reanimated.** { *; }
 -keep class com.facebook.react.turbomodule.** { *; }
+
+#react-native-admob
+-keep class io.invertase.googlemobileads.** { *; }
+-keep public class com.google.android.gms.ads.** { public *; }
+-keep public class com.google.ads.** { public *;}
+
+

@@ -23,8 +23,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
   const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const { showBanner } = useAuth();
-  const { load, isLoaded, show, isShowing, isClosed, error } =
-    useInterstitialAd(INTER_ID);
+  const { load, show, isLoaded, isClosed, error } = useInterstitialAd(INTER_ID);
 
   const [openModal, setOpenModal] = useState<'Plan' | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -36,9 +35,11 @@ const SuccessModal: React.FC<ISuccessModal> = ({
     }, []),
   );
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  useFocusEffect(
+    useCallback(() => {
+      load();
+    }, [load]),
+  );
 
   useEffect(() => {
     if (isLoaded && !!openAD) {
@@ -47,12 +48,12 @@ const SuccessModal: React.FC<ISuccessModal> = ({
   }, [isLoaded, openAD]);
 
   useEffect(() => {
-    if (!isShowing && isClosed) {
+    if ((!isLoaded && openAD) || isClosed) {
       setLoading(false);
       setOpenModal('Plan');
     }
     () => setOpenAd(false);
-  }, [isShowing]);
+  }, [isClosed, isLoaded, openAD]);
 
   useEffect(() => {
     if (!!error) {
