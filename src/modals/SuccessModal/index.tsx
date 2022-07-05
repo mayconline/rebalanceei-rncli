@@ -23,14 +23,8 @@ const SuccessModal: React.FC<ISuccessModal> = ({
   const { logEvent } = useAmplitude();
   const { color, gradient } = useContext(ThemeContext);
   const { showBanner } = useAuth();
-  const {
-    adLoaded,
-    show,
-    adShowing,
-    adDismissed,
-    adLoadError,
-    adPresentError,
-  } = useInterstitialAd(INTER_ID);
+  const { load, isLoaded, show, isShowing, isClosed, error } =
+    useInterstitialAd(INTER_ID);
 
   const [openModal, setOpenModal] = useState<'Plan' | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,25 +37,29 @@ const SuccessModal: React.FC<ISuccessModal> = ({
   );
 
   useEffect(() => {
-    if (adLoaded && !!openAD) {
-      show();
-    }
-  }, [adLoaded, openAD]);
+    load();
+  }, [load]);
 
   useEffect(() => {
-    if (!adShowing && adDismissed) {
+    if (isLoaded && !!openAD) {
+      show();
+    }
+  }, [isLoaded, openAD]);
+
+  useEffect(() => {
+    if (!isShowing && isClosed) {
       setLoading(false);
       setOpenModal('Plan');
     }
     () => setOpenAd(false);
-  }, [adShowing, adDismissed]);
+  }, [isShowing]);
 
   useEffect(() => {
-    if (!!adLoadError || !!adPresentError) {
+    if (!!error) {
       setLoading(false);
     }
     () => setOpenAd(false);
-  }, [adLoadError, adPresentError]);
+  }, [error]);
 
   const getViewCount = useCallback(async () => {
     let viewCount = await getLocalStorage('@countView');
@@ -81,7 +79,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
     setLoading(true);
     const viewCount = await setViewCount();
 
-    if (showBanner && viewCount % 8 === 0) {
+    if (showBanner && viewCount % 4 === 0) {
       setOpenAd(true);
       logEvent('show adMob interticial');
     } else {
