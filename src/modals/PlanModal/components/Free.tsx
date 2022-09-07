@@ -18,6 +18,7 @@ import {
   listSku,
   Subscription,
   Purchase,
+  sendRequestSubscription,
 } from '../../../services/Iap';
 
 import { gql, useMutation } from '@apollo/client';
@@ -44,7 +45,6 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     finishTransaction,
     currentPurchase,
     currentPurchaseError,
-    requestSubscription,
   } = useIAP();
 
   const { handleSignOut } = useAuth();
@@ -59,10 +59,8 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     }, []),
   );
 
-  const [
-    updateRole,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation<IUpdateRole>(UPDATE_ROLE);
+  const [updateRole, { loading: mutationLoading, error: mutationError }] =
+    useMutation<IUpdateRole>(UPDATE_ROLE);
 
   const handleChangePlan = useCallback(async (plan: object) => {
     try {
@@ -103,7 +101,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
   useEffect(() => {
     if (!!listSku.length && connected) {
-      getSubscriptions(listSku);
+      getSubscriptions({ skus: listSku });
     }
   }, [getSubscriptions, listSku, connected]);
 
@@ -124,26 +122,32 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
           try {
             setErrorMessage(undefined);
 
-            const {
-              renewSubscription,
-            } = await calculateInitialRenewSubscription(
-              purchase?.transactionDate,
-              String(skuID?.subscriptionPeriodAndroid),
-              false,
-            );
+            const { renewSubscription } =
+              await calculateInitialRenewSubscription(
+                purchase?.transactionDate,
+                String(
+                  skuID?.subscriptionOfferDetails?.[0]?.pricingPhases
+                    ?.pricingPhaseList?.[0]?.billingPeriod,
+                ),
+                false,
+              );
 
             const transactionData = {
               transactionDate: purchase?.transactionDate,
               renewDate: renewSubscription,
               description: skuID?.description,
-              localizedPrice: skuID?.localizedPrice,
+              localizedPrice:
+                skuID?.subscriptionOfferDetails?.[0]?.pricingPhases
+                  ?.pricingPhaseList?.[0]?.formattedPrice,
               productId: purchase?.productId,
-              subscriptionPeriodAndroid: skuID?.subscriptionPeriodAndroid,
+              subscriptionPeriodAndroid:
+                skuID?.subscriptionOfferDetails?.[0]?.pricingPhases
+                  ?.pricingPhaseList?.[0]?.billingPeriod,
               packageName: purchase?.packageNameAndroid,
               transactionId: purchase?.transactionId,
             };
 
-            await finishTransaction(purchase);
+            await finishTransaction({ purchase });
 
             setLoading(false);
 
@@ -174,7 +178,12 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     setLoading(true);
 
     if (!!skuID) {
-      await requestSubscription(skuID.productId);
+      await sendRequestSubscription(skuID.productId, [
+        {
+          sku: skuID.productId,
+          offerToken: skuID.subscriptionOfferDetails?.[0]?.offerToken!,
+        },
+      ]);
     }
   }, [skuID]);
 
@@ -204,32 +213,38 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       {!!errorMessage && <TextError>{errorMessage}</TextError>}
 
       {!!subscriptions?.length ? (
-        subscriptions?.map(subscription => (
-          <CardPlan
-            key={subscription.productId}
-            title={subscription.description}
-            descriptions={
-              subscription.subscriptionPeriodAndroid === 'P1M'
-                ? ['📊 Recursos exclusivos', '✔ Renovação automática']
-                : [
-                    '📊 Recursos exclusivos',
-                    '💰 20% off',
-                    '⏲️ Por tempo limitado',
-                    '✔ Renovação automática',
-                  ]
-            }
-            plan={`${subscription.localizedPrice} / ${
-              subscription.subscriptionPeriodAndroid === 'P1M' ? 'Mês' : 'Ano'
-            }`}
-            active={planName === subscription.subscriptionPeriodAndroid}
-            onPress={() =>
-              handleChangeOptionPlan(
-                subscription,
-                subscription.subscriptionPeriodAndroid,
-              )
-            }
-          />
-        ))
+        subscriptions?.map(subscription => {
+          const subsDetails =
+            subscription?.subscriptionOfferDetails?.[0]?.pricingPhases
+              ?.pricingPhaseList?.[0];
+
+          const subscriptionPeriodAndroid = subsDetails?.billingPeriod;
+          const localizedPrice = subsDetails?.formattedPrice;
+
+          return (
+            <CardPlan
+              key={subscription.productId}
+              title={subscription.description}
+              descriptions={
+                subscriptionPeriodAndroid === 'P1M'
+                  ? ['📊 Recursos exclusivos', '✔ Renovação automática']
+                  : [
+                      '📊 Recursos exclusivos',
+                      '💰 20% off',
+                      '⏲️ Por tempo limitado',
+                      '✔ Renovação automática',
+                    ]
+              }
+              plan={`${localizedPrice} / ${
+                subscriptionPeriodAndroid === 'P1M' ? 'Mês' : 'Ano'
+              }`}
+              active={planName === subscriptionPeriodAndroid}
+              onPress={() =>
+                handleChangeOptionPlan(subscription, subscriptionPeriodAndroid)
+              }
+            />
+          );
+        })
       ) : (
         <ActivityIndicator size="large" color={color.filterDisabled} />
       )}

@@ -4,6 +4,9 @@ import {
   getAvailablePurchases,
   Subscription as SubscriptionType,
   Purchase as PurchaseType,
+  requestSubscription,
+  SubscriptionPurchase,
+  SubscriptionOffer,
 } from 'react-native-iap';
 import { IPlan } from '../contexts/authContext';
 
@@ -39,14 +42,12 @@ export const setNewSubscriptionsDate = async (
   const today = new Date().getTime();
 
   if (today > Number(renewDate)) {
-    const {
-      newTransactionDate,
-      newRenewDate,
-    } = await calculateRenovateSubscriptionDate(
-      transactionDate,
-      subscriptionPeriodAndroid,
-      false,
-    );
+    const { newTransactionDate, newRenewDate } =
+      await calculateRenovateSubscriptionDate(
+        transactionDate,
+        subscriptionPeriodAndroid,
+        false,
+      );
 
     return {
       newTransactionDate,
@@ -135,6 +136,13 @@ export const restoreSubscription = async () => {
   const purchases = await getAvailablePurchases();
 
   return purchases;
+};
+
+export const sendRequestSubscription = async (
+  sku: string,
+  subscriptionOffers: SubscriptionOffer[],
+): Promise<SubscriptionPurchase | null> => {
+  return await requestSubscription({ sku, subscriptionOffers });
 };
 
 export type Subscription = SubscriptionType;

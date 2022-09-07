@@ -4,6 +4,7 @@ import { render, fireEvent, act } from '../../utils/testProvider';
 import { Alert } from 'react-native';
 import * as CancelPlan from '../../utils/CancelPlan';
 import { formatDate } from '../../utils/format';
+import { sendRequestSubscription } from '../../services/Iap';
 
 const mockedOnClose = jest.fn();
 const mockedAlert = (Alert.alert = jest.fn());
@@ -27,20 +28,56 @@ jest.mock('../../contexts/authContext', () => ({
 
 const SUBSCRIPTIONS_MOCK = [
   {
-    description: 'Premium Mensal',
-    localizedPrice: 'R$ 19,99',
-    productId: 'rebalanceei_premium_mensal_22',
-    subscriptionPeriodAndroid: 'P1M',
+    subscriptionOfferDetails: [
+      {
+        pricingPhases: {
+          pricingPhaseList: [
+            {
+              recurrenceMode: 1,
+              priceAmountMicros: '189990000',
+              billingCycleCount: 0,
+              billingPeriod: 'P1Y',
+              priceCurrencyCode: 'BRL',
+              formattedPrice: 'R$ 189,99',
+            },
+          ],
+        },
+        offerTags: [],
+        offerToken: 'tokenOfferAnual',
+      },
+    ],
+    name: 'Premium Anual 2022',
+    productType: 'subs',
+    description: 'Premium Anual 2022',
+    title: 'Premium Anual 2022 (Rebalanceei Investimento Ações)',
+    productId: 'rebalanceei_premium_anual_22',
   },
   {
-    description: 'Premium Anual',
-    localizedPrice: 'R$ 189,90',
-    productId: 'rebalanceei_premium_anual_22',
-    subscriptionPeriodAndroid: 'P1Y',
+    subscriptionOfferDetails: [
+      {
+        pricingPhases: {
+          pricingPhaseList: [
+            {
+              recurrenceMode: 1,
+              priceAmountMicros: '19990000',
+              billingCycleCount: 0,
+              billingPeriod: 'P1M',
+              priceCurrencyCode: 'BRL',
+              formattedPrice: 'R$ 19,99',
+            },
+          ],
+        },
+        offerTags: [],
+        offerToken: 'tokenOfferMensal',
+      },
+    ],
+    name: 'Premium Mensal 2022',
+    productType: 'subs',
+    description: 'Premium Mensal 2022',
+    title: 'Premium Mensal 2022 (Rebalanceei Investimento Ações)',
+    productId: 'rebalanceei_premium_mensal_22',
   },
 ];
-
-const MOCKED_REQUEST_SUB = jest.fn();
 
 jest.mock('../../services/Iap', () => ({
   listSku: ['rebalanceei_premium_mensal_22', 'rebalanceei_premium_anual_22'],
@@ -48,9 +85,9 @@ jest.mock('../../services/Iap', () => ({
     connected: true,
     subscriptions: SUBSCRIPTIONS_MOCK,
     getSubscriptions: jest.fn(),
-    requestSubscription: MOCKED_REQUEST_SUB,
     finishTransaction: jest.fn(),
   }),
+  sendRequestSubscription: jest.fn(),
 }));
 
 describe('PlanModal', () => {
@@ -94,21 +131,23 @@ describe('PlanModal', () => {
     expect(submitButton).toHaveProperty('children', ['Assine já !']);
 
     await act(async () => fireEvent.press(submitButton));
-    expect(MOCKED_REQUEST_SUB).toHaveBeenCalledTimes(1);
-    expect(MOCKED_REQUEST_SUB).toHaveBeenLastCalledWith(
-      'rebalanceei_premium_mensal_22',
+    expect(sendRequestSubscription).toHaveBeenCalledTimes(1);
+    expect(sendRequestSubscription).toHaveBeenLastCalledWith(
+      'rebalanceei_premium_anual_22',
+      [
+        {
+          offerToken: 'tokenOfferAnual',
+          sku: 'rebalanceei_premium_anual_22',
+        },
+      ],
     );
   });
 
   it('should successfully list current plan premium', async () => {
-    const {
-      findAllByA11yRole,
-      findByText,
-      getByText,
-      getByA11yRole,
-    } = render(<PlanModal onClose={mockedOnClose} />, [
-      SUCCESSFUL_GET_ROLE_PREMIUM,
-    ]);
+    const { findAllByA11yRole, findByText, getByText, getByA11yRole } = render(
+      <PlanModal onClose={mockedOnClose} />,
+      [SUCCESSFUL_GET_ROLE_PREMIUM],
+    );
 
     const title = await findAllByA11yRole('header');
     expect(title[0]).toHaveProperty('children', ['Meu Plano Atual']);
