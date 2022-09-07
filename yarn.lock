@@ -6262,10 +6262,10 @@ react-native-gesture-handler@2.6.0:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
-react-native-google-mobile-ads@7.0.1:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-google-mobile-ads/-/react-native-google-mobile-ads-7.0.1.tgz#c6868eb1b911857e7f086fa8dc7e52e7e18e4f87"
-  integrity sha512-G7oP/ETRa58i1he/bQPvGXE3Vcs1KdtY3B8inmxLaMrjeSaWg69dZn4yVrSR9IK/MOA9fcLNmsEQgLBk15COMw==
+react-native-google-mobile-ads@8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-google-mobile-ads/-/react-native-google-mobile-ads-8.0.1.tgz#cefb7c799c4c8d8e81a8b9bd6984890edc2470e4"
+  integrity sha512-z3R8nIsdrQPIJF9b9rK9vp5g3MNSIF6LS1P0vau/ufoqJdpkWcnMRJzZ7xoSiqAjfShFqKMsIoRVq23yRxUfWA==
   dependencies:
     "@iabtcf/core" "^1.4.0"
     use-deep-compare-effect "^1.8.1"
@@ -6275,12 +6275,10 @@ react-native-gradle-plugin@^0.0.7:
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.0.7.tgz#96602f909745239deab7b589443f14fce5da2056"
   integrity sha512-+4JpbIx42zGTONhBTIXSyfyHICHC29VTvhkkoUOJAh/XHPEixpuBduYgf6Y4y9wsN1ARlQhBBoptTvXvAFQf5g==
 
-
 react-native-iap@10.0.7:
   version "10.0.7"
   resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-10.0.7.tgz#7f979a633f1fb7f924ce23db40e30870fe89d503"
   integrity sha512-OCvyv95sro5b6RRu3A23B0SM8b/3KXwe3vY4OQb4rLkAVoLXxmxL6VDKBSy/o3YieC1AlVgi+sC5QoKbc8t/PQ==
-
 
 react-native-linear-gradient@2.6.2:
   version "2.6.2"
