@@ -5,6 +5,8 @@ import {
   Subscription as SubscriptionType,
   Purchase as PurchaseType,
   requestSubscription,
+  SubscriptionPurchase,
+  SubscriptionOffer,
 } from 'react-native-iap';
 import { IPlan } from '../contexts/authContext';
 
@@ -136,7 +138,14 @@ export const restoreSubscription = async () => {
   return purchases;
 };
 
+export const sendRequestSubscription = async (
+  sku: string,
+  subscriptionOffers: SubscriptionOffer[],
+): Promise<SubscriptionPurchase | null> => {
+  return await requestSubscription({ sku, subscriptionOffers });
+};
+
 export type Subscription = SubscriptionType;
 export type Purchase = PurchaseType;
 
-export { withIAPContext, useIAP, requestSubscription };
+export { withIAPContext, useIAP };

@@ -18,7 +18,7 @@ import {
   listSku,
   Subscription,
   Purchase,
-  requestSubscription,
+  sendRequestSubscription,
 } from '../../../services/Iap';
 
 import { gql, useMutation } from '@apollo/client';
@@ -178,15 +178,12 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     setLoading(true);
 
     if (!!skuID) {
-      await requestSubscription({
-        sku: skuID.productId,
-        subscriptionOffers: [
-          {
-            sku: skuID.productId,
-            offerToken: skuID.subscriptionOfferDetails?.[0]?.offerToken!,
-          },
-        ],
-      });
+      await sendRequestSubscription(skuID.productId, [
+        {
+          sku: skuID.productId,
+          offerToken: skuID.subscriptionOfferDetails?.[0]?.offerToken!,
+        },
+      ]);
     }
   }, [skuID]);
 
