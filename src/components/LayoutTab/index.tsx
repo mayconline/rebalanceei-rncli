@@ -87,6 +87,7 @@ const LayoutTab = ({
               <YearFilter
                 currentYear={currentYear!}
                 setCurrentYear={setCurrentYear!}
+                isAccumulated={selectedFilter === 'accumulated'}
               />
             )}
           </SubHeader>

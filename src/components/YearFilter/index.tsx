@@ -13,9 +13,14 @@ import {
 interface IYearFilter {
   currentYear: number;
   setCurrentYear: React.Dispatch<React.SetStateAction<number>>;
+  isAccumulated?: boolean;
 }
 
-const YearFilter = ({ currentYear, setCurrentYear }: IYearFilter) => {
+const YearFilter = ({
+  currentYear,
+  setCurrentYear,
+  isAccumulated = false,
+}: IYearFilter) => {
   const { color } = useContext(ThemeContext);
 
   return (
@@ -24,11 +29,12 @@ const YearFilter = ({ currentYear, setCurrentYear }: IYearFilter) => {
         onPress={() => setCurrentYear(current => current - 1)}
         accessibilityRole="button"
         accessibilityLabel="Ano Anterior"
+        disabled={isAccumulated}
       >
         <MaterialCommunityIcons
           name="chevron-left-circle"
           size={32}
-          color={color.blue}
+          color={isAccumulated ? color.filterDisabled : color.blue}
         />
       </Pressable>
 
@@ -39,7 +45,7 @@ const YearFilter = ({ currentYear, setCurrentYear }: IYearFilter) => {
             now: currentYear,
           }}
         >
-          {currentYear}
+          {isAccumulated ? 'Todos' : currentYear}
         </YearText>
         <YearSubtitle>Ano selecionado</YearSubtitle>
       </YearContainer>
@@ -48,11 +54,12 @@ const YearFilter = ({ currentYear, setCurrentYear }: IYearFilter) => {
         onPress={() => setCurrentYear(current => current + 1)}
         accessibilityRole="button"
         accessibilityLabel="Próximo Ano"
+        disabled={isAccumulated}
       >
         <MaterialCommunityIcons
           name="chevron-right-circle"
           size={32}
-          color={color.blue}
+          color={isAccumulated ? color.filterDisabled : color.blue}
         />
       </Pressable>
     </ContainerYearFilter>

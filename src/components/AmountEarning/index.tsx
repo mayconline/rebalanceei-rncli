@@ -13,12 +13,14 @@ import {
   CurrentTitle,
   CurrentAmount,
 } from './styles';
-import { formatNumber } from '../../utils/format';
+import { formatNumber, formatPercent } from '../../utils/format';
 import TextError from '../TextError';
 
 interface ISumEarning {
   sumCurrentYear: number;
   sumOldYear: number;
+  sumTotalEarnings: number;
+  yieldOnCost: number;
 }
 
 export interface IDataSumEarning {
@@ -29,18 +31,21 @@ interface IAmountEarningProps {
   data?: IDataSumEarning;
   queryLoading?: boolean;
   queryError?: ApolloError;
+  isAccumulated?: boolean;
 }
 
 const AmountEarning = ({
   data,
   queryLoading,
   queryError,
+  isAccumulated = false,
 }: IAmountEarningProps) => {
   const { color, gradient } = useContext(ThemeContext);
 
   const isPositive =
-    data &&
-    data?.getSumEarning?.sumCurrentYear > data?.getSumEarning?.sumOldYear;
+    (data &&
+      data?.getSumEarning?.sumCurrentYear > data?.getSumEarning?.sumOldYear) ||
+    isAccumulated;
 
   return queryLoading ? (
     <ActivityIndicator size="small" color={color.filterDisabled} />
@@ -52,23 +57,48 @@ const AmountEarning = ({
       <Card colors={gradient.lightToGray} isPositive={isPositive}>
         <WalletContainer>
           <PreviousContainer>
-            <PreviousTitle>Ano Anterior</PreviousTitle>
+            <PreviousTitle>
+              {isAccumulated ? 'Total de Proventos' : 'Ano Anterior'}
+            </PreviousTitle>
             <PreviousAmount
-              accessibilityLabel="Total de Proventos do Ano Anterior"
-              accessibilityValue={{ now: data?.getSumEarning?.sumOldYear }}
+              accessibilityLabel={
+                isAccumulated
+                  ? 'Total de Proventos Acumulado'
+                  : 'Total de Proventos do Ano Anterior'
+              }
+              accessibilityValue={{
+                now: isAccumulated
+                  ? data?.getSumEarning?.sumTotalEarnings
+                  : data?.getSumEarning?.sumOldYear,
+              }}
             >
-              {data && formatNumber(data?.getSumEarning?.sumOldYear)}
+              {data &&
+                (isAccumulated
+                  ? formatNumber(data?.getSumEarning?.sumTotalEarnings)
+                  : formatNumber(data?.getSumEarning?.sumOldYear))}
             </PreviousAmount>
           </PreviousContainer>
           <CurrentContainer>
-            <CurrentTitle>Ano Selecionado</CurrentTitle>
+            <CurrentTitle>
+              {isAccumulated ? 'Yield on Cost' : 'Ano Selecionado'}
+            </CurrentTitle>
             <CurrentAmount
-              accessibilityLabel="Total de Proventos do Ano Selecionado"
+              accessibilityLabel={
+                isAccumulated
+                  ? 'Yield on Cost'
+                  : 'Total de Proventos do Ano Selecionado'
+              }
               accessibilityValue={{
-                now: data?.getSumEarning?.sumCurrentYear,
+                now: isAccumulated
+                  ? data?.getSumEarning?.yieldOnCost
+                  : data?.getSumEarning?.sumCurrentYear,
               }}
+              isPositive={isAccumulated}
             >
-              {data && formatNumber(data?.getSumEarning?.sumCurrentYear)}
+              {data &&
+                (isAccumulated
+                  ? formatPercent(data?.getSumEarning?.yieldOnCost)
+                  : formatNumber(data?.getSumEarning?.sumCurrentYear))}
             </CurrentAmount>
           </CurrentContainer>
         </WalletContainer>

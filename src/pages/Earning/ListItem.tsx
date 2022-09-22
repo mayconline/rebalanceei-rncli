@@ -23,39 +23,52 @@ interface IListItem {
 const ListItem = ({ item, handleOpenEditEarningModal }: IListItem) => {
   const { color, gradient } = useContext(ThemeContext);
 
+  const isAccumulated = !item?.month;
+
   return (
     <Content>
       <TouchableOpacity
         accessibilityRole="button"
-        accessibilityLabel={`Lançamento Manual ${formatMonth(item.month)}`}
+        accessibilityLabel={
+          isAccumulated
+            ? `Proventos Acumulados ${formatMonth(item.year)}`
+            : `Lançamento Manual ${formatMonth(item.month!)}`
+        }
         onPress={() => handleOpenEditEarningModal(item)}
+        disabled={isAccumulated}
       >
         <Card colors={gradient.lightToGray} variation={item.amount}>
           <MaterialCommunityIcons
-            name="circle-edit-outline"
+            name={isAccumulated ? 'calendar-sync' : 'circle-edit-outline'}
             size={28}
             color={color.blue}
           />
+
           <CardContent>
             <CardTitleContainer>
               <CardTicket
-                accessibilityLabel="Mês"
-                accessibilityValue={{ text: formatMonth(item.month) }}
+                accessibilityLabel={isAccumulated ? 'Ano' : 'Mês'}
+                accessibilityValue={{
+                  text: isAccumulated
+                    ? String(item.year)
+                    : formatMonth(item.month!),
+                }}
               >
-                {formatMonth(item.month)}
+                {isAccumulated ? String(item.year) : formatMonth(item.month!)}
               </CardTicket>
             </CardTitleContainer>
+
             <CardSubTitle
               accessibilityLabel="Observação"
               accessibilityValue={{
-                text: `Lançamento Manual`,
+                text: isAccumulated ? '' : 'Lançamento Manual',
               }}
             >
-              {`Lançamento manual`}
+              {isAccumulated ? 'Acumulado no Ano' : 'Lançamento Manual'}
             </CardSubTitle>
           </CardContent>
           <Amount
-            accessibilityLabel="Total do Mês"
+            accessibilityLabel={isAccumulated ? 'Total do Ano' : 'Total do Mês'}
             accessibilityValue={{ now: item.amount }}
             variation={item.amount}
           >

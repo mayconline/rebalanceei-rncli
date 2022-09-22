@@ -17,6 +17,9 @@ import LayoutTab from '../../components/LayoutTab';
 
 const initialFilter = [
   {
+    name: 'accumulated',
+  },
+  {
     name: 'amount',
   },
   {
@@ -27,12 +30,16 @@ const initialFilter = [
 export interface IEarning {
   _id: string;
   year: number;
-  month: number;
+  month?: number;
   amount: number;
 }
 
 interface IDataEarning {
   getEarningByWallet: IEarning[];
+}
+
+interface IDataAccEarning {
+  getEarningAccByYear: Omit<IEarning[], 'month'>;
 }
 
 interface IEarningList {
@@ -77,6 +84,14 @@ const Earning = ({
     fetchPolicy: 'cache-first',
   });
 
+  const [
+    getEarningAccByYear,
+    { data: dataAccEarning, loading: queryAccLoading, error: queryAccError },
+  ] = useLazyQuery<IDataAccEarning>(GET_EARNING_ACC_BY_YEAR, {
+    variables: { walletID: wallet },
+    fetchPolicy: 'cache-first',
+  });
+
   useFocusEffect(
     useCallback(() => {
       !data?.getEarningByWallet && getEarningByWallet();
@@ -91,7 +106,15 @@ const Earning = ({
 
   useFocusEffect(
     useCallback(() => {
-      selectedFilter === 'month'
+      !dataAccEarning?.getEarningAccByYear && getEarningAccByYear();
+    }, [dataAccEarning?.getEarningAccByYear]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      selectedFilter === 'accumulated'
+        ? setEarningData(dataAccEarning?.getEarningAccByYear)
+        : selectedFilter === 'month'
         ? setEarningData(data?.getEarningByWallet)
         : setEarningData(
             getArraySortByParams<IEarning>(
@@ -113,7 +136,7 @@ const Earning = ({
   }, []);
 
   const hasEmptyTickets =
-    !wallet || (!queryLoading && earningData?.length === 0);
+    !wallet || (!queryLoading && data?.getEarningByWallet?.length === 0);
 
   return (
     <>
@@ -125,7 +148,7 @@ const Earning = ({
         selectedFilter={selectedFilter}
         handleChangeFilter={handleChangeFilter}
         hasEmptyTickets={hasEmptyTickets}
-        queryError={queryError}
+        queryError={queryError || queryAccError}
         menuTitles={initialMenuTitles}
         handleChangeMenu={handleChangeMenu}
         selectedMenu={selectedMenu}
@@ -142,6 +165,7 @@ const Earning = ({
               data={dataSumEarning}
               queryLoading={querySumLoading}
               queryError={querySumError}
+              isAccumulated={selectedFilter === 'accumulated'}
             />
           }
           renderItem={({ item }) => (
@@ -189,6 +213,18 @@ export const GET_SUM_EARNING = gql`
     getSumEarning(walletID: $walletID, year: $year) {
       sumCurrentYear
       sumOldYear
+      sumTotalEarnings
+      yieldOnCost
+    }
+  }
+`;
+
+export const GET_EARNING_ACC_BY_YEAR = gql`
+  query getEarningAccByYear($walletID: ID!) {
+    getEarningAccByYear(walletID: $walletID) {
+      _id
+      year
+      amount
     }
   }
 `;

@@ -13,6 +13,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import {
   GET_EARNING_BY_WALLET,
   GET_SUM_EARNING,
+  GET_EARNING_ACC_BY_YEAR,
   IEarning,
 } from '../../pages/Earning';
 import {
@@ -42,10 +43,8 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
   const [focus, setFocus] = useState(0);
   const [amount, setAmount] = useState<IAmount>();
 
-  const [
-    updateEarning,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation(UPDATE_EARNING);
+  const [updateEarning, { loading: mutationLoading, error: mutationError }] =
+    useMutation(UPDATE_EARNING);
 
   useFocusEffect(
     useCallback(() => {
@@ -80,6 +79,10 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
           {
             query: GET_EARNING_BY_WALLET,
             variables: { walletID: wallet, year },
+          },
+          {
+            query: GET_EARNING_ACC_BY_YEAR,
+            variables: { walletID: wallet },
           },
           {
             query: GET_SUM_EARNING,
@@ -133,7 +136,7 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
     >
       <FormRow>
         <InputForm
-          label={`Total de ${formatMonth(earningData?.month)}`}
+          label={`Total de ${formatMonth(earningData?.month!)}`}
           value={amount?.preview}
           defaultValue={formatNumber(earningData?.amount)}
           placeholder="R$ 0000,00"

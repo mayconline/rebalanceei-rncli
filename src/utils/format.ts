@@ -55,6 +55,7 @@ export const formatFilter = (filter: string) =>
     INDUSTRY: 'Segmento',
     amount: 'Valor',
     month: 'Mês',
+    accumulated: 'Acumulado',
   }[filter]);
 
 export const PREMIUM_FILTER = ['SECTOR', 'INDUSTRY', 'Proventos'];

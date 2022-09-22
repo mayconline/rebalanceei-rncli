@@ -47,8 +47,13 @@ export const PreviousAmount = styled.Text`
   padding-left: 8px;
 `;
 
-export const CurrentAmount = styled.Text`
-  color: ${({ theme }) => theme.color.subtitle};
-  font: 400 16px/24px 'TitilliumWeb-Regular';
+export const CurrentAmount = styled.Text<any>`
+  color: ${({ theme, isPositive }) =>
+    isPositive ? theme.color.success : theme.color.subtitle};
+  font: ${({ isPositive }) =>
+    isPositive
+      ? "600 16px/24px 'TitilliumWeb-SemiBold'"
+      : "400 16px/24px 'TitilliumWeb-Regular'"};
+
   padding-left: 8px;
 `;
