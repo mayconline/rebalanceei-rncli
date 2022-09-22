@@ -27,6 +27,7 @@ interface ISubHeaderProps {
   handleChangeMenu?(menu: string): void;
   menuTitles?: string[];
   selectedMenu?: string;
+  children?: React.ReactNode;
 }
 
 interface IFilters {

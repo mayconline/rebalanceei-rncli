@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
-import { ActivityIndicator, FlatList, FlatListProps } from 'react-native';
-import { ThemeContext } from 'styled-components/native';
+import React from 'react';
+import { FlatList, FlatListProps } from 'react-native';
 
-import { List } from './styles';
+import ImageEmptyList from '../../../assets/svg/imageEmptyList';
+
+import { List, Image, TextLink, ContainerTitle } from './styles';
 
 const ListTicket = (props: FlatListProps<any>) => {
-  const { color } = useContext(ThemeContext);
-
   return (
     <List>
       <FlatList
@@ -18,7 +17,14 @@ const ListTicket = (props: FlatListProps<any>) => {
         automaticallyAdjustContentInsets={false}
         style={{ flex: 0 }}
         ListEmptyComponent={
-          <ActivityIndicator size="small" color={color.filterDisabled} />
+          <>
+            <Image>
+              <ImageEmptyList />
+            </Image>
+            <ContainerTitle>
+              <TextLink>Nenhum item encontrado</TextLink>
+            </ContainerTitle>
+          </>
         }
       />
     </List>
