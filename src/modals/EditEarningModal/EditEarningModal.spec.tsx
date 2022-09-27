@@ -1,7 +1,11 @@
 import React from 'react';
 import EditEarningModal, { UPDATE_EARNING } from './index';
 import { render, fireEvent, waitFor, act } from '../../utils/testProvider';
-import { GET_EARNING_BY_WALLET, GET_SUM_EARNING } from '../../pages/Earning';
+import {
+  GET_EARNING_ACC_BY_YEAR,
+  GET_EARNING_BY_WALLET,
+  GET_SUM_EARNING,
+} from '../../pages/Earning';
 
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
@@ -37,6 +41,7 @@ describe('Edit Earning Modal', () => {
         SUCCESSFUL_SUM_EARNINGS(2022),
         SUCCESSFUL_SUM_EARNINGS(2023),
         SUCCESSFUL_SUM_EARNINGS(2021),
+        SUCCESSFUL_LIST_ACC_EARNINGS(),
       ],
     );
 
@@ -75,6 +80,7 @@ describe('Edit Earning Modal', () => {
         SUCCESSFUL_SUM_EARNINGS(2022),
         SUCCESSFUL_SUM_EARNINGS(2023),
         SUCCESSFUL_SUM_EARNINGS(2021),
+        SUCCESSFUL_LIST_ACC_EARNINGS(),
       ],
     );
 
@@ -219,7 +225,42 @@ const SUCCESSFUL_SUM_EARNINGS = (mockYear: number) => ({
       getSumEarning: {
         sumCurrentYear: 181,
         sumOldYear: 40,
+        sumTotalEarnings: 3000,
+        yieldOnCost: 12,
       },
+    },
+  },
+});
+
+const SUCCESSFUL_LIST_ACC_EARNINGS = () => ({
+  request: {
+    query: GET_EARNING_ACC_BY_YEAR,
+    variables: { walletID: '5fa1d752a8c5892a48c69b35' },
+  },
+  result: {
+    data: {
+      getEarningAccByYear: [
+        {
+          _id: '2022',
+          year: 2022,
+          amount: 300,
+        },
+        {
+          _id: '2021',
+          year: 2021,
+          amount: 250,
+        },
+        {
+          _id: '2020',
+          year: 2020,
+          amount: 200,
+        },
+        {
+          _id: '2019',
+          year: 2019,
+          amount: 30.55,
+        },
+      ],
     },
   },
 });

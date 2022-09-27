@@ -1,5 +1,9 @@
 import React from 'react';
-import Earning, { GET_EARNING_BY_WALLET, GET_SUM_EARNING } from './index';
+import Earning, {
+  GET_EARNING_ACC_BY_YEAR,
+  GET_EARNING_BY_WALLET,
+  GET_SUM_EARNING,
+} from './index';
 import { render, fireEvent, act, waitFor } from '../../utils/testProvider';
 
 jest.mock('../../contexts/authContext', () => ({
@@ -66,6 +70,50 @@ describe('Earning Tab', () => {
     await waitFor(() =>
       expect(selectedYear).toHaveProperty('children', ['2021']),
     );
+  });
+  it('should successfully list earnings accumulated', async () => {
+    const {
+      findAllByA11yRole,
+      getByText,
+      getByA11yLabel,
+      getAllByA11yLabel,
+      findByA11yLabel,
+      findAllByA11yLabel,
+    } = render(
+      <Earning
+        handleChangeMenu={mockedHandleChangeMenu}
+        initialMenuTitles={mockedInitialMenuTitles}
+        selectedMenu="Proventos"
+      />,
+      [
+        SUCCESSFUL_LIST_EARNINGS(2022),
+        SUCCESSFUL_SUM_EARNINGS(2022),
+        SUCCESSFUL_LIST_ACC_EARNINGS(),
+      ],
+    );
+
+    await findAllByA11yRole('header');
+    getByText('Proventos');
+    const AccFilter = getByText('Acumulado');
+
+    act(() => fireEvent.press(AccFilter));
+
+    const selectedYear = getByA11yLabel(/^Ano Selecionado$/i);
+    expect(selectedYear).toHaveProperty('children', ['Todos']);
+
+    const earningTotalAcc = await findByA11yLabel(
+      'Total de Proventos Acumulado',
+    );
+    expect(earningTotalAcc).toHaveProperty('children', ['R$ 3.000,00']);
+
+    const yieldOnCost = getByA11yLabel('Yield on Cost');
+    expect(yieldOnCost).toHaveProperty('children', [' (+12.0%)']);
+
+    const listYear = await findAllByA11yLabel('Ano');
+    expect(listYear[0]).toHaveProperty('children', ['2022']);
+
+    const listAmount = getAllByA11yLabel('Total do Ano');
+    expect(listAmount[0]).toHaveProperty('children', ['R$ 300,00']);
   });
 });
 
@@ -164,7 +212,42 @@ const SUCCESSFUL_SUM_EARNINGS = (mockYear: number) => ({
       getSumEarning: {
         sumCurrentYear: 181,
         sumOldYear: 40,
+        sumTotalEarnings: 3000,
+        yieldOnCost: 12,
       },
+    },
+  },
+});
+
+const SUCCESSFUL_LIST_ACC_EARNINGS = () => ({
+  request: {
+    query: GET_EARNING_ACC_BY_YEAR,
+    variables: { walletID: '5fa1d752a8c5892a48c69b35' },
+  },
+  result: {
+    data: {
+      getEarningAccByYear: [
+        {
+          _id: '2022',
+          year: 2022,
+          amount: 300,
+        },
+        {
+          _id: '2021',
+          year: 2021,
+          amount: 250,
+        },
+        {
+          _id: '2020',
+          year: 2020,
+          amount: 200,
+        },
+        {
+          _id: '2019',
+          year: 2019,
+          amount: 30,
+        },
+      ],
     },
   },
 });

@@ -61,7 +61,7 @@ const ListItem = ({ item, handleOpenEditEarningModal }: IListItem) => {
             <CardSubTitle
               accessibilityLabel="Observação"
               accessibilityValue={{
-                text: isAccumulated ? '' : 'Lançamento Manual',
+                text: isAccumulated ? 'Acumulado no Ano' : 'Lançamento Manual',
               }}
             >
               {isAccumulated ? 'Acumulado no Ano' : 'Lançamento Manual'}

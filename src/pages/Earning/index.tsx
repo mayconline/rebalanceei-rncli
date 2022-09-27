@@ -122,7 +122,7 @@ const Earning = ({
               selectedFilter,
             ),
           );
-    }, [data, selectedFilter]),
+    }, [data, selectedFilter, dataAccEarning]),
   );
 
   const handleChangeFilter = useCallback((filterName: string) => {
