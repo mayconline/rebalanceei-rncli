@@ -16,8 +16,6 @@ import {
 } from './styles';
 import ImageAddTicket from '../../../assets/svg/ImageAddTicket';
 import SuccessModal from '../../modals/SuccessModal';
-import { GET_TICKETS_BY_WALLET } from '../Ticket';
-import { GET_WALLET_BY_USER } from '../../modals/WalletModal';
 import SuggestionsModal from '../../modals/SuggestionsModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import EditTicket from '../../components/EditTicket';
@@ -33,6 +31,7 @@ import {
 import useAmplitude from '../../hooks/useAmplitude';
 import PlanModal from '../../modals/PlanModal';
 import LayoutForm from '../../components/LayoutForm';
+import { refetchQuery } from '../../utils/refetchQuery';
 
 interface IDataParamsForm {
   ticket: ITickets;
@@ -54,7 +53,7 @@ interface IcreateTicket {
 
 const AddTicket = () => {
   const { logEvent } = useAmplitude();
-  const { wallet, handleSetLoading } = useAuth();
+  const { wallet, handleSetLoading, showBanner } = useAuth();
 
   const { color, gradient } = useContext(ThemeContext);
 
@@ -92,10 +91,8 @@ const AddTicket = () => {
     setHasSuggestions(false);
   }, []);
 
-  const [
-    createTicket,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation<IcreateTicket>(CREATE_TICKET);
+  const [createTicket, { loading: mutationLoading, error: mutationError }] =
+    useMutation<IcreateTicket>(CREATE_TICKET);
 
   useFocusEffect(
     useCallback(() => {
@@ -133,15 +130,7 @@ const AddTicket = () => {
     try {
       await createTicket({
         variables: dataTicket,
-        refetchQueries: [
-          {
-            query: GET_TICKETS_BY_WALLET,
-            variables: { walletID: wallet, sort: 'grade' },
-          },
-          {
-            query: GET_WALLET_BY_USER,
-          },
-        ],
+        refetchQueries: refetchQuery(wallet, !showBanner),
         awaitRefetchQueries: true,
       });
 

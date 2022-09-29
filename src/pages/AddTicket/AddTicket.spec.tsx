@@ -7,6 +7,7 @@ import { GraphQLError } from 'graphql';
 import MockAdapter from 'axios-mock-adapter';
 import api from '../../services/api';
 import { GET_WALLET_BY_USER } from '../../modals/WalletModal';
+import { GET_SUM_EARNING } from '../Earning';
 
 const apiMock = new MockAdapter(api);
 
@@ -14,6 +15,7 @@ jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     wallet: '5fa1d752a8c5892a48c69b35',
     handleSetLoading: jest.fn(),
+    showBanner: false,
   }),
 }));
 
@@ -39,6 +41,7 @@ describe('AddTicket Tab', () => {
       SUCCESSFUL_LIST_TICKETS('symbol'),
       SUCCESSFUL_LIST_TICKETS('grade'),
       SUCCESSFUL_LIST_WALLET,
+      SUCCESSFUL_SUM_EARNINGS(2022),
     ]);
 
     const title = await findByA11yRole('header');
@@ -111,6 +114,7 @@ describe('AddTicket Tab', () => {
         SUCCESSFUL_LIST_TICKETS('symbol'),
         SUCCESSFUL_LIST_TICKETS('grade'),
         SUCCESSFUL_LIST_WALLET,
+        SUCCESSFUL_SUM_EARNINGS(2022),
       ],
       MOCKED_PARAMS,
     );
@@ -152,6 +156,7 @@ describe('AddTicket Tab', () => {
         SUCCESSFUL_LIST_TICKETS('symbol'),
         SUCCESSFUL_LIST_TICKETS('grade'),
         SUCCESSFUL_LIST_WALLET,
+        SUCCESSFUL_SUM_EARNINGS(2022),
       ],
       MOCKED_PARAMS,
     );
@@ -181,11 +186,10 @@ describe('AddTicket Tab', () => {
       },
     });
 
-    const {
-      getAllByA11yRole,
-      getByText,
-      getByPlaceholderText,
-    } = render(<AddTicket />, [INVALID_CREATE_TICKET]);
+    const { getAllByA11yRole, getByText, getByPlaceholderText } = render(
+      <AddTicket />,
+      [INVALID_CREATE_TICKET],
+    );
 
     const suggestButton = getAllByA11yRole('button')[0];
     await act(async () => fireEvent.press(suggestButton));
@@ -334,8 +338,7 @@ const SUCCESSFUL_LIST_TICKETS = (sort: string) => ({
           _id: '5fa47a6df704ca0f84523c04',
           averagePrice: 19.98,
           grade: 6,
-          name:
-            'CTEEP - Companhia de Transmissão de Energia Elétrica Paulista S.A.',
+          name: 'CTEEP - Companhia de Transmissão de Energia Elétrica Paulista S.A.',
           quantity: 45,
           symbol: 'TRPL4.SA',
         },
@@ -462,3 +465,20 @@ const SUCCESSFUL_LIST_WALLET = {
     },
   },
 };
+
+const SUCCESSFUL_SUM_EARNINGS = (mockYear: number) => ({
+  request: {
+    query: GET_SUM_EARNING,
+    variables: { walletID: '5fa1d752a8c5892a48c69b35', year: mockYear },
+  },
+  result: {
+    data: {
+      getSumEarning: {
+        sumCurrentYear: 181,
+        sumOldYear: 40,
+        sumTotalEarnings: 3000,
+        yieldOnCost: 12,
+      },
+    },
+  },
+});

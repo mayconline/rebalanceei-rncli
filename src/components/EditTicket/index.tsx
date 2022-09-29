@@ -5,8 +5,7 @@ import { useAuth } from '../../contexts/authContext';
 import { useMutation, gql } from '@apollo/client';
 import { FormRow, ContainerButtons } from './styles';
 
-import { ITickets, GET_TICKETS_BY_WALLET } from '../../pages/Ticket';
-import { GET_WALLET_BY_USER } from '../../modals/WalletModal';
+import { ITickets } from '../../pages/Ticket';
 
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Button from '../Button';
@@ -14,6 +13,7 @@ import InputForm from '../InputForm';
 import TextError from '../TextError';
 import { formatAveragePricePreview, formatTicket } from '../../utils/format';
 import useAmplitude from '../../hooks/useAmplitude';
+import { refetchQuery } from '../../utils/refetchQuery';
 
 interface IDataForm {
   _id: string;
@@ -42,7 +42,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
   const { logEvent } = useAmplitude();
 
   const { gradient, color } = useContext(ThemeContext);
-  const { wallet } = useAuth();
+  const { wallet, showBanner } = useAuth();
   const navigation = useNavigation();
 
   const [ticketForm, setTicketForm] = useState<IDataForm>({} as IDataForm);
@@ -67,10 +67,8 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
     navigation.setParams({ ticket: null });
   }, []);
 
-  const [
-    updateTicket,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation<IUpdateTicket>(UPDATE_TICKET);
+  const [updateTicket, { loading: mutationLoading, error: mutationError }] =
+    useMutation<IUpdateTicket>(UPDATE_TICKET);
 
   const [
     deleteTicket,
@@ -84,7 +82,8 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
       !ticketForm.name ||
       !ticketForm.quantity ||
       !ticketForm.averagePrice ||
-      !ticketForm.grade
+      !ticketForm.grade ||
+      !wallet
     ) {
       logEvent('not filled input at Edit Ticket');
       return;
@@ -102,16 +101,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
     try {
       await updateTicket({
         variables: dataTicket,
-        refetchQueries: [
-          {
-            query: GET_TICKETS_BY_WALLET,
-            variables: { walletID: wallet, sort: 'grade' },
-          },
-
-          {
-            query: GET_WALLET_BY_USER,
-          },
-        ],
+        refetchQueries: refetchQuery(wallet!, !showBanner),
         awaitRefetchQueries: true,
       });
 
@@ -137,15 +127,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
           _id: ticketForm._id,
           walletID: wallet,
         },
-        refetchQueries: [
-          {
-            query: GET_TICKETS_BY_WALLET,
-            variables: { walletID: wallet, sort: 'grade' },
-          },
-          {
-            query: GET_WALLET_BY_USER,
-          },
-        ],
+        refetchQueries: refetchQuery(wallet!, !showBanner),
         awaitRefetchQueries: true,
       });
 
