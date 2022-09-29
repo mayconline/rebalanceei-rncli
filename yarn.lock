@@ -6275,10 +6275,10 @@ react-native-gradle-plugin@^0.0.7:
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.0.7.tgz#96602f909745239deab7b589443f14fce5da2056"
   integrity sha512-+4JpbIx42zGTONhBTIXSyfyHICHC29VTvhkkoUOJAh/XHPEixpuBduYgf6Y4y9wsN1ARlQhBBoptTvXvAFQf5g==
 
-react-native-iap@10.0.7:
-  version "10.0.7"
-  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-10.0.7.tgz#7f979a633f1fb7f924ce23db40e30870fe89d503"
-  integrity sha512-OCvyv95sro5b6RRu3A23B0SM8b/3KXwe3vY4OQb4rLkAVoLXxmxL6VDKBSy/o3YieC1AlVgi+sC5QoKbc8t/PQ==
+react-native-iap@11.0.7:
+  version "11.0.7"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-11.0.7.tgz#7ea6f9be88f8b51317be6a0fa0b1a9d7efbf8215"
+  integrity sha512-DxBFSZyhflwKedUkGFwddSIRoCJ6NrOJshGH0boXBndRw288LqD0zZi1P8f6amZ2hi1FZ2t5tU6ONwMKKD3LUA==
 
 react-native-linear-gradient@2.6.2:
   version "2.6.2"
