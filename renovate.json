@@ -18,6 +18,15 @@
       "matchUpdateTypes": ["patch", "minor"],
       "groupName": "peerDependencies (non-major)",
       "groupSlug": "peerDependencies"
+    },
+    {
+      "matchPackageNames": [
+        "@babel/core",
+        "@babel/plugin-transform-named-capturing-groups-regex",
+        "@babel/runtime"
+      ],
+      "groupName": "babel dev-dependencies",
+      "groupSlug": "babel-dev-dependencies"
     }
   ],
   "separateMajorMinor": true
