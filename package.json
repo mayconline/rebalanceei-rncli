@@ -64,7 +64,7 @@
     "husky": "8.0.1",
     "jest": "27.5.1",
     "jest-styled-components": "7.0.8",
-    "metro-react-native-babel-preset": "0.71.2",
+    "metro-react-native-babel-preset": "0.72.3",
     "react-test-renderer": "18.2.0",
     "typescript": "4.7.4"
   },
