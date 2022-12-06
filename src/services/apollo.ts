@@ -4,35 +4,40 @@ import {
   createHttpLink,
   ApolloLink,
   resetCaches,
+  gql,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LOGIN } from '../pages/public/Login';
+
+import {
+  getLocalStorage,
+  multiRemoveLocalStorage,
+  multiSetLocalStorage,
+} from '../utils/localStorage';
 
 const httpLink = createHttpLink({
-  uri: 'https://app-rebalanceei.onrender.com',
+  // uri: 'https://app-rebalanceei.onrender.com',
+  uri: 'http://192.168.1.5:4000',
   credentials: 'include',
 });
 
 const authErrorLink = onError(({ graphQLErrors, operation, forward }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(async ({ message, extensions }) => {
-      if (message === 'Context creation failed: Token Invalid or Expired') {
-        const [storageEmail, storagePass] = await AsyncStorage.multiGet([
-          '@authEmail',
-          '@authPass',
-        ]);
+      const errorMessages = [
+        'Token Not Exists',
+        'Context creation failed: Token Invalid or Expired',
+      ];
 
-        if (storageEmail[1] && storagePass[1]) {
-          retryLogin(storageEmail[1], storagePass[1])
+      if (errorMessages.includes(message)) {
+        const refreshToken = await getLocalStorage('@refreshToken');
+
+        if (refreshToken) {
+          updateRefreshToken(refreshToken)
             .then(async res => {
               if (res.data) {
-                const token = res?.data?.login?.token;
+                const { token, refreshToken } = res?.data?.updateRefreshToken;
 
-                await AsyncStorage.setItem('@authToken', token);
-
-                // modify the operation context with a new token
                 const oldHeaders = operation.getContext().headers;
 
                 operation.setContext({
@@ -42,15 +47,18 @@ const authErrorLink = onError(({ graphQLErrors, operation, forward }) => {
                   },
                 });
 
-                // retry the request, returning the new observable
+                await multiSetLocalStorage([
+                  ['@authToken', token],
+                  ['@refreshToken', refreshToken],
+                ]);
               }
             })
             .catch(async err => {
-              await AsyncStorage.removeItem('@authToken');
+              await multiRemoveLocalStorage(['@authToken', '@refreshToken']);
               resetCaches();
             });
         } else {
-          await AsyncStorage.removeItem('@authToken');
+          await multiRemoveLocalStorage(['@authToken', '@refreshToken']);
           resetCaches();
         }
 
@@ -61,7 +69,7 @@ const authErrorLink = onError(({ graphQLErrors, operation, forward }) => {
 });
 
 const authLink = setContext(async (_, { headers }) => {
-  const storageToken = await AsyncStorage.getItem('@authToken');
+  const storageToken = await getLocalStorage('@authToken');
 
   return {
     headers: {
@@ -97,18 +105,31 @@ export const client = new ApolloClient({
               return incoming;
             },
           },
+          updateRefreshToken: {
+            merge(existing, incoming) {
+              return incoming;
+            },
+          },
         },
       },
     },
   }),
 });
 
-function retryLogin(email: string, password: string) {
+function updateRefreshToken(refreshToken: string) {
   return client.mutate({
-    mutation: LOGIN,
+    mutation: REFRESH_TOKEN,
     variables: {
-      email,
-      password,
+      refreshToken,
     },
   });
 }
+
+const REFRESH_TOKEN = gql`
+  mutation updateRefreshToken($refreshToken: ID!) {
+    updateRefreshToken(input: { refreshToken: $refreshToken }) {
+      token
+      refreshToken
+    }
+  }
+`;
