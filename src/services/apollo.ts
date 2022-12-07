@@ -16,8 +16,8 @@ import {
 } from '../utils/localStorage';
 
 const httpLink = createHttpLink({
-  // uri: 'https://app-rebalanceei.onrender.com',
-  uri: 'http://192.168.1.5:4000',
+  uri: 'https://app-rebalanceei.onrender.com',
+  //uri: 'http://192.168.1.5:4000',
   credentials: 'include',
 });
 
@@ -25,15 +25,14 @@ const authErrorLink = onError(({ graphQLErrors, operation, forward }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(async ({ message, extensions }) => {
       const errorMessages = [
-        'Token Not Exists',
         'Context creation failed: Token Invalid or Expired',
       ];
 
       if (errorMessages.includes(message)) {
-        const refreshToken = await getLocalStorage('@refreshToken');
+        const storageRefreshToken = await getLocalStorage('@refreshToken');
 
-        if (refreshToken) {
-          updateRefreshToken(refreshToken)
+        if (storageRefreshToken) {
+          updateRefreshToken(storageRefreshToken)
             .then(async res => {
               if (res.data) {
                 const { token, refreshToken } = res?.data?.updateRefreshToken;
@@ -51,6 +50,8 @@ const authErrorLink = onError(({ graphQLErrors, operation, forward }) => {
                   ['@authToken', token],
                   ['@refreshToken', refreshToken],
                 ]);
+
+                return forward(operation);
               }
             })
             .catch(async err => {
@@ -61,8 +62,6 @@ const authErrorLink = onError(({ graphQLErrors, operation, forward }) => {
           await multiRemoveLocalStorage(['@authToken', '@refreshToken']);
           resetCaches();
         }
-
-        return forward(operation);
       }
     });
   }
