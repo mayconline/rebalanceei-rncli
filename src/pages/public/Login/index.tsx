@@ -19,7 +19,6 @@ import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
 import LayoutForm from '../../../components/LayoutForm';
 
-import { setLocalStorage } from '../../../utils/localStorage';
 import useAmplitude from '../../../hooks/useAmplitude';
 
 interface IAccountLogin {

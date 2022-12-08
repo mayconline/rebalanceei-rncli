@@ -4,9 +4,6 @@ import SignUp, { CREATE_USER } from './index';
 import { render, fireEvent, waitFor, act } from '../../../utils/testProvider';
 import * as Terms from '../../../utils/Terms';
 import { GraphQLError } from 'graphql';
-import * as localStorage from '../../../utils/localStorage';
-
-const mockedSetLocalStorage = jest.spyOn(localStorage, 'setLocalStorage');
 
 const mockedHandleSignIn = jest.fn();
 const mockedAlert = (Alert.alert = jest.fn());
@@ -48,10 +45,6 @@ describe('SignUp Page', () => {
     fireEvent.changeText(inputPassword, '123');
     getByDisplayValue('123');
 
-    await waitFor(() =>
-      expect(mockedSetLocalStorage).toHaveBeenCalledWith('@authPass', '123'),
-    );
-
     getByText(/Aceito os Termos de Uso e Política de Privacidade/i);
 
     const switchTerms = getByA11yRole('switch');
@@ -73,13 +66,6 @@ describe('SignUp Page', () => {
     fireEvent.changeText(inputEmail, 'test@test.com');
     getByDisplayValue('test@test.com');
 
-    await waitFor(() =>
-      expect(mockedSetLocalStorage).toHaveBeenCalledWith(
-        '@authEmail',
-        'test@test.com',
-      ),
-    );
-
     const registerButton = getAllByText('Criar Conta')[1];
     fireEvent.press(registerButton);
 
@@ -88,6 +74,7 @@ describe('SignUp Page', () => {
         __typename: 'User',
         _id: 'id_created',
         token: 'token_created',
+        refreshToken: 'rft_logged',
         role: 'role_logged',
       }),
     );
@@ -127,6 +114,7 @@ const SUCCESSFUL_CREATE_USER = {
       createUser: {
         _id: 'id_created',
         token: 'token_created',
+        refreshToken: 'rft_logged',
         role: 'role_logged',
         __typename: 'User',
       },

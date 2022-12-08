@@ -20,7 +20,7 @@ import TextError from '../../../components/TextError';
 import LayoutForm from '../../../components/LayoutForm';
 
 import { getTerms } from '../../../utils/Terms';
-import { setLocalStorage } from '../../../utils/localStorage';
+
 import useAmplitude from '../../../hooks/useAmplitude';
 
 interface IAccountRegister {

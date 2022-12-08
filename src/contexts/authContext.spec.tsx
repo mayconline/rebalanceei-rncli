@@ -26,6 +26,7 @@ describe('Auth Context', () => {
       result.current.handleSignIn({
         _id: 'id_logged',
         token: 'token_logged',
+        refreshToken: 'rft_logged',
         role: 'role_logged',
       });
     });
@@ -38,6 +39,7 @@ describe('Auth Context', () => {
     expect(multiSetSpy).toHaveBeenCalledWith([
       ['@authRole', 'role_logged'],
       ['@authToken', 'token_logged'],
+      ['@refreshToken', 'rft_logged'],
       ['@authID', 'id_logged'],
     ]);
 
@@ -79,6 +81,7 @@ describe('Auth Context', () => {
       '@authWallet',
       '@authWalletName',
       '@authToken',
+      '@refreshToken',
       '@authEmail',
       '@authPass',
       '@authRole',
