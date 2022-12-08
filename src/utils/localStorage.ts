@@ -18,7 +18,7 @@ export const multiRemoveLocalStorage = async (keys: string[]) => {
 export const multiSetLocalStorage = async (
   keyValuePairs: [string, string][],
 ) => {
-  await AsyncStorage.multiSet(keyValuePairs);
+  return await AsyncStorage.multiSet(keyValuePairs);
 };
 
 export const multiGetLocalStorage = async (keys: string[]) =>

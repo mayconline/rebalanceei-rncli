@@ -5,6 +5,7 @@ import {
   ApolloLink,
   resetCaches,
   gql,
+  fromPromise,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
@@ -17,63 +18,47 @@ import {
 
 const httpLink = createHttpLink({
   uri: 'https://app-rebalanceei.onrender.com',
-  //uri: 'http://192.168.1.5:4000',
   credentials: 'include',
 });
 
 const authErrorLink = onError(({ graphQLErrors, operation, forward }) => {
+  if (operation.operationName === 'updateRefreshToken') return;
+
   if (graphQLErrors) {
-    graphQLErrors.forEach(async ({ message, extensions }) => {
-      const errorMessages = [
-        'Context creation failed: Token Invalid or Expired',
-      ];
+    for (let err of graphQLErrors) {
+      switch (err.message) {
+        case 'Context creation failed: Token Invalid or Expired':
+          return fromPromise(getNewToken())
+            .filter(value => Boolean(value))
+            .flatMap(accessToken => {
+              const oldHeaders = operation.getContext().headers;
+              // modify the operation context with a new token
+              operation.setContext({
+                headers: {
+                  ...oldHeaders,
+                  authorization: `Bearer ${accessToken}`,
+                },
+              });
 
-      if (errorMessages.includes(message)) {
-        const storageRefreshToken = await getLocalStorage('@refreshToken');
-
-        if (storageRefreshToken) {
-          updateRefreshToken(storageRefreshToken)
-            .then(async res => {
-              if (res.data) {
-                const { token, refreshToken } = res?.data?.updateRefreshToken;
-
-                const oldHeaders = operation.getContext().headers;
-
-                operation.setContext({
-                  headers: {
-                    ...oldHeaders,
-                    authorization: `Bearer ${token}`,
-                  },
-                });
-
-                await multiSetLocalStorage([
-                  ['@authToken', token],
-                  ['@refreshToken', refreshToken],
-                ]);
-
-                return forward(operation);
-              }
-            })
-            .catch(async err => {
-              await multiRemoveLocalStorage(['@authToken', '@refreshToken']);
-              resetCaches();
+              // retry the request, returning the new observable
+              return forward(operation);
             });
-        } else {
-          await multiRemoveLocalStorage(['@authToken', '@refreshToken']);
-          resetCaches();
-        }
       }
-    });
+    }
   }
 });
 
-const authLink = setContext(async (_, { headers }) => {
+const authLink = setContext(async ({ operationName }, { headers }) => {
   const storageToken = await getLocalStorage('@authToken');
+
+  const skipRefresh = operationName !== 'updateRefreshToken';
 
   return {
     headers: {
       ...headers,
-      authorization: storageToken ? `Bearer ${storageToken}` : '',
+      ...(skipRefresh && {
+        authorization: storageToken ? `Bearer ${storageToken}` : '',
+      }),
     },
   };
 });
@@ -115,17 +100,44 @@ export const client = new ApolloClient({
   }),
 });
 
-function updateRefreshToken(refreshToken: string) {
-  return client.mutate({
-    mutation: REFRESH_TOKEN,
-    variables: {
-      refreshToken,
-    },
-  });
+const getNewToken = () => {
+  return getLocalStorage('@refreshToken')
+    .then(refreshToken => {
+      return client
+        .mutate({
+          mutation: REFRESH_TOKEN,
+          variables: {
+            refreshToken,
+          },
+        })
+        .then(async response => {
+          const { token, refreshToken } = response.data.updateRefreshToken;
+
+          await multiSetLocalStorage([
+            ['@authToken', token],
+            ['@refreshToken', refreshToken],
+          ]);
+
+          return token;
+        })
+        .catch(async error => {
+          console.log({ error });
+          return await handleResetCache();
+        });
+    })
+    .catch(async err => {
+      console.log({ err });
+      return await handleResetCache();
+    });
+};
+
+async function handleResetCache() {
+  resetCaches();
+  return await multiRemoveLocalStorage(['@authToken', '@refreshToken']);
 }
 
 const REFRESH_TOKEN = gql`
-  mutation updateRefreshToken($refreshToken: ID!) {
+  mutation updateRefreshToken($refreshToken: String!) {
     updateRefreshToken(input: { refreshToken: $refreshToken }) {
       token
       refreshToken
