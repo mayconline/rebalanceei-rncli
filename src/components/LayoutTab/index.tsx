@@ -11,6 +11,11 @@ import SubHeader from '../SubHeader';
 import TextError from '../TextError';
 import YearFilter from '../YearFilter';
 
+const fatalErrors = [
+  'Error: Token Not Exists',
+  'Error: Refresh Token Invalid or Expired',
+];
+
 interface LayoutTabProps {
   children?: any;
   title: string;
@@ -48,7 +53,7 @@ const LayoutTab = ({
 }: LayoutTabProps) => {
   const { color } = useContext(ThemeContext);
   const { logEvent } = useAmplitude();
-  const { handleSetLoading } = useAuth();
+  const { handleSetLoading, handleSignOut } = useAuth();
 
   useFocusEffect(
     useCallback(() => {
@@ -60,6 +65,12 @@ const LayoutTab = ({
     useCallback(() => {
       handleSetLoading(queryLoading);
     }, [queryLoading]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      fatalErrors.includes(String(queryError)) && handleSignOut();
+    }, [queryError]),
   );
 
   return (

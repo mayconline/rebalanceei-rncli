@@ -9,12 +9,7 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
-
-import {
-  getLocalStorage,
-  multiRemoveLocalStorage,
-  multiSetLocalStorage,
-} from '../utils/localStorage';
+import { getLocalStorage, multiSetLocalStorage } from '../utils/localStorage';
 
 const httpLink = createHttpLink({
   uri: 'https://app-rebalanceei.onrender.com',
@@ -107,7 +102,7 @@ const getNewToken = () => {
         .mutate({
           mutation: REFRESH_TOKEN,
           variables: {
-            refreshToken,
+            refreshToken: refreshToken ? refreshToken : '',
           },
         })
         .then(async response => {
@@ -120,21 +115,18 @@ const getNewToken = () => {
 
           return token;
         })
-        .catch(async error => {
-          console.log({ error });
-          return await handleResetCache();
+        .catch(error => {
+          resetCaches();
+
+          throw error;
         });
     })
     .catch(async err => {
-      console.log({ err });
-      return await handleResetCache();
+      resetCaches();
+
+      throw err;
     });
 };
-
-async function handleResetCache() {
-  resetCaches();
-  return await multiRemoveLocalStorage(['@authToken', '@refreshToken']);
-}
 
 const REFRESH_TOKEN = gql`
   mutation updateRefreshToken($refreshToken: String!) {

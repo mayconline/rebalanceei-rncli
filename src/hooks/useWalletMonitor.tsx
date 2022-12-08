@@ -23,6 +23,8 @@ const useWalletMonitor = (message?: string) => {
         return handleSetServerFailed();
       case 'Token Not Exists':
         return handleSetServerFailed();
+      case 'Refresh Token Invalid or Expired':
+        return handleSetServerFailed();
       case 'Wallet Not Found':
         return handleSetInvalidWallet();
       case 'Response not successful: Received status code 400':
