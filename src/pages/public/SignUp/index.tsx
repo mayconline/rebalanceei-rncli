@@ -20,7 +20,7 @@ import TextError from '../../../components/TextError';
 import LayoutForm from '../../../components/LayoutForm';
 
 import { getTerms } from '../../../utils/Terms';
-import { setLocalStorage } from '../../../utils/localStorage';
+
 import useAmplitude from '../../../hooks/useAmplitude';
 
 interface IAccountRegister {
@@ -33,6 +33,7 @@ interface ICreateUser {
   createUser: {
     _id: string;
     token: string;
+    refreshToken: string;
     role: string;
   };
 }
@@ -52,10 +53,8 @@ const SignUp = () => {
     }, []),
   );
 
-  const [
-    createUser,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation<ICreateUser, IAccountRegister>(CREATE_USER);
+  const [createUser, { loading: mutationLoading, error: mutationError }] =
+    useMutation<ICreateUser, IAccountRegister>(CREATE_USER);
 
   const handleSubmit = () => {
     logEvent('click on submit at SignUp');
@@ -103,8 +102,6 @@ const SignUp = () => {
       ...account,
       email,
     }));
-
-    await setLocalStorage('@authEmail', email);
   }, []);
 
   const handleSetPassword = useCallback(async (password: string) => {
@@ -112,8 +109,6 @@ const SignUp = () => {
       ...account,
       password,
     }));
-
-    await setLocalStorage('@authPass', password);
   }, []);
 
   const handleToogleSwitch = useCallback(() => {
@@ -223,6 +218,7 @@ export const CREATE_USER = gql`
     ) {
       _id
       token
+      refreshToken
       role
       plan {
         transactionDate

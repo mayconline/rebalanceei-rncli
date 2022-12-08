@@ -19,7 +19,6 @@ import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
 import LayoutForm from '../../../components/LayoutForm';
 
-import { setLocalStorage } from '../../../utils/localStorage';
 import useAmplitude from '../../../hooks/useAmplitude';
 
 interface IAccountLogin {
@@ -31,6 +30,7 @@ interface ILogin {
   login: {
     _id: string;
     token: string;
+    refreshToken: string;
     role: string;
   };
 }
@@ -50,10 +50,8 @@ const Login = () => {
     }, []),
   );
 
-  const [
-    login,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation<ILogin, IAccountLogin>(LOGIN);
+  const [login, { loading: mutationLoading, error: mutationError }] =
+    useMutation<ILogin, IAccountLogin>(LOGIN);
 
   const handleSubmit = () => {
     logEvent('click on submit at Login');
@@ -81,8 +79,6 @@ const Login = () => {
       ...account,
       email,
     }));
-
-    await setLocalStorage('@authEmail', email);
   }, []);
 
   const handleSetPassword = useCallback(async (password: string) => {
@@ -90,8 +86,6 @@ const Login = () => {
       ...account,
       password,
     }));
-
-    await setLocalStorage('@authPass', password);
   }, []);
 
   const onEndInputEditing = useCallback(
@@ -173,6 +167,7 @@ export const LOGIN = gql`
     login(input: { email: $email, password: $password }) {
       _id
       token
+      refreshToken
       role
       plan {
         transactionDate

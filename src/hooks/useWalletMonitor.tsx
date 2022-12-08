@@ -12,18 +12,23 @@ const useWalletMonitor = (message?: string) => {
     handleSetWallet(null, null);
   }, []);
 
+  const handleSetInvalidWallet = useCallback(() => {
+    sethasInvalidWallet(true);
+    handleSetWallet(null, null);
+  }, []);
+
   useEffect(() => {
     switch (message) {
       case 'Network request failed':
         return handleSetServerFailed();
-      case 'Context creation failed: Token Invalid or Expired':
+      case 'Token Not Exists':
+        return handleSetServerFailed();
+      case 'Refresh Token Invalid or Expired':
         return handleSetServerFailed();
       case 'Wallet Not Found':
-        return sethasInvalidWallet(true);
+        return handleSetInvalidWallet();
       case 'Response not successful: Received status code 400':
-        return sethasInvalidWallet(true);
-      case 'Response not successful: Received status code 500':
-        return sethasInvalidWallet(true);
+        return handleSetInvalidWallet();
       default:
         return sethasInvalidWallet(false);
     }

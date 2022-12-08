@@ -4,10 +4,10 @@ import React, {
   useEffect,
   useContext,
   useCallback,
+  ReactNode,
 } from 'react';
 import { Modal, StatusBar, useColorScheme } from 'react-native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { useApolloClient } from '@apollo/client';
 
@@ -16,7 +16,12 @@ import {
   setNewSubscriptionsDate,
   validHasSubscription,
 } from '../services/Iap';
-import { setLocalStorage } from '../utils/localStorage';
+import {
+  multiGetLocalStorage,
+  multiRemoveLocalStorage,
+  multiSetLocalStorage,
+  setLocalStorage,
+} from '../utils/localStorage';
 import themes, { themeMode, Theme } from '../themes';
 import { ThemeProvider } from 'styled-components/native';
 import Loading from '../modals/Loading';
@@ -24,6 +29,7 @@ import Loading from '../modals/Loading';
 interface ISignIn {
   _id: string;
   token: string;
+  refreshToken: string;
   role: string;
   plan?: IPlan;
 }
@@ -60,7 +66,7 @@ interface IAuthContext {
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
-export const AuthProvider: React.FC = ({ children }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const client = useApolloClient();
   const { isConnected } = useNetInfo();
   const deviceTheme = useColorScheme() as themeMode;
@@ -102,7 +108,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         storageWalletName,
         storageID,
         storagePlan,
-      ] = await AsyncStorage.multiGet([
+      ] = await multiGetLocalStorage([
         '@authRole',
         '@authToken',
         '@authWallet',
@@ -145,11 +151,12 @@ export const AuthProvider: React.FC = ({ children }) => {
   const handleSignIn = useCallback(async (userLogin: ISignIn) => {
     setLoading(true);
     try {
-      const { token, role, _id, plan } = userLogin;
+      const { token, refreshToken, role, _id, plan } = userLogin;
 
-      await AsyncStorage.multiSet([
+      await multiSetLocalStorage([
         ['@authRole', role],
         ['@authToken', token],
+        ['@refreshToken', refreshToken],
         ['@authID', _id],
       ]);
 
@@ -165,10 +172,11 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const handleSignOut = useCallback(async () => {
     await client.clearStore();
-    await AsyncStorage.multiRemove([
+    await multiRemoveLocalStorage([
       '@authWallet',
       '@authWalletName',
       '@authToken',
+      '@refreshToken',
       '@authEmail',
       '@authPass',
       '@authRole',
@@ -188,14 +196,14 @@ export const AuthProvider: React.FC = ({ children }) => {
   const handleSetWallet = useCallback(
     async (walletID: string | null, walletName: string | null) => {
       if (walletID && walletName) {
-        await AsyncStorage.multiSet([
+        await multiSetLocalStorage([
           ['@authWallet', walletID],
           ['@authWalletName', walletName],
         ]);
         setWallet(walletID);
         setWalletName(walletName);
       } else {
-        await AsyncStorage.multiRemove(['@authWallet', '@authWalletName']);
+        await multiRemoveLocalStorage(['@authWallet', '@authWalletName']);
         setWallet(null);
         setWalletName(null);
       }
@@ -216,14 +224,12 @@ export const AuthProvider: React.FC = ({ children }) => {
       if (!!purchases.length) {
         const { transactionDate, renewDate, subscriptionPeriodAndroid } = plan;
 
-        const {
-          newTransactionDate,
-          newRenewDate,
-        } = await setNewSubscriptionsDate(
-          Number(transactionDate),
-          String(subscriptionPeriodAndroid),
-          Number(renewDate),
-        );
+        const { newTransactionDate, newRenewDate } =
+          await setNewSubscriptionsDate(
+            Number(transactionDate),
+            String(subscriptionPeriodAndroid),
+            Number(renewDate),
+          );
 
         const transactionData = {
           ...plan,

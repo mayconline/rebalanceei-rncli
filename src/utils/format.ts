@@ -70,13 +70,14 @@ export const formatErrors = (error: string) =>
     'User or Password Invalid': 'Usuário ou Senha inválido',
     'Token Not Exists': 'Token não cadastrado',
     'Token Invalid or Expired': 'Token inválido ou expirado',
+    'Refresh Token Invalid or Expired': 'Refresh Token inválido ou expirado',
     'User Exists': 'Usuário já cadastrado',
     'User Not Exists': 'Usuário não cadastrado',
     'Email Already Send': 'E-mail enviado',
     'Code Invalid or Expired': 'Code inválido ou expirado',
     'User Unauthorized': 'Usuário não autorizado',
     'User Inactive': 'Usuário desabilitado',
-    'Wallet Not Found': 'Carteira não encontrada',
+    'Wallet Not Found': 'Selecione a carteira',
     'Ticket Not Found': 'Ativo não encontrado',
     'Ticket Exists': 'Ativo já cadastrado',
     'Tickets limited to 16 items': 'Limite de 16 ativos já cadastrados',
@@ -85,9 +86,9 @@ export const formatErrors = (error: string) =>
     'Failed Stock API': 'Erro ao buscar os dados',
     'Failed SendGrid': 'Falha ao enviar o e-mail',
     'Response not successful: Received status code 400':
-      'Nenhuma carteira selecionada',
+      'Selecione a carteira e tente novamente',
     'Response not successful: Received status code 500':
-      'Nenhuma carteira selecionada',
+      'Houve um erro, por favor tente novamente',
     'Network request failed': 'Falha de conexão com o servidor',
     'Payment is Cancelled.': 'Pagamento não realizado',
     'An unknown or unexpected error has occured. Please try again later.':
