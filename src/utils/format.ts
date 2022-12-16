@@ -89,6 +89,8 @@ export const formatErrors = (error: string) =>
       'Selecione a carteira e tente novamente',
     'Response not successful: Received status code 500':
       'Houve um erro, por favor tente novamente',
+    'Response not successful: Received status code 502':
+      'Houve um erro, por favor tente novamente',
     'Network request failed': 'Falha de conexão com o servidor',
     'Payment is Cancelled.': 'Pagamento não realizado',
     'An unknown or unexpected error has occured. Please try again later.':
