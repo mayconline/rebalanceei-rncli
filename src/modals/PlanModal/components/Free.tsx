@@ -135,7 +135,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
             const transactionData = {
               transactionDate: purchase?.transactionDate,
               renewDate: renewSubscription,
-              description: skuID?.description,
+              description: skuID?.name,
               localizedPrice:
                 skuID?.subscriptionOfferDetails?.[0]?.pricingPhases
                   ?.pricingPhaseList?.[0]?.formattedPrice,
@@ -202,7 +202,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     <>
       <CardPlan
         title="Plano Básico - Ativo"
-        descriptions={['+ Até 2 Carteiras', '+ Até 16 Ativos em cada carteira']}
+        descriptions={['😕 Carteira e Ativos limitados']}
         plan="Grátis"
         currentPlan
         disabled
@@ -224,22 +224,22 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
           return (
             <CardPlan
               key={subscription.productId}
-              title={subscription.description}
+              title={subscription.name}
               descriptions={
                 subscriptionPeriodAndroid === 'P1M'
-                  ? ['📊 Recursos exclusivos', '✔ Renovação automática']
+                  ? ['📊 Recursos exclusivos', '✅ Renovação automática']
                   : [
-                      '📊 Recursos exclusivos',
-                      '💰 20% off',
-                      '⏲️ Por tempo limitado',
-                      '✔ Renovação automática',
+                      '🔖 Promoção',
+                      '💰 25% de desconto',
+                      '😍 Imperdível',
+                      '✅ Renovação automática',
                     ]
               }
               plan={`${localizedPrice} / ${
                 subscriptionPeriodAndroid === 'P1M' ? 'Mês' : 'Ano'
               }`}
               active={planName === subscriptionPeriodAndroid}
-              onPress={() =>
+              onPressIn={() =>
                 handleChangeOptionPlan(subscription, subscriptionPeriodAndroid)
               }
             />

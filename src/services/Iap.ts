@@ -11,8 +11,8 @@ import {
 import { IPlan } from '../contexts/authContext';
 
 export const listSku = [
-  'rebalanceei_premium_mensal_22',
-  'rebalanceei_premium_anual_22',
+  'rebalanceei_premium_mensal_23',
+  'rebalanceei_premium_anual_23',
 ];
 
 export const validHasSubscription = async (plan?: IPlan) => {

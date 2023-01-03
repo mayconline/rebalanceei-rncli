@@ -11,6 +11,10 @@ import { GET_SUM_EARNING } from '../Earning';
 
 const apiMock = new MockAdapter(api);
 
+jest.mock('../../utils/currentYear', () => ({
+  CURRENT_YEAR: 2022,
+}));
+
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     wallet: '5fa1d752a8c5892a48c69b35',
@@ -144,6 +148,8 @@ describe('AddTicket Tab', () => {
     expect(submitButton).toHaveProperty('children', ['Alterar']);
 
     await act(async () => fireEvent.press(submitButton));
+
+    expect(setParams).toHaveBeenCalledTimes(1);
 
     expect(setParams).toHaveBeenCalledWith({ ticket: null });
   });

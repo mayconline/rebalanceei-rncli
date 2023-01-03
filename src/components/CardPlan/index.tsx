@@ -8,6 +8,8 @@ import {
   CardPlanContainerDescription,
   CardPlanDescription,
   CardPlanRole,
+  PlanRadioSelect,
+  CardPlanHeaderGroup,
 } from './styles';
 
 interface ICardPlan extends TouchableOpacityProps {
@@ -23,11 +25,15 @@ const CardPlan = ({
   descriptions,
   plan,
   currentPlan = false,
-  active,
+  active = false,
   ...rest
 }: ICardPlan) => (
   <Wrapper currentPlan={currentPlan} active={active} {...rest}>
-    <CardPlanTitle>{title}</CardPlanTitle>
+    <CardPlanHeaderGroup>
+      <CardPlanTitle>{title}</CardPlanTitle>
+      {!currentPlan && <PlanRadioSelect selected={active} />}
+    </CardPlanHeaderGroup>
+
     <CardPlanGroup>
       <CardPlanContainerDescription>
         {descriptions?.map((description, index) => (

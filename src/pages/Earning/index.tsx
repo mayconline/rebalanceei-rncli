@@ -14,6 +14,7 @@ import EditEarningModal from '../../modals/EditEarningModal';
 
 import AmountEarning, { IDataSumEarning } from '../../components/AmountEarning';
 import LayoutTab from '../../components/LayoutTab';
+import { CURRENT_YEAR } from '../../utils/currentYear';
 
 const initialFilter = [
   {
@@ -60,9 +61,7 @@ const Earning = ({
   const [selectedFilter, setSelectFilter] = useState<string>('month');
 
   const [openModal, setOpenModal] = useState(false);
-  const [currentYear, setCurrentYear] = useState<number>(
-    Number(new Date().getFullYear()),
-  );
+  const [currentYear, setCurrentYear] = useState<number>(CURRENT_YEAR);
   const [earningData, setEarningData] = useState<IEarning[]>();
   const [editEarningData, setEditEarningData] = useState<IEarning>(
     {} as IEarning,

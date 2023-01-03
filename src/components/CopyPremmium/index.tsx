@@ -16,15 +16,15 @@ interface ICopyPremmium {
 const CopyPremmium = ({ isPremmium = false }: ICopyPremmium) => (
   <ContainerPremmium>
     <Title accessibilityRole="header">
-      {isPremmium ? 'Premium' : 'Torne-se Premium'}
+      {isPremmium ? 'Premium' : 'Assine Já 👇'}
     </Title>
     <ContainerPremmiumGroup>
       <ContainerDescription>
-        <Description>+ Carteiras ilimitadas</Description>
-        <Description>+ Ativos ilimitados</Description>
-        <Description>+ Gráficos exclusivos</Description>
-        <Description>+ Sem Anúncios</Description>
-        <Description>+ Todos os Benefícios do app</Description>
+        <Description>💰 Menu de Proventos</Description>
+        <Description>📊 Gráficos exclusivos</Description>
+        <Description>📂 Carteiras ilimitadas</Description>
+        <Description>🛒 Ativos ilimitados</Description>
+        <Description>🚫 Sem Anúncios</Description>
       </ContainerDescription>
 
       <ImagePremmium translateX={10} />

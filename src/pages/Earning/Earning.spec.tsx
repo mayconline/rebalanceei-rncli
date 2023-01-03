@@ -6,6 +6,10 @@ import Earning, {
 } from './index';
 import { render, fireEvent, act, waitFor } from '../../utils/testProvider';
 
+jest.mock('../../utils/currentYear', () => ({
+  CURRENT_YEAR: 2022,
+}));
+
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     wallet: '5fa1d752a8c5892a48c69b35',
