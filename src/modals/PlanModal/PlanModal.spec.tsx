@@ -1,5 +1,5 @@
 import React from 'react';
-import PlanModal, { GET_USER_BY_TOKEN } from './index';
+import PlanModal from './index';
 import { render, fireEvent, act } from '../../utils/testProvider';
 import { Alert } from 'react-native';
 import * as CancelPlan from '../../utils/CancelPlan';
@@ -9,22 +9,6 @@ import { sendRequestSubscription } from '../../services/Iap';
 const mockedOnClose = jest.fn();
 const mockedAlert = (Alert.alert = jest.fn());
 const mockedLinkCancelPlan = jest.spyOn(CancelPlan, 'getLinkCancelPlan');
-
-jest.mock('../../contexts/authContext', () => ({
-  useAuth: () => ({
-    plan: {
-      transactionDate: 1612968855335,
-      renewDate: 1613978855335,
-      description: 'Premium Mensal',
-      localizedPrice: 'R$ 19,99',
-      productId: 'rebalanceei_premium_mensal_23',
-      subscriptionPeriodAndroid: 'P1M',
-      packageName: 'com.rebalanceei',
-      transactionId: '12121221',
-    },
-    handleSetLoading: jest.fn(),
-  }),
-}));
 
 const SUBSCRIPTIONS_MOCK = [
   {
@@ -77,6 +61,12 @@ const SUBSCRIPTIONS_MOCK = [
   },
 ];
 
+const mockedUseAuth = jest.fn();
+
+jest.mock('../../contexts/authContext', () => ({
+  useAuth: () => mockedUseAuth(),
+}));
+
 jest.mock('../../services/Iap', () => ({
   listSku: ['rebalanceei_premium_mensal_23', 'rebalanceei_premium_anual_23'],
   useIAP: (): Record<string, unknown> => ({
@@ -90,22 +80,28 @@ jest.mock('../../services/Iap', () => ({
 
 describe('PlanModal', () => {
   it('should successfully list current plan and options premium', async () => {
+    mockedUseAuth.mockReturnValue({
+      plan: null,
+      handleSetLoading: jest.fn(),
+      showBanner: true,
+    });
+
     const {
-      findByA11yRole,
+      findAllByA11yRole,
       getByText,
       getAllByText,
       getByA11yRole,
       findByText,
-    } = render(<PlanModal onClose={mockedOnClose} />, [
-      SUCCESSFUL_GET_ROLE_USER,
-    ]);
+    } = render(<PlanModal onClose={mockedOnClose} />);
 
-    const title = await findByA11yRole('header');
-    expect(title).toHaveProperty('children', ['Meu Plano Atual']);
+    const title = await findAllByA11yRole('header');
+    expect(title[0]).toHaveProperty('children', ['Meu Plano Atual']);
 
     await findByText(/Plano Básico - Ativo/i);
     getByText(/Grátis/i);
     getByText(/Carteira e Ativos limitados/i);
+
+    expect(title[1]).toHaveProperty('children', ['Assine Já 👇']);
 
     getByText(/Menu de Proventos/i);
     getByText(/Gráficos exclusivos/i);
@@ -140,9 +136,23 @@ describe('PlanModal', () => {
   });
 
   it('should successfully list current plan premium', async () => {
+    mockedUseAuth.mockReturnValue({
+      plan: {
+        transactionDate: 1612968855335,
+        renewDate: 1613978855335,
+        description: 'Premium Mensal',
+        localizedPrice: 'R$ 19,99',
+        productId: 'rebalanceei_premium_mensal_23',
+        subscriptionPeriodAndroid: 'P1M',
+        packageName: 'com.rebalanceei',
+        transactionId: '12121221',
+      },
+      handleSetLoading: jest.fn(),
+      showBanner: false,
+    });
+
     const { findAllByA11yRole, findByText, getByText, getByA11yRole } = render(
       <PlanModal onClose={mockedOnClose} />,
-      [SUCCESSFUL_GET_ROLE_PREMIUM],
     );
 
     const title = await findAllByA11yRole('header');
@@ -185,33 +195,3 @@ describe('PlanModal', () => {
     );
   });
 });
-
-const SUCCESSFUL_GET_ROLE_USER = {
-  request: {
-    query: GET_USER_BY_TOKEN,
-  },
-  result: {
-    data: {
-      getUserByToken: {
-        _id: 'id_logged',
-        role: 'USER',
-        __typename: 'User',
-      },
-    },
-  },
-};
-
-const SUCCESSFUL_GET_ROLE_PREMIUM = {
-  request: {
-    query: GET_USER_BY_TOKEN,
-  },
-  result: {
-    data: {
-      getUserByToken: {
-        _id: 'id_logged',
-        role: 'PREMIUM',
-        __typename: 'User',
-      },
-    },
-  },
-};

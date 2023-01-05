@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert } from 'react-native';
-import { useAuth } from '../../../contexts/authContext';
+import { IPlan, useAuth } from '../../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
 
 import CopyPremmium from '../../../components/CopyPremmium';
@@ -8,7 +8,7 @@ import CardPlan from '../../../components/CardPlan';
 import Button from '../../../components/Button';
 
 import { ContainerButtons, SubTitle } from '../styles';
-import { GET_USER_BY_TOKEN, IPlanName, IUser } from '../index';
+import { IPlanName } from '../index';
 
 import TextError from '../../../components/TextError';
 
@@ -25,7 +25,13 @@ import { gql, useMutation } from '@apollo/client';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
 
-export interface IUpdateRole {
+interface IUser {
+  _id: string;
+  role: string;
+  plan?: IPlan;
+}
+
+interface IUpdateRole {
   updateRole: IUser;
 }
 
@@ -69,12 +75,6 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
           role: 'PREMIUM',
           ...plan,
         },
-        refetchQueries: [
-          {
-            query: GET_USER_BY_TOKEN,
-          },
-        ],
-        awaitRefetchQueries: true,
       });
 
       logEvent('successful updateRole at Plan Free Modal');

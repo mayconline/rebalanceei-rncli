@@ -2,26 +2,14 @@ import React, { useContext, useState, useCallback } from 'react';
 
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
-import { useLazyQuery, gql } from '@apollo/client';
 
 import { Wrapper, ScrollView, ContainerTitle, BackIcon, Title } from './styles';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import TextError from '../../components/TextError';
 import Free from './components/Free';
 import Premium from './components/Premium';
-import { IPlan, useAuth } from '../../contexts/authContext';
-
-export interface IUser {
-  _id: string;
-  role: string;
-  plan?: IPlan;
-}
-
-interface IGetUser {
-  getUserByToken: IUser;
-}
+import { useAuth } from '../../contexts/authContext';
 
 interface PlanModal {
   onClose(): void;
@@ -30,47 +18,24 @@ interface PlanModal {
 export type IPlanName = 'FREE' | 'P1Y' | 'P1M' | null;
 
 const PlanModal = ({ onClose }: PlanModal) => {
-  const [
-    getUserByToken,
-    { data, loading: queryLoading, error: queryError },
-  ] = useLazyQuery<IGetUser>(GET_USER_BY_TOKEN, {
-    fetchPolicy: 'cache-first',
-  });
-
-  const currentRole = data?.getUserByToken?.role;
-  const { handleSetLoading } = useAuth();
+  const { showBanner } = useAuth();
 
   const { color } = useContext(ThemeContext);
   const [planName, setPlanName] = useState<IPlanName>(null);
 
   useFocusEffect(
     useCallback(() => {
-      currentRole === 'USER'
-        ? handleSelectPlan('P1Y')
-        : handleSelectPlan('FREE');
-    }, [currentRole]),
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      getUserByToken();
-    }, []),
+      showBanner ? handleSelectPlan('P1Y') : handleSelectPlan('FREE');
+    }, [showBanner]),
   );
 
   const handleSelectPlan = useCallback((plan: IPlanName) => {
     setPlanName(plan);
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      handleSetLoading(queryLoading);
-    }, [queryLoading]),
-  );
-
   return (
     <Wrapper>
       <ScrollView>
-        {!!queryError && <TextError>{queryError?.message}</TextError>}
         <ContainerTitle>
           <Title accessibilityRole="header">Meu Plano Atual</Title>
           <BackIcon
@@ -85,23 +50,14 @@ const PlanModal = ({ onClose }: PlanModal) => {
             />
           </BackIcon>
         </ContainerTitle>
-        {currentRole === 'USER' && (
+        {showBanner ? (
           <Free planName={planName} handleSelectPlan={handleSelectPlan} />
+        ) : (
+          <Premium />
         )}
-
-        {currentRole === 'PREMIUM' && <Premium />}
       </ScrollView>
     </Wrapper>
   );
 };
-
-export const GET_USER_BY_TOKEN = gql`
-  query getUserByToken {
-    getUserByToken {
-      _id
-      role
-    }
-  }
-`;
 
 export default PlanModal;
