@@ -138,7 +138,9 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
         <InputForm
           label={`Total de ${formatMonth(earningData?.month!)}`}
           value={amount?.preview}
-          defaultValue={formatNumber(earningData?.amount)}
+          defaultValue={
+            earningData?.amount ? formatNumber(earningData?.amount) : ''
+          }
           placeholder="R$ 0000,00"
           keyboardType="number-pad"
           autoFocus={focus === 1}
