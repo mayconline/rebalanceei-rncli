@@ -104,8 +104,8 @@ export const openPlanModalOnError = (errorMessage?: string) => {
   if (!errorMessage?.length) return false;
 
   const openPlanModal =
-    errorMessage === 'Tickets limited to 16 items' ||
-    errorMessage === 'Wallet limited to 2 items';
+    errorMessage === 'Tickets limit Reached' ||
+    errorMessage === 'Wallet limit Reached';
 
   return openPlanModal;
 };
