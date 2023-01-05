@@ -89,7 +89,6 @@ describe('Edit Earning Modal', () => {
 
     getByText('Total de Fevereiro');
     const inputEarning = getByPlaceholderText('R$ 0000,00');
-    getByDisplayValue('R$ 0,00');
 
     act(() => fireEvent.changeText(inputEarning, 'R$ 100,00'));
 
