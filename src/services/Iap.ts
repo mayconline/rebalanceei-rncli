@@ -141,7 +141,7 @@ export const restoreSubscription = async () => {
 export const sendRequestSubscription = async (
   sku: string,
   subscriptionOffers: SubscriptionOffer[],
-): Promise<SubscriptionPurchase | null> => {
+): Promise<void | SubscriptionPurchase | null> => {
   return await requestSubscription({ sku, subscriptionOffers });
 };
 

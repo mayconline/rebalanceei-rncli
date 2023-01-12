@@ -207,8 +207,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
         currentPlan
         disabled
       />
-      <CopyPremmium />
-
+      {!!subscriptions.length && <CopyPremmium />}
       {!!mutationError && <TextError>{mutationError?.message}</TextError>}
       {!!errorMessage && <TextError>{errorMessage}</TextError>}
 
