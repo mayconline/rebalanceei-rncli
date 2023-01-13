@@ -10,6 +10,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Free from './components/Free';
 import Premium from './components/Premium';
 import { useAuth } from '../../contexts/authContext';
+import { withIAPContext } from '../../services/Iap';
 
 interface PlanModal {
   onClose(): void;
@@ -60,4 +61,4 @@ const PlanModal = ({ onClose }: PlanModal) => {
   );
 };
 
-export default PlanModal;
+export default withIAPContext(PlanModal);

@@ -19,6 +19,7 @@ import {
   Subscription,
   Purchase,
   sendRequestSubscription,
+  flushFailedPurchasesCachedAsPendingAndroid,
 } from '../../../services/Iap';
 
 import { gql, useMutation } from '@apollo/client';
@@ -101,7 +102,9 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
   useEffect(() => {
     if (!!listSku.length && connected) {
-      getSubscriptions({ skus: listSku });
+      flushFailedPurchasesCachedAsPendingAndroid().then(() =>
+        getSubscriptions({ skus: listSku }),
+      );
     }
   }, [getSubscriptions, listSku, connected]);
 
@@ -123,14 +126,14 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
             setErrorMessage(undefined);
 
             const { renewSubscription } =
-              await calculateInitialRenewSubscription(
-                purchase?.transactionDate,
-                String(
+              await calculateInitialRenewSubscription({
+                transactionDate: purchase?.transactionDate,
+                subscriptionPeriodAndroid: String(
                   skuID?.subscriptionOfferDetails?.[0]?.pricingPhases
                     ?.pricingPhaseList?.[0]?.billingPeriod,
                 ),
-                false,
-              );
+                isTest: false,
+              });
 
             const transactionData = {
               transactionDate: purchase?.transactionDate,
@@ -208,6 +211,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
         disabled
       />
       {!!subscriptions.length && <CopyPremmium />}
+
       {!!mutationError && <TextError>{mutationError?.message}</TextError>}
       {!!errorMessage && <TextError>{errorMessage}</TextError>}
 

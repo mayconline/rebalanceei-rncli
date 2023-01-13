@@ -7,8 +7,14 @@ import {
   requestSubscription,
   SubscriptionPurchase,
   SubscriptionOffer,
+  flushFailedPurchasesCachedAsPendingAndroid,
 } from 'react-native-iap';
 import { IPlan } from '../contexts/authContext';
+
+type SubscriptionTransaction = {
+  transactionDate: number;
+  subscriptionPeriodAndroid: string;
+};
 
 export const listSku = [
   'rebalanceei_premium_mensal_23',
@@ -34,20 +40,20 @@ export const validHasSubscription = async (plan?: IPlan) => {
   return true;
 };
 
-export const setNewSubscriptionsDate = async (
-  transactionDate: number,
-  subscriptionPeriodAndroid: string,
-  renewDate: number,
-) => {
+export const setNewSubscriptionsDate = async ({
+  transactionDate,
+  subscriptionPeriodAndroid,
+  renewDate,
+}: SubscriptionTransaction & { renewDate: number }) => {
   const today = new Date().getTime();
 
   if (today > Number(renewDate)) {
     const { newTransactionDate, newRenewDate } =
-      await calculateRenovateSubscriptionDate(
+      await calculateRenovateSubscriptionDate({
         transactionDate,
         subscriptionPeriodAndroid,
-        false,
-      );
+        isTest: false,
+      });
 
     return {
       newTransactionDate,
@@ -61,11 +67,13 @@ export const setNewSubscriptionsDate = async (
   }
 };
 
-const calculateRenovateSubscriptionDate = async (
-  transactionDate: number,
-  subscriptionPeriodAndroid: string,
-  isTest: boolean,
-) => {
+const calculateRenovateSubscriptionDate = async ({
+  transactionDate,
+  subscriptionPeriodAndroid,
+  isTest,
+}: SubscriptionTransaction & {
+  isTest: boolean;
+}) => {
   const purchaseDay = new Date(Number(transactionDate));
 
   if (isTest) {
@@ -104,11 +112,11 @@ const calculateRenovateSubscriptionDate = async (
   }
 };
 
-export const calculateInitialRenewSubscription = async (
-  transactionDate: number,
-  subscriptionPeriodAndroid: string,
-  isTest: boolean,
-) => {
+export const calculateInitialRenewSubscription = async ({
+  transactionDate,
+  subscriptionPeriodAndroid,
+  isTest,
+}: SubscriptionTransaction & { isTest: boolean }) => {
   const initalDate = new Date(transactionDate);
 
   if (isTest) {
@@ -148,4 +156,4 @@ export const sendRequestSubscription = async (
 export type Subscription = SubscriptionType;
 export type Purchase = PurchaseType;
 
-export { withIAPContext, useIAP };
+export { withIAPContext, useIAP, flushFailedPurchasesCachedAsPendingAndroid };

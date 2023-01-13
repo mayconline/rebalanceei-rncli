@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
 import {
   useRoute,
   useNavigation,
@@ -144,12 +144,17 @@ const AddTicket = () => {
       console.error(mutationError?.message + err);
 
       handleSetLoading(false);
-
-      if (openPlanModalOnError(mutationError?.message)) {
-        setOpenModal('PLAN');
-      }
     }
   }, [ticketForm, wallet]);
+
+  useEffect(() => {
+    if (
+      mutationError?.message &&
+      openPlanModalOnError(mutationError?.message)
+    ) {
+      setOpenModal('PLAN');
+    }
+  }, [mutationError]);
 
   const handleSetGrade = useCallback((grade: string) => {
     setTicketForm(ticketForm => ({ ...ticketForm, grade }));

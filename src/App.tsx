@@ -5,7 +5,6 @@ import { AuthProvider } from './contexts/authContext';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './services/apollo';
 import SplashScreen from 'react-native-splash-screen';
-import { withIAPContext } from './services/Iap';
 
 import Routes from './routes';
 
@@ -25,4 +24,4 @@ const App = () => {
   );
 };
 
-export default withIAPContext(App);
+export default App;

@@ -225,11 +225,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const { transactionDate, renewDate, subscriptionPeriodAndroid } = plan;
 
         const { newTransactionDate, newRenewDate } =
-          await setNewSubscriptionsDate(
-            Number(transactionDate),
-            String(subscriptionPeriodAndroid),
-            Number(renewDate),
-          );
+          await setNewSubscriptionsDate({
+            transactionDate: Number(transactionDate),
+            subscriptionPeriodAndroid: String(subscriptionPeriodAndroid),
+            renewDate: Number(renewDate),
+          });
 
         const transactionData = {
           ...plan,

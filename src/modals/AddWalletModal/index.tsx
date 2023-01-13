@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { ThemeContext } from 'styled-components/native';
 import { useMutation, gql } from '@apollo/client';
 import { useAuth } from '../../contexts/authContext';
@@ -13,6 +13,10 @@ import EditWallet from '../../components/EditWallet';
 import useAmplitude from '../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
 import LayoutForm from '../../components/LayoutForm';
+import { openPlanModalOnError } from '../../utils/format';
+import { Modal } from 'react-native';
+import SuccessModal from '../SuccessModal';
+import PlanModal from '../PlanModal';
 
 interface IAddWalletModal {
   onClose(): void;
@@ -33,13 +37,12 @@ const AddWalletModal = ({
   const { gradient } = useContext(ThemeContext);
   const [wallet, setWallet] = useState('');
   const [focus, setFocus] = useState(0);
+  const [openModal, setOpenModal] = useState<'SUCCESS' | 'PLAN' | null>(null);
 
   const isEdit = !!walletData?._id;
 
-  const [
-    createWallet,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation(CREATE_WALLET);
+  const [createWallet, { loading: mutationLoading, error: mutationError }] =
+    useMutation(CREATE_WALLET);
 
   useFocusEffect(
     useCallback(() => {
@@ -67,12 +70,13 @@ const AddWalletModal = ({
       });
 
       setWallet('');
-      beforeModalClose();
 
       handleSetWallet(
         response?.data?.createWallet?._id,
         response?.data?.createWallet?.description,
       );
+
+      setOpenModal('SUCCESS');
 
       logEvent('successful createWallet at Add Wallet');
     } catch (err: any) {
@@ -81,6 +85,15 @@ const AddWalletModal = ({
       handleSetLoading(false);
     }
   }, [wallet]);
+
+  useEffect(() => {
+    if (
+      mutationError?.message &&
+      openPlanModalOnError(mutationError?.message)
+    ) {
+      setOpenModal('PLAN');
+    }
+  }, [mutationError]);
 
   const handleSetName = useCallback((walletName: string) => {
     setWallet(walletName);
@@ -146,6 +159,31 @@ const AddWalletModal = ({
           </>
         )}
       </LayoutForm>
+
+      {openModal === 'SUCCESS' && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={openModal === 'SUCCESS'}
+          statusBarTranslucent={false}
+        >
+          <SuccessModal
+            onClose={() => setOpenModal(null)}
+            beforeModalClose={() => beforeModalClose()}
+          />
+        </Modal>
+      )}
+
+      {openModal === 'PLAN' && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={openModal === 'PLAN'}
+          statusBarTranslucent={true}
+        >
+          <PlanModal onClose={() => setOpenModal(null)} />
+        </Modal>
+      )}
     </>
   );
 };
