@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthProvider } from './contexts/authContext';
+import { withIAPContext } from './services/Iap';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './services/apollo';
 import SplashScreen from 'react-native-splash-screen';
@@ -24,4 +25,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default withIAPContext(App);
