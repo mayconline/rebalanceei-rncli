@@ -76,6 +76,8 @@ jest.mock('../../services/Iap', () => ({
     finishTransaction: jest.fn(),
   }),
   sendRequestSubscription: jest.fn(),
+  flushFailedPurchasesCachedAsPendingAndroid: jest.fn().mockResolvedValue(true),
+  withIAPContext: jest.fn,
 }));
 
 describe('PlanModal', () => {

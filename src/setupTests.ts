@@ -12,6 +12,9 @@ jest.mock('./services/AdMob', () => ({
   }),
   BannerAd: () => null,
 }));
+jest.mock('./services/Iap', () => ({
+  withIAPContext: jest.fn,
+}));
 jest.mock('@react-native-community/netinfo', () => {
   const defaultState = {
     type: 'cellular',
