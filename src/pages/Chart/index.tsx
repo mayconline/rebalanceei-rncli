@@ -51,7 +51,7 @@ const Chart = () => {
   const [dataGraph, setDataGraph] = useState<PieChartData[]>([]);
   const [selectedFilter, setSelectFilter] = useState<string>('CLASS');
 
-  const { wallet, handleSetLoading } = useAuth();
+  const { wallet } = useAuth();
 
   useFocusEffect(
     useCallback(() => {
@@ -59,13 +59,11 @@ const Chart = () => {
     }, []),
   );
 
-  const [
-    getReportsByType,
-    { data, loading: queryLoading, error: queryError },
-  ] = useLazyQuery<IDataReports>(GET_REPORTS_BY_TYPE, {
-    variables: { walletID: wallet, type: selectedFilter },
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getReportsByType, { data, loading: queryLoading, error: queryError }] =
+    useLazyQuery<IDataReports>(GET_REPORTS_BY_TYPE, {
+      variables: { walletID: wallet, type: selectedFilter },
+      fetchPolicy: 'cache-and-network',
+    });
 
   useFocusEffect(
     useCallback(() => {
