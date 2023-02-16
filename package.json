@@ -28,7 +28,7 @@
     "react": "18.2.0",
     "react-native": "0.69.5",
     "react-native-gesture-handler": "2.8.0",
-    "react-native-google-mobile-ads": "9.0.0",
+    "react-native-google-mobile-ads": "9.1.1",
     "react-native-iap": "12.4.14",
     "react-native-linear-gradient": "2.6.2",
     "react-native-reanimated": "2.13.0",

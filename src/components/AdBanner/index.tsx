@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { useAuth } from '../../contexts/authContext';
 import { BannerAd, BannerAdSize, BANNER_ID } from '../../services/AdMob';
@@ -6,24 +6,17 @@ import { BannerAd, BannerAdSize, BANNER_ID } from '../../services/AdMob';
 const AdBanner = () => {
   const { showBanner } = useAuth();
 
-  const [hasError, setHasError] = useState(false);
-
-  const handleAdError = (error: Error) => {
-    setHasError(!!error);
-    console.log(error);
-  };
-
-  return !hasError && showBanner ? (
+  return showBanner ? (
     <SafeAreaView
       style={{
         alignSelf: 'center',
-        marginVertical: 8,
+        marginVertical: 24,
       }}
     >
       <BannerAd
         size={BannerAdSize.BANNER}
         unitId={BANNER_ID}
-        onAdFailedToLoad={error => handleAdError(error)}
+        onAdFailedToLoad={error => console.log(error)}
       />
     </SafeAreaView>
   ) : null;

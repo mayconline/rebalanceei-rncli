@@ -48,7 +48,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
   }, [isLoaded, openAD]);
 
   useEffect(() => {
-    if ((!isLoaded && openAD) || isClosed) {
+    if (isClosed) {
       setLoading(false);
       setOpenModal('Plan');
     }
@@ -92,8 +92,6 @@ const SuccessModal: React.FC<ISuccessModal> = ({
 
   const handleClosePlanModal = useCallback(async () => {
     setOpenModal(null);
-    beforeModalClose();
-    onClose();
   }, []);
 
   return (
