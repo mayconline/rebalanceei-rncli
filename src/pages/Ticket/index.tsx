@@ -45,9 +45,8 @@ const Ticket = () => {
   const [selectedFilter, setSelectFilter] = useState<string>('grade');
   const [ticketData, setTicketData] = useState<ITickets[]>();
 
-  const [updateRole, { error: mutationError }] = useMutation<IUpdateRole>(
-    UPDATE_ROLE,
-  );
+  const [updateRole, { error: mutationError }] =
+    useMutation<IUpdateRole>(UPDATE_ROLE);
 
   useFocusEffect(
     useCallback(() => {

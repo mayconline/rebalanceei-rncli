@@ -32,7 +32,7 @@ interface IUser {
   plan?: IPlan;
 }
 
-interface IUpdateRole {
+export interface IUpdateRole {
   updateRole: IUser;
 }
 
