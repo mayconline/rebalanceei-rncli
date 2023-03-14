@@ -43,10 +43,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected Boolean isHermesEnabled() {
       return BuildConfig.IS_HERMES_ENABLED;
     }
-    // @Override
-    // protected JSIModulePackage getJSIModulePackage() {
-    //   return new ReanimatedJSIModulePackage(); // <- add
-    // }
   };
 
   @Override
