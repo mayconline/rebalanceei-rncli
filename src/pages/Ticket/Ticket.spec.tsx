@@ -20,13 +20,13 @@ describe('Ticket Tab', () => {
       findAllByA11yLabel,
       getAllByA11yRole,
       getAllByA11yLabel,
-      getByText,
+      findByText,
       setParams,
       navigate,
     } = render(<Ticket />, [SUCCESSFUL_LIST_TICKETS]);
 
     await findByA11yRole('header');
-    getByText('Meus Ativos');
+    await findByText('Meus Ativos');
 
     const symbolItemOne = (await findAllByA11yLabel(/Código do Ativo/i))[0];
     expect(symbolItemOne).toHaveProperty('children', ['SAPR4']);
@@ -72,12 +72,10 @@ describe('Ticket Tab', () => {
   });
 
   it('should render empty component', async () => {
-    const {
-      findByA11yRole,
-      getByA11yRole,
-      findByText,
-      navigate,
-    } = render(<Ticket />, [EMPTY_LIST_TICKETS]);
+    const { findByA11yRole, getByA11yRole, findByText, navigate } = render(
+      <Ticket />,
+      [EMPTY_LIST_TICKETS],
+    );
 
     await findByA11yRole('header');
     await findByText('Adicione um ativo dando uma nota para ele.');
@@ -155,8 +153,7 @@ const SUCCESSFUL_LIST_TICKETS = {
           _id: '5fa47a6df704ca0f84523c04',
           averagePrice: 19.98,
           grade: 6,
-          name:
-            'CTEEP - Companhia de Transmissão de Energia Elétrica Paulista S.A.',
+          name: 'CTEEP - Companhia de Transmissão de Energia Elétrica Paulista S.A.',
           quantity: 45,
           symbol: 'TRPL4.SA',
           classSymbol: 'Ação',

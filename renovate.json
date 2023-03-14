@@ -23,10 +23,22 @@
       "matchPackageNames": [
         "@babel/core",
         "@babel/plugin-transform-named-capturing-groups-regex",
-        "@babel/runtime"
+        "@babel/runtime",
+        "@babel/preset-env",
+        "metro-react-native-babel-preset"
       ],
       "groupName": "babel dev-dependencies",
       "groupSlug": "babel-dev-dependencies"
+    },
+    {
+      "matchPackageNames": [
+        "babel-jest",
+        "jest",
+        "@types/jest",
+        "jest-styled-components"
+      ],
+      "groupName": "jest dev-dependencies",
+      "groupSlug": "jest-dev-dependencies"
     }
   ],
   "separateMajorMinor": true
