@@ -57,7 +57,7 @@ interface IAuthContext {
   userID: string | null;
   plan: IPlan | null;
   statePlan: IStatePlan;
-  handleSetWallet(walletID: string | null, walletName: string | null): void;
+  handleSetWallet(walletID: string, walletName: string | null): void;
   handleSignIn(user: ISignIn): Promise<void>;
   handleSignOut(): Promise<void>;
   setSelectTheme(selectedTheme: 'LIGHT' | 'DARK'): void;
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const defaultTheme: Theme = themes[deviceTheme] ?? themes.light;
 
   const [signed, setSigned] = useState<boolean>(false);
-  const [wallet, setWallet] = useState<string | null>(null);
+  const [wallet, setWallet] = useState<string>('');
   const [walletName, setWalletName] = useState<string | null>(null);
   const [showBanner, setShowBanner] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -185,7 +185,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     ]);
     setStatePlan(null);
     setShowBanner(false);
-    setWallet(null);
+    setWallet('');
     setWalletName(null);
     setPlan(null);
     setUserID(null);
@@ -194,7 +194,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const handleSetWallet = useCallback(
-    async (walletID: string | null, walletName: string | null) => {
+    async (walletID: string, walletName: string | null) => {
       if (walletID && walletName) {
         await multiSetLocalStorage([
           ['@authWallet', walletID],
@@ -204,7 +204,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setWalletName(walletName);
       } else {
         await multiRemoveLocalStorage(['@authWallet', '@authWalletName']);
-        setWallet(null);
+        setWallet('');
         setWalletName(null);
       }
     },

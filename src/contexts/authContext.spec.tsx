@@ -115,7 +115,7 @@ describe('Auth Context', () => {
     expect(result.current.wallet).toBe('1234');
     expect(result.current.walletName).toBe('myNewWallet');
 
-    act(() => result.current.handleSetWallet(null, null));
+    act(() => result.current.handleSetWallet('', null));
 
     await waitForNextUpdate();
 

@@ -112,7 +112,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
             }}
             source={require('../../../assets/looties/success-lootie.json')}
             autoPlay
-            loop
+            loop={false}
           />
         </LootieContainer>
         <Button
