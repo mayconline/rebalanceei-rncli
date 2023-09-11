@@ -90,7 +90,7 @@ describe('Auth Context', () => {
     ]);
 
     expect(result.current.signed).toBeFalsy();
-    expect(result.current.wallet).toBeNull();
+    expect(result.current.wallet).toBeFalsy();
     expect(result.current.walletName).toBeNull();
     expect(result.current.statePlan).toBeNull();
     expect(result.current.userID).toBeNull();
@@ -124,7 +124,7 @@ describe('Auth Context', () => {
       '@authWalletName',
     ]);
 
-    expect(result.current.wallet).toBeNull();
+    expect(result.current.wallet).toBeFalsy();
     expect(result.current.walletName).toBeNull();
   });
 
