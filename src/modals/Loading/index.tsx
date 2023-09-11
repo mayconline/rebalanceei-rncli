@@ -17,7 +17,8 @@ const Loading = () => {
         <LottieView
           source={require('../../../assets/looties/loading-lootie.json')}
           autoPlay
-          loop={true}
+          loop
+          style={{ width: '100%', height: 200 }}
         />
       </LootieContainer>
 

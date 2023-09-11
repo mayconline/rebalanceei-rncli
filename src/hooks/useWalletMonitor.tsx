@@ -9,12 +9,12 @@ const useWalletMonitor = (message?: string) => {
 
   const handleSetServerFailed = useCallback(() => {
     setHasServerFailed(true);
-    handleSetWallet(null, null);
+    handleSetWallet('', null);
   }, []);
 
   const handleSetInvalidWallet = useCallback(() => {
     sethasInvalidWallet(true);
-    handleSetWallet(null, null);
+    handleSetWallet('', null);
   }, []);
 
   useEffect(() => {

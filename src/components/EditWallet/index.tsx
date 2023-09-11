@@ -60,10 +60,8 @@ const EditWallet = ({
     handleSetLoading(false);
   }, []);
 
-  const [
-    updateWallet,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation<IWalletData>(UPDATE_WALLET);
+  const [updateWallet, { loading: mutationLoading, error: mutationError }] =
+    useMutation<IWalletData>(UPDATE_WALLET);
 
   const [
     deleteWallet,
@@ -132,7 +130,7 @@ const EditWallet = ({
         awaitRefetchQueries: true,
       });
 
-      if (currentWallet === wallet._id) handleSetWallet(null, null);
+      if (currentWallet === wallet._id) handleSetWallet('', null);
 
       handleGoBack();
 
