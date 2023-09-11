@@ -1,5 +1,7 @@
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
-require('react-native-reanimated').setUpTests();
+import { setUpTests } from 'react-native-reanimated';
+
+setUpTests();
 
 jest.mock('./services/AdMob', () => ({
   useInterstitialAd: () => ({
