@@ -105,10 +105,14 @@ const SuccessModal: React.FC<ISuccessModal> = ({
           <LottieView
             style={{
               backgroundColor: color.secondary,
+              width: '80%',
+              height: 200,
+              flex: 1,
+              alignSelf: 'center',
             }}
             source={require('../../../assets/looties/success-lootie.json')}
             autoPlay
-            loop={false}
+            loop
           />
         </LootieContainer>
         <Button
