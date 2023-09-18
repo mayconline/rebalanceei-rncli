@@ -42,7 +42,7 @@ const menuItens = [
   {
     lib: MaterialCommunityIcons,
     icon: 'shield-check',
-    description: 'Termos de Uso',
+    description: 'Termos de Uso e Política de Privacidade',
   },
   {
     lib: FontAwesome,
@@ -52,7 +52,7 @@ const menuItens = [
   {
     lib: Octicons,
     icon: 'versions',
-    description: 'Versão do APP - v1.7.14',
+    description: 'Versão do APP - v1.7.15',
   },
   {
     lib: AntDesign,
@@ -88,11 +88,11 @@ const MenuModal = ({ onClose }: MenuProps) => {
         return setOpenModal('User');
       case 'Meu Plano Atual':
         return setOpenModal('Plan');
-      case 'Termos de Uso':
+      case 'Termos de Uso e Política de Privacidade':
         return getTerms();
       case 'Ajuda':
         return setOpenModal('Help');
-      case 'Versão do APP - v1.7.14':
+      case 'Versão do APP - v1.7.15':
         return;
       case 'Sair':
         return handleSignOut();

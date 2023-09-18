@@ -64,7 +64,7 @@ const SignUp = () => {
     }
     if (!account.checkTerms) {
       return Alert.alert(
-        'Termos de Uso',
+        'Termos de Uso e Política de Privacidade',
         'É preciso aceitar os termos de uso para utilizar o app.',
         [
           {
