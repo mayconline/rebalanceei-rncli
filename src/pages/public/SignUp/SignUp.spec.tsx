@@ -53,7 +53,9 @@ describe('SignUp Page', () => {
     fireEvent.press(submitButton);
 
     expect(mockedAlert).toHaveBeenCalledTimes(1);
-    expect(mockedAlert.mock.calls[0][0]).toBe('Termos de Uso');
+    expect(mockedAlert.mock.calls[0][0]).toBe(
+      'Termos de Uso e Política de Privacidade',
+    );
     expect(mockedAlert.mock.calls[0][1]).toBe(
       'É preciso aceitar os termos de uso para utilizar o app.',
     );
