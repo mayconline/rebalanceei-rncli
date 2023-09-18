@@ -52,7 +52,7 @@ const menuItens = [
   {
     lib: Octicons,
     icon: 'versions',
-    description: 'Versão do APP - v1.7.15',
+    description: 'Versão do APP - v1.7.16',
   },
   {
     lib: AntDesign,
@@ -92,7 +92,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
         return getTerms();
       case 'Ajuda':
         return setOpenModal('Help');
-      case 'Versão do APP - v1.7.15':
+      case 'Versão do APP - v1.7.16':
         return;
       case 'Sair':
         return handleSignOut();
@@ -136,7 +136,9 @@ const MenuModal = ({ onClose }: MenuProps) => {
                   <MenuIcon>
                     <Icon name={icon} size={20} color={color.shadowBackdrop} />
                   </MenuIcon>
-                  <MenuTitle>{description}</MenuTitle>
+                  <MenuTitle numberOfLines={1} ellipsizeMode="tail">
+                    {description}
+                  </MenuTitle>
                 </Menu>
                 <Divider />
               </Fragment>
