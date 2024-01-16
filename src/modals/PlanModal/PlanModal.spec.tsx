@@ -18,11 +18,11 @@ const SUBSCRIPTIONS_MOCK = [
           pricingPhaseList: [
             {
               recurrenceMode: 1,
-              priceAmountMicros: '189990000',
+              priceAmountMicros: '335640000',
               billingCycleCount: 0,
               billingPeriod: 'P1Y',
               priceCurrencyCode: 'BRL',
-              formattedPrice: 'R$ 189,99',
+              formattedPrice: 'R$ 335,64',
             },
           ],
         },
@@ -30,10 +30,10 @@ const SUBSCRIPTIONS_MOCK = [
         offerToken: 'tokenOfferAnual',
       },
     ],
-    name: 'Premium Anual 2023',
+    name: 'Premium Anual 2024',
     productType: 'subs',
-    title: 'Premium Anual 2023 (Rebalanceei Investimento Ações)',
-    productId: 'rebalanceei_premium_anual_23',
+    title: 'Premium Anual 2024 (Rebalanceei Investimento Ações)',
+    productId: 'rebalanceei_premium_anual_2024',
   },
   {
     subscriptionOfferDetails: [
@@ -42,11 +42,11 @@ const SUBSCRIPTIONS_MOCK = [
           pricingPhaseList: [
             {
               recurrenceMode: 1,
-              priceAmountMicros: '19990000',
+              priceAmountMicros: '37970000',
               billingCycleCount: 0,
               billingPeriod: 'P1M',
               priceCurrencyCode: 'BRL',
-              formattedPrice: 'R$ 19,99',
+              formattedPrice: 'R$ 37,97',
             },
           ],
         },
@@ -54,10 +54,10 @@ const SUBSCRIPTIONS_MOCK = [
         offerToken: 'tokenOfferMensal',
       },
     ],
-    name: 'Premium Mensal 2023',
+    name: 'Premium Mensal 2024',
     productType: 'subs',
-    title: 'Premium Mensal 2023 (Rebalanceei Investimento Ações)',
-    productId: 'rebalanceei_premium_mensal_23',
+    title: 'Premium Mensal 2024 (Rebalanceei Investimento Ações)',
+    productId: 'rebalanceei_premium_mensal_24',
   },
 ];
 
@@ -68,7 +68,7 @@ jest.mock('../../contexts/authContext', () => ({
 }));
 
 jest.mock('../../services/Iap', () => ({
-  listSku: ['rebalanceei_premium_mensal_23', 'rebalanceei_premium_anual_23'],
+  listSku: ['rebalanceei_premium_mensal_24', 'rebalanceei_premium_anual_2024'],
   useIAP: (): Record<string, unknown> => ({
     connected: true,
     subscriptions: SUBSCRIPTIONS_MOCK,
@@ -112,13 +112,12 @@ describe('PlanModal', () => {
     getByText(/Sem Anúncios/i);
 
     getByText(/Premium Anual/i);
-    getByText(/Promoção/i);
-    getByText(/25% de desconto/i);
+    getByText(/R\$ 120,00 OFF no Plano Anual/i);
 
     getByText(/Premium Mensal/i);
-    getByText(/R\$ 19,99 \/ Mês/i);
+    getByText(/R\$ 37,97 \/ Mês/i);
 
-    getAllByText(/Gráficos exclusivos/i);
+    getAllByText(/Recursos exclusivos/i);
     getAllByText(/Renovação automática/i);
 
     const submitButton = getByA11yRole('button');
@@ -127,11 +126,11 @@ describe('PlanModal', () => {
     await act(async () => fireEvent.press(submitButton));
     expect(sendRequestSubscription).toHaveBeenCalledTimes(1);
     expect(sendRequestSubscription).toHaveBeenLastCalledWith(
-      'rebalanceei_premium_anual_23',
+      'rebalanceei_premium_anual_2024',
       [
         {
           offerToken: 'tokenOfferAnual',
-          sku: 'rebalanceei_premium_anual_23',
+          sku: 'rebalanceei_premium_anual_2024',
         },
       ],
     );
@@ -143,8 +142,8 @@ describe('PlanModal', () => {
         transactionDate: 1612968855335,
         renewDate: 1613978855335,
         description: 'Premium Mensal',
-        localizedPrice: 'R$ 19,99',
-        productId: 'rebalanceei_premium_mensal_23',
+        localizedPrice: 'R$ 37,97',
+        productId: 'rebalanceei_premium_mensal_24',
         subscriptionPeriodAndroid: 'P1M',
         packageName: 'com.rebalanceei',
         transactionId: '12121221',
@@ -161,7 +160,7 @@ describe('PlanModal', () => {
     expect(title[0]).toHaveProperty('children', ['Meu Plano Atual']);
 
     await findByText(/Premium Mensal - Ativo/i);
-    getByText(/R\$ 19,99 \/ Mês/i);
+    getByText(/R\$ 37,97 \/ Mês/i);
     getByText(/^Data da Renovação$/i);
     getByText(formatDate(1613978855335));
     getByText(
@@ -193,7 +192,7 @@ describe('PlanModal', () => {
     expect(mockedLinkCancelPlan).toHaveBeenCalledTimes(1);
     expect(mockedLinkCancelPlan).toHaveBeenCalledWith(
       'com.rebalanceei',
-      'rebalanceei_premium_mensal_23',
+      'rebalanceei_premium_mensal_24',
     );
   });
 });
