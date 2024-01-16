@@ -236,29 +236,29 @@ const AddTicket = () => {
 
             <FormRow>
               <InputForm
-                label="Preço Médio"
-                value={ticketForm.averagePreview}
-                placeholder="Preço Médio de Compra"
-                keyboardType="number-pad"
-                autoFocus={focus === 3}
-                onFocus={() => setFocus(3)}
-                onChangeText={handleSetPrice}
-                onEndEditing={() => onEndInputEditing(4, 'averagePrice')}
-                width={60}
-              />
-
-              <InputForm
                 label="Quantidade"
                 value={ticketForm.quantity}
                 placeholder="9999"
                 keyboardType="number-pad"
                 returnKeyType="send"
+                autoFocus={focus === 3}
+                onFocus={() => setFocus(3)}
+                onChangeText={handleSetQuantity}
+                onEndEditing={() => onEndInputEditing(4, 'quantity')}
+                width={30}
+              />
+
+              <InputForm
+                label="Preço Médio"
+                value={ticketForm.averagePreview}
+                placeholder="Preço Médio de Compra"
+                keyboardType="number-pad"
                 autoFocus={focus === 4}
                 onFocus={() => setFocus(4)}
-                onChangeText={handleSetQuantity}
-                onEndEditing={() => onEndInputEditing(0, 'quantity')}
+                onChangeText={handleSetPrice}
+                onEndEditing={() => onEndInputEditing(0, 'averagePrice')}
                 onSubmitEditing={handleSubmit}
-                width={30}
+                width={60}
               />
             </FormRow>
 

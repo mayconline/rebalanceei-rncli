@@ -112,7 +112,7 @@ describe('PlanModal', () => {
     getByText(/Sem Anúncios/i);
 
     getByText(/Premium Anual/i);
-    getByText(/R\$ 120,00 OFF no Plano Anual/i);
+    getByText(/R\$ 120,00 OFF Anual/i);
 
     getByText(/Premium Mensal/i);
     getByText(/R\$ 37,97 \/ Mês/i);

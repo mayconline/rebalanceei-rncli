@@ -216,7 +216,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       {!!errorMessage && <TextError>{errorMessage}</TextError>}
 
       {!!subscriptions?.length ? (
-        subscriptions?.map(subscription => {
+        subscriptions.reverse().map(subscription => {
           const subsDetails =
             subscription?.subscriptionOfferDetails?.[0]?.pricingPhases
               ?.pricingPhaseList?.[0];
@@ -233,7 +233,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
                   ? ['📊 Recursos exclusivos', '✅ Renovação automática']
                   : [
                       '🔖 Promoção por tempo limitado',
-                      '💰 R$ 120,00 OFF no Plano Anual',
+                      '💰 R$ 120,00 OFF Anual',
                       '📊 Recursos exclusivos',
                       '✅ Renovação automática',
                     ]
