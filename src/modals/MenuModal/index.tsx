@@ -52,7 +52,7 @@ const menuItens = [
   {
     lib: Octicons,
     icon: 'versions',
-    description: 'Versão do APP - v1.7.16',
+    description: 'Versão do APP - v1.7.17',
   },
   {
     lib: AntDesign,
@@ -92,7 +92,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
         return getTerms();
       case 'Ajuda':
         return setOpenModal('Help');
-      case 'Versão do APP - v1.7.16':
+      case 'Versão do APP - v1.7.17':
         return;
       case 'Sair':
         return handleSignOut();

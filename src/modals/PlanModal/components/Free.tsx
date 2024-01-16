@@ -204,8 +204,8 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
   ) : (
     <>
       <CardPlan
-        title="Plano Básico - Ativo"
-        descriptions={['😕 Carteira e Ativos limitados']}
+        title="✅ Plano Básico - Ativo"
+        descriptions={['Carteira e Ativos limitados']}
         plan="Grátis"
         currentPlan
         disabled
@@ -232,9 +232,9 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
                 subscriptionPeriodAndroid === 'P1M'
                   ? ['📊 Recursos exclusivos', '✅ Renovação automática']
                   : [
-                      '🔖 Promoção',
-                      '💰 25% de desconto',
-                      '😍 Imperdível',
+                      '🔖 Promoção por tempo limitado',
+                      '💰 R$ 120,00 OFF no Plano Anual',
+                      '📊 Recursos exclusivos',
                       '✅ Renovação automática',
                     ]
               }

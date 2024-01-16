@@ -68,7 +68,7 @@ const Premium = () => {
   ) : (
     <>
       <CardPlan
-        title={`${plan?.description} - Ativo`}
+        title={`✅ ${plan?.description} - Ativo`}
         descriptions={[
           'Data da Renovação',
           `${formatDate(Number(plan?.renewDate))}`,

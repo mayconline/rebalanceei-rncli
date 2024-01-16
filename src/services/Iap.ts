@@ -17,8 +17,8 @@ type SubscriptionTransaction = {
 };
 
 export const listSku = [
-  'rebalanceei_premium_mensal_23',
-  'rebalanceei_premium_anual_23',
+  'rebalanceei_premium_mensal_24',
+  'rebalanceei_premium_anual_2024',
 ];
 
 export const validHasSubscription = async (plan?: IPlan) => {
