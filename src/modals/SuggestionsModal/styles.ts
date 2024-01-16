@@ -18,10 +18,11 @@ export const SuggestionContainer = styled(SafeAreaView)`
 export const SuggestionList = styled.ScrollView`
   margin-top: 4px;
   elevation: 0.6;
-  border-left-color: ${({ theme }) => theme.color.divider};
-  border-left-width: 0.7px;
+  border-color: ${({ theme }) => theme.color.divider};
+  border-width: 0.7px;
   border-radius: 4px;
   max-height: 160px;
+  background-color: ${({ theme }) => theme.color.bgCardPlan};
 `;
 
 export const SuggestionItem = styled.View`

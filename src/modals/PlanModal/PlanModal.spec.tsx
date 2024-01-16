@@ -71,7 +71,7 @@ jest.mock('../../services/Iap', () => ({
   listSku: ['rebalanceei_premium_mensal_24', 'rebalanceei_premium_anual_2024'],
   useIAP: (): Record<string, unknown> => ({
     connected: true,
-    subscriptions: SUBSCRIPTIONS_MOCK,
+    subscriptions: SUBSCRIPTIONS_MOCK.reverse(),
     getSubscriptions: jest.fn(),
     finishTransaction: jest.fn(),
   }),

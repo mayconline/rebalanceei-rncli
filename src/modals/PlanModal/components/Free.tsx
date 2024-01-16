@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { ActivityIndicator, Alert } from 'react-native';
 import { IPlan, useAuth } from '../../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
@@ -199,6 +205,11 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     [],
   );
 
+  const inverseSubscriptions = useMemo(
+    () => subscriptions?.reverse(),
+    [subscriptions],
+  );
+
   return loading ? (
     <ActivityIndicator size="large" color={color.filterDisabled} />
   ) : (
@@ -210,13 +221,13 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
         currentPlan
         disabled
       />
-      {!!subscriptions.length && <CopyPremmium />}
+      {!!inverseSubscriptions?.length && <CopyPremmium />}
 
       {!!mutationError && <TextError>{mutationError?.message}</TextError>}
       {!!errorMessage && <TextError>{errorMessage}</TextError>}
 
-      {!!subscriptions?.length ? (
-        subscriptions.reverse().map(subscription => {
+      {!!inverseSubscriptions?.length ? (
+        inverseSubscriptions?.map(subscription => {
           const subsDetails =
             subscription?.subscriptionOfferDetails?.[0]?.pricingPhases
               ?.pricingPhaseList?.[0];

@@ -1,4 +1,3 @@
-import { PressableProps } from 'react-native';
 import styled from 'styled-components/native';
 
 interface SelectProps {
@@ -18,6 +17,7 @@ export const Wrapper = styled.Pressable.attrs({
   border-width: 2px;
   border-radius: 12px;
   elevation: ${({ active }) => (active ? 2 : 0)};
+  background-color: ${({ theme }) => theme.color.bgCardPlan};
 `;
 
 export const CardPlanHeaderGroup = styled.View`
@@ -29,7 +29,7 @@ export const CardPlanHeaderGroup = styled.View`
 
 export const CardPlanTitle = styled.Text`
   color: ${({ theme }) => theme.color.title};
-  font: 400 16px/24px 'TitilliumWeb-SemiBold';
+  font: 600 16px/24px 'TitilliumWeb-SemiBold';
   margin: 12px 16px 0;
 `;
 
@@ -41,7 +41,9 @@ export const CardPlanGroup = styled.View`
   margin: 12px;
 `;
 
-export const CardPlanContainerDescription = styled.View``;
+export const CardPlanContainerDescription = styled.View`
+  gap: 8px;
+`;
 
 export const CardPlanDescription = styled.Text`
   color: ${({ theme }) => theme.color.title};
@@ -50,8 +52,8 @@ export const CardPlanDescription = styled.Text`
 
 export const CardPlanRole = styled.Text`
   color: ${({ theme }) => theme.color.title};
-  font: 400 16px/24px 'TitilliumWeb-Regular';
-  margin-top: -32px;
+  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  margin-top: -10px;
 `;
 
 export const PlanRadioSelect = styled.View<SelectProps>`

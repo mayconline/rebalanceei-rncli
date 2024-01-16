@@ -28,6 +28,7 @@ export default {
     Cripto: '#F7DD70',
     bgMenuSubheaderActive: '#FFF',
     bgMenuSubheaderInative: '#F1F5FB',
+    bgCardPlan: '#F1F5FB',
   },
   gradient: {
     darkToLightGreen: ['#31AD2C', '#2D9B28'],

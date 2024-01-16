@@ -28,11 +28,12 @@ export default {
     Cripto: '#F7DD70',
     bgMenuSubheaderActive: '#1E222B',
     bgMenuSubheaderInative: '#131418',
+    bgCardPlan: '#343840',
   },
   gradient: {
     darkToLightGreen: ['#131418', '#131418'],
     darkToLightBlue: ['#347AF0', '#5C8FE5', '#F2F2F7'],
-    lightToGray: ['#FAFAFA', '#EDF1F9'],
+    lightToGray: ['#FFF', '#EDF1F9'],
     lightToDarkGreen: ['#359846', '#4CD964', '#F2F2F7'],
     lightToDarkRed: ['#F44336', '#F2F2F7'],
   },
