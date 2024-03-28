@@ -51,7 +51,7 @@
     "@tsconfig/react-native": "3.0.0",
     "@testing-library/jest-native": "5.4.2",
     "@testing-library/react-hooks": "8.0.1",
-    "@testing-library/react-native": "9.1.0",
+    "@testing-library/react-native": "12.4.5",
     "@types/jest": "29.4.2",
     "@types/react-native": "0.71.3",
     "@types/react-native-svg-charts": "5.0.12",
