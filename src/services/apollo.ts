@@ -12,7 +12,7 @@ import { onError } from '@apollo/client/link/error';
 import { getLocalStorage, multiSetLocalStorage } from '../utils/localStorage';
 
 const httpLink = createHttpLink({
-  uri: 'https://app-rebalanceei.onrender.com',
+  uri: 'https://rebalanceei-app.adaptable.app',
   credentials: 'include',
 });
 
