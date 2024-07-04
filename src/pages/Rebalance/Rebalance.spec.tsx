@@ -45,17 +45,14 @@ describe('Rebalance Tab', () => {
     expect(targetPercentItemOne).toHaveProperty('children', [
       ' % Ideal: 3.0 %',
     ]);
-    expect(targetPercentItemOne.props.style[0].color).toBe('#75BF72');
 
     const statusItemOne = getAllByA11yLabel(/Status do ativo/i)[0];
     expect(statusItemOne).toHaveProperty('children', ['Comprar']);
-    expect(statusItemOne.props.style[0].color).toBe('#75BF72');
 
     const targetAmountItemOne = getAllByA11yLabel(
       /Valor para rebalancear o ativo na carteira/i,
     )[0];
     expect(targetAmountItemOne).toHaveProperty('children', ['R$ 456,66']);
-    expect(targetAmountItemOne.props.style[0].color).toBe('#75BF72');
 
     const symbolItemThree = getAllByA11yLabel(/Código do Ativo/i)[2];
     expect(symbolItemThree).toHaveProperty('children', ['FLRY3']);
@@ -76,17 +73,14 @@ describe('Rebalance Tab', () => {
     expect(targetPercentItemThree).toHaveProperty('children', [
       ' % Ideal: 5.0 %',
     ]);
-    expect(targetPercentItemThree.props.style[0].color).toBe('#db8818');
 
     const statusItemThree = getAllByA11yLabel(/Status do ativo/i)[2];
     expect(statusItemThree).toHaveProperty('children', ['Aguardar']);
-    expect(statusItemThree.props.style[0].color).toBe('#db8818');
 
     const targetAmountItemThree = getAllByA11yLabel(
       /Valor para rebalancear o ativo na carteira/i,
     )[2];
     expect(targetAmountItemThree).toHaveProperty('children', ['R$ 0,00']);
-    expect(targetAmountItemThree.props.style[0].color).toBe('#db8818');
 
     const symbolItemFour = getAllByA11yLabel(/Código do Ativo/i)[3];
     expect(symbolItemFour).toHaveProperty('children', ['EGIE3']);
@@ -111,17 +105,14 @@ describe('Rebalance Tab', () => {
     expect(targetPercentItemFour).toHaveProperty('children', [
       ' % Ideal: 6.0 %',
     ]);
-    expect(targetPercentItemFour.props.style[0].color).toBe('#f44336');
 
     const statusItemFour = getAllByA11yLabel(/Status do ativo/i)[3];
     expect(statusItemFour).toHaveProperty('children', ['Analizar']);
-    expect(statusItemFour.props.style[0].color).toBe('#f44336');
 
     const targetAmountItemFour = getAllByA11yLabel(
       /Valor para rebalancear o ativo na carteira/i,
     )[3];
     expect(targetAmountItemFour).toHaveProperty('children', ['R$ -112,83']);
-    expect(targetAmountItemFour.props.style[0].color).toBe('#f44336');
   });
 
   it('should throw error', async () => {

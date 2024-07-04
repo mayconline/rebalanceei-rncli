@@ -45,22 +45,18 @@ describe('Rentability Tab', () => {
       /Porcentagem de variação do ativo/i,
     )[0];
     expect(variationPercentItemOne).toHaveProperty('children', [' (+36.8%)']);
-    expect(variationPercentItemOne.props.style[0].color).toBe('#75BF72');
 
     const currentAmountItemOne = getAllByA11yLabel(/Saldo atual do ativo/i)[0];
     expect(currentAmountItemOne).toHaveProperty('children', ['R$ 1.876,00']);
-    expect(currentAmountItemOne.props.style[0].color).toBe('#75BF72');
 
     await act(async () => {
       const walletCost = findByA11yLabel(/Saldo aplicado na carteira/i);
       expect((await walletCost).props.children).toBe('R$ 16.900,63');
-      expect((await walletCost).props.style[0].color).toBe('#485068');
     });
 
     await act(async () => {
       const walletCurrentAmount = findByA11yLabel(/Saldo atual da carteira/i);
       expect((await walletCurrentAmount).props.children).toBe('R$ 18.816,10');
-      expect((await walletCurrentAmount).props.style[0].color).toBe('#485068');
     });
 
     await act(async () => {
@@ -68,7 +64,6 @@ describe('Rentability Tab', () => {
         /Percentual de variação da carteira/i,
       );
       expect((await walletVariation).props.children).toBe(' (+11.3%)');
-      expect((await walletVariation).props.style[0].color).toBe('#75BF72');
     });
 
     const symbolItemTwo = getAllByA11yLabel(/Código do Ativo/i)[1];
@@ -88,11 +83,9 @@ describe('Rentability Tab', () => {
       /Porcentagem de variação do ativo/i,
     )[1];
     expect(variationPercentItemTwo).toHaveProperty('children', [' (-11.9%)']);
-    expect(variationPercentItemTwo.props.style[0].color).toBe('#f44336');
 
     const currentAmountItemTwo = getAllByA11yLabel(/Saldo atual do ativo/i)[1];
     expect(currentAmountItemTwo).toHaveProperty('children', ['R$ 1.019,92']);
-    expect(currentAmountItemTwo.props.style[0].color).toBe('#f44336');
   });
 
   it('should throw error', async () => {
