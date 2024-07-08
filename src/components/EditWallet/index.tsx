@@ -180,21 +180,20 @@ const EditWallet = ({
 
       <ContainerButtons>
         <Button
-          colors={gradient.lightToDarkRed}
-          onPress={handleDeleteSubmit}
-          loading={mutationDeleteLoading}
-          disabled={mutationDeleteLoading}
-        >
-          Deletar
-        </Button>
-
-        <Button
-          colors={gradient.darkToLightBlue}
           onPress={handleEditSubmit}
           loading={mutationLoading}
           disabled={mutationLoading}
         >
-          Alterar
+          Alterar Carteira
+        </Button>
+
+        <Button
+          onPress={handleDeleteSubmit}
+          loading={mutationDeleteLoading}
+          disabled={mutationDeleteLoading}
+          outlined
+        >
+          Excluir Carteira
         </Button>
       </ContainerButtons>
     </>

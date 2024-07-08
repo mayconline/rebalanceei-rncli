@@ -18,9 +18,8 @@ export const ContainerTitle = styled.View`
 `;
 
 export const SubTitle = styled.Text`
-  color: ${({ theme }) => theme.color.activeText};
-  font: 400 28px/56px 'TitilliumWeb-Regular';
-  opacity: 0.5;
+  color: ${({ theme }) => theme.color.onboardingSubtitle};
+  font: 400 32px/56px 'TitilliumWeb-Regular';
   padding: 4px 20px;
   text-align: center;
 `;

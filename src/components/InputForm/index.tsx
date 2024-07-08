@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState } from 'react';
 import { ThemeContext } from 'styled-components/native';
 import { TextInputProps } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -41,13 +41,6 @@ const InputForm = ({
   const { color } = useContext(ThemeContext);
   const [visiblePassword, setVisiblePassword] = useState(true);
 
-  const inputRef = useRef<any>(null);
-
-  const handleFocusInput = () => {
-    inputRef.current?.blur();
-    inputRef.current?.focus();
-  };
-
   return (
     <Container autoFocus={autoFocus} width={width} filled={value?.length}>
       <InputGroup>
@@ -59,7 +52,6 @@ const InputForm = ({
           {label}
         </Label>
         <TextCustomInput
-          ref={inputRef}
           value={value}
           defaultValue={defaultValue}
           placeholder={placeholder}
@@ -78,7 +70,6 @@ const InputForm = ({
           accessibilityValue={{ text: value }}
           autoCorrect={false}
           autoCapitalize={autoCapitalize}
-          onPressIn={handleFocusInput}
         />
       </InputGroup>
       {isSecure && (

@@ -62,12 +62,10 @@ const WalletModal = ({ onClose }: IWalletProps) => {
     }, []),
   );
 
-  const [
-    getWalletByUser,
-    { data, loading: queryLoading, error: queryError },
-  ] = useLazyQuery<IDataWallet>(GET_WALLET_BY_USER, {
-    fetchPolicy: 'cache-first',
-  });
+  const [getWalletByUser, { data, loading: queryLoading, error: queryError }] =
+    useLazyQuery<IDataWallet>(GET_WALLET_BY_USER, {
+      fetchPolicy: 'cache-first',
+    });
 
   useFocusEffect(
     useCallback(() => {
@@ -173,7 +171,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
           animationType="slide"
           transparent={true}
           visible={openModal}
-          statusBarTranslucent={false}
+          statusBarTranslucent={true}
         >
           <AddWalletModal
             onClose={handleAddWallet}

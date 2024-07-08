@@ -97,8 +97,8 @@ const privateRoute = () => {
           );
         },
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: color.activeText,
-        tabBarInactiveTintColor: color.inactiveTabs,
+        tabBarActiveTintColor: color.activeMenuItem,
+        tabBarInactiveTintColor: color.inactiveMenuItem,
         tabBarItemStyle: {
           backgroundColor: color.primary,
           borderTopColor: color.divider,

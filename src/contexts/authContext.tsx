@@ -271,9 +271,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     >
       <ThemeProvider theme={theme}>
         <StatusBar
-          barStyle={'default'}
+          barStyle={'dark-content'}
           translucent={true}
-          backgroundColor={theme.color.primary}
+          backgroundColor="transparent"
         />
 
         {loading && (

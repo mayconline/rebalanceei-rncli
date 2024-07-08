@@ -1,9 +1,7 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { ThemeContext } from 'styled-components/native';
 
 import {
-  StepContainer,
   Step,
   ContainerIndicator,
   StepIndicator,
@@ -20,7 +18,7 @@ import { setLocalStorage } from '../../../utils/localStorage';
 
 const StepThree = () => {
   const { logEvent } = useAmplitude();
-  const { gradient } = useContext(ThemeContext);
+
   const navigation = useNavigation();
 
   useFocusEffect(
@@ -37,25 +35,21 @@ const StepThree = () => {
 
   return (
     <LayoutForm img={OnboardingImgThree} routeName="StepThree">
-      <StepContainer>
-        <Step>
-          <ContainerIndicator>
-            <StepIndicator />
-            <StepIndicator />
-            <StepIndicator active={true} />
-          </ContainerIndicator>
-          <ContainerTitle>
-            <Title>Acompanhe de perto sua carteira</Title>
-            <Subtitle>
-              Veja a variação de seus ativos e rebalanceeie eles como desejar!
-            </Subtitle>
-          </ContainerTitle>
+      <Step>
+        <ContainerIndicator>
+          <StepIndicator />
+          <StepIndicator />
+          <StepIndicator active={true} />
+        </ContainerIndicator>
+        <ContainerTitle>
+          <Title>Acompanhe de perto sua carteira</Title>
+          <Subtitle>
+            Veja a variação de seus ativos e rebalanceeie eles como desejar!
+          </Subtitle>
+        </ContainerTitle>
 
-          <Button colors={gradient.darkToLightBlue} onPress={handleNext}>
-            Vamos Começar
-          </Button>
-        </Step>
-      </StepContainer>
+        <Button onPress={handleNext}>Vamos Começar</Button>
+      </Step>
     </LayoutForm>
   );
 };

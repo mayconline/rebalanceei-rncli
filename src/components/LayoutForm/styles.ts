@@ -14,35 +14,28 @@ export const Header = styled.View<HeaderProps>`
 `;
 
 export const Title = styled.Text`
-  color: ${({ theme }) => theme.color.activeText};
-  font: 600 24px/32px 'TitilliumWeb-SemiBold';
+  color: ${({ theme }) => theme.color.title};
+  font: 600 18px/32px 'TitilliumWeb-Regular';
 `;
 
-export const Icon = styled.TouchableOpacity`
-  padding: 0 24px 0 12px;
-`;
-
-export const ContainerTitle = styled.View`
-  flex: 1;
-  padding-left: 24px;
-`;
 export const Image = styled.View`
   height: 32%;
   margin-top: 8%;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const ContainerTextLink = styled.TouchableOpacity`
   align-items: center;
-  padding: 0 16px;
+  padding: 0 32px;
 `;
 
 export const TextLink = styled.Text`
-  color: ${({ theme }) => theme.color.activeText};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  color: ${({ theme }) => theme.color.onboardingSubtitle};
+  font: 600 18px/24px 'TitilliumWeb-SemiBold';
 `;
 
 export const FormContainer = styled.KeyboardAvoidingView`
-  height: 364px;
   width: 100%;
   position: absolute;
   bottom: 0;
@@ -55,5 +48,11 @@ export const Form = styled.View`
   padding: 20px 20px 4px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  min-height: 500px;
+  min-height: 300px;
+`;
+
+export const TitleContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
 `;

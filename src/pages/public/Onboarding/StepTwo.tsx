@@ -3,7 +3,6 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 
 import {
-  StepContainer,
   Step,
   ContainerIndicator,
   StepIndicator,
@@ -35,25 +34,23 @@ const StepTwo = () => {
 
   return (
     <LayoutForm img={OnboardingImgTwo} routeName="StepTwo">
-      <StepContainer>
-        <Step>
-          <ContainerIndicator>
-            <StepIndicator />
-            <StepIndicator active={true} />
-            <StepIndicator />
-          </ContainerIndicator>
-          <ContainerTitle>
-            <Title>Adicione seus ativos e dê notas a eles</Title>
-            <Subtitle>
-              Usamos elas para verificar a % ideal de cada ativo baseado em suas
-              preferências!
-            </Subtitle>
-          </ContainerTitle>
-          <Button colors={gradient.lightToGray} onPress={handleNext} outlined>
-            Próximo
-          </Button>
-        </Step>
-      </StepContainer>
+      <Step>
+        <ContainerIndicator>
+          <StepIndicator />
+          <StepIndicator active={true} />
+          <StepIndicator />
+        </ContainerIndicator>
+        <ContainerTitle>
+          <Title>Adicione seus ativos e dê notas a eles</Title>
+          <Subtitle>
+            Usamos elas para verificar a % ideal de cada ativo baseado em suas
+            preferências!
+          </Subtitle>
+        </ContainerTitle>
+        <Button onPress={handleNext} outlined>
+          Próximo
+        </Button>
+      </Step>
     </LayoutForm>
   );
 };

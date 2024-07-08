@@ -1,22 +1,22 @@
 import React, { memo, useCallback, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from 'styled-components/native';
-import Entypo from 'react-native-vector-icons/Entypo';
 
 import {
-  ContainerTitle,
   Image,
-  Icon,
   Title,
   Header,
   ContainerTextLink,
   TextLink,
   FormContainer,
   Form,
+  TitleContainer,
 } from './styles';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import useAmplitude from '../../hooks/useAmplitude';
 import { setLocalStorage } from '../../utils/localStorage';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import { BackIcon } from '../../modals/PlanModal/styles';
 
 interface LayoutFormProps {
   children?: any;
@@ -60,38 +60,43 @@ const LayoutForm = ({
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color.bgHeaderEmpty }}>
-      <Header hasOnboardingRoutes={hasOnboardingRoutes}>
-        {hasOnboardingRoutes ? (
-          <>
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
+      {hasOnboardingRoutes ? (
+        <>
+          <Header hasOnboardingRoutes={hasOnboardingRoutes}>
             <ContainerTextLink onPress={handleSkip}>
               <TextLink>Pular</TextLink>
             </ContainerTextLink>
-          </>
-        ) : (
-          <>
-            <Icon
-              accessibilityRole="imagebutton"
-              accessibilityLabel="Voltar"
-              onPress={handleGoBack}
-            >
-              <Entypo name="chevron-left" size={32} color={color.activeText} />
-            </Icon>
-            <ContainerTitle>
-              <Title accessibilityRole="header">{title}</Title>
-            </ContainerTitle>
-          </>
-        )}
-      </Header>
+          </Header>
+          <Image>
+            <IMG />
+          </Image>
 
-      <Image>
-        <IMG />
-      </Image>
-      {hasOnboardingRoutes ? (
-        children
+          {children}
+        </>
       ) : (
-        <FormContainer behavior={'padding'}>
-          <Form>{children}</Form>
+        <FormContainer behavior={'position'}>
+          <Form>
+            <TitleContainer>
+              <Title accessibilityRole="header">{title}</Title>
+              <BackIcon
+                accessibilityRole="imagebutton"
+                accessibilityLabel="Voltar"
+                onPress={handleGoBack}
+              >
+                <AntDesign
+                  name="closecircleo"
+                  size={24}
+                  color={color.shadowBackdrop}
+                />
+              </BackIcon>
+            </TitleContainer>
+            {children}
+          </Form>
         </FormContainer>
       )}
     </SafeAreaView>

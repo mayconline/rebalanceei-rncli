@@ -74,11 +74,8 @@ const LayoutTab = ({
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color.primary }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.bgHeaderEmpty }}>
       <Header />
-      {!!queryError && (
-        <TextError isTabs={true}>{queryError?.message}</TextError>
-      )}
 
       {hasEmptyTickets ? (
         <Empty errorMessage={queryError?.message} />

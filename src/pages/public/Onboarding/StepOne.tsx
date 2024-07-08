@@ -1,9 +1,7 @@
 import React, { useCallback, useContext } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { ThemeContext } from 'styled-components/native';
 
 import {
-  StepContainer,
   Step,
   ContainerIndicator,
   StepIndicator,
@@ -19,7 +17,7 @@ import useAmplitude from '../../../hooks/useAmplitude';
 
 const StepOne = () => {
   const { logEvent } = useAmplitude();
-  const { gradient } = useContext(ThemeContext);
+
   const navigation = useNavigation();
 
   useFocusEffect(
@@ -35,24 +33,22 @@ const StepOne = () => {
 
   return (
     <LayoutForm img={OnboardingImgOne} routeName="StepOne">
-      <StepContainer>
-        <Step>
-          <ContainerIndicator>
-            <StepIndicator active={true} />
-            <StepIndicator />
-            <StepIndicator />
-          </ContainerIndicator>
-          <ContainerTitle>
-            <Title>Bem vindo ao Rebalanceei</Title>
-            <Subtitle>Rebalanceeie seus ativos em sua carteira!</Subtitle>
-            <Subtitle>É simples e fácil!</Subtitle>
-          </ContainerTitle>
+      <Step>
+        <ContainerIndicator>
+          <StepIndicator active={true} />
+          <StepIndicator />
+          <StepIndicator />
+        </ContainerIndicator>
+        <ContainerTitle>
+          <Title>Bem vindo ao Rebalanceei</Title>
+          <Subtitle>Rebalanceeie seus ativos em sua carteira!</Subtitle>
+          <Subtitle>É simples e fácil!</Subtitle>
+        </ContainerTitle>
 
-          <Button colors={gradient.lightToGray} onPress={handleNext} outlined>
-            Próximo
-          </Button>
-        </Step>
-      </StepContainer>
+        <Button onPress={handleNext} outlined>
+          Próximo
+        </Button>
+      </Step>
     </LayoutForm>
   );
 };

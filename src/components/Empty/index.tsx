@@ -73,7 +73,7 @@ const Empty = ({ errorMessage }: IEmpty) => {
           </ContainerTitle>
         </Main>
         <Footer>
-          <Button colors={gradient.darkToLightBlue} onPress={handlePressAction}>
+          <Button onPress={handlePressAction}>
             {hasServerFailed
               ? 'Tentar Novamente'
               : hasInvalidWallet

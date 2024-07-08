@@ -15,7 +15,7 @@ export const Wrapper = styled(SafeAreaView)`
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 
-  height: 340px;
+  height: 300px;
   width: 100%;
   position: absolute;
   bottom: 0;
