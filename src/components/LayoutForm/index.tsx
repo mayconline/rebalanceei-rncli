@@ -91,7 +91,7 @@ const LayoutForm = ({
                 <AntDesign
                   name="closecircleo"
                   size={24}
-                  color={color.shadowBackdrop}
+                  color={color.closeIcon}
                 />
               </BackIcon>
             </TitleContainer>

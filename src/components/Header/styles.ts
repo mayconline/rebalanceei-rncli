@@ -1,7 +1,6 @@
 import styled from 'styled-components/native';
-import LinearGradient from 'react-native-linear-gradient';
 
-export const Wrapper = styled(LinearGradient)<any>`
+export const Wrapper = styled.SafeAreaView`
   min-height: 12%;
 `;
 
@@ -21,7 +20,7 @@ export const Wallet = styled.TouchableOpacity`
 `;
 
 export const Title = styled.Text`
-  color: ${({ theme }) => theme.color.activeText};
+  color: ${({ theme }) => theme.color.headerPrimary};
   font: 600 24px/32px 'TitilliumWeb-SemiBold';
   margin-right: 4%;
   max-width: 70%;

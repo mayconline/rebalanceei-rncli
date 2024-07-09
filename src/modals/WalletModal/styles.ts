@@ -10,7 +10,7 @@ export interface IPercentVariation {
 }
 
 export const Wrapper = styled(SafeAreaView)`
-  background-color: ${({ theme }) => theme.color.secondary};
+  background-color: ${({ theme }) => theme.color.bgModalPrimary};
   padding: 20px 20px 4px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
@@ -31,7 +31,7 @@ export const TitleContainer = styled.View`
 
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
-  font: 600 16px/20px 'TitilliumWeb-SemiBold';
+  font: 600 18px/20px 'TitilliumWeb-SemiBold';
   text-align: center;
   margin: 8px;
   flex: 1;

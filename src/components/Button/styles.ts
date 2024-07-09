@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 interface IButton {
   outlined?: boolean;
@@ -14,6 +14,12 @@ export const ContainerButton = styled.TouchableOpacity<any>`
     outlined ? theme.color.bgButtonOutlined : theme.color.bgButtonPrimary};
   flex-direction: row;
   justify-content: center;
+
+  ${({ mb }) =>
+    mb &&
+    css`
+      margin-bottom: ${mb}px;
+    `}
 `;
 
 export const TextButton = styled.Text<IButton>`

@@ -16,6 +16,8 @@ export const Header = styled.View<HeaderProps>`
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 600 18px/32px 'TitilliumWeb-Regular';
+  text-align: center;
+  flex: 1;
 `;
 
 export const Image = styled.View`
@@ -55,4 +57,5 @@ export const TitleContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 20px;
+  align-items: center;
 `;

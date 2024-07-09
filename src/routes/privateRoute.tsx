@@ -20,9 +20,9 @@ interface labelProps {
 
 const Label = styled.Text<labelProps>`
   color: ${({ color }) => color};
-  border-bottom-width: ${({ focused }) => (focused ? '2px' : 0)};
+  border-bottom-width: ${({ focused }) => (focused ? '4px' : 0)};
   border-bottom-color: ${({ color }) => color};
-  font: 600 12px/16px 'TitilliumWeb-SemiBold';
+  font: 600 14px/16px 'TitilliumWeb-SemiBold';
 `;
 
 const Tab = createBottomTabNavigator();
@@ -74,8 +74,8 @@ const privateRoute = () => {
                   navigation.navigate('AddTicket', { ticket: null })
                 }
                 focused={focused}
-                size={60}
-                mb={24}
+                size={64}
+                mb={64}
               />
             );
           }
@@ -100,13 +100,18 @@ const privateRoute = () => {
         tabBarActiveTintColor: color.activeMenuItem,
         tabBarInactiveTintColor: color.inactiveMenuItem,
         tabBarItemStyle: {
-          backgroundColor: color.primary,
-          borderTopColor: color.divider,
-          padding: 4,
+          backgroundColor: color.bgTabMenu,
+          paddingVertical: 16,
+          paddingHorizontal: 4,
+          borderTopLeftRadius: route.name === 'Ticket' ? 28 : 0,
+          borderTopRightRadius: route.name === 'Chart' ? 28 : 0,
         },
         tabBarStyle: [
           {
             display: 'flex',
+            height: 84,
+            backgroundColor: color.bgHeaderEmpty,
+            borderTopColor: 'transparent',
           },
           null,
         ],

@@ -1,5 +1,5 @@
-import React, { useContext, useState, useCallback, useEffect } from 'react';
-import { ThemeContext } from 'styled-components/native';
+import React, { useState, useCallback, useEffect } from 'react';
+
 import { useMutation, gql } from '@apollo/client';
 import { useAuth } from '../../contexts/authContext';
 import { FormRow, ContainerButtons } from './styles';
@@ -34,7 +34,7 @@ const AddWalletModal = ({
   const { logEvent } = useAmplitude();
 
   const { handleSetWallet, handleSetLoading } = useAuth();
-  const { gradient } = useContext(ThemeContext);
+
   const [wallet, setWallet] = useState('');
   const [focus, setFocus] = useState(0);
   const [openModal, setOpenModal] = useState<'SUCCESS' | 'PLAN' | null>(null);

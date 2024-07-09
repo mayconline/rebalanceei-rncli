@@ -116,11 +116,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
             accessibilityLabel="Voltar"
             onPress={onClose}
           >
-            <AntDesign
-              name="closecircleo"
-              size={24}
-              color={color.shadowBackdrop}
-            />
+            <AntDesign name="closecircleo" size={24} color={color.closeIcon} />
           </BackIcon>
         </TitleContainer>
 

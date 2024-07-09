@@ -12,13 +12,13 @@ import MenuModal from '../../modals/MenuModal';
 
 const Header = () => {
   const { walletName, setSelectTheme } = useAuth();
-  const { color, gradient, name } = useContext(ThemeContext);
+  const { color, name } = useContext(ThemeContext);
 
   const [openModal, setOpenModal] = useState<'Wallet' | 'Menu' | null>(null);
 
   return (
     <>
-      <Wrapper colors={gradient.darkToLightGreen}>
+      <Wrapper>
         <MenuBar>
           <Wallet onPress={() => setOpenModal('Wallet')}>
             <Title numberOfLines={1} ellipsizeMode="tail">
@@ -27,7 +27,7 @@ const Header = () => {
             <Entypo
               name="chevron-thin-down"
               size={20}
-              color={color.activeText}
+              color={color.headerPrimary}
             />
           </Wallet>
           <Icons>
@@ -39,14 +39,14 @@ const Header = () => {
               <MaterialCommunityIcons
                 name="theme-light-dark"
                 size={28}
-                color={color.activeText}
+                color={color.headerPrimary}
               />
             </Menu>
             <Menu onPress={() => setOpenModal('Menu')}>
               <Entypo
                 name="dots-three-vertical"
                 size={20}
-                color={color.activeText}
+                color={color.headerPrimary}
               />
             </Menu>
           </Icons>

@@ -8,7 +8,6 @@ import useAmplitude from '../../hooks/useAmplitude';
 import Empty from '../Empty';
 import Header from '../Header';
 import SubHeader from '../SubHeader';
-import TextError from '../TextError';
 import YearFilter from '../YearFilter';
 
 const fatalErrors = [

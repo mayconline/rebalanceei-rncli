@@ -1,5 +1,10 @@
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { TextProps } from 'react-native';
+
+interface ITextLinkProps extends TextProps {
+  strong?: boolean;
+}
 
 export const Wrapper = styled(SafeAreaView)`
   flex: 1;
@@ -45,4 +50,20 @@ export const ButtonContainer = styled.TouchableOpacity`
 export const ButtonText = styled.Text`
   color: ${({ theme }) => theme.color.blue};
   font: 600 20px/28px 'TitilliumWeb-SemiBold';
+`;
+
+export const ContainerTextLink = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+  flex-direction: row;
+  gap: 4px;
+`;
+
+export const TextLink = styled.Text<ITextLinkProps>`
+  color: ${({ theme }) => theme.color.activeText};
+  font: ${({ strong }) =>
+    strong
+      ? '600 16px/24px TitilliumWeb-SemiBold'
+      : '400 16px/24px TitilliumWeb-SemiBold'};
 `;

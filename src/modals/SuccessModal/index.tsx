@@ -115,12 +115,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
             loop={false}
           />
         </LootieContainer>
-        <Button
-          colors={gradient.lightToDarkGreen}
-          onPress={handleClose}
-          loading={loading}
-          disabled={loading}
-        >
+        <Button onPress={handleClose} loading={loading} disabled={loading}>
           Concluir
         </Button>
       </Wrapper>

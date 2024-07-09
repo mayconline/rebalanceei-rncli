@@ -7,6 +7,7 @@ interface IButtonProps extends TouchableOpacityProps {
   children: string;
   loading?: boolean;
   outlined?: boolean;
+  mb?: number;
 }
 
 const Button = ({
