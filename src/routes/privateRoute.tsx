@@ -103,16 +103,15 @@ const privateRoute = () => {
           backgroundColor: color.bgTabMenu,
           paddingVertical: 12,
           paddingHorizontal: 2,
-          borderTopLeftRadius: route.name === 'Ticket' ? 32 : 0,
-          borderTopRightRadius: route.name === 'Chart' ? 32 : 0,
+          borderTopLeftRadius: route.name === 'Ticket' ? 24 : 0,
+          borderTopRightRadius: route.name === 'Chart' ? 24 : 0,
           borderTopColor: color.borderTabMenu,
           borderLeftColor:
             route.name === 'Ticket' ? color.borderTabMenu : color.bgTabMenu,
           borderRightColor:
             route.name === 'Chart' ? color.borderTabMenu : color.bgTabMenu,
-          borderTopWidth: 1,
-          borderLeftWidth: route.name === 'Ticket' ? 0.1 : 0,
-          borderRightWidth: route.name === 'Chart' ? 0.1 : 0,
+          borderWidth: 1,
+          marginHorizontal: -1,
         },
         tabBarStyle: [
           {

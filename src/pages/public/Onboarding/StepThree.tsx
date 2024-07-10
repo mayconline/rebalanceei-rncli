@@ -30,7 +30,7 @@ const StepThree = () => {
   const handleNext = async () => {
     logEvent('click on start button at Onboarding Step Three');
     await setLocalStorage('@authFirstAccess', 'true');
-    navigation.navigate('SignUp');
+    navigation.navigate('Welcome');
   };
 
   return (

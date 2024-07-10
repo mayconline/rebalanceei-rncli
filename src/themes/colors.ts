@@ -27,4 +27,16 @@ export const colors = {
     '800': '#1B1C1B',
     '900': '#000000',
   },
+  shadow: {
+    card: {
+      shadowColor: '#000000',
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 4,
+    },
+  },
 };

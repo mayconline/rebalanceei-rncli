@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { css } from 'styled-components';
 
 export interface RadioProps {
   selected?: boolean;
@@ -26,7 +27,7 @@ export const Wrapper = styled(SafeAreaView)`
 export const TitleContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin-bottom: 24px;
 `;
 
 export const Title = styled.Text`
@@ -35,15 +36,6 @@ export const Title = styled.Text`
   text-align: center;
   margin: 8px;
   flex: 1;
-`;
-
-export const Content = styled.View`
-  flex: 0;
-`;
-
-export const ContainerCard = styled.View`
-  flex-direction: row;
-  align-items: center;
 `;
 
 export const IconButton = styled.TouchableOpacity`
@@ -62,7 +54,7 @@ export const CardTitleContainer = styled.View`
   flex: 1;
 `;
 export const WalletTitle = styled.Text`
-  color: ${({ theme }) => theme.color.title};
+  color: ${({ theme }) => theme.color.titleItemCard};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
   max-width: 80%;
 `;
@@ -71,8 +63,9 @@ export const CardSubTitle = styled.View`
   align-items: center;
 `;
 export const CurrentAmount = styled.Text`
-  color: ${({ theme }) => theme.color.title};
-  font: 400 16px/24px 'TitilliumWeb-Regular';
+  color: ${({ theme }) => theme.color.titleItemCard};
+  font: 400 14px/24px 'TitilliumWeb-Regular';
+  opacity: 0.5;
 `;
 export const VariationPercent = styled.Text<IPercentVariation>`
   color: ${({ theme, value }) =>
@@ -81,20 +74,22 @@ export const VariationPercent = styled.Text<IPercentVariation>`
       : value < 0
       ? theme.color.danger
       : theme.color.titleNotImport};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font: 600 14px/24px 'TitilliumWeb-SemiBold';
+  margin-left: 8px;
 `;
 export const PercentWallet = styled.View`
   flex-direction: column;
   margin-right: 16px;
 `;
 export const PercentTitle = styled.Text`
-  color: ${({ theme }) => theme.color.title};
+  color: ${({ theme }) => theme.color.titleItemCard};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;
 export const CurrentPercent = styled.Text`
-  color: ${({ theme }) => theme.color.title};
+  color: ${({ theme }) => theme.color.titleItemCard};
   font: 400 16px/24px 'TitilliumWeb-Regular';
   align-self: flex-end;
+  opacity: 0.5;
 `;
 export const AddWalletContainer = styled.View`
   flex-direction: row;
@@ -120,7 +115,7 @@ export const WalletRadioSelect = styled.View<RadioProps>`
   border-radius: 12px;
   align-items: center;
   justify-content: center;
-  border: ${({ selected }) => (selected ? '8px' : '4px')} solid
-    ${({ selected, theme }) =>
-      selected ? theme.color.blue : theme.color.inactiveTabs};
+  border: ${({ selected }) => (selected ? '6px' : '2px')} solid
+    ${({ theme }) => theme.color.selectedRadio};
+  background-color: ${({ theme }) => theme.color.bgRadio};
 `;

@@ -22,8 +22,8 @@ export const InputGroup = styled.View`
 `;
 
 export const Label = styled.Text<IFocusProps>`
-  color: ${({ theme, autoFocus, filled }) =>
-    autoFocus || filled ? theme.color.success : theme.color.titleNotImport};
+  color: ${({ theme, autoFocus }) =>
+    autoFocus ? theme.color.success : theme.color.titleNotImport};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
 `;
 

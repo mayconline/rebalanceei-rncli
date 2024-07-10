@@ -124,6 +124,14 @@ const WalletModal = ({ onClose }: IWalletProps) => {
           data={data?.getWalletByUser}
           extraData={!!queryLoading}
           keyExtractor={item => item._id}
+          renderItem={({ item }) => (
+            <ListItem
+              item={item}
+              handleSelectWallet={handleSelectWallet}
+              selectedWallet={selectedWallet}
+              handleEditWallet={handleEditWallet}
+            />
+          )}
           ListFooterComponent={
             <>
               <Title
@@ -143,14 +151,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
               </Title>
             </>
           }
-          renderItem={({ item }) => (
-            <ListItem
-              item={item}
-              handleSelectWallet={handleSelectWallet}
-              selectedWallet={selectedWallet}
-              handleEditWallet={handleEditWallet}
-            />
-          )}
+          ListFooterComponentStyle={{ marginTop: 16 }}
         />
         {!!queryError && <TextError>{queryError?.message}</TextError>}
 
