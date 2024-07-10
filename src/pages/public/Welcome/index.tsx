@@ -21,11 +21,15 @@ import useAmplitude from '../../../hooks/useAmplitude';
 import Login from '../Login';
 import { Modal } from 'react-native';
 import SignUp from '../SignUp';
+import ForgotPassword from '../ForgotPassword';
+import ChangePassword from '../ChangePassword';
 
 const Welcome = () => {
   const [openModal, setOpenModal] = useState<
-    'Login' | 'SignUp' | 'ForgotPassword' | null
+    'Login' | 'SignUp' | 'ForgotPassword' | 'ChangePassword' | null
   >(null);
+
+  const [modalData, setModalData] = useState<any>(null);
 
   const { logEvent } = useAmplitude();
   const navigation = useNavigation();
@@ -51,8 +55,12 @@ const Welcome = () => {
   }, []);
 
   const handleOpenModal = useCallback(
-    (modal: 'Login' | 'SignUp' | 'ForgotPassword') => {
+    (
+      modal: 'Login' | 'SignUp' | 'ForgotPassword' | 'ChangePassword',
+      data?: any,
+    ) => {
       setOpenModal(modal);
+      setModalData(data);
     },
     [],
   );
@@ -103,6 +111,34 @@ const Welcome = () => {
           statusBarTranslucent={true}
         >
           <SignUp onClose={() => setOpenModal(null)} />
+        </Modal>
+      )}
+
+      {openModal === 'ForgotPassword' && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={openModal === 'ForgotPassword'}
+          statusBarTranslucent={true}
+        >
+          <ForgotPassword
+            onClose={() => setOpenModal(null)}
+            handleOpenModal={handleOpenModal}
+          />
+        </Modal>
+      )}
+
+      {openModal === 'ChangePassword' && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={openModal === 'ChangePassword'}
+          statusBarTranslucent={true}
+        >
+          <ChangePassword
+            modalData={modalData}
+            onClose={() => setOpenModal(null)}
+          />
         </Modal>
       )}
     </>

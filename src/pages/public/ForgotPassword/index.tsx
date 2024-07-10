@@ -1,10 +1,9 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Alert } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
-import { ThemeContext } from 'styled-components/native';
 import { FormRow, ContainerButtons } from './styles';
-import ImageRecoveryPassword from '../../../../assets/svg/ImageRecoveryPassword';
+
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
@@ -20,19 +19,20 @@ interface ISendRecovery {
   sendRecovery: boolean;
 }
 
-const ForgotPassword = () => {
+interface IForgotPasswordProps {
+  onClose: () => void;
+  handleOpenModal: (modal: 'ChangePassword', data: any) => void;
+}
+
+const ForgotPassword = ({ onClose, handleOpenModal }: IForgotPasswordProps) => {
   const { handleSetLoading } = useAuth();
   const { logEvent } = useAmplitude();
-  const { gradient } = useContext(ThemeContext);
+
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountLogin);
 
-  const navigation = useNavigation();
-
-  const [
-    sendRecovery,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation<ISendRecovery, IAccountLogin>(SEND_RECOVERY);
+  const [sendRecovery, { loading: mutationLoading, error: mutationError }] =
+    useMutation<ISendRecovery, IAccountLogin>(SEND_RECOVERY);
 
   useFocusEffect(
     useCallback(() => {
@@ -63,7 +63,8 @@ const ForgotPassword = () => {
                   logEvent(
                     `click on Navigate to ChangePassword at ForgotPassword`,
                   );
-                  navigation.navigate('ChangePassword', {
+
+                  handleOpenModal('ChangePassword', {
                     email: account.email,
                   });
                 },
@@ -95,9 +96,9 @@ const ForgotPassword = () => {
 
   return (
     <LayoutForm
-      img={ImageRecoveryPassword}
       title="Recuperar Senha"
       routeName="ForgotPassword"
+      goBack={onClose}
     >
       <FormRow>
         <InputForm
@@ -119,10 +120,10 @@ const ForgotPassword = () => {
 
       <ContainerButtons>
         <Button
-          colors={gradient.darkToLightBlue}
           onPress={handleSubmit}
           loading={mutationLoading}
           disabled={mutationLoading}
+          mb={48}
         >
           Recuperar Senha
         </Button>

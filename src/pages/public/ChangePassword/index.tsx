@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Modal } from 'react-native';
 import {
   useFocusEffect,
@@ -6,7 +6,6 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
-import { ThemeContext } from 'styled-components/native';
 
 import { ContainerButtons, FormRow } from './styles';
 
@@ -33,16 +32,19 @@ interface IDataParamsForm {
   email: string;
 }
 
-const ChangePassword = () => {
+interface IChangePasswordProps {
+  modalData: IDataParamsForm;
+  onClose: () => void;
+}
+
+const ChangePassword = ({ modalData, onClose }: IChangePasswordProps) => {
   const { handleSetLoading } = useAuth();
   const { logEvent } = useAmplitude();
-  const { gradient } = useContext(ThemeContext);
+
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IChangePassword);
   const [openModal, setOpenModal] = useState(false);
 
-  const route = useRoute();
-  const params = route?.params as IDataParamsForm;
   const navigation = useNavigation();
 
   useFocusEffect(
@@ -51,10 +53,8 @@ const ChangePassword = () => {
     }, []),
   );
 
-  const [
-    resetPassword,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation<ILogin>(RESET_PASSWORD);
+  const [resetPassword, { loading: mutationLoading, error: mutationError }] =
+    useMutation<ILogin>(RESET_PASSWORD);
 
   useFocusEffect(
     useCallback(() => {
@@ -63,21 +63,22 @@ const ChangePassword = () => {
   );
 
   const handleSubmit = () => {
-    if (!account.code || !account.password || !params.email) {
+    if (!account.code || !account.password || !modalData?.email) {
       logEvent('not filled input at ChangePassword');
       return;
     }
 
     resetPassword({
       variables: {
-        email: params.email,
+        email: modalData.email,
         code: account.code,
         password: account.password,
       },
     })
       .then(response => {
         logEvent('successful ChangePassword');
-        return !!response?.data?.resetPassword && setOpenModal(true);
+        !!response?.data?.resetPassword && setOpenModal(true);
+        onClose();
       })
       .catch(err => {
         logEvent('error on ChangePassword');
@@ -146,10 +147,10 @@ const ChangePassword = () => {
 
         <ContainerButtons>
           <Button
-            colors={gradient.darkToLightBlue}
             onPress={handleSubmit}
             loading={mutationLoading}
             disabled={mutationLoading}
+            mb={48}
           >
             Alterar Senha
           </Button>
