@@ -7,6 +7,7 @@ export default {
     activeMenuItem: colors.primary['100'],
     inactiveMenuItem: colors.primary['250'],
     bgTabMenu: colors.primary['350'],
+    borderTabMenu: colors.primary['350'],
     secondary: colors.primary['100'],
     success: '#75BF72',
     warning: '#db8818',
