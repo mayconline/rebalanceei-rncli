@@ -84,13 +84,11 @@ const Rentability = () => {
     }, []),
   );
 
-  const [
-    getRentability,
-    { data, loading: queryLoading, error: queryError },
-  ] = useLazyQuery<IDataTickets>(GET_RENTABILITY, {
-    variables: { walletID: wallet, sort: 'currentAmount' },
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getRentability, { data, loading: queryLoading, error: queryError }] =
+    useLazyQuery<IDataTickets>(GET_RENTABILITY, {
+      variables: { walletID: wallet, sort: 'currentAmount' },
+      fetchPolicy: 'cache-and-network',
+    });
 
   useFocusEffect(
     useCallback(() => {
@@ -123,7 +121,7 @@ const Rentability = () => {
 
   return selectedMenu === 'Carteira' ? (
     <LayoutTab
-      title="Variação da carteira"
+      title="Variação"
       routeName="Rentability"
       count={rentabilityData.length}
       initialFilter={initialFilter}
@@ -135,18 +133,14 @@ const Rentability = () => {
       menuTitles={initialMenuTitles}
       handleChangeMenu={handleChangeMenu}
       selectedMenu={selectedMenu}
+      dataWallet={dataWallet}
+      queryWalletLoading={queryWalletLoading}
+      queryWalletError={queryWalletError}
     >
       <ListTicket
         data={rentabilityData}
         extraData={rentabilityData}
         keyExtractor={item => item._id}
-        ListHeaderComponent={
-          <AmountWallet
-            data={dataWallet}
-            queryLoading={queryWalletLoading}
-            queryError={queryWalletError}
-          />
-        }
         renderItem={({ item, index }) => (
           <ListItem
             item={item}

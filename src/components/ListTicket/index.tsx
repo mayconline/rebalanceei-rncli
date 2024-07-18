@@ -26,6 +26,7 @@ const ListTicket = (props: FlatListProps<any>) => {
             </ContainerTitle>
           </>
         }
+        contentContainerStyle={{ paddingVertical: 4, paddingHorizontal: 12 }}
       />
     </List>
   );

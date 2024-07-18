@@ -9,6 +9,7 @@ import Empty from '../Empty';
 import Header from '../Header';
 import SubHeader from '../SubHeader';
 import YearFilter from '../YearFilter';
+import AmountWallet from '../AmountWallet';
 
 const fatalErrors = [
   'Error: Token Not Exists',
@@ -31,6 +32,9 @@ interface LayoutTabProps {
   selectedMenu?: string;
   currentYear?: number;
   setCurrentYear?: React.Dispatch<React.SetStateAction<number>>;
+  dataWallet?: any;
+  queryWalletLoading?: boolean;
+  queryWalletError?: ApolloError;
 }
 
 const LayoutTab = ({
@@ -49,6 +53,9 @@ const LayoutTab = ({
   selectedMenu,
   currentYear,
   setCurrentYear,
+  dataWallet,
+  queryWalletLoading,
+  queryWalletError,
 }: LayoutTabProps) => {
   const { color } = useContext(ThemeContext);
   const { logEvent } = useAmplitude();
@@ -90,6 +97,14 @@ const LayoutTab = ({
             handleChangeMenu={handleChangeMenu}
             selectedMenu={selectedMenu}
           >
+            {routeName === 'Rentability' && (
+              <AmountWallet
+                data={dataWallet}
+                queryLoading={queryWalletLoading}
+                queryError={queryWalletError}
+              />
+            )}
+
             {routeName === 'Earning' && (
               <YearFilter
                 currentYear={currentYear!}

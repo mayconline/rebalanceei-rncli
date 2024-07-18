@@ -1,32 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { ProgressBar } from '@react-native-community/progress-bar-android';
-import { ThemeContext } from 'styled-components/native';
-import {
-  Content,
-  Card,
-  CardContent,
-  CardTitleContainer,
-  CardTicket,
-  CardTitle,
-  SubTitleContant,
-  CardSubTitle,
-  CurrentPercent,
-  TargetPercent,
-  AmountContainer,
-  Amount,
-  Status,
-  VariationContainer,
-} from './styles';
 
-import {
-  formatNumber,
-  formatTicket,
-  formatStatus,
-  formatProgress,
-} from '../../utils/format';
+import { CardContainerProgress } from './styles';
+
+import { formatNumber, formatStatus, formatProgress } from '../../utils/format';
 
 import { IRebalances } from './index';
 import AdBanner from '../../components/AdBanner';
+import { colors } from '../../themes/colors';
+import { CardItem } from '../../components/CardItem';
 
 const ListItem = ({
   item,
@@ -35,80 +17,54 @@ const ListItem = ({
   item: IRebalances;
   showAdBanner: boolean;
 }) => {
-  const { color, gradient } = useContext(ThemeContext);
-
   return (
     <>
       {showAdBanner && <AdBanner />}
-      <Content>
-        <Card colors={gradient.lightToGray} status={item.status}>
-          <CardContent>
-            <CardTitleContainer>
-              <CardTicket
-                accessibilityLabel="Código do Ativo"
-                accessibilityValue={{ text: item.symbol }}
-              >
-                {formatTicket(item.symbol)}
-              </CardTicket>
-              <CardTitle
-                accessibilityLabel="Nome do Ativo"
-                accessibilityValue={{ text: item.longName }}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {' '}
-                - {formatTicket(item.longName)}
-              </CardTitle>
-            </CardTitleContainer>
-            <SubTitleContant>
-              <CardSubTitle>
-                <CurrentPercent
-                  accessibilityLabel="Porcentagem atual do ativo"
-                  accessibilityValue={{ now: item.currentPercent }}
-                >
-                  {` % Atual: ${item.currentPercent.toFixed(1)} %`}
-                </CurrentPercent>
-                <TargetPercent
-                  accessibilityLabel="Porcentagem ideal do ativo"
-                  accessibilityValue={{ now: item.gradePercent }}
-                  status={item.status}
-                >
-                  {` % Ideal: ${item.gradePercent.toFixed(1)} %`}
-                </TargetPercent>
-              </CardSubTitle>
-              <ProgressBar
-                styleAttr="Horizontal"
-                indeterminate={false}
-                progress={formatProgress(
-                  item.gradePercent,
-                  item.currentPercent,
-                )}
-                color={color.blue}
-              />
-            </SubTitleContant>
-          </CardContent>
-          <AmountContainer>
-            <VariationContainer>
-              <Status
-                accessibilityLabel="Status do ativo"
-                accessibilityValue={{ text: item.status }}
-                status={item.status}
-              >
-                {formatStatus(item.status)}
-              </Status>
-            </VariationContainer>
-            <Amount
-              accessibilityLabel="Valor para rebalancear o ativo na carteira"
-              accessibilityValue={{ now: item.targetAmount }}
+
+      <CardItem>
+        <CardItem.Content>
+          <CardItem.Title symbol={item?.symbol} name={item?.longName} />
+
+          <CardContainerProgress>
+            <CardItem.SubTitle
+              accessibilityLabel="Porcentagem atual do ativo"
+              accessibilityValue={{ now: item.currentPercent }}
+              text={`% Atual: ${item.currentPercent.toFixed(1)} %`}
+              size={12}
+            />
+
+            <CardItem.AmountText
+              accessibilityLabel="Porcentagem ideal do ativo"
+              accessibilityValue={{ now: item.gradePercent }}
               status={item.status}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {formatNumber(item.targetAmount)}
-            </Amount>
-          </AmountContainer>
-        </Card>
-      </Content>
+              text={`% Ideal: ${item.gradePercent.toFixed(1)} %`}
+              size={12}
+            />
+          </CardContainerProgress>
+
+          <ProgressBar
+            styleAttr="Horizontal"
+            indeterminate={false}
+            progress={formatProgress(item.gradePercent, item.currentPercent)}
+            color={colors.primary['600']}
+          />
+        </CardItem.Content>
+        <CardItem.AmountContent>
+          <CardItem.AmountText
+            accessibilityLabel="Status do ativo"
+            accessibilityValue={{ text: item.status }}
+            status={item.status}
+            text={formatStatus(item.status)}
+          />
+
+          <CardItem.AmountText
+            accessibilityLabel="Valor para rebalancear o ativo na carteira"
+            accessibilityValue={{ now: item.targetAmount }}
+            status={item.status}
+            text={formatNumber(item.targetAmount)}
+          />
+        </CardItem.AmountContent>
+      </CardItem>
     </>
   );
 };

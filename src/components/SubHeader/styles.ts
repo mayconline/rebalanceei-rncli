@@ -5,7 +5,6 @@ interface IFocused {
 }
 
 export const Wrapper = styled.SafeAreaView`
-  background-color: ${({ theme }) => theme.color.secondary};
   padding: 20px 20px 4px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
@@ -18,12 +17,14 @@ export const ContainerTitle = styled.View`
 
 export const SubTitle = styled.Text`
   color: ${({ theme }) => theme.color.title};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font: 400 18px 'TitilliumWeb-Regular';
+  font-smooth: antialiased;
 `;
 
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.title};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font: 400 18px 'TitilliumWeb-Regular';
+  font-smooth: antialiased;
 `;
 
 export const FiltersContainer = styled.View`
@@ -43,8 +44,9 @@ export const TextFilter = styled.Text<IFocused>`
   color: ${({ focused, theme }) =>
     focused ? theme.color.filterFocused : theme.color.filterDisabled};
   padding: 4px 12px;
-  border-radius: 16px;
+  border-radius: 8px;
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font-smooth: antialiased;
 `;
 
 export const MenuButton = styled.TouchableOpacity`
@@ -66,4 +68,5 @@ export const MenuButtonText = styled.Text<IFocused>`
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
   align-items: center;
   justify-content: center;
+  font-smooth: antialiased;
 `;

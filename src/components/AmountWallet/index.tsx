@@ -4,7 +4,6 @@ import { ActivityIndicator } from 'react-native';
 import { ApolloError } from '@apollo/client';
 import {
   Wrapper,
-  Card,
   WalletContainer,
   PreviousContainer,
   PreviousTitle,
@@ -17,6 +16,7 @@ import {
 } from './styles';
 import { formatNumber, formatPercent } from '../../utils/format';
 import TextError from '../TextError';
+import { CardItem } from '../CardItem';
 
 interface IWallet {
   _id: string;
@@ -40,7 +40,7 @@ const AmountWallet = ({
   queryLoading,
   queryError,
 }: IAmountWalletProps) => {
-  const { color, gradient } = useContext(ThemeContext);
+  const { color } = useContext(ThemeContext);
 
   const isPositive = data && data?.getWalletById?.percentRentabilityWallet > 0;
 
@@ -51,7 +51,7 @@ const AmountWallet = ({
       {!!queryError && (
         <TextError isTabs={true}>{queryError?.message}</TextError>
       )}
-      <Card colors={gradient.lightToGray} isPositive={isPositive}>
+      <CardItem>
         <WalletContainer>
           <PreviousContainer>
             <PreviousTitle>Saldo Aplicado</PreviousTitle>
@@ -87,7 +87,7 @@ const AmountWallet = ({
             </CurrentAmountContainer>
           </CurrentContainer>
         </WalletContainer>
-      </Card>
+      </CardItem>
     </Wrapper>
   );
 };

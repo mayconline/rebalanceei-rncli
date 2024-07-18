@@ -1,7 +1,6 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from 'styled-components/native';
+import React from 'react';
+
 import {
-  IconButton,
   Card,
   CardTitleContainer,
   WalletTitle,
@@ -13,12 +12,11 @@ import {
   CurrentPercent,
   WalletRadioSelect,
 } from './styles';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { IObjectWallet } from './index';
 import { formatNumber, formatPercent } from '../../utils/format';
 
-import CardItem from '../../components/CardItem';
+import { CardItem } from '../../components/CardItem';
 
 interface IListItem {
   item: IObjectWallet;
@@ -33,20 +31,11 @@ const ListItem = ({
   selectedWallet,
   handleEditWallet,
 }: IListItem) => {
-  const { color } = useContext(ThemeContext);
   return (
     <CardItem>
-      <IconButton
-        accessibilityRole="button"
-        accessibilityLabel={`Editar carteira ${item.description}`}
+      <CardItem.EditButton
         onPress={() => handleEditWallet(item._id, item.description)}
-      >
-        <MaterialCommunityIcons
-          name="circle-edit-outline"
-          size={28}
-          color={color.blue}
-        />
-      </IconButton>
+      />
       <Card
         onPress={() => handleSelectWallet(item._id, item.description)}
         accessibilityRole="radio"
