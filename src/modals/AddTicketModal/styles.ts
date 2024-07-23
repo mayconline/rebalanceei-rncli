@@ -16,6 +16,7 @@ export const SuggestButton = styled.TouchableOpacity`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 24px;
 `;
 
 export const SuggestButtonText = styled.Text`
@@ -25,5 +26,5 @@ export const SuggestButtonText = styled.Text`
 `;
 
 export const ContainerButtons = styled.View`
-  margin-top: 4%;
+  margin: 12% 16%;
 `;

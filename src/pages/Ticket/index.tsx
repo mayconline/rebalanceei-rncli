@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Alert } from 'react-native';
+import { Alert, Modal } from 'react-native';
 import { useAuth } from '../../contexts/authContext';
 import { useLazyQuery, gql, useMutation } from '@apollo/client';
 
@@ -14,6 +14,7 @@ import {
   UPDATE_ROLE,
 } from '../../modals/PlanModal/components/Free';
 import LayoutTab from '../../components/LayoutTab';
+import { useModalStore } from '../../store/useModalStore';
 
 const initialFilter = [
   {
@@ -41,6 +42,8 @@ interface IDataTickets {
 const Ticket = () => {
   const navigation = useNavigation();
   const { wallet, plan, statePlan, handleSignOut } = useAuth();
+
+  const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
 
   const [selectedFilter, setSelectFilter] = useState<string>('grade');
   const [ticketData, setTicketData] = useState<ITickets[]>();
@@ -117,37 +120,38 @@ const Ticket = () => {
   }, []);
 
   const handleOpenEditModal = useCallback((item: ITickets) => {
-    navigation.setParams({ ticket: null });
-    navigation.navigate('AddTicket', { ticket: item });
+    openModal('AddTicket', { ticket: item });
   }, []);
 
   const hasEmptyTickets = !wallet || (!queryLoading && !ticketData?.length);
 
   return (
-    <LayoutTab
-      title="Meus Ativos"
-      routeName="Ticket"
-      count={ticketData?.length!}
-      initialFilter={initialFilter}
-      selectedFilter={selectedFilter}
-      handleChangeFilter={handleChangeFilter}
-      hasEmptyTickets={hasEmptyTickets}
-      queryError={queryError}
-      queryLoading={queryLoading}
-    >
-      <ListTicket
-        data={ticketData}
-        extraData={ticketData}
-        keyExtractor={item => item._id}
-        renderItem={({ item, index }) => (
-          <ListItem
-            item={item}
-            showAdBanner={getPositionAdBanner(index, ticketData?.length!)}
-            handleOpenEditModal={handleOpenEditModal}
-          />
-        )}
-      />
-    </LayoutTab>
+    <>
+      <LayoutTab
+        title="Meus Ativos"
+        routeName="Ticket"
+        count={ticketData?.length!}
+        initialFilter={initialFilter}
+        selectedFilter={selectedFilter}
+        handleChangeFilter={handleChangeFilter}
+        hasEmptyTickets={hasEmptyTickets}
+        queryError={queryError}
+        queryLoading={queryLoading}
+      >
+        <ListTicket
+          data={ticketData}
+          extraData={ticketData}
+          keyExtractor={item => item._id}
+          renderItem={({ item, index }) => (
+            <ListItem
+              item={item}
+              showAdBanner={getPositionAdBanner(index, ticketData?.length!)}
+              handleOpenEditModal={handleOpenEditModal}
+            />
+          )}
+        />
+      </LayoutTab>
+    </>
   );
 };
 

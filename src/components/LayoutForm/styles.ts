@@ -18,6 +18,7 @@ export const Title = styled.Text`
   font: 600 18px/32px 'TitilliumWeb-Regular';
   text-align: center;
   flex: 1;
+  font-smooth: 'antialiased';
 `;
 
 export const Image = styled.View`
@@ -35,6 +36,7 @@ export const ContainerTextLink = styled.TouchableOpacity`
 export const TextLink = styled.Text`
   color: ${({ theme }) => theme.color.onboardingSubtitle};
   font: 600 18px/24px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;
 
 export const FormContainer = styled.KeyboardAvoidingView`
@@ -50,7 +52,6 @@ export const Form = styled.View`
   padding: 20px 20px 4px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  min-height: 300px;
 `;
 
 export const TitleContainer = styled.View`

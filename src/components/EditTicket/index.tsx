@@ -7,7 +7,7 @@ import { FormRow, ContainerButtons } from './styles';
 
 import { ITickets } from '../../pages/Ticket';
 
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Button from '../Button';
 import InputForm from '../InputForm';
 import TextError from '../TextError';
@@ -36,14 +36,14 @@ interface IDeleteTicket {
 interface IEditWalletModal {
   ticket: ITickets;
   openModal(): void;
+  onClose(): void;
 }
 
-const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
+const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
   const { logEvent } = useAmplitude();
 
-  const { gradient, color } = useContext(ThemeContext);
+  const { color } = useContext(ThemeContext);
   const { wallet, showBanner } = useAuth();
-  const navigation = useNavigation();
 
   const [ticketForm, setTicketForm] = useState<IDataForm>({} as IDataForm);
   const [focus, setFocus] = useState(0);
@@ -61,11 +61,6 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
       });
     }, [ticket]),
   );
-
-  const handleGoBack = useCallback(() => {
-    setTicketForm({} as IDataForm);
-    navigation.setParams({ ticket: null });
-  }, []);
 
   const [updateTicket, { loading: mutationLoading, error: mutationError }] =
     useMutation<IUpdateTicket>(UPDATE_TICKET);
@@ -107,7 +102,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
 
       logEvent('successful editTicket at Edit Ticket');
 
-      handleGoBack();
+      onClose();
       openModal();
     } catch (err: any) {
       logEvent('error on editTicket at Edit Ticket');
@@ -132,7 +127,7 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
       });
 
       logEvent('successful deleteTicket at Delete Ticket');
-      handleGoBack();
+      onClose();
       openModal();
     } catch (err: any) {
       logEvent('error on deleteTicket at Delete Ticket');
@@ -235,21 +230,20 @@ const EditTicket = ({ ticket, openModal }: IEditWalletModal) => {
 
       <ContainerButtons>
         <Button
-          colors={gradient.lightToDarkRed}
-          onPress={handleDeleteSubmit}
-          loading={mutationDeleteLoading}
-          disabled={mutationDeleteLoading}
-        >
-          Deletar
-        </Button>
-
-        <Button
-          colors={gradient.darkToLightBlue}
           onPress={handleSubmit}
           loading={mutationLoading}
           disabled={mutationLoading}
         >
-          Alterar
+          Alterar Ativo
+        </Button>
+
+        <Button
+          onPress={handleDeleteSubmit}
+          loading={mutationDeleteLoading}
+          disabled={mutationDeleteLoading}
+          outlined
+        >
+          Excluir Ativo
         </Button>
       </ContainerButtons>
     </>

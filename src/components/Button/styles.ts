@@ -26,4 +26,5 @@ export const TextButton = styled.Text<IButton>`
   color: ${({ theme, outlined }) =>
     outlined ? theme.color.bgButtonPrimary : theme.color.activeText};
   font: 600 20px/28px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;

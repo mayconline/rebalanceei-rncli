@@ -4,7 +4,6 @@ import { useMutation, gql } from '@apollo/client';
 import { useAuth } from '../../contexts/authContext';
 import { FormRow, ContainerButtons } from './styles';
 
-import ImageAddTicket from '../../../assets/svg/ImageAddTicket';
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
@@ -129,7 +128,6 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
 
   return (
     <LayoutForm
-      img={ImageAddTicket}
       title="Lançamento Manual"
       routeName="EditEarningModal"
       goBack={onClose}
@@ -154,7 +152,6 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
 
       <ContainerButtons>
         <Button
-          colors={gradient.darkToLightBlue}
           onPress={handleSubmit}
           loading={mutationLoading}
           disabled={mutationLoading}

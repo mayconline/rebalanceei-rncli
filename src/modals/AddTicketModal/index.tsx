@@ -1,9 +1,5 @@
 import React, { useContext, useState, useCallback, useEffect } from 'react';
-import {
-  useRoute,
-  useNavigation,
-  useFocusEffect,
-} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Modal } from 'react-native';
 import { useAuth } from '../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
@@ -14,12 +10,11 @@ import {
   SuggestButtonText,
   ContainerButtons,
 } from './styles';
-import ImageAddTicket from '../../../assets/svg/ImageAddTicket';
-import SuccessModal from '../../modals/SuccessModal';
+
 import SuggestionsModal from '../../modals/SuggestionsModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import EditTicket from '../../components/EditTicket';
-import { ITickets } from '../Ticket';
+import { ITickets } from '../../pages/Ticket';
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
@@ -32,10 +27,7 @@ import useAmplitude from '../../hooks/useAmplitude';
 import PlanModal from '../../modals/PlanModal';
 import LayoutForm from '../../components/LayoutForm';
 import { refetchQuery } from '../../utils/refetchQuery';
-
-interface IDataParamsForm {
-  ticket: ITickets;
-}
+import { useModalStore } from '../../store/useModalStore';
 
 interface ITicketForm {
   symbol: string;
@@ -51,27 +43,28 @@ interface IcreateTicket {
   createTicket: ITickets;
 }
 
-const AddTicket = () => {
-  const { logEvent } = useAmplitude();
-  const { wallet, handleSetLoading, showBanner } = useAuth();
+interface IAddTicketModalProps {
+  onClose?: () => void;
+  contentModal?: any;
+}
 
-  const { color, gradient } = useContext(ThemeContext);
+const AddTicketModal = ({ onClose, contentModal }: IAddTicketModalProps) => {
+  const { logEvent } = useAmplitude();
+  const { wallet, showBanner } = useAuth();
+  const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
+
+  const { color } = useContext(ThemeContext);
 
   const [ticketForm, setTicketForm] = useState<ITicketForm>({} as ITicketForm);
   const [focus, setFocus] = useState(0);
   const [hasSuggestions, setHasSuggestions] = useState(false);
-  const [openModal, setOpenModal] = useState<'SUCCESS' | 'PLAN' | null>(null);
 
-  const route = useRoute();
-  const params = route?.params as IDataParamsForm;
-  const navigation = useNavigation();
-
-  const isEdit = !!params?.ticket?._id;
+  const isEdit = !!contentModal?.ticket?._id;
 
   const handleGoBack = useCallback(() => {
     setTicketForm({} as ITicketForm);
-    navigation.setParams({ ticket: null });
-    navigation.goBack();
+
+    onClose && onClose();
   }, []);
 
   const HandleOpenSuggestionsModal = useCallback(() => {
@@ -94,17 +87,10 @@ const AddTicket = () => {
   const [createTicket, { loading: mutationLoading, error: mutationError }] =
     useMutation<IcreateTicket>(CREATE_TICKET);
 
-  useFocusEffect(
-    useCallback(() => {
-      mutationLoading && handleSetLoading(true);
-    }, [mutationLoading]),
-  );
-
   const handleSubmit = useCallback(async () => {
     if (!wallet) {
       logEvent('has invalid wallet at Add Ticket');
-
-      return navigation.navigate('Ticket');
+      return;
     }
 
     if (
@@ -138,12 +124,10 @@ const AddTicket = () => {
 
       setTicketForm({} as ITicketForm);
       setFocus(0);
-      setOpenModal('SUCCESS');
+      openModal('SUCCESS');
     } catch (err: any) {
       logEvent('error on createTicket at Add Ticket');
       console.error(mutationError?.message + err);
-
-      handleSetLoading(false);
     }
   }, [ticketForm, wallet]);
 
@@ -152,7 +136,7 @@ const AddTicket = () => {
       mutationError?.message &&
       openPlanModalOnError(mutationError?.message)
     ) {
-      setOpenModal('PLAN');
+      openModal('PLAN');
     }
   }, [mutationError]);
 
@@ -185,15 +169,15 @@ const AddTicket = () => {
   return (
     <>
       <LayoutForm
-        img={ImageAddTicket}
         title={isEdit ? 'Alterar Ativo' : 'Adicionar Ativo'}
         routeName="AddTicket"
         goBack={handleGoBack}
       >
         {isEdit ? (
           <EditTicket
-            ticket={params?.ticket}
-            openModal={() => setOpenModal('SUCCESS')}
+            ticket={contentModal?.ticket}
+            openModal={() => openModal('SUCCESS')}
+            onClose={handleGoBack}
           />
         ) : (
           <>
@@ -268,7 +252,6 @@ const AddTicket = () => {
 
             <ContainerButtons>
               <Button
-                colors={gradient.darkToLightBlue}
                 onPress={handleSubmit}
                 loading={mutationLoading}
                 disabled={mutationLoading}
@@ -279,31 +262,6 @@ const AddTicket = () => {
           </>
         )}
       </LayoutForm>
-
-      {openModal === 'SUCCESS' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'SUCCESS'}
-          statusBarTranslucent={false}
-        >
-          <SuccessModal
-            onClose={() => setOpenModal(null)}
-            beforeModalClose={() => navigation.goBack()}
-          />
-        </Modal>
-      )}
-
-      {openModal === 'PLAN' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'PLAN'}
-          statusBarTranslucent={true}
-        >
-          <PlanModal onClose={() => setOpenModal(null)} />
-        </Modal>
-      )}
 
       {hasSuggestions && (
         <Modal
@@ -351,4 +309,4 @@ export const CREATE_TICKET = gql`
   }
 `;
 
-export default AddTicket;
+export default AddTicketModal;

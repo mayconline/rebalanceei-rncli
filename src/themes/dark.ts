@@ -27,7 +27,7 @@ export default {
     onboardingSubtitle: colors.primary['100'],
     subtitle: '#1E222B',
     blue: colors.secondary['400'],
-    shadowBackdrop: colors.neutral['900'],
+    shadowBackdrop: `${colors.neutral['900']}70`,
     Ação: '#21897E',
     FII: '#69D1C5',
     ETF: '#69A1E5',

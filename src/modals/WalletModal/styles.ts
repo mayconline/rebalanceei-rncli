@@ -1,6 +1,5 @@
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { css } from 'styled-components';
 
 export interface RadioProps {
   selected?: boolean;

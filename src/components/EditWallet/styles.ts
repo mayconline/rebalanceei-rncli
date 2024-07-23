@@ -11,6 +11,6 @@ export const ContainerButtons = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 8%;
+  margin: 12% 0;
   width: 100%;
 `;

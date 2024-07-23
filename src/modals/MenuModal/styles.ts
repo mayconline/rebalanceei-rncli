@@ -7,7 +7,6 @@ export const Wrapper = styled(SafeAreaView)`
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 
-  height: 380px;
   width: 100%;
   position: absolute;
   bottom: 0;
@@ -27,6 +26,7 @@ export const Title = styled.Text`
   text-align: center;
   padding-bottom: 8px;
   flex: 1;
+  font-smooth: antialiased;
 `;
 
 export const BackIcon = styled.TouchableOpacity``;
@@ -48,4 +48,5 @@ export const MenuTitle = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
   max-width: 80%;
+  font-smooth: antialiased;
 `;

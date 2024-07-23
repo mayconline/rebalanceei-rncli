@@ -6,6 +6,7 @@ import PublicRoute from './publicRoute';
 
 import Offline from '../components/Offline';
 import { ITickets } from '../pages/Ticket';
+import { PrivatesModalProvider } from '../contexts/PrivatesModalProvider';
 
 declare global {
   namespace ReactNavigation {
@@ -32,7 +33,13 @@ const Routes = () => {
 
   if (!isConnected && !loading) return <Offline />;
 
-  return signed ? <PrivateRoute /> : <PublicRoute />;
+  return signed ? (
+    <PrivatesModalProvider>
+      <PrivateRoute />
+    </PrivatesModalProvider>
+  ) : (
+    <PublicRoute />
+  );
 };
 
 export default Routes;

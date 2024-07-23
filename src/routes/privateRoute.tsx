@@ -9,9 +9,11 @@ import AddButton from '../components/AddButton';
 
 import Ticket from '../pages/Ticket';
 import Rebalance from '../pages/Rebalance';
-import AddTicket from '../pages/AddTicket';
+
 import Rentability from '../pages/Rentability';
 import Chart from '../pages/Chart';
+import { useModalStore } from '../store/useModalStore';
+import AddTicketModal from '../modals/AddTicketModal';
 
 interface labelProps {
   focused: boolean;
@@ -63,16 +65,16 @@ const icons: Icons = {
 const privateRoute = () => {
   const { color } = useContext(ThemeContext);
 
+  const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
+
   return (
     <Tab.Navigator
-      screenOptions={({ route, navigation }) => ({
+      screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size, focused }) => {
           if (route.name === 'AddTicket') {
             return (
               <AddButton
-                onPress={() =>
-                  navigation.navigate('AddTicket', { ticket: null })
-                }
+                onPress={() => openModal('AddTicket')}
                 focused={focused}
                 size={64}
                 mb={64}
@@ -144,10 +146,15 @@ const privateRoute = () => {
       />
       <Tab.Screen
         name="AddTicket"
-        component={AddTicket}
+        component={AddTicketModal}
         options={{
           title: '',
         }}
+        listeners={() => ({
+          tabPress: e => {
+            e.preventDefault();
+          },
+        })}
       />
       <Tab.Screen
         name="Rentability"

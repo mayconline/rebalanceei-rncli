@@ -107,7 +107,6 @@ const WalletModal = ({ onClose }: IWalletProps) => {
 
   return (
     <>
-      <ShadowBackdrop />
       <Wrapper>
         <TitleContainer>
           <Title accessibilityRole="header">Carteiras</Title>
@@ -172,7 +171,6 @@ const WalletModal = ({ onClose }: IWalletProps) => {
         >
           <AddWalletModal
             onClose={handleAddWallet}
-            beforeModalClose={onClose}
             walletData={editWallet}
             handleResetEditWallet={handleResetEditWallet}
           />

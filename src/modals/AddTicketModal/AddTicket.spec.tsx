@@ -1,13 +1,13 @@
 import React from 'react';
 import AddTicket, { CREATE_TICKET } from './index';
 import { UPDATE_TICKET, DELETE_TICKET } from '../../components/EditTicket';
-import { GET_TICKETS_BY_WALLET } from '../Ticket';
+import { GET_TICKETS_BY_WALLET } from '../../pages/Ticket';
 import { render, fireEvent, act, waitFor } from '../../utils/testProvider';
 import { GraphQLError } from 'graphql';
 import MockAdapter from 'axios-mock-adapter';
 import api from '../../services/api';
 import { GET_WALLET_BY_USER } from '../../modals/WalletModal';
-import { GET_SUM_EARNING } from '../Earning';
+import { GET_SUM_EARNING } from '../../pages/Earning';
 
 const apiMock = new MockAdapter(api);
 

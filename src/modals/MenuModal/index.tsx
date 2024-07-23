@@ -27,6 +27,7 @@ import {
 import { ThemeContext } from 'styled-components/native';
 import useAmplitude from '../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
+import { useModalStore } from '../../store/useModalStore';
 
 const menuItens = [
   {
@@ -70,6 +71,10 @@ const MenuModal = ({ onClose }: MenuProps) => {
 
   const { color } = useContext(ThemeContext);
   const { handleSignOut } = useAuth();
+  const { openModal: openPlanModal } = useModalStore(({ openModal }) => ({
+    openModal,
+  }));
+
   const [openModal, setOpenModal] = useState<'User' | 'Help' | 'Plan' | null>(
     null,
   );
@@ -87,7 +92,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
       case 'Meus Dados':
         return setOpenModal('User');
       case 'Meu Plano Atual':
-        return setOpenModal('Plan');
+        return openPlanModal('PLAN');
       case 'Termos de Uso e Política de Privacidade':
         return getTerms();
       case 'Ajuda':
@@ -103,7 +108,6 @@ const MenuModal = ({ onClose }: MenuProps) => {
 
   return (
     <>
-      <ShadowBackdrop />
       <Wrapper>
         <TitleContainer>
           <Title accessibilityRole="header">Menu</Title>
@@ -166,17 +170,6 @@ const MenuModal = ({ onClose }: MenuProps) => {
           statusBarTranslucent={true}
         >
           <HelpModal onClose={() => setOpenModal(null)} />
-        </Modal>
-      )}
-
-      {openModal === 'Plan' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'Plan'}
-          statusBarTranslucent={true}
-        >
-          <PlanModal onClose={() => setOpenModal(null)} />
         </Modal>
       )}
     </>
