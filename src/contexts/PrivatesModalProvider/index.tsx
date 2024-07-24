@@ -49,7 +49,7 @@ export const PrivatesModalProvider = ({ children }: IPrivatesModalProps) => {
       )}
 
       {modalType === 'Menu' && (
-        <Modal>
+        <Modal animationType="fade">
           <MenuModal onClose={closeModal} />
         </Modal>
       )}

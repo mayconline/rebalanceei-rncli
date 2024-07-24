@@ -3,13 +3,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Wrapper = styled(SafeAreaView)`
   flex: 1;
-  background-color: ${({ theme }) => theme.color.primary};
+  background-color: ${({ theme }) => theme.color.bgHeaderEmpty};
 `;
 
 export const ScrollView = styled.ScrollView`
   flex: 1;
-  background-color: ${({ theme }) => theme.color.secondary};
-  margin-top: 32px;
+  background-color: ${({ theme }) => theme.color.bgHeaderEmpty};
+
   padding: 20px 20px 4px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
@@ -39,9 +39,9 @@ export const ContainerButtons = styled.View`
 `;
 
 export const SubTitle = styled.Text`
-  color: ${({ theme }) => theme.color.titleNotImport};
+  color: ${({ theme }) => theme.color.titleItemCard};
   font: 400 16px/20px 'TitilliumWeb-Regular';
-  text-align: center;
   flex: 1;
   margin: 12px 0;
+  opacity: 0.5;
 `;

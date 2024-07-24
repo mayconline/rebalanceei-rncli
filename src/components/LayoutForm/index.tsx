@@ -15,7 +15,7 @@ import {
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import useAmplitude from '../../hooks/useAmplitude';
 import { setLocalStorage } from '../../utils/localStorage';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { BackIcon } from '../../modals/PlanModal/styles';
 
 interface LayoutFormProps {
@@ -88,8 +88,8 @@ const LayoutForm = ({
                 accessibilityLabel="Voltar"
                 onPress={handleGoBack}
               >
-                <AntDesign
-                  name="closecircleo"
+                <MaterialCommunityIcons
+                  name="close"
                   size={24}
                   color={color.closeIcon}
                 />

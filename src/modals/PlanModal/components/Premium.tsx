@@ -67,6 +67,7 @@ const Premium = () => {
     <ActivityIndicator size="large" color={color.filterDisabled} />
   ) : (
     <>
+      <CopyPremmium isPremmium />
       <CardPlan
         title={`✅ ${plan?.description} - Ativo`}
         descriptions={[
@@ -82,13 +83,13 @@ const Premium = () => {
       <SubTitle>
         *Seu Plano será renovado automáticamente na data da renovação.
       </SubTitle>
-      <CopyPremmium isPremmium />
+
       <ContainerButtons>
         <Button
-          colors={gradient.lightToDarkRed}
           onPress={handleCancelSubscription}
           loading={loading}
           disabled={loading}
+          outlined
         >
           Cancelar Plano
         </Button>

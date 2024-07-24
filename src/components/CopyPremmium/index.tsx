@@ -20,10 +20,10 @@ const CopyPremmium = ({ isPremmium = false }: ICopyPremmium) => (
     </Title>
     <ContainerPremmiumGroup>
       <ContainerDescription>
-        <Description>💰 Menu de Proventos</Description>
-        <Description>📊 Gráficos exclusivos</Description>
         <Description>📂 Carteiras ilimitadas</Description>
         <Description>🛒 Ativos ilimitados</Description>
+        <Description>💰 Menu de Proventos</Description>
+        <Description>📊 Gráficos exclusivos</Description>
         <Description>🚫 Sem Anúncios</Description>
       </ContainerDescription>
 

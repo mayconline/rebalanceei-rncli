@@ -5,7 +5,7 @@ import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
 import { useMutation, useLazyQuery, gql } from '@apollo/client';
 import { FormRow, ContainerButtons } from './styles';
-import ImageProfile from '../../../assets/svg/ImageProfile';
+
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
@@ -34,22 +34,18 @@ interface IUpdateUserModal {
 
 const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
   const { logEvent } = useAmplitude();
-  const { color, gradient } = useContext(ThemeContext);
+  const { color } = useContext(ThemeContext);
   const [user, setUser] = useState({} as IUser);
   const { handleSignOut } = useAuth();
   const [focus, setFocus] = useState(0);
 
-  const [
-    getUserByToken,
-    { data, loading: queryLoading, error: queryError },
-  ] = useLazyQuery<IGetUser>(GET_USER_BY_TOKEN, {
-    fetchPolicy: 'cache-first',
-  });
+  const [getUserByToken, { data, loading: queryLoading, error: queryError }] =
+    useLazyQuery<IGetUser>(GET_USER_BY_TOKEN, {
+      fetchPolicy: 'cache-first',
+    });
 
-  const [
-    updateUser,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation<IUpdateUser>(UPDATE_USER);
+  const [updateUser, { loading: mutationLoading, error: mutationError }] =
+    useMutation<IUpdateUser>(UPDATE_USER);
 
   useFocusEffect(
     useCallback(() => {
@@ -145,8 +141,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
 
   return (
     <LayoutForm
-      img={ImageProfile}
-      title="Alterar Usuário"
+      title="Minha Conta"
       routeName="UpdateUserModal"
       goBack={onClose}
     >
@@ -192,21 +187,20 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
 
       <ContainerButtons>
         <Button
-          colors={gradient.lightToDarkRed}
-          onPress={handleDisabledSubmit}
-          loading={mutationLoading}
-          disabled={mutationLoading}
-        >
-          Desativar
-        </Button>
-
-        <Button
-          colors={gradient.darkToLightBlue}
           onPress={handleSubmit}
           loading={mutationLoading}
           disabled={mutationLoading}
         >
-          Alterar
+          Alterar Senha
+        </Button>
+
+        <Button
+          onPress={handleDisabledSubmit}
+          loading={mutationLoading}
+          disabled={mutationLoading}
+          outlined
+        >
+          Desativar Conta
         </Button>
       </ContainerButtons>
     </LayoutForm>

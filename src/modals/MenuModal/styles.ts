@@ -5,14 +5,16 @@ export const Wrapper = styled(SafeAreaView)`
   background-color: ${({ theme }) => theme.color.secondary};
   padding: 20px 20px 4px;
   border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-
-  width: 100%;
+  border-bottom-left-radius: 20px;
+  max-height: 80%;
+  width: 60%;
   position: absolute;
-  bottom: 0;
-  left: 0;
+  top: 8%;
+  right: 0;
   elevation: 5;
 `;
+
+export const ScrollView = styled.ScrollView``;
 
 export const TitleContainer = styled.View`
   flex-direction: row;
@@ -22,14 +24,16 @@ export const TitleContainer = styled.View`
 
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
-  font: 600 16px/20px 'TitilliumWeb-SemiBold';
-  text-align: center;
+  font: 600 18px/20px 'TitilliumWeb-SemiBold';
+  margin: 12px 8px;
   padding-bottom: 8px;
   flex: 1;
   font-smooth: antialiased;
 `;
 
-export const BackIcon = styled.TouchableOpacity``;
+export const BackIcon = styled.TouchableOpacity`
+  margin-top: 8px;
+`;
 
 export const MenuContainer = styled.View``;
 
@@ -46,7 +50,7 @@ export const MenuIcon = styled.View`
 
 export const MenuTitle = styled.Text`
   color: ${({ theme }) => theme.color.title};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font: 600 14px/20px 'TitilliumWeb-SemiBold';
   max-width: 80%;
   font-smooth: antialiased;
 `;

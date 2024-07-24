@@ -52,6 +52,7 @@ export default {
     selectedRadio: colors.secondary['300'],
     bgRadio: colors.primary['100'],
     editItemColor: colors.primary['100'],
+    menuIconColor: colors.primary['100'],
   },
   gradient: {
     darkToLightGreen: ['#131418', '#131418'],

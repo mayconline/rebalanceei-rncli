@@ -2,7 +2,7 @@ import React, { useContext, useState, useCallback } from 'react';
 import { Modal } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+
 import { useLazyQuery, gql } from '@apollo/client';
 import { useAuth } from '../../contexts/authContext';
 import {
@@ -16,13 +16,14 @@ import {
 } from './styles';
 
 import AddButton from '../../components/AddButton';
-import ShadowBackdrop from '../../components/ShadowBackdrop';
+
 import TextError from '../../components/TextError';
 import AddWalletModal from '../AddWalletModal';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
 import { formatNumber } from '../../utils/format';
 import useAmplitude from '../../hooks/useAmplitude';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface IWalletProps {
   onClose(): void;
@@ -115,7 +116,11 @@ const WalletModal = ({ onClose }: IWalletProps) => {
             accessibilityLabel="Voltar"
             onPress={onClose}
           >
-            <AntDesign name="closecircleo" size={24} color={color.closeIcon} />
+            <MaterialCommunityIcons
+              name="close"
+              size={24}
+              color={color.closeIcon}
+            />
           </BackIcon>
         </TitleContainer>
 

@@ -1,18 +1,13 @@
 import React, { Fragment, useCallback, useContext, useState } from 'react';
-import { Modal } from 'react-native';
 
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Octicons from 'react-native-vector-icons/Octicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import { useAuth } from '../../contexts/authContext';
 import { getTerms } from '../../utils/Terms';
 import Divider from '../../components/Divider';
-import ShadowBackdrop from '../../components/ShadowBackdrop';
+
 import UpdateUserModal from '../UpdateUserModal';
 import HelpModal from '../HelpModal';
-import PlanModal from '../PlanModal';
 
 import {
   Wrapper,
@@ -23,17 +18,19 @@ import {
   Menu,
   MenuIcon,
   MenuTitle,
+  ScrollView,
 } from './styles';
 import { ThemeContext } from 'styled-components/native';
 import useAmplitude from '../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
 import { useModalStore } from '../../store/useModalStore';
+import { Modal } from '../../components/Modal';
 
 const menuItens = [
   {
     lib: MaterialCommunityIcons,
     icon: 'face-man-profile',
-    description: 'Meus Dados',
+    description: 'Minha Conta',
   },
   {
     lib: MaterialCommunityIcons,
@@ -42,22 +39,27 @@ const menuItens = [
   },
   {
     lib: MaterialCommunityIcons,
-    icon: 'shield-check',
-    description: 'Termos de Uso e Política de Privacidade',
+    icon: 'theme-light-dark',
+    description: 'Modo Escuro',
   },
   {
-    lib: FontAwesome,
-    icon: 'question-circle',
+    lib: MaterialCommunityIcons,
+    icon: 'help-circle',
     description: 'Ajuda',
   },
   {
-    lib: Octicons,
-    icon: 'versions',
+    lib: MaterialCommunityIcons,
+    icon: 'application-cog-outline',
     description: 'Versão do APP - v1.7.20',
   },
   {
-    lib: AntDesign,
-    icon: 'logout',
+    lib: MaterialCommunityIcons,
+    icon: 'shield-check',
+    description: 'Termos de Uso',
+  },
+  {
+    lib: MaterialCommunityIcons,
+    icon: 'logout-variant',
     description: 'Sair',
   },
 ];
@@ -69,8 +71,8 @@ interface MenuProps {
 const MenuModal = ({ onClose }: MenuProps) => {
   const { logEvent } = useAmplitude();
 
-  const { color } = useContext(ThemeContext);
-  const { handleSignOut } = useAuth();
+  const { color, name } = useContext(ThemeContext);
+  const { handleSignOut, setSelectTheme } = useAuth();
   const { openModal: openPlanModal } = useModalStore(({ openModal }) => ({
     openModal,
   }));
@@ -89,16 +91,18 @@ const MenuModal = ({ onClose }: MenuProps) => {
     logEvent(`click on ${description} at Menu Modal`);
 
     switch (description) {
-      case 'Meus Dados':
+      case 'Minha Conta':
         return setOpenModal('User');
       case 'Meu Plano Atual':
         return openPlanModal('PLAN');
-      case 'Termos de Uso e Política de Privacidade':
-        return getTerms();
+      case 'Modo Escuro':
+        return setSelectTheme(name === 'LIGHT' ? 'DARK' : 'LIGHT');
       case 'Ajuda':
         return setOpenModal('Help');
       case 'Versão do APP - v1.7.20':
         return;
+      case 'Termos de Uso':
+        return getTerms();
       case 'Sair':
         return handleSignOut();
       default:
@@ -109,66 +113,62 @@ const MenuModal = ({ onClose }: MenuProps) => {
   return (
     <>
       <Wrapper>
-        <TitleContainer>
-          <Title accessibilityRole="header">Menu</Title>
-          <BackIcon
-            accessibilityRole="imagebutton"
-            accessibilityLabel="Voltar"
-            onPress={onClose}
-          >
-            <AntDesign
-              name="closecircleo"
-              size={24}
-              color={color.shadowBackdrop}
-            />
-          </BackIcon>
-        </TitleContainer>
+        <ScrollView>
+          <TitleContainer>
+            <Title accessibilityRole="header">Menu</Title>
+            <BackIcon
+              accessibilityRole="imagebutton"
+              accessibilityLabel="Voltar"
+              onPress={onClose}
+            >
+              <MaterialCommunityIcons
+                name="close"
+                size={20}
+                color={color.closeIcon}
+              />
+            </BackIcon>
+          </TitleContainer>
 
-        <MenuContainer accessibilityRole="menu">
-          {menuItens?.map(menuItem => {
-            const { lib: Icon, icon, description } = menuItem;
+          <MenuContainer accessibilityRole="menu">
+            {menuItens?.map(menuItem => {
+              const { lib: Icon, icon, description } = menuItem;
 
-            return (
-              <Fragment key={description}>
-                <Menu
-                  onPress={() => {
-                    handleClickMenu(description);
-                  }}
-                  accessibilityRole="menuitem"
-                  accessibilityLabel={description}
-                >
-                  <MenuIcon>
-                    <Icon name={icon} size={20} color={color.shadowBackdrop} />
-                  </MenuIcon>
-                  <MenuTitle numberOfLines={1} ellipsizeMode="tail">
-                    {description}
-                  </MenuTitle>
-                </Menu>
-                <Divider />
-              </Fragment>
-            );
-          })}
-        </MenuContainer>
+              return (
+                <Fragment key={description}>
+                  <Menu
+                    onPress={() => {
+                      handleClickMenu(description);
+                    }}
+                    accessibilityRole="menuitem"
+                    accessibilityLabel={description}
+                  >
+                    <MenuIcon>
+                      <Icon name={icon} size={20} color={color.menuIconColor} />
+                    </MenuIcon>
+                    <MenuTitle numberOfLines={1} ellipsizeMode="tail">
+                      {description === 'Modo Escuro'
+                        ? name === 'LIGHT'
+                          ? description
+                          : 'Modo Claro'
+                        : description}
+                    </MenuTitle>
+                  </Menu>
+                  <Divider />
+                </Fragment>
+              );
+            })}
+          </MenuContainer>
+        </ScrollView>
       </Wrapper>
 
       {openModal === 'User' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'User'}
-          statusBarTranslucent={false}
-        >
+        <Modal>
           <UpdateUserModal onClose={() => setOpenModal(null)} />
         </Modal>
       )}
 
       {openModal === 'Help' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'Help'}
-          statusBarTranslucent={true}
-        >
+        <Modal>
           <HelpModal onClose={() => setOpenModal(null)} />
         </Modal>
       )}

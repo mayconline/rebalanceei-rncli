@@ -16,14 +16,12 @@ export const Wallet = styled.TouchableOpacity`
   align-items: center;
   padding: 4% 8%;
   justify-content: space-between;
-  max-width: 70%;
 `;
 
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.headerPrimary};
   font: 600 24px/32px 'TitilliumWeb-SemiBold';
   margin-right: 4%;
-  max-width: 70%;
 `;
 
 export const Icons = styled.View`

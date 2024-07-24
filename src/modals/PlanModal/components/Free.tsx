@@ -265,7 +265,6 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
       <ContainerButtons>
         <Button
-          colors={gradient.darkToLightBlue}
           onPress={handlePurchaseSubscription}
           loading={mutationLoading || loading}
           disabled={mutationLoading || loading}
