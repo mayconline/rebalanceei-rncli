@@ -29,6 +29,7 @@ export const Title = styled.Text`
   text-align: center;
   flex: 1;
   margin-left: 12%;
+  font-smooth: 'antialiased';
 `;
 
 export const Container = styled.SafeAreaView`
@@ -42,4 +43,5 @@ export const Container = styled.SafeAreaView`
 export const Question = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 400 16px/24px 'TitilliumWeb-Regular';
+  font-smooth: 'antialiased';
 `;

@@ -17,10 +17,12 @@ export const YearText = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 400 16px/20px 'TitilliumWeb-Regular';
   text-align: center;
+  font-smooth: 'antialiased';
 `;
 
 export const YearSubtitle = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
   font: 400 12px/24px 'TitilliumWeb-Regular';
   margin: -8px 0;
+  font-smooth: 'antialiased';
 `;

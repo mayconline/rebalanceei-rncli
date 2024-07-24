@@ -24,6 +24,7 @@ export const ContainerTitle = styled.View`
 export const SubTitle = styled.Text`
   color: ${({ theme }) => theme.color.onboardingSubtitle};
   font: 400 32px/56px 'TitilliumWeb-Regular';
+  font-smooth: 'antialiased';
 `;
 
 export const Footer = styled.View``;

@@ -30,6 +30,7 @@ export const Title = styled.Text`
   font: 600 20px/24px 'TitilliumWeb-SemiBold';
   text-align: center;
   flex: 1;
+  font-smooth: 'antialiased';
 `;
 
 export const ContainerButtons = styled.View`
@@ -44,4 +45,5 @@ export const SubTitle = styled.Text`
   flex: 1;
   margin: 12px 0;
   opacity: 0.5;
+  font-smooth: 'antialiased';
 `;

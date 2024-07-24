@@ -25,6 +25,7 @@ const Label = styled.Text<labelProps>`
   border-bottom-width: ${({ focused }) => (focused ? '4px' : 0)};
   border-bottom-color: ${({ color }) => color};
   font: 600 14px/16px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;
 
 const Tab = createBottomTabNavigator();

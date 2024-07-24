@@ -2,6 +2,8 @@ import styled from 'styled-components/native';
 
 export const Wrapper = styled.SafeAreaView`
   min-height: 12%;
+  flex-direction: column;
+  margin: 0 16px;
 `;
 
 export const MenuBar = styled.SafeAreaView`
@@ -14,14 +16,16 @@ export const MenuBar = styled.SafeAreaView`
 export const Wallet = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  padding: 4% 8%;
+  padding: 8% 0;
   justify-content: space-between;
+  margin-left: 8px;
 `;
 
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.headerPrimary};
-  font: 600 24px/32px 'TitilliumWeb-SemiBold';
-  margin-right: 4%;
+  font: 400 24px 'TitilliumWeb-Regular';
+  margin-right: 4px;
+  font-smooth: antialiased;
 `;
 
 export const Icons = styled.View`
@@ -30,6 +34,16 @@ export const Icons = styled.View`
   justify-content: space-between;
 `;
 
-export const Menu = styled.TouchableOpacity`
-  padding: 0 24px;
+export const Menu = styled.TouchableOpacity``;
+
+export const Logo = styled.View`
+  height: 80px;
+  width: 80px;
+`;
+
+export const WrapperLogo = styled.View`
+  flex-direction: row;
+  align-items: center;
+  width: 80%;
+  margin-left: -8px;
 `;

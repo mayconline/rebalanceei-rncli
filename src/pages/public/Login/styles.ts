@@ -17,4 +17,5 @@ export const TextForgotPassword = styled.Text`
   color: ${({ theme }) => theme.color.blue};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
   text-align: right;
+  font-smooth: 'antialiased';
 `;

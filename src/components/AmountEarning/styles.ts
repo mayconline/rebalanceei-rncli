@@ -35,16 +35,19 @@ export const CurrentContainer = styled.View`
 export const PreviousTitle = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
   font: 600 16px/20px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;
 export const CurrentTitle = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
   font: 600 16px/20px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;
 
 export const PreviousAmount = styled.Text`
   color: ${({ theme }) => theme.color.subtitle};
   font: 400 16px/24px 'TitilliumWeb-Regular';
   padding-left: 8px;
+  font-smooth: 'antialiased';
 `;
 
 export const CurrentAmount = styled.Text<any>`
@@ -56,4 +59,5 @@ export const CurrentAmount = styled.Text<any>`
       : "400 16px/24px 'TitilliumWeb-Regular'"};
 
   padding-left: 8px;
+  font-smooth: 'antialiased';
 `;

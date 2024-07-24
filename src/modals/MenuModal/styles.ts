@@ -3,13 +3,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Wrapper = styled(SafeAreaView)`
   background-color: ${({ theme }) => theme.color.secondary};
-  padding: 20px 20px 4px;
+  padding: 20px;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
   max-height: 80%;
   width: 60%;
   position: absolute;
-  top: 8%;
+  top: 6%;
   right: 0;
   elevation: 5;
 `;
@@ -23,9 +23,9 @@ export const TitleContainer = styled.View`
 `;
 
 export const Title = styled.Text`
-  color: ${({ theme }) => theme.color.titleNotImport};
-  font: 600 18px/20px 'TitilliumWeb-SemiBold';
-  margin: 12px 8px;
+  color: ${({ theme }) => theme.color.title};
+  font: 400 18px 'TitilliumWeb-Regular';
+  margin: 4px 8px 16px;
   padding-bottom: 8px;
   flex: 1;
   font-smooth: antialiased;
@@ -49,8 +49,8 @@ export const MenuIcon = styled.View`
 `;
 
 export const MenuTitle = styled.Text`
-  color: ${({ theme }) => theme.color.title};
-  font: 600 14px/20px 'TitilliumWeb-SemiBold';
+  color: ${({ theme }) => theme.color.titleItemCard};
+  font: 400 14px 'TitilliumWeb-Regular';
   max-width: 80%;
   font-smooth: antialiased;
 `;

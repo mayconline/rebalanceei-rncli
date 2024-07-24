@@ -27,12 +27,14 @@ export const ContainerTitle = styled.View`
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.activeText};
   font: 300 48px/56px 'TitilliumWeb-Regular';
+  font-smooth: 'antialiased';
 `;
 
 export const SubTitle = styled.Text`
   color: ${({ theme }) => theme.color.activeText};
   font: 400 28px/56px 'TitilliumWeb-Regular';
   opacity: 0.5;
+  font-smooth: 'antialiased';
 `;
 
 export const Footer = styled.View``;
@@ -50,6 +52,7 @@ export const ButtonContainer = styled.TouchableOpacity`
 export const ButtonText = styled.Text`
   color: ${({ theme }) => theme.color.blue};
   font: 600 20px/28px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;
 
 export const ContainerTextLink = styled.TouchableOpacity`
@@ -65,5 +68,6 @@ export const TextLink = styled.Text<ITextLinkProps>`
   font: ${({ strong }) =>
     strong
       ? '600 16px/24px TitilliumWeb-SemiBold'
-      : '400 16px/24px TitilliumWeb-SemiBold'};
+      : '400 16px/24px TitilliumWeb-Regular'};
+  font-smooth: 'antialiased';
 `;

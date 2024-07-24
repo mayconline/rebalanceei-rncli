@@ -25,6 +25,7 @@ export const Label = styled.Text<IFocusProps>`
   color: ${({ theme, autoFocus }) =>
     autoFocus ? theme.color.success : theme.color.titleNotImport};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;
 
 export const TextCustomInput = styled.TextInput`

@@ -20,6 +20,7 @@ export const Title = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 600 20px/28px 'TitilliumWeb-SemiBold';
   align-self: center;
+  font-smooth: 'antialiased';
 `;
 
 export const LootieContainer = styled.View`

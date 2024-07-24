@@ -25,6 +25,7 @@ export const Subtitle = styled.Text`
   color: ${({ theme }) => theme.color.onboardingSubtitle};
   font: 400 16px/24px 'TitilliumWeb-Regular';
   text-align: center;
+  font-smooth: 'antialiased';
 `;
 
 export const Footer = styled.View`

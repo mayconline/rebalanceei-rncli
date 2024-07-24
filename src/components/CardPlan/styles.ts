@@ -31,6 +31,7 @@ export const CardPlanTitle = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
   margin: 12px 16px 0;
+  font-smooth: 'antialiased';
 `;
 
 export const CardPlanGroup = styled.View`
@@ -48,12 +49,14 @@ export const CardPlanContainerDescription = styled.View`
 export const CardPlanDescription = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 400 16px/24px 'TitilliumWeb-Regular';
+  font-smooth: 'antialiased';
 `;
 
 export const CardPlanRole = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
   margin-top: -10px;
+  font-smooth: 'antialiased';
 `;
 
 export const PlanRadioSelect = styled.View<SelectProps>`

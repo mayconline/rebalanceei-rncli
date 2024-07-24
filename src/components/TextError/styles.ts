@@ -10,4 +10,5 @@ export const TextContentError = styled.Text<ITextContentError>`
   font: 400 16px/24px 'TitilliumWeb-Regular';
   text-align: center;
   margin-top: -12px;
+  font-smooth: 'antialiased';
 `;

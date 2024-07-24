@@ -39,6 +39,7 @@ export const SuggestionButton = styled.TouchableOpacity`
 export const SuggestionText = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 400 16px/24px 'TitilliumWeb-Regular';
+  font-smooth: 'antialiased';
 `;
 
 export const BackButtonContainer = styled.TouchableOpacity`
@@ -50,9 +51,11 @@ export const BackButtonContainer = styled.TouchableOpacity`
 export const BackButton = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
   font: 600 20px/28px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;
 
 export const SuggestionError = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;

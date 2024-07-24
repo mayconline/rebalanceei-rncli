@@ -23,6 +23,7 @@ export const SuggestButtonText = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
   flex: 1;
+  font-smooth: 'antialiased';
 `;
 
 export const ContainerButtons = styled.View`

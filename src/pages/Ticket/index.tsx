@@ -126,32 +126,30 @@ const Ticket = () => {
   const hasEmptyTickets = !wallet || (!queryLoading && !ticketData?.length);
 
   return (
-    <>
-      <LayoutTab
-        title="Meus Ativos"
-        routeName="Ticket"
-        count={ticketData?.length!}
-        initialFilter={initialFilter}
-        selectedFilter={selectedFilter}
-        handleChangeFilter={handleChangeFilter}
-        hasEmptyTickets={hasEmptyTickets}
-        queryError={queryError}
-        queryLoading={queryLoading}
-      >
-        <ListTicket
-          data={ticketData}
-          extraData={ticketData}
-          keyExtractor={item => item._id}
-          renderItem={({ item, index }) => (
-            <ListItem
-              item={item}
-              showAdBanner={getPositionAdBanner(index, ticketData?.length!)}
-              handleOpenEditModal={handleOpenEditModal}
-            />
-          )}
-        />
-      </LayoutTab>
-    </>
+    <LayoutTab
+      title="Meus Ativos"
+      routeName="Ticket"
+      count={ticketData?.length!}
+      initialFilter={initialFilter}
+      selectedFilter={selectedFilter}
+      handleChangeFilter={handleChangeFilter}
+      hasEmptyTickets={hasEmptyTickets}
+      queryError={queryError}
+      queryLoading={queryLoading}
+    >
+      <ListTicket
+        data={ticketData}
+        extraData={ticketData}
+        keyExtractor={item => item._id}
+        renderItem={({ item, index }) => (
+          <ListItem
+            item={item}
+            showAdBanner={getPositionAdBanner(index, ticketData?.length!)}
+            handleOpenEditModal={handleOpenEditModal}
+          />
+        )}
+      />
+    </LayoutTab>
   );
 };
 

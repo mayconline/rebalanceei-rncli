@@ -18,4 +18,5 @@ export const TextTermsLink = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
   text-align: center;
+  font-smooth: 'antialiased';
 `;

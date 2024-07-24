@@ -77,15 +77,18 @@ const MenuModal = ({ onClose }: MenuProps) => {
     openModal,
   }));
 
-  const [openModal, setOpenModal] = useState<'User' | 'Help' | 'Plan' | null>(
-    null,
-  );
+  const [openModal, setOpenModal] = useState<'User' | 'Help' | null>(null);
 
   useFocusEffect(
     useCallback(() => {
       logEvent('open Menu Modal');
     }, []),
   );
+
+  const onSignOut = useCallback(() => {
+    onClose();
+    handleSignOut();
+  }, []);
 
   const handleClickMenu = (description: string) => {
     logEvent(`click on ${description} at Menu Modal`);
@@ -104,7 +107,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
       case 'Termos de Uso':
         return getTerms();
       case 'Sair':
-        return handleSignOut();
+        return onSignOut();
       default:
         return;
     }
@@ -130,11 +133,13 @@ const MenuModal = ({ onClose }: MenuProps) => {
           </TitleContainer>
 
           <MenuContainer accessibilityRole="menu">
-            {menuItens?.map(menuItem => {
+            {menuItens?.map((menuItem, index) => {
               const { lib: Icon, icon, description } = menuItem;
 
               return (
                 <Fragment key={description}>
+                  {index !== 0 && <Divider />}
+
                   <Menu
                     onPress={() => {
                       handleClickMenu(description);
@@ -153,7 +158,6 @@ const MenuModal = ({ onClose }: MenuProps) => {
                         : description}
                     </MenuTitle>
                   </Menu>
-                  <Divider />
                 </Fragment>
               );
             })}

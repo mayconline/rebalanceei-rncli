@@ -5,4 +5,5 @@ export const Grade = styled.Text`
   font: 600 18px 'TitilliumWeb-SemiBold';
   text-align: center;
   width: 12%;
+  font-smooth: 'antialiased';
 `;

@@ -15,6 +15,7 @@ export const Header = styled.TouchableOpacity`
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;
 
 export const Body = styled.View`

@@ -43,6 +43,7 @@ export const CardTicket = styled.Text`
   line-height: 24px;
   font-weight: 600;
   font-family: 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;
 
 export const CardSubTitle = styled.Text`
@@ -50,6 +51,7 @@ export const CardSubTitle = styled.Text`
   font-size: 12px;
   line-height: 24px;
   font-family: 'TitilliumWeb-Regular';
+  font-smooth: 'antialiased';
 `;
 export const Amount = styled.Text<IVariation>`
   color: ${({ theme, variation }) =>
@@ -59,4 +61,5 @@ export const Amount = styled.Text<IVariation>`
       ? theme.color.danger
       : theme.color.subtitle};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;

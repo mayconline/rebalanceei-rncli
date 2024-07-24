@@ -12,7 +12,7 @@ export default {
     success: colors.primary['600'],
     warning: colors.secondary['100'],
     danger: colors.secondary['200'],
-    divider: '#CFD2D8',
+    divider: colors.primary['600'],
     activeText: colors.neutral['100'],
     inactiveTabs: '#92929C',
     blueLight: '#EDF1F9',

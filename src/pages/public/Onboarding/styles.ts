@@ -33,12 +33,14 @@ export const Title = styled.Text`
   font: 600 36px/44px 'TitilliumWeb-Bold';
   text-align: center;
   margin: 0 16px 16px;
+  font-smooth: 'antialiased';
 `;
 
 export const Subtitle = styled.Text`
   color: ${({ theme }) => theme.color.onboardingSubtitle};
   font: 400 18px/24px 'TitilliumWeb-Regular';
   text-align: center;
+  font-smooth: 'antialiased';
 `;
 
 export const Step = styled.View`

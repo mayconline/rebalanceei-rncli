@@ -22,4 +22,5 @@ export const SubTitle = styled.Text`
   font: 400 32px/56px 'TitilliumWeb-Regular';
   padding: 4px 20px;
   text-align: center;
+  font-smooth: 'antialiased';
 `;
