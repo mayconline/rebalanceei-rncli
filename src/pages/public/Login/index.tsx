@@ -24,6 +24,7 @@ interface ILogin {
     token: string;
     refreshToken: string;
     role: string;
+    email: string;
   };
 }
 
@@ -163,6 +164,7 @@ export const LOGIN = gql`
       token
       refreshToken
       role
+      email
       plan {
         transactionDate
         renewDate

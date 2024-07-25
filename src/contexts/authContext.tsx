@@ -32,6 +32,7 @@ interface ISignIn {
   refreshToken: string;
   role: string;
   plan?: IPlan;
+  email: string;
 }
 
 type IStatePlan = 'ACTIVE' | 'PENDING' | 'CANCEL' | null;
@@ -57,6 +58,7 @@ interface IAuthContext {
   userID: string | null;
   plan: IPlan | null;
   statePlan: IStatePlan;
+  userEmail: string | null;
   handleSetWallet(walletID: string, walletName: string | null): void;
   handleSignIn(user: ISignIn): Promise<void>;
   handleSignOut(): Promise<void>;
@@ -82,6 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [plan, setPlan] = useState<IPlan | null>(null);
   const [statePlan, setStatePlan] = useState<IStatePlan>(null);
   const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   const setSelectTheme = useCallback(
     async (selectedTheme: 'LIGHT' | 'DARK') => {
@@ -108,6 +111,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         storageWalletName,
         storageID,
         storagePlan,
+        storageEmail,
       ] = await multiGetLocalStorage([
         '@authRole',
         '@authToken',
@@ -115,6 +119,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         '@authWalletName',
         '@authID',
         '@authPlan',
+        '@userEmail',
       ]);
 
       if (storageRole[1] === 'USER') {
@@ -134,6 +139,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUserID(storageID[1]);
       }
 
+      if (storageEmail[1]) {
+        setUserEmail(storageEmail[1]);
+      }
+
       if (storageToken[1]) {
         setSigned(true);
       } else {
@@ -151,18 +160,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handleSignIn = useCallback(async (userLogin: ISignIn) => {
     setLoading(true);
     try {
-      const { token, refreshToken, role, _id, plan } = userLogin;
+      const { token, refreshToken, role, _id, plan, email } = userLogin;
+
+      console.log({ token, refreshToken, role, _id, plan, email });
 
       await multiSetLocalStorage([
         ['@authRole', role],
         ['@authToken', token],
         ['@refreshToken', refreshToken],
         ['@authID', _id],
+        ['@userEmail', email],
       ]);
 
       if (role === 'USER') setShowBanner(true);
       if (role === 'PREMIUM' && !!plan) await handleVerificationPlan(plan);
 
+      setUserEmail(email);
       setUserID(_id);
       setSigned(true);
     } catch (err: any) {
@@ -182,6 +195,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       '@authRole',
       '@authPlan',
       '@authID',
+      '@userEmail',
     ]);
     setStatePlan(null);
     setShowBanner(false);
@@ -191,6 +205,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUserID(null);
     setLoading(false);
     setSigned(false);
+    setUserEmail(null);
   }, []);
 
   const handleSetWallet = useCallback(
@@ -267,6 +282,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         userID,
         plan,
         statePlan,
+        userEmail,
       }}
     >
       <ThemeProvider theme={theme}>

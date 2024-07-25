@@ -9,7 +9,7 @@ export const Wrapper = styled(SafeAreaView)`
   max-height: 80%;
   width: 60%;
   position: absolute;
-  top: 6%;
+  top: 7%;
   right: 0;
   elevation: 5;
 `;

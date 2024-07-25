@@ -53,6 +53,7 @@ export default {
     bgRadio: colors.primary['100'],
     editItemColor: colors.primary['700'],
     menuIconColor: colors.primary['850'],
+    bgSelectWallet: colors.primary['100'],
   },
   gradient: {
     darkToLightGreen: ['#31AD2C', '#2D9B28'],

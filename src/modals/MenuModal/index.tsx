@@ -116,7 +116,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
   return (
     <>
       <Wrapper>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <TitleContainer>
             <Title accessibilityRole="header">Menu</Title>
             <BackIcon

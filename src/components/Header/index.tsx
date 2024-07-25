@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 import {
   Wrapper,
@@ -13,17 +13,22 @@ import {
   MenuBar,
   Logo,
   WrapperLogo,
+  UserNameWrapper,
+  WalletTitle,
 } from './styles';
 
 import { useModalStore } from '../../store/useModalStore';
 import RebalanceeiLogo from '../../../assets/svg/RebalanceeiLogo';
 import Divider from '../Divider';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Header = () => {
-  const { walletName } = useAuth();
+  const { walletName, userEmail } = useAuth();
   const { color, name } = useContext(ThemeContext);
 
   const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
+
+  const userName = `${userEmail?.split('@')[0]}`;
 
   return (
     <Wrapper>
@@ -35,16 +40,11 @@ const Header = () => {
             />
           </Logo>
 
-          <Wallet onPress={() => openModal('Wallet')}>
+          <UserNameWrapper>
             <Title numberOfLines={1} ellipsizeMode="tail">
-              {walletName ?? 'Selecionar Carteira'}
+              {`Olá, ${userName}!`}
             </Title>
-            <MaterialCommunityIcons
-              name="chevron-down"
-              size={32}
-              color={color.headerPrimary}
-            />
-          </Wallet>
+          </UserNameWrapper>
         </WrapperLogo>
         <Icons>
           <Menu onPress={() => openModal('Menu')}>
@@ -57,6 +57,13 @@ const Header = () => {
         </Icons>
       </MenuBar>
       <Divider />
+
+      <Wallet onPress={() => openModal('Wallet')}>
+        <WalletTitle numberOfLines={1} ellipsizeMode="tail">
+          {walletName ?? 'Selecionar Carteira'}
+        </WalletTitle>
+        <Entypo name="chevron-thin-down" size={16} color={color.title} />
+      </Wallet>
     </Wrapper>
   );
 };
