@@ -6,13 +6,13 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getArraySortByParams } from '../../utils/sort';
 import { getPositionAdBanner } from '../../utils/format';
 
-import AmountWallet from '../../components/AmountWallet';
-
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
 
 import Earning from '../Earning';
 import LayoutTab from '../../components/LayoutTab';
+
+import AmountVariation from '../../components/AmountVariation';
 
 const initialFilter = [
   {
@@ -133,9 +133,18 @@ const Rentability = () => {
       menuTitles={initialMenuTitles}
       handleChangeMenu={handleChangeMenu}
       selectedMenu={selectedMenu}
-      dataWallet={dataWallet}
-      queryWalletLoading={queryWalletLoading}
-      queryWalletError={queryWalletError}
+      childrenBeforeFilter={
+        <AmountVariation
+          previousTitle="Saldo aplicado"
+          previousValue={dataWallet?.getWalletById.sumCostWallet}
+          currentTitle="Saldo atual"
+          currentValue={dataWallet?.getWalletById?.sumAmountWallet}
+          variationTitle="Percentual de variação da carteira"
+          variationValue={dataWallet?.getWalletById?.percentRentabilityWallet}
+          queryLoading={queryWalletLoading}
+          queryError={queryWalletError}
+        />
+      }
     >
       <ListTicket
         data={rentabilityData}

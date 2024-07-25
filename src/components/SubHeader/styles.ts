@@ -13,6 +13,7 @@ export const Wrapper = styled.SafeAreaView`
 export const ContainerTitle = styled.View`
   justify-content: space-between;
   flex-direction: row;
+  margin-top: 20px;
 `;
 
 export const SubTitle = styled.Text`
@@ -46,27 +47,5 @@ export const TextFilter = styled.Text<IFocused>`
   padding: 4px 12px;
   border-radius: 8px;
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
-  font-smooth: antialiased;
-`;
-
-export const MenuButton = styled.TouchableOpacity`
-  flex: 1;
-`;
-
-export const MenuButtonText = styled.Text<IFocused>`
-  background-color: ${({ focused, theme }) =>
-    focused
-      ? theme.color.bgMenuSubheaderActive
-      : theme.color.bgMenuSubheaderInative};
-  color: ${({ focused, theme }) =>
-    focused ? theme.color.filterFocused : theme.color.filterDisabled};
-
-  border-radius: ${({ focused }) => (focused ? '40px' : '20px')};
-
-  padding: 16px;
-  margin: -16px -16px 0;
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
-  align-items: center;
-  justify-content: center;
   font-smooth: antialiased;
 `;

@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { memo, useCallback, useContext } from 'react';
+import React, { memo, ReactNode, useCallback, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
@@ -8,8 +8,6 @@ import useAmplitude from '../../hooks/useAmplitude';
 import Empty from '../Empty';
 import Header from '../Header';
 import SubHeader from '../SubHeader';
-import YearFilter from '../YearFilter';
-import AmountWallet from '../AmountWallet';
 
 const fatalErrors = [
   'Error: Token Not Exists',
@@ -17,7 +15,7 @@ const fatalErrors = [
 ];
 
 interface LayoutTabProps {
-  children?: any;
+  children?: ReactNode;
   title: string;
   routeName: string;
   queryLoading: boolean;
@@ -30,11 +28,8 @@ interface LayoutTabProps {
   menuTitles?: string[];
   handleChangeMenu?: (menu: 'Carteira' | 'Proventos') => void;
   selectedMenu?: string;
-  currentYear?: number;
-  setCurrentYear?: React.Dispatch<React.SetStateAction<number>>;
-  dataWallet?: any;
-  queryWalletLoading?: boolean;
-  queryWalletError?: ApolloError;
+  childrenBeforeFilter?: ReactNode;
+  childrenBeforeTitle?: ReactNode;
 }
 
 const LayoutTab = ({
@@ -51,11 +46,8 @@ const LayoutTab = ({
   menuTitles,
   handleChangeMenu,
   selectedMenu,
-  currentYear,
-  setCurrentYear,
-  dataWallet,
-  queryWalletLoading,
-  queryWalletError,
+  childrenBeforeFilter,
+  childrenBeforeTitle,
 }: LayoutTabProps) => {
   const { color } = useContext(ThemeContext);
   const { logEvent } = useAmplitude();
@@ -96,23 +88,11 @@ const LayoutTab = ({
             menuTitles={menuTitles}
             handleChangeMenu={handleChangeMenu}
             selectedMenu={selectedMenu}
+            childrenBeforeTitle={childrenBeforeTitle}
           >
-            {routeName === 'Rentability' && (
-              <AmountWallet
-                data={dataWallet}
-                queryLoading={queryWalletLoading}
-                queryError={queryWalletError}
-              />
-            )}
-
-            {routeName === 'Earning' && (
-              <YearFilter
-                currentYear={currentYear!}
-                setCurrentYear={setCurrentYear!}
-                isAccumulated={selectedFilter === 'accumulated'}
-              />
-            )}
+            {childrenBeforeFilter}
           </SubHeader>
+
           {children}
         </>
       )}

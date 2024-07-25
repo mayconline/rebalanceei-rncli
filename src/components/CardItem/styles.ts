@@ -1,4 +1,3 @@
-import { TextProps } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
 export const ContainerCard = styled.View`
@@ -13,7 +12,9 @@ export const ContainerCard = styled.View`
   height: 64px;
 `;
 
-export const IconButton = styled.TouchableOpacity``;
+export const IconButton = styled.TouchableOpacity`
+  margin-left: 16px;
+`;
 
 export const CardContent = styled.View`
   flex: 1;
@@ -30,7 +31,7 @@ export const CardTitleStyle = styled.Text`
   font-smooth: antialiased;
 `;
 
-interface ITextProps extends TextProps {
+interface ITextProps {
   opacity?: number;
   size?: number;
 }
@@ -52,7 +53,7 @@ export const AmountContent = styled.View`
   width: 40%;
 `;
 
-interface IFormatStatus extends TextProps {
+interface IFormatStatus {
   status?: string;
   variation?: number;
   size: number;

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { Modal } from 'react-native';
+
 import { useAuth } from '../../contexts/authContext';
 import { useLazyQuery, gql } from '@apollo/client';
 
@@ -12,9 +12,11 @@ import ListItem from './ListItem';
 import useAmplitude from '../../hooks/useAmplitude';
 import EditEarningModal from '../../modals/EditEarningModal';
 
-import AmountEarning, { IDataSumEarning } from '../../components/AmountEarning';
 import LayoutTab from '../../components/LayoutTab';
 import { CURRENT_YEAR } from '../../utils/currentYear';
+import { Modal } from '../../components/Modal';
+import YearFilter from '../../components/YearFilter';
+import AmountVariation from '../../components/AmountVariation';
 
 const initialFilter = [
   {
@@ -27,6 +29,17 @@ const initialFilter = [
     name: 'month',
   },
 ];
+
+interface ISumEarning {
+  sumCurrentYear: number;
+  sumOldYear: number;
+  sumTotalEarnings: number;
+  yieldOnCost: number;
+}
+
+export interface IDataSumEarning {
+  getSumEarning: ISumEarning;
+}
 
 export interface IEarning {
   _id: string;
@@ -137,6 +150,8 @@ const Earning = ({
   const hasEmptyTickets =
     !wallet || (!queryLoading && data?.getEarningByWallet?.length === 0);
 
+  const isAccumulated = selectedFilter === 'accumulated';
+
   return (
     <>
       <LayoutTab
@@ -151,22 +166,40 @@ const Earning = ({
         menuTitles={initialMenuTitles}
         handleChangeMenu={handleChangeMenu}
         selectedMenu={selectedMenu}
-        currentYear={currentYear}
-        setCurrentYear={setCurrentYear}
         queryLoading={queryLoading}
+        childrenBeforeTitle={
+          <YearFilter
+            currentYear={currentYear!}
+            setCurrentYear={setCurrentYear!}
+            isAccumulated={isAccumulated}
+          />
+        }
+        childrenBeforeFilter={
+          <AmountVariation
+            previousTitle={isAccumulated ? 'Total acumulado' : 'Ano anterior'}
+            previousValue={
+              isAccumulated
+                ? dataSumEarning?.getSumEarning?.sumTotalEarnings
+                : dataSumEarning?.getSumEarning?.sumOldYear
+            }
+            currentTitle={isAccumulated ? 'Yield on cost' : 'Ano selecionado'}
+            currentValue={
+              isAccumulated
+                ? null
+                : dataSumEarning?.getSumEarning?.sumCurrentYear
+            }
+            variationValue={
+              isAccumulated ? dataSumEarning?.getSumEarning?.yieldOnCost : null
+            }
+            queryLoading={querySumLoading}
+            queryError={querySumError}
+          />
+        }
       >
         <ListTicket
           data={earningData}
           extraData={earningData}
           keyExtractor={item => item._id}
-          ListHeaderComponent={
-            <AmountEarning
-              data={dataSumEarning}
-              queryLoading={querySumLoading}
-              queryError={querySumError}
-              isAccumulated={selectedFilter === 'accumulated'}
-            />
-          }
           renderItem={({ item }) => (
             <ListItem
               item={item}
@@ -177,12 +210,7 @@ const Earning = ({
       </LayoutTab>
 
       {openModal && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal}
-          statusBarTranslucent={false}
-        >
+        <Modal>
           <EditEarningModal
             onClose={() => {
               setOpenModal(false);

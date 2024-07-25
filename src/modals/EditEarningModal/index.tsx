@@ -1,5 +1,5 @@
-import React, { useContext, useState, useCallback } from 'react';
-import { ThemeContext } from 'styled-components/native';
+import React, { useState, useCallback } from 'react';
+
 import { useMutation, gql } from '@apollo/client';
 import { useAuth } from '../../contexts/authContext';
 import { FormRow, ContainerButtons } from './styles';
@@ -38,7 +38,7 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
   const { logEvent } = useAmplitude();
 
   const { handleSetLoading, wallet } = useAuth();
-  const { gradient } = useContext(ThemeContext);
+
   const [focus, setFocus] = useState(0);
   const [amount, setAmount] = useState<IAmount>();
 

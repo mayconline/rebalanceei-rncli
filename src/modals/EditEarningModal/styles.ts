@@ -8,5 +8,5 @@ export const FormRow = styled.View`
 `;
 
 export const ContainerButtons = styled.View`
-  margin-top: 80px;
+  margin: 12% 16%;
 `;
