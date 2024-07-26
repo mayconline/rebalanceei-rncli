@@ -20,6 +20,8 @@ interface ICardItemProps {
 }
 
 interface ICardEditButtonProps {
+  ml?: string;
+  mr?: string;
   onPress?: () => void;
 }
 
@@ -85,7 +87,7 @@ const CardSubTitle = memo(
   },
 );
 
-const CardEditButton = memo(({ onPress }: ICardEditButtonProps) => {
+const CardEditButton = memo(({ onPress, ...props }: ICardEditButtonProps) => {
   const { color } = useContext(ThemeContext);
 
   return (
@@ -93,6 +95,7 @@ const CardEditButton = memo(({ onPress }: ICardEditButtonProps) => {
       accessibilityRole="button"
       accessibilityLabel={'Editar'}
       onPress={onPress}
+      {...props}
     >
       <Feather name="edit" size={20} color={color.editItemColor} />
     </IconButton>

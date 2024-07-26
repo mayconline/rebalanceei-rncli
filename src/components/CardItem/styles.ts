@@ -1,5 +1,10 @@
 import styled, { css } from 'styled-components/native';
 
+interface IIconButtonProps {
+  ml?: string;
+  mr?: string;
+}
+
 export const ContainerCard = styled.View`
   justify-content: space-between;
   flex-direction: row;
@@ -12,8 +17,18 @@ export const ContainerCard = styled.View`
   height: 64px;
 `;
 
-export const IconButton = styled.TouchableOpacity`
-  margin-left: 16px;
+export const IconButton = styled.TouchableOpacity<IIconButtonProps>`
+  ${({ ml }) =>
+    ml &&
+    css`
+      margin-left: ${ml};
+    `}
+
+  ${({ mr }) =>
+    mr &&
+    css`
+      margin-right: ${mr};
+    `}
 `;
 
 export const CardContent = styled.View`

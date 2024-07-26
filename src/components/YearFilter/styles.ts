@@ -15,14 +15,18 @@ export const YearContainer = styled.View`
 
 export const YearText = styled.Text`
   color: ${({ theme }) => theme.color.title};
-  font: 400 16px/20px 'TitilliumWeb-Regular';
+  font: 600 18px 'TitilliumWeb-Semibold';
   text-align: center;
   font-smooth: 'antialiased';
 `;
 
 export const YearSubtitle = styled.Text`
-  color: ${({ theme }) => theme.color.titleNotImport};
-  font: 400 12px/24px 'TitilliumWeb-Regular';
-  margin: -8px 0;
+  color: ${({ theme }) => theme.color.title};
+  font: 400 16px 'TitilliumWeb-Regular';
+  margin: -2px 0;
   font-smooth: 'antialiased';
+`;
+
+export const YearButton = styled.Pressable`
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;

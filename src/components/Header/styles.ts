@@ -22,7 +22,7 @@ export const Wallet = styled.TouchableOpacity`
   background-color: ${({ theme }) => theme.color.bgSelectWallet};
   border: 1px solid ${({ theme }) => theme.color.success};
   border-radius: 8px;
-  margin: 20px auto;
+  margin: 20px auto 8px;
   width: 64%;
   padding: 4px 16px;
 `;

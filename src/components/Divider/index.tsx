@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Wrapper } from './styles';
+import { Wrapper, IDividerProps } from './styles';
 
-const Divider = () => <Wrapper />;
+const Divider = ({ ...props }: IDividerProps) => <Wrapper {...props} />;
 
 export default Divider;

@@ -53,7 +53,10 @@ const ListItem = ({ item, handleOpenEditEarningModal }: IListItem) => {
       </CardItem.AmountContent>
 
       {!isAccumulated && (
-        <CardItem.EditButton onPress={() => handleOpenEditEarningModal(item)} />
+        <CardItem.EditButton
+          onPress={() => handleOpenEditEarningModal(item)}
+          ml={'16px'}
+        />
       )}
     </CardItem>
   );

@@ -35,6 +35,7 @@ const ListItem = ({
     <CardItem>
       <CardItem.EditButton
         onPress={() => handleEditWallet(item._id, item.description)}
+        mr={'4px'}
       />
       <Card
         onPress={() => handleSelectWallet(item._id, item.description)}

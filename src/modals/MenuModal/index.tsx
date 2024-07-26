@@ -138,7 +138,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
 
               return (
                 <Fragment key={description}>
-                  {index !== 0 && <Divider />}
+                  {index !== 0 && <Divider mt={'8px'} />}
 
                   <Menu
                     onPress={() => {

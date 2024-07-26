@@ -58,7 +58,7 @@ export const VariationAmount = styled.Text<IFormatStatus>`
       : variation < 0
       ? theme.color.danger
       : theme.color.titleItemCard};
-  font: 400 18px 'TitilliumWeb-Regular';
+  font: 600 18px 'TitilliumWeb-Semibold';
   align-self: flex-end;
   font-smooth: antialiased;
 `;
