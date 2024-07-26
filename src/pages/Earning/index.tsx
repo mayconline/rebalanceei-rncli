@@ -155,7 +155,7 @@ const Earning = ({
   return (
     <>
       <LayoutTab
-        title="Proventos Recebidos"
+        title="Variação"
         routeName="Earning"
         count={earningData?.length!}
         initialFilter={initialFilter}

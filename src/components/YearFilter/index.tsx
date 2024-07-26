@@ -35,7 +35,7 @@ const YearFilter = ({
           accessibilityLabel="Ano Anterior"
           disabled={isAccumulated}
         >
-          <Feather name="arrow-left-circle" size={32} color={color.title} />
+          <Feather name="arrow-left-circle" size={24} color={color.title} />
         </YearButton>
 
         <YearContainer>
@@ -56,7 +56,7 @@ const YearFilter = ({
           accessibilityLabel="Próximo Ano"
           disabled={isAccumulated}
         >
-          <Feather name="arrow-right-circle" size={32} color={color.title} />
+          <Feather name="arrow-right-circle" size={24} color={color.title} />
         </YearButton>
       </ContainerYearFilter>
     </>

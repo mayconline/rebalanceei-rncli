@@ -146,6 +146,7 @@ const Chart = () => {
       hasEmptyTickets={hasEmptyTickets}
       queryError={queryError}
       queryLoading={queryLoading}
+      showCount
     >
       <Content>
         <ContainerGraph>

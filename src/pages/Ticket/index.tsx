@@ -136,6 +136,7 @@ const Ticket = () => {
       hasEmptyTickets={hasEmptyTickets}
       queryError={queryError}
       queryLoading={queryLoading}
+      showCount
     >
       <ListTicket
         data={ticketData}

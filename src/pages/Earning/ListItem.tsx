@@ -18,14 +18,6 @@ const ListItem = ({ item, handleOpenEditEarningModal }: IListItem) => {
 
   return (
     <CardItem>
-      {isAccumulated && (
-        <MaterialCommunityIcons
-          name={'calendar-sync'}
-          size={28}
-          color={color.closeIcon}
-        />
-      )}
-
       <CardItem.Content>
         <CardItem.AmountText
           accessibilityLabel={isAccumulated ? 'Ano' : 'Mês'}
@@ -38,14 +30,14 @@ const ListItem = ({ item, handleOpenEditEarningModal }: IListItem) => {
         <CardItem.SubTitle
           accessibilityLabel="Observação"
           accessibilityValue={{
-            text: isAccumulated ? 'Acumulado no Ano' : 'Lançamento Manual',
+            text: isAccumulated ? 'Acumulado no ano' : 'Lançamento manual',
           }}
-          text={isAccumulated ? 'Acumulado no Ano' : 'Lançamento Manual'}
+          text={isAccumulated ? 'Acumulado no ano' : 'Lançamento manual'}
         />
       </CardItem.Content>
       <CardItem.AmountContent>
         <CardItem.AmountText
-          accessibilityLabel={isAccumulated ? 'Total do Ano' : 'Total do Mês'}
+          accessibilityLabel={isAccumulated ? 'Total do ano' : 'Total do mês'}
           accessibilityValue={{ now: item.amount }}
           variation={item.amount}
           text={formatNumber(item.amount)}

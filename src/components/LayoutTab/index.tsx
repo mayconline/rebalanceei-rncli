@@ -30,6 +30,7 @@ interface LayoutTabProps {
   selectedMenu?: string;
   childrenBeforeFilter?: ReactNode;
   childrenBeforeTitle?: ReactNode;
+  showCount?: boolean;
 }
 
 const LayoutTab = ({
@@ -48,6 +49,7 @@ const LayoutTab = ({
   selectedMenu,
   childrenBeforeFilter,
   childrenBeforeTitle,
+  showCount,
 }: LayoutTabProps) => {
   const { color } = useContext(ThemeContext);
   const { logEvent } = useAmplitude();
@@ -82,6 +84,7 @@ const LayoutTab = ({
           <SubHeader
             title={title}
             count={count}
+            showCount={showCount}
             filters={initialFilter}
             selectedFilter={selectedFilter}
             onPress={handleChangeFilter}

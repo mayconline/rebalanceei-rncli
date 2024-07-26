@@ -26,6 +26,7 @@ interface ISubHeaderProps {
   selectedMenu?: string;
   children?: React.ReactNode;
   childrenBeforeTitle?: React.ReactNode;
+  showCount?: boolean;
 }
 
 interface IFilters {
@@ -43,6 +44,7 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
   menuTitles,
   selectedMenu,
   childrenBeforeTitle,
+  showCount,
 }) => {
   const { logEvent } = useAmplitude();
   const { color } = useContext(ThemeContext);
@@ -69,7 +71,7 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
 
         <ContainerTitle>
           <Title accessibilityRole="header">{title}</Title>
-          <SubTitle>{count} Itens</SubTitle>
+          {showCount && <SubTitle>{count} Itens</SubTitle>}
         </ContainerTitle>
 
         {children}
