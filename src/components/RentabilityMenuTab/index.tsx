@@ -1,9 +1,8 @@
 import { useCallback, useContext } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { PREMIUM_FILTER } from '../../utils/format';
+
 import { MenuButton, MenuButtonText, MenuWrapper } from './styles';
 import { ThemeContext } from 'styled-components/native';
-import { useAuth } from '../../contexts/authContext';
 import useAmplitude from '../../hooks/useAmplitude';
 import { useModalStore } from '../../store/useModalStore';
 
@@ -11,21 +10,18 @@ interface IRentabilityMenuTabProps {
   menuTitles: string[];
   selectedMenu?: string;
   handleChangeMenu: (menu: string) => void;
+  verifyPremiumFilter: (filterName: string) => boolean;
 }
 
 export const RentabilityMenuTab = ({
   menuTitles,
   selectedMenu,
   handleChangeMenu,
+  verifyPremiumFilter,
 }: IRentabilityMenuTabProps) => {
   const { logEvent } = useAmplitude();
-  const { showBanner } = useAuth();
   const { color } = useContext(ThemeContext);
   const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
-
-  const verifyPremiumFilter = useCallback((filterName: string) => {
-    return PREMIUM_FILTER.includes(filterName) && showBanner;
-  }, []);
 
   const handleSelectMenu = useCallback((menu: string) => {
     logEvent(`selected ${menu} menu`);

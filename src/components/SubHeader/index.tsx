@@ -11,9 +11,11 @@ import {
   Filter,
   TextFilter,
 } from './styles';
-import { formatFilter } from '../../utils/format';
+import { formatFilter, PREMIUM_FILTER } from '../../utils/format';
 import useAmplitude from '../../hooks/useAmplitude';
 import { RentabilityMenuTab } from '../RentabilityMenuTab';
+import { useAuth } from '../../contexts/authContext';
+import { useModalStore } from '../../store/useModalStore';
 
 interface ISubHeaderProps {
   title: string;
@@ -47,13 +49,24 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
   showCount,
 }) => {
   const { logEvent } = useAmplitude();
+  const { showBanner } = useAuth();
+  const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
+
   const { color } = useContext(ThemeContext);
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const verifyPremiumFilter = useCallback((filterName: string) => {
+    return PREMIUM_FILTER.includes(filterName) && showBanner;
+  }, []);
 
   const handleSelectFilter = useCallback((filterName: string) => {
     logEvent(`selected ${filterName} filter`);
 
-    onPress(filterName);
+    if (verifyPremiumFilter(filterName)) {
+      openModal('PLAN');
+    } else {
+      onPress(filterName);
+    }
   }, []);
 
   return (
@@ -64,6 +77,7 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
             menuTitles={menuTitles}
             selectedMenu={selectedMenu}
             handleChangeMenu={handleChangeMenu}
+            verifyPremiumFilter={verifyPremiumFilter}
           />
         )}
 

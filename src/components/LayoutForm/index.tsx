@@ -1,36 +1,21 @@
 import React, { memo, useCallback, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from 'styled-components/native';
-
-import {
-  Image,
-  Title,
-  Header,
-  ContainerTextLink,
-  TextLink,
-  FormContainer,
-  Form,
-  TitleContainer,
-} from './styles';
+import { Title, FormContainer, Form, TitleContainer } from './styles';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import useAmplitude from '../../hooks/useAmplitude';
-import { setLocalStorage } from '../../utils/localStorage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { BackIcon } from '../../modals/PlanModal/styles';
 
 interface LayoutFormProps {
   children?: any;
-  img?: any;
   title?: string;
   routeName: string;
   goBack?: () => void;
 }
 
-const OnboardingRoutes = ['StepOne', 'StepTwo', 'StepThree'];
-
 const LayoutForm = ({
   children,
-  img: IMG,
   title,
   routeName,
   goBack,
@@ -51,54 +36,31 @@ const LayoutForm = ({
     goBack ? goBack() : navigation.goBack();
   }, []);
 
-  const hasOnboardingRoutes = OnboardingRoutes.includes(routeName);
-
-  const handleSkip = useCallback(async () => {
-    logEvent(`click on handleSkip at Onboarding ${routeName}`);
-    await setLocalStorage('@authFirstAccess', 'true');
-    navigation.navigate('SignUp');
-  }, []);
-
   return (
     <SafeAreaView
       style={{
         flex: 1,
       }}
     >
-      {hasOnboardingRoutes ? (
-        <>
-          <Header hasOnboardingRoutes={hasOnboardingRoutes}>
-            <ContainerTextLink onPress={handleSkip}>
-              <TextLink>Pular</TextLink>
-            </ContainerTextLink>
-          </Header>
-          <Image>
-            <IMG />
-          </Image>
-
+      <FormContainer behavior={'position'}>
+        <Form>
+          <TitleContainer>
+            <Title accessibilityRole="header">{title}</Title>
+            <BackIcon
+              accessibilityRole="imagebutton"
+              accessibilityLabel="Voltar"
+              onPress={handleGoBack}
+            >
+              <MaterialCommunityIcons
+                name="close"
+                size={24}
+                color={color.closeIcon}
+              />
+            </BackIcon>
+          </TitleContainer>
           {children}
-        </>
-      ) : (
-        <FormContainer behavior={'position'}>
-          <Form>
-            <TitleContainer>
-              <Title accessibilityRole="header">{title}</Title>
-              <BackIcon
-                accessibilityRole="imagebutton"
-                accessibilityLabel="Voltar"
-                onPress={handleGoBack}
-              >
-                <MaterialCommunityIcons
-                  name="close"
-                  size={24}
-                  color={color.closeIcon}
-                />
-              </BackIcon>
-            </TitleContainer>
-            {children}
-          </Form>
-        </FormContainer>
-      )}
+        </Form>
+      </FormContainer>
     </SafeAreaView>
   );
 };

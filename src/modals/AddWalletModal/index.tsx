@@ -3,19 +3,14 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import { useAuth } from '../../contexts/authContext';
 import { FormRow, ContainerButtons } from './styles';
-
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
 import { GET_WALLET_BY_USER, IWalletData } from '../WalletModal';
-import EditWallet from '../../components/EditWallet';
+import EditWallet from '../EditWallet';
 import useAmplitude from '../../hooks/useAmplitude';
-import { useFocusEffect } from '@react-navigation/native';
 import LayoutForm from '../../components/LayoutForm';
 import { openPlanModalOnError } from '../../utils/format';
-import { Modal } from 'react-native';
-import SuccessModal from '../SuccessModal';
-import PlanModal from '../PlanModal';
 import { useModalStore } from '../../store/useModalStore';
 
 interface IAddWalletModal {

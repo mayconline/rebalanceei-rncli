@@ -89,6 +89,11 @@ export const client = new ApolloClient({
               return incoming;
             },
           },
+          getUserByToken: {
+            merge(existing, incoming) {
+              return incoming;
+            },
+          },
         },
       },
     },

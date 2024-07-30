@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import {
@@ -11,9 +11,10 @@ import {
 } from './styles';
 
 import Button from '../../../components/Button';
-import LayoutForm from '../../../components/LayoutForm';
+
 import OnboardingImgOne from '../../../../assets/svg/OnboardingImgOne';
 import useAmplitude from '../../../hooks/useAmplitude';
+import LayoutOnboarding from '../../../components/LayoutOnboarding';
 
 const StepOne = () => {
   const { logEvent } = useAmplitude();
@@ -32,7 +33,7 @@ const StepOne = () => {
   };
 
   return (
-    <LayoutForm img={OnboardingImgOne} routeName="StepOne">
+    <LayoutOnboarding img={OnboardingImgOne}>
       <Step>
         <ContainerIndicator>
           <StepIndicator active={true} />
@@ -49,7 +50,7 @@ const StepOne = () => {
           Próximo
         </Button>
       </Step>
-    </LayoutForm>
+    </LayoutOnboarding>
   );
 };
 

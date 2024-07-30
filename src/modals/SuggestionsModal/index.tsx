@@ -104,7 +104,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
         {loading ? (
           <ActivityIndicator size="large" color={color.filterDisabled} />
         ) : !!suggestions?.length ? (
-          <SuggestionList>
+          <SuggestionList showsVerticalScrollIndicator={false}>
             {suggestions?.map(suggestion => (
               <SuggestionItem key={suggestion.symbol}>
                 <SuggestionButton

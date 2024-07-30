@@ -105,7 +105,6 @@ const privateRoute = () => {
         tabBarItemStyle: {
           backgroundColor: color.bgTabMenu,
           paddingVertical: 12,
-          paddingHorizontal: 2,
           borderTopLeftRadius: route.name === 'Ticket' ? 24 : 0,
           borderTopRightRadius: route.name === 'Chart' ? 24 : 0,
           borderTopColor: color.borderTabMenu,

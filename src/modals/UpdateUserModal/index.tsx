@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Alert, ActivityIndicator } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
@@ -11,6 +11,8 @@ import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
 import useAmplitude from '../../hooks/useAmplitude';
 import LayoutForm from '../../components/LayoutForm';
+import { useModalStore } from '../../store/useModalStore';
+import { IPlan } from '../../types/plan-types';
 
 interface IUser {
   _id: string;
@@ -18,13 +20,14 @@ interface IUser {
   active: boolean;
   checkTerms: boolean;
   password?: string;
+  plan?: IPlan;
 }
 
 interface IUpdateUser {
   updateUser: IUser;
 }
 
-interface IGetUser {
+export interface IGetUser {
   getUserByToken: IUser;
 }
 
@@ -38,6 +41,13 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
   const [user, setUser] = useState({} as IUser);
   const { handleSignOut } = useAuth();
   const [focus, setFocus] = useState(0);
+
+  const { openConfirmModal, setLoading } = useModalStore(
+    ({ openConfirmModal, setLoading }) => ({
+      openConfirmModal,
+      setLoading,
+    }),
+  );
 
   const [getUserByToken, { data, loading: queryLoading, error: queryError }] =
     useLazyQuery<IGetUser>(GET_USER_BY_TOKEN, {
@@ -56,46 +66,36 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
   const handleDisabledSubmit = useCallback(async () => {
     logEvent('click on disabled account');
 
-    try {
-      Alert.alert(
-        'Desativar Conta',
-        'Se você continuar, sua conta será desativada e perderá o acesso a ela.',
-        [
-          {
-            text: 'Voltar',
-            style: 'cancel',
-          },
-          {
-            text: 'Continuar',
-            style: 'destructive',
-            onPress: async () => {
-              logEvent('successful disabled account');
+    setLoading(true);
 
-              await updateUser({
-                variables: {
-                  active: false,
-                },
-                refetchQueries: [
-                  {
-                    query: GET_USER_BY_TOKEN,
-                  },
-                ],
-                awaitRefetchQueries: true,
-              });
-              handleSignOut();
-            },
+    try {
+      logEvent('successful disabled account');
+
+      await updateUser({
+        variables: {
+          active: false,
+        },
+        refetchQueries: [
+          {
+            query: GET_USER_BY_TOKEN,
           },
         ],
-        { cancelable: false },
-      );
+        awaitRefetchQueries: true,
+      });
+
+      handleSignOut();
     } catch (err: any) {
       logEvent('error on disabled account');
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   const handleSubmit = useCallback(async () => {
     logEvent('click on update account');
+
+    setLoading(true);
 
     try {
       await updateUser({
@@ -114,6 +114,8 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
     } catch (err: any) {
       logEvent('error on update account');
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   }, [user]);
 
@@ -146,7 +148,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
       goBack={onClose}
     >
       <FormRow>
-        {!data ? (
+        {!data || queryLoading ? (
           <ActivityIndicator size="small" color={color.filterDisabled} />
         ) : (
           <InputForm
@@ -178,7 +180,12 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
           onFocus={() => setFocus(2)}
           onChangeText={handleSetPassword}
           onEndEditing={() => onEndInputEditing(0, 'password')}
-          onSubmitEditing={handleSubmit}
+          onSubmitEditing={() =>
+            openConfirmModal({
+              description: 'Tem certeza que deseja alterar a senha?',
+              onConfirm: () => handleSubmit(),
+            })
+          }
         />
       </FormRow>
 
@@ -187,16 +194,26 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
 
       <ContainerButtons>
         <Button
-          onPress={handleSubmit}
-          loading={mutationLoading}
+          onPress={() =>
+            openConfirmModal({
+              description: 'Tem certeza que deseja alterar a senha?',
+              onConfirm: () => handleSubmit(),
+            })
+          }
           disabled={mutationLoading}
         >
           Alterar Senha
         </Button>
 
         <Button
-          onPress={handleDisabledSubmit}
-          loading={mutationLoading}
+          onPress={() =>
+            openConfirmModal({
+              description: 'Tem certeza que deseja desativar a conta?',
+              legend:
+                'Se você continuar, sua conta será desativada e perderá o acesso a ela.',
+              onConfirm: () => handleDisabledSubmit(),
+            })
+          }
           disabled={mutationLoading}
           outlined
         >
@@ -237,6 +254,16 @@ export const GET_USER_BY_TOKEN = gql`
       email
       checkTerms
       active
+      plan {
+        transactionDate
+        renewDate
+        description
+        localizedPrice
+        productId
+        subscriptionPeriodAndroid
+        packageName
+        transactionId
+      }
     }
   }
 `;

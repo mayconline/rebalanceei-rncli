@@ -5,3 +5,10 @@ export type IModals =
   | 'Wallet'
   | 'Menu'
   | null;
+
+export interface IContentConfirmModalProps {
+  description: string;
+  legend?: string;
+  onConfirm: () => Promise<void>;
+  isOnlyConfirm?: boolean;
+}

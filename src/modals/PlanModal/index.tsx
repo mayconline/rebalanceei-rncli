@@ -34,7 +34,7 @@ const PlanModal = ({ onClose }: PlanModal) => {
 
   return (
     <Wrapper>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <ContainerTitle>
           <Title accessibilityRole="header">Meu Plano Atual</Title>
           <BackIcon

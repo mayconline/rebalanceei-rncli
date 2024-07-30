@@ -13,7 +13,7 @@ import {
 
 import SuggestionsModal from '../../modals/SuggestionsModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import EditTicket from '../../components/EditTicket';
+import EditTicket from '../EditTicket';
 import { ITickets } from '../../pages/Ticket';
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';

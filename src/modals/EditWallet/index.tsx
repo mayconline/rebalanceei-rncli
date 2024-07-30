@@ -7,11 +7,12 @@ import { useMutation, gql } from '@apollo/client';
 import { FormRow, ContainerButtons } from './styles';
 
 import { IWalletData, GET_WALLET_BY_USER } from '../../modals/WalletModal';
-import InputForm from '../InputForm';
-import TextError from '../TextError';
-import Button from '../Button';
+import InputForm from '../../components/InputForm';
+import TextError from '../../components/TextError';
+import Button from '../../components/Button';
 import { useAuth } from '../../contexts/authContext';
 import useAmplitude from '../../hooks/useAmplitude';
+import { useModalStore } from '../../store/useModalStore';
 
 interface IEditWallet {
   walletData?: IWalletData;
@@ -33,6 +34,13 @@ const EditWallet = ({
   const { logEvent } = useAmplitude();
 
   const { handleSetWallet, wallet: currentWallet } = useAuth();
+  const { openConfirmModal, setLoading } = useModalStore(
+    ({ openConfirmModal, setLoading }) => ({
+      openConfirmModal,
+      setLoading,
+    }),
+  );
+
   const { color } = useContext(ThemeContext);
   const [wallet, setWallet] = useState<IWalletData>({} as IWalletData);
   const [focus, setFocus] = useState(0);
@@ -71,6 +79,8 @@ const EditWallet = ({
       return;
     }
 
+    setLoading(true);
+
     try {
       await updateWallet({
         variables: {
@@ -93,6 +103,8 @@ const EditWallet = ({
       logEvent('successful createWallet at Edit Wallet');
     } catch (err: any) {
       console.error(mutationError?.message + err);
+    } finally {
+      setLoading(false);
     }
   }, [wallet]);
 
@@ -102,6 +114,7 @@ const EditWallet = ({
       return;
     }
 
+    setLoading(true);
     try {
       await deleteWallet({
         variables: {
@@ -122,6 +135,8 @@ const EditWallet = ({
       logEvent('successful createWallet at Delete Wallet');
     } catch (err: any) {
       console.error(mutationDeleteError?.message + err);
+    } finally {
+      setLoading(false);
     }
   }, [wallet]);
 
@@ -151,7 +166,12 @@ const EditWallet = ({
             onFocus={() => setFocus(1)}
             onChangeText={handleSetName}
             onEndEditing={() => onEndInputEditing(0, 'walletDescription')}
-            onSubmitEditing={handleEditSubmit}
+            onSubmitEditing={() =>
+              openConfirmModal({
+                description: 'Tem certeza que deseja alterar a carteira?',
+                onConfirm: () => handleEditSubmit(),
+              })
+            }
           />
         )}
       </FormRow>
@@ -164,16 +184,24 @@ const EditWallet = ({
 
       <ContainerButtons>
         <Button
-          onPress={handleEditSubmit}
-          loading={mutationLoading}
+          onPress={() =>
+            openConfirmModal({
+              description: 'Tem certeza que deseja alterar a carteira?',
+              onConfirm: () => handleEditSubmit(),
+            })
+          }
           disabled={mutationLoading}
         >
           Alterar Carteira
         </Button>
 
         <Button
-          onPress={handleDeleteSubmit}
-          loading={mutationDeleteLoading}
+          onPress={() =>
+            openConfirmModal({
+              description: 'Tem certeza que deseja excluir a carteira?',
+              onConfirm: () => handleDeleteSubmit(),
+            })
+          }
           disabled={mutationDeleteLoading}
           outlined
         >

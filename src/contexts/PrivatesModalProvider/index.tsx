@@ -16,9 +16,13 @@ interface IPrivatesModalProps {
 const PrivatesModalContext = createContext({});
 
 export const PrivatesModalProvider = ({ children }: IPrivatesModalProps) => {
-  const { modalType, contentModal, closeModal } = useModalStore();
-
-  console.log({ modalType, contentModal });
+  const { modalType, contentModal, closeModal } = useModalStore(
+    ({ modalType, contentModal, closeModal }) => ({
+      modalType,
+      contentModal,
+      closeModal,
+    }),
+  );
 
   return (
     <PrivatesModalContext.Provider value={{}}>

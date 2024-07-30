@@ -16,7 +16,7 @@ interface ICopyPremmium {
 const CopyPremmium = ({ isPremmium = false }: ICopyPremmium) => (
   <ContainerPremmium>
     <Title accessibilityRole="header">
-      {isPremmium ? 'Premium' : 'Assine Já 👇'}
+      {isPremmium ? 'Premium' : 'Torne-se Premium 👇'}
     </Title>
     <ContainerPremmiumGroup>
       <ContainerDescription>
@@ -25,6 +25,7 @@ const CopyPremmium = ({ isPremmium = false }: ICopyPremmium) => (
         <Description>💰 Menu de Proventos</Description>
         <Description>📊 Gráficos exclusivos</Description>
         <Description>🚫 Sem Anúncios</Description>
+        <Description>✅ Renovação automática</Description>
       </ContainerDescription>
 
       <ImagePremmium translateX={10} />

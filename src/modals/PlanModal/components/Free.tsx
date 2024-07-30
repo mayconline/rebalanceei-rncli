@@ -5,8 +5,8 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { ActivityIndicator, Alert } from 'react-native';
-import { IPlan, useAuth } from '../../../contexts/authContext';
+import { ActivityIndicator } from 'react-native';
+import { useAuth } from '../../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
 
 import CopyPremmium from '../../../components/CopyPremmium';
@@ -31,6 +31,8 @@ import {
 import { gql, useMutation } from '@apollo/client';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
+import { useModalStore } from '../../../store/useModalStore';
+import { IPlan } from '../../../types/plan-types';
 
 interface IUser {
   _id: string;
@@ -51,6 +53,10 @@ interface IFree {
 const Free = ({ planName, handleSelectPlan }: IFree) => {
   const { logEvent } = useAmplitude();
 
+  const { openConfirmModal } = useModalStore(({ openConfirmModal }) => ({
+    openConfirmModal,
+  }));
+
   const {
     connected,
     subscriptions,
@@ -61,7 +67,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
   } = useIAP();
 
   const { handleSignOut } = useAuth();
-  const { gradient, color } = useContext(ThemeContext);
+  const { color } = useContext(ThemeContext);
   const [loading, setLoading] = useState(true);
   const [skuID, setSkuID] = useState<Subscription>();
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -86,20 +92,12 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
       logEvent('successful updateRole at Plan Free Modal');
 
-      Alert.alert(
-        'Compra realizada com sucesso!',
-        'Por favor entre novamente no aplicativo.',
-        [
-          {
-            text: 'Continuar',
-            style: 'destructive',
-            onPress: async () => {
-              handleSignOut();
-            },
-          },
-        ],
-        { cancelable: false },
-      );
+      openConfirmModal({
+        description: 'Compra realizada com sucesso!',
+        legend: 'Por favor entre novamente no aplicativo.',
+        onConfirm: () => handleSignOut(),
+        isOnlyConfirm: true,
+      });
     } catch (err: any) {
       logEvent('error on updateRole at Plan Free Modal');
       console.error(mutationError?.message + err);
@@ -116,7 +114,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
   useEffect(() => {
     if (!!subscriptions.length) {
-      setSkuID(subscriptions[0]);
+      setSkuID(subscriptions[1]);
     }
 
     setLoading(false);
@@ -216,7 +214,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     <>
       <CardPlan
         title="✅ Plano Básico - Ativo"
-        descriptions={['Carteira e Ativos limitados']}
+        descriptions={['📂 Até 1 Carteira', '🛒 Até 16 ativos']}
         plan="Grátis"
         currentPlan
         disabled
@@ -241,13 +239,8 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
               title={subscription.name}
               descriptions={
                 subscriptionPeriodAndroid === 'P1M'
-                  ? ['📊 Recursos exclusivos', '✅ Renovação automática']
-                  : [
-                      '🔖 Promoção por tempo limitado',
-                      '💰 R$ 120,00 OFF Anual',
-                      '📊 Recursos exclusivos',
-                      '✅ Renovação automática',
-                    ]
+                  ? []
+                  : ['🔖 Promoção limitada', '💰 R$ 120,00 OFF Anual']
               }
               plan={`${localizedPrice} / ${
                 subscriptionPeriodAndroid === 'P1M' ? 'Mês' : 'Ano'
@@ -272,10 +265,6 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
           Assine já !
         </Button>
       </ContainerButtons>
-
-      <SubTitle>
-        *Precisa de ajuda? - Acesse nossa pagina de ajuda no menu.
-      </SubTitle>
     </>
   );
 };

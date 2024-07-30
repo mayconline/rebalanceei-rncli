@@ -36,7 +36,7 @@ export const Title = styled.Text`
 export const ContainerButtons = styled.View`
   align-items: center;
   justify-content: center;
-  margin: 8px 0;
+  margin: 4% 16% 16%;
 `;
 
 export const SubTitle = styled.Text`

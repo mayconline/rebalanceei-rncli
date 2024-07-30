@@ -1,49 +1,57 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 interface SelectProps {
   selected?: boolean;
 }
 
+interface ITextProps {
+  hasDescriptions?: boolean;
+}
+
 export const Wrapper = styled.Pressable.attrs({
   android_ripple: { radius: 1, color: '#75BF72' },
 })<any>`
-  margin: 8px 0 16px;
+  position: relative;
+  justify-content: space-between;
+  margin: 8px 0;
+  height: 114px;
   border-color: ${({ theme, currentPlan, active }) =>
     currentPlan
       ? theme.color.success
       : active
       ? theme.color.blue
       : theme.color.inactiveTabs};
-  border-width: 2px;
+  border-width: 1px;
   border-radius: 12px;
-  elevation: ${({ active }) => (active ? 2 : 0)};
   background-color: ${({ theme }) => theme.color.bgCardPlan};
 `;
 
 export const CardPlanHeaderGroup = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px 8px 0px;
+  justify-content: flex-end;
+  position: absolute;
+  top: 8px;
+  right: 8px;
 `;
 
-export const CardPlanTitle = styled.Text`
+export const CardPlanTitle = styled.Text<ITextProps>`
   color: ${({ theme }) => theme.color.title};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
-  margin: 12px 16px 0;
   font-smooth: 'antialiased';
+
+  margin-bottom: ${({ hasDescriptions }) => (hasDescriptions ? '12px' : '0px')};
 `;
 
 export const CardPlanGroup = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
-  padding: 8px 12px;
-  margin: 12px;
+  justify-content: space-between;
+  margin: auto 20px;
 `;
 
 export const CardPlanContainerDescription = styled.View`
-  gap: 8px;
+  flex-direction: column;
 `;
 
 export const CardPlanDescription = styled.Text`
@@ -55,8 +63,8 @@ export const CardPlanDescription = styled.Text`
 export const CardPlanRole = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
-  margin-top: -10px;
   font-smooth: 'antialiased';
+  margin-left: -12px;
 `;
 
 export const PlanRadioSelect = styled.View<SelectProps>`
@@ -65,7 +73,7 @@ export const PlanRadioSelect = styled.View<SelectProps>`
   border-radius: 12px;
   align-items: center;
   justify-content: center;
-  border: ${({ selected }) => (selected ? '8px' : '4px')} solid
-    ${({ selected, theme }) =>
-      selected ? theme.color.blue : theme.color.inactiveTabs};
+  border: ${({ selected }) => (selected ? '6px' : '2px')} solid
+    ${({ theme }) => theme.color.selectedRadio};
+  background-color: ${({ theme }) => theme.color.bgRadio};
 `;

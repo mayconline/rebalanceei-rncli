@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 
 export const Wrapper = styled.SafeAreaView`
-  height: 24%;
+  height: 20%;
   flex-direction: column;
   margin: 0 16px;
 `;
@@ -22,7 +22,7 @@ export const Wallet = styled.TouchableOpacity`
   background-color: ${({ theme }) => theme.color.bgSelectWallet};
   border: 1px solid ${({ theme }) => theme.color.success};
   border-radius: 8px;
-  margin: 20px auto 8px;
+  margin: 12px auto 8px;
   width: 64%;
   padding: 4px 16px;
 `;

@@ -11,10 +11,10 @@ import {
 } from './styles';
 
 import Button from '../../../components/Button';
-import LayoutForm from '../../../components/LayoutForm';
 import OnboardingImgThree from '../../../../assets/svg/OnboardingImgThree';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { setLocalStorage } from '../../../utils/localStorage';
+import LayoutOnboarding from '../../../components/LayoutOnboarding';
 
 const StepThree = () => {
   const { logEvent } = useAmplitude();
@@ -34,7 +34,7 @@ const StepThree = () => {
   };
 
   return (
-    <LayoutForm img={OnboardingImgThree} routeName="StepThree">
+    <LayoutOnboarding img={OnboardingImgThree}>
       <Step>
         <ContainerIndicator>
           <StepIndicator />
@@ -50,7 +50,7 @@ const StepThree = () => {
 
         <Button onPress={handleNext}>Vamos Começar</Button>
       </Step>
-    </LayoutForm>
+    </LayoutOnboarding>
   );
 };
 

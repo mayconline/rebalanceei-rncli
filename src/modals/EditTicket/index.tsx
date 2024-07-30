@@ -8,12 +8,13 @@ import { FormRow, ContainerButtons } from './styles';
 import { ITickets } from '../../pages/Ticket';
 
 import { useFocusEffect } from '@react-navigation/native';
-import Button from '../Button';
-import InputForm from '../InputForm';
-import TextError from '../TextError';
+import Button from '../../components/Button';
+import InputForm from '../../components/InputForm';
+import TextError from '../../components/TextError';
 import { formatAveragePricePreview, formatTicket } from '../../utils/format';
 import useAmplitude from '../../hooks/useAmplitude';
 import { refetchQuery } from '../../utils/refetchQuery';
+import { useModalStore } from '../../store/useModalStore';
 
 interface IDataForm {
   _id: string;
@@ -41,6 +42,13 @@ interface IEditWalletModal {
 
 const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
   const { logEvent } = useAmplitude();
+
+  const { openConfirmModal, setLoading } = useModalStore(
+    ({ openConfirmModal, setLoading }) => ({
+      openConfirmModal,
+      setLoading,
+    }),
+  );
 
   const { color } = useContext(ThemeContext);
   const { wallet, showBanner } = useAuth();
@@ -93,6 +101,8 @@ const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
       grade: Number(ticketForm.grade),
     };
 
+    setLoading(true);
+
     try {
       await updateTicket({
         variables: dataTicket,
@@ -107,6 +117,8 @@ const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
     } catch (err: any) {
       logEvent('error on editTicket at Edit Ticket');
       console.error(mutationError?.message + err);
+    } finally {
+      setLoading(false);
     }
   }, [ticketForm]);
 
@@ -115,6 +127,8 @@ const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
       logEvent('not filled input at Delete Ticket');
       return;
     }
+
+    setLoading(true);
 
     try {
       await deleteTicket({
@@ -132,6 +146,8 @@ const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
     } catch (err: any) {
       logEvent('error on deleteTicket at Delete Ticket');
       console.error(mutationDeleteError?.message + err);
+    } finally {
+      setLoading(false);
     }
   }, [ticketForm]);
 
@@ -216,7 +232,12 @@ const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
               onFocus={() => setFocus(4)}
               onChangeText={handleSetPrice}
               onEndEditing={() => onEndInputEditing(0, 'averagePrice')}
-              onSubmitEditing={handleSubmit}
+              onSubmitEditing={() =>
+                openConfirmModal({
+                  description: 'Tem certeza que deseja alterar o ativo?',
+                  onConfirm: () => handleSubmit(),
+                })
+              }
               width={60}
             />
           </FormRow>
@@ -230,16 +251,24 @@ const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
 
       <ContainerButtons>
         <Button
-          onPress={handleSubmit}
-          loading={mutationLoading}
+          onPress={() =>
+            openConfirmModal({
+              description: 'Tem certeza que deseja alterar o ativo?',
+              onConfirm: () => handleSubmit(),
+            })
+          }
           disabled={mutationLoading}
         >
           Alterar Ativo
         </Button>
 
         <Button
-          onPress={handleDeleteSubmit}
-          loading={mutationDeleteLoading}
+          onPress={() =>
+            openConfirmModal({
+              description: 'Tem certeza que deseja excluir o ativo?',
+              onConfirm: () => handleDeleteSubmit(),
+            })
+          }
           disabled={mutationDeleteLoading}
           outlined
         >

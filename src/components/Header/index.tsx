@@ -56,7 +56,7 @@ const Header = () => {
           </Menu>
         </Icons>
       </MenuBar>
-      <Divider mt={'8px'} />
+      <Divider mt={'4px'} />
 
       <Wallet onPress={() => openModal('Wallet')}>
         <WalletTitle numberOfLines={1} ellipsizeMode="tail">

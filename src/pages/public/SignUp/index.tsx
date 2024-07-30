@@ -28,6 +28,7 @@ interface ICreateUser {
     token: string;
     refreshToken: string;
     role: string;
+    email: string;
   };
 }
 
@@ -208,6 +209,7 @@ export const CREATE_USER = gql`
       token
       refreshToken
       role
+      email
       plan {
         transactionDate
         renewDate

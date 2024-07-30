@@ -1,6 +1,5 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { ThemeContext } from 'styled-components/native';
 
 import {
   Step,
@@ -12,13 +11,13 @@ import {
 } from './styles';
 
 import Button from '../../../components/Button';
-import LayoutForm from '../../../components/LayoutForm';
 import OnboardingImgTwo from '../../../../assets/svg/OnboardingImgTwo';
 import useAmplitude from '../../../hooks/useAmplitude';
+import LayoutOnboarding from '../../../components/LayoutOnboarding';
 
 const StepTwo = () => {
   const { logEvent } = useAmplitude();
-  const { gradient } = useContext(ThemeContext);
+
   const navigation = useNavigation();
 
   useFocusEffect(
@@ -33,7 +32,7 @@ const StepTwo = () => {
   };
 
   return (
-    <LayoutForm img={OnboardingImgTwo} routeName="StepTwo">
+    <LayoutOnboarding img={OnboardingImgTwo}>
       <Step>
         <ContainerIndicator>
           <StepIndicator />
@@ -51,7 +50,7 @@ const StepTwo = () => {
           Próximo
         </Button>
       </Step>
-    </LayoutForm>
+    </LayoutOnboarding>
   );
 };
 

@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthProvider } from './contexts/authContext';
+import { ConfirmModalProvider } from './contexts/ConfirmModalProvider';
 import { withIAPContext } from './services/Iap';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './services/apollo';
@@ -17,9 +18,11 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <AuthProvider>
-        <NavigationContainer>
-          <Routes />
-        </NavigationContainer>
+        <ConfirmModalProvider>
+          <NavigationContainer>
+            <Routes />
+          </NavigationContainer>
+        </ConfirmModalProvider>
       </AuthProvider>
     </ApolloProvider>
   );

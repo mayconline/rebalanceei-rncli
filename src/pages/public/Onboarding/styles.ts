@@ -46,4 +46,5 @@ export const Subtitle = styled.Text`
 export const Step = styled.View`
   width: 100%;
   align-items: center;
+  margin-bottom: 24%;
 `;
