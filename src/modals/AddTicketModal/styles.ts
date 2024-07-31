@@ -20,10 +20,11 @@ export const SuggestButton = styled.TouchableOpacity`
 `;
 
 export const SuggestButtonText = styled.Text`
-  color: ${({ theme }) => theme.color.titleNotImport};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  color: ${({ theme }) => theme.color.titleItemCard};
+  font: 400 14px 'TitilliumWeb-Regular';
   flex: 1;
   font-smooth: 'antialiased';
+  margin-left: 8px;
 `;
 
 export const ContainerButtons = styled.View`

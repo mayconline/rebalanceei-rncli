@@ -21,6 +21,7 @@ import {
   formatNumber,
 } from '../../utils/format';
 import LayoutForm from '../../components/LayoutForm';
+import { useModalStore } from '../../store/useModalStore';
 
 interface IEditEarningModal {
   onClose(): void;
@@ -37,19 +38,20 @@ const MONTH_ID = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
   const { logEvent } = useAmplitude();
 
-  const { handleSetLoading, wallet } = useAuth();
+  const { wallet } = useAuth();
+
+  const { openConfirmModal, setLoading } = useModalStore(
+    ({ openConfirmModal, setLoading }) => ({
+      openConfirmModal,
+      setLoading,
+    }),
+  );
 
   const [focus, setFocus] = useState(0);
   const [amount, setAmount] = useState<IAmount>();
 
   const [updateEarning, { loading: mutationLoading, error: mutationError }] =
     useMutation(UPDATE_EARNING);
-
-  useFocusEffect(
-    useCallback(() => {
-      mutationLoading && handleSetLoading(true);
-    }, [mutationLoading]),
-  );
 
   const handleSubmit = useCallback(async () => {
     if (!amount) {
@@ -60,6 +62,8 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
     if (!wallet || !earningData) {
       return;
     }
+
+    setLoading(true);
 
     const { _id, year, month } = earningData;
 
@@ -100,12 +104,13 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
       });
 
       logEvent('successful updated earning');
-      handleSetLoading(false);
+
       handleGoBack();
     } catch (err: any) {
       logEvent('error on updated earning');
       console.error(mutationError?.message + err);
-      handleSetLoading(false);
+    } finally {
+      setLoading(false);
     }
   }, [wallet, amount]);
 
@@ -144,7 +149,13 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
           autoFocus={focus === 1}
           onFocus={() => setFocus(1)}
           onChangeText={handleSetAmount}
-          onSubmitEditing={handleSubmit}
+          onSubmitEditing={() =>
+            openConfirmModal({
+              description:
+                'Tem certeza que deseja alterar o valor do provento?',
+              onConfirm: () => handleSubmit(),
+            })
+          }
         />
       </FormRow>
 
@@ -152,8 +163,13 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
 
       <ContainerButtons>
         <Button
-          onPress={handleSubmit}
-          loading={mutationLoading}
+          onPress={() =>
+            openConfirmModal({
+              description:
+                'Tem certeza que deseja alterar o valor do provento?',
+              onConfirm: () => handleSubmit(),
+            })
+          }
           disabled={mutationLoading}
         >
           Alterar Valor

@@ -80,10 +80,10 @@ const SuccessModal: React.FC<ISuccessModal> = ({ onClose }) => {
 
     if (showBanner && viewCount % 4 === 0) {
       setOpenAd(true);
+
       logEvent('show adMob interticial');
     } else {
       setLoading(false);
-
       onClose();
     }
   }, []);

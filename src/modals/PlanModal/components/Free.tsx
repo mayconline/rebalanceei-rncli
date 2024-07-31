@@ -221,9 +221,6 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       />
       {!!inverseSubscriptions?.length && <CopyPremmium />}
 
-      {!!mutationError && <TextError>{mutationError?.message}</TextError>}
-      {!!errorMessage && <TextError>{errorMessage}</TextError>}
-
       {!!inverseSubscriptions?.length ? (
         inverseSubscriptions?.map(subscription => {
           const subsDetails =
@@ -262,9 +259,12 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
           loading={mutationLoading || loading}
           disabled={mutationLoading || loading}
         >
-          Assine já !
+          Assine já
         </Button>
       </ContainerButtons>
+
+      {!!mutationError && <TextError>{mutationError?.message}</TextError>}
+      {!!errorMessage && <TextError>{errorMessage}</TextError>}
     </>
   );
 };

@@ -4,7 +4,7 @@ export const ContainerYearFilter = styled.View`
   align-items: center;
   justify-content: space-evenly;
   flex-direction: row;
-  margin: 0 auto -24px;
+  margin: 0 auto -52px;
 `;
 
 export const YearContainer = styled.View`

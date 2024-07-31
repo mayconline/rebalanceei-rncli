@@ -27,7 +27,7 @@ const YearFilter = ({
 
   return (
     <>
-      <Divider mt={'24px'} />
+      <Divider mt={'16px'} />
       <ContainerYearFilter>
         <YearButton
           onPress={() => setCurrentYear(current => current - 1)}

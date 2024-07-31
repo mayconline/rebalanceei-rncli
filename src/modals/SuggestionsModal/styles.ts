@@ -7,7 +7,7 @@ export const SuggestionContainer = styled(SafeAreaView)`
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 
-  min-height: 320px;
+  min-height: 380px;
   width: 100%;
   position: absolute;
   bottom: 0;

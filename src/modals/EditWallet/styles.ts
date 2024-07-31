@@ -1,16 +1,10 @@
 import styled from 'styled-components/native';
 
-export const FormRow = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  width: 100%;
-`;
+export const FormRow = styled.View``;
 
 export const ContainerButtons = styled.View`
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  margin: 12% 0;
-  width: 100%;
+  justify-content: space-evenly;
+  margin: 20% auto;
+  gap: 16px;
 `;

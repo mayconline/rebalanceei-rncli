@@ -40,6 +40,7 @@ const LayoutForm = ({
     <SafeAreaView
       style={{
         flex: 1,
+        width: '100%',
       }}
     >
       <FormContainer behavior={'position'}>

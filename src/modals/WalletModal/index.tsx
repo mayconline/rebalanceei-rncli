@@ -149,9 +149,8 @@ const WalletModal = ({ onClose }: IWalletProps) => {
                 {formatNumber(data?.getWalletByUser[0]?.sumAmountAllWallet)}
               </Title>
               <Title>
-                {!!data?.getWalletByUser?.length
-                  ? `${data?.getWalletByUser?.length} Itens`
-                  : 'Adicione uma Carteira clicando no botão abaixo.'}
+                {!data?.getWalletByUser?.length &&
+                  'Adicione uma Carteira clicando no botão abaixo.'}
               </Title>
             </>
           }

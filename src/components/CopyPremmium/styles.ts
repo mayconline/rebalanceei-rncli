@@ -24,6 +24,5 @@ export const Title = styled.Text`
   color: ${({ theme }) => theme.color.title};
   font: 600 36px/48px 'TitilliumWeb-SemiBold';
   text-align: center;
-  flex: 1;
   font-smooth: 'antialiased';
 `;

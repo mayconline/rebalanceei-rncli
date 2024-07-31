@@ -1,21 +1,20 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from 'styled-components/native';
+import React from 'react';
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { formatNumber, formatMonth } from '../../utils/format';
 import { IEarning } from './index';
 import { CardItem } from '../../components/CardItem';
 
 interface IListItem {
   item: IEarning;
+  isAccumulated?: boolean;
   handleOpenEditEarningModal(item: IEarning): void;
 }
 
-const ListItem = ({ item, handleOpenEditEarningModal }: IListItem) => {
-  const { color } = useContext(ThemeContext);
-
-  const isAccumulated = !item?.month;
-
+const ListItem = ({
+  item,
+  isAccumulated,
+  handleOpenEditEarningModal,
+}: IListItem) => {
   return (
     <CardItem>
       <CardItem.Content>
@@ -33,6 +32,7 @@ const ListItem = ({ item, handleOpenEditEarningModal }: IListItem) => {
             text: isAccumulated ? 'Acumulado no ano' : 'Lançamento manual',
           }}
           text={isAccumulated ? 'Acumulado no ano' : 'Lançamento manual'}
+          opacity={0.5}
         />
       </CardItem.Content>
       <CardItem.AmountContent>

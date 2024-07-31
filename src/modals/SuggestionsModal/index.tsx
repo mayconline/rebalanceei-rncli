@@ -92,7 +92,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
       <ShadowBackdrop />
       <SuggestionContainer>
         <InputForm
-          label="Pesquise e Selecione um Ativo"
+          label="Pesquise e selecione um ativo"
           value={selectTicket}
           placeholder="RBLC3"
           maxLength={10}

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Switch, Alert } from 'react-native';
+import { Switch } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
@@ -15,6 +15,7 @@ import LayoutForm from '../../../components/LayoutForm';
 import { getTerms } from '../../../utils/Terms';
 
 import useAmplitude from '../../../hooks/useAmplitude';
+import { useModalStore } from '../../../store/useModalStore';
 
 interface IAccountRegister {
   email: string;
@@ -44,6 +45,10 @@ const SignUp = ({ onClose }: ISignUpProps) => {
 
   const { handleSignIn, handleSetLoading } = useAuth();
 
+  const { openConfirmModal } = useModalStore(({ openConfirmModal }) => ({
+    openConfirmModal,
+  }));
+
   useFocusEffect(
     useCallback(() => {
       logEvent('open signUp');
@@ -60,22 +65,13 @@ const SignUp = ({ onClose }: ISignUpProps) => {
       return;
     }
     if (!account.checkTerms) {
-      return Alert.alert(
-        'Termos de Uso e Política de Privacidade',
-        'É preciso aceitar os termos de uso para utilizar o app.',
-        [
-          {
-            text: 'Voltar',
-            style: 'cancel',
-          },
-          {
-            text: 'Continuar',
-            style: 'destructive',
-            onPress: handleToogleSwitch,
-          },
-        ],
-        { cancelable: false },
-      );
+      openConfirmModal({
+        description: 'Termos de Uso e Política de Privacidade',
+        legend: `É preciso aceitar os termos de uso para utilizar o app.`,
+        onConfirm: () => handleToogleSwitch(),
+      });
+
+      return;
     }
 
     createUser({
@@ -109,12 +105,12 @@ const SignUp = ({ onClose }: ISignUpProps) => {
     }));
   }, []);
 
-  const handleToogleSwitch = useCallback(() => {
+  const handleToogleSwitch = useCallback(async () => {
     setAccount(account => ({
       ...account,
       checkTerms: !account.checkTerms,
     }));
-    logEvent('change toogle switch at Signup');
+    await logEvent('change toogle switch at Signup');
   }, []);
 
   const onEndInputEditing = useCallback(
@@ -171,11 +167,15 @@ const SignUp = ({ onClose }: ISignUpProps) => {
         </ContainerTerms>
         <Switch
           trackColor={{
-            false: color.inactiveTabs,
-            true: color.success,
+            false: color.switchDefaultColor,
+            true: color.switchSuccessColor,
           }}
-          thumbColor={account.checkTerms ? color.success : color.titleNotImport}
-          ios_backgroundColor={color.titleNotImport}
+          thumbColor={
+            account.checkTerms
+              ? color.switchSuccessColor
+              : color.switchDefaultColor
+          }
+          ios_backgroundColor={color.switchSuccessColor}
           onValueChange={handleToogleSwitch}
           value={account.checkTerms}
           accessibilityRole="switch"

@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.title};
-  font: 600 18px/32px 'TitilliumWeb-Regular';
+  font: 600 18px 'TitilliumWeb-Regular';
   text-align: center;
   flex: 1;
   font-smooth: 'antialiased';
@@ -18,9 +18,10 @@ export const FormContainer = styled.KeyboardAvoidingView`
 
 export const Form = styled.View`
   background-color: ${({ theme }) => theme.color.secondary};
-  padding: 20px 20px 4px;
+  padding: 20px 20px 0;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
+  width: 100%;
 `;
 
 export const TitleContainer = styled.View`

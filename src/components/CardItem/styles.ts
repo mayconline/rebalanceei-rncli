@@ -42,8 +42,9 @@ export const CardTitleContainer = styled.View`
 
 export const CardTitleStyle = styled.Text`
   color: ${({ theme }) => theme.color.titleItemCard};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font: 600 16px 'TitilliumWeb-SemiBold';
   font-smooth: antialiased;
+  width: 96%;
 `;
 
 interface ITextProps {

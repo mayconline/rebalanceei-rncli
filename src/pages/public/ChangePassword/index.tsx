@@ -1,23 +1,14 @@
 import React, { useState, useCallback } from 'react';
-import { Modal } from 'react-native';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
-
 import { ContainerButtons, FormRow } from './styles';
-
-import ImageRecoveryPassword from '../../../../assets/svg/ImageRecoveryPassword';
-
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
 import LayoutForm from '../../../components/LayoutForm';
-import SuccessModal from '../../../modals/SuccessModal';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useAuth } from '../../../contexts/authContext';
+import { useModalStore } from '../../../store/useModalStore';
 
 interface IChangePassword {
   code: string;
@@ -34,7 +25,7 @@ interface IDataParamsForm {
 
 interface IChangePasswordProps {
   modalData: IDataParamsForm;
-  onClose: () => void;
+  onClose: () => Promise<void>;
 }
 
 const ChangePassword = ({ modalData, onClose }: IChangePasswordProps) => {
@@ -43,9 +34,10 @@ const ChangePassword = ({ modalData, onClose }: IChangePasswordProps) => {
 
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IChangePassword);
-  const [openModal, setOpenModal] = useState(false);
 
-  const navigation = useNavigation();
+  const { openConfirmModal } = useModalStore(({ openConfirmModal }) => ({
+    openConfirmModal,
+  }));
 
   useFocusEffect(
     useCallback(() => {
@@ -77,8 +69,12 @@ const ChangePassword = ({ modalData, onClose }: IChangePasswordProps) => {
     })
       .then(response => {
         logEvent('successful ChangePassword');
-        !!response?.data?.resetPassword && setOpenModal(true);
-        onClose();
+        !!response?.data?.resetPassword &&
+          openConfirmModal({
+            description: 'Senha redefinida com sucesso!',
+            onConfirm: () => onClose(),
+            isOnlyConfirm: true,
+          });
       })
       .catch(err => {
         logEvent('error on ChangePassword');
@@ -109,68 +105,48 @@ const ChangePassword = ({ modalData, onClose }: IChangePasswordProps) => {
   );
 
   return (
-    <>
-      <LayoutForm
-        img={ImageRecoveryPassword}
-        title="Nova Senha"
-        routeName="ChangePassword"
-      >
-        <FormRow>
-          <InputForm
-            label="Code"
-            value={account.code}
-            placeholder="999999"
-            maxLength={6}
-            autoFocus={focus === 1}
-            onFocus={() => setFocus(1)}
-            onChangeText={handleSetCode}
-            onEndEditing={() => onEndInputEditing(2, 'code')}
-          />
-        </FormRow>
-        <FormRow>
-          <InputForm
-            label="Nova Senha"
-            value={account.password}
-            isSecure
-            placeholder="********"
-            autoCompleteType="password"
-            maxLength={32}
-            returnKeyType="send"
-            autoFocus={focus === 2}
-            onFocus={() => setFocus(2)}
-            onChangeText={handleSetPassword}
-            onEndEditing={() => onEndInputEditing(0, 'password')}
-            onSubmitEditing={handleSubmit}
-          />
-        </FormRow>
-        {!!mutationError && <TextError>{mutationError?.message}</TextError>}
+    <LayoutForm title="Nova Senha" routeName="ChangePassword">
+      <FormRow>
+        <InputForm
+          label="Code"
+          value={account?.code}
+          placeholder="999999"
+          maxLength={6}
+          autoFocus={focus === 1}
+          onFocus={() => setFocus(1)}
+          onChangeText={handleSetCode}
+          onEndEditing={() => onEndInputEditing(2, 'code')}
+        />
+      </FormRow>
+      <FormRow>
+        <InputForm
+          label="Nova Senha"
+          value={account?.password}
+          isSecure
+          placeholder="********"
+          autoCompleteType="password"
+          maxLength={32}
+          returnKeyType="send"
+          autoFocus={focus === 2}
+          onFocus={() => setFocus(2)}
+          onChangeText={handleSetPassword}
+          onEndEditing={() => onEndInputEditing(0, 'password')}
+          onSubmitEditing={handleSubmit}
+        />
+      </FormRow>
+      {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
-        <ContainerButtons>
-          <Button
-            onPress={handleSubmit}
-            loading={mutationLoading}
-            disabled={mutationLoading}
-            mb={48}
-          >
-            Alterar Senha
-          </Button>
-        </ContainerButtons>
-      </LayoutForm>
-
-      {openModal && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal}
-          statusBarTranslucent={false}
+      <ContainerButtons>
+        <Button
+          onPress={handleSubmit}
+          loading={mutationLoading}
+          disabled={mutationLoading}
+          mb={48}
         >
-          <SuccessModal
-            onClose={() => setOpenModal(false)}
-            beforeModalClose={() => navigation.navigate('Login')}
-          />
-        </Modal>
-      )}
-    </>
+          Alterar Senha
+        </Button>
+      </ContainerButtons>
+    </LayoutForm>
   );
 };
 

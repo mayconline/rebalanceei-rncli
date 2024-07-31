@@ -155,7 +155,7 @@ const Earning = ({
   return (
     <>
       <LayoutTab
-        title="Variação"
+        title=""
         routeName="Earning"
         count={earningData?.length!}
         initialFilter={initialFilter}
@@ -199,11 +199,12 @@ const Earning = ({
         <ListTicket
           data={earningData}
           extraData={earningData}
-          keyExtractor={item => item._id}
+          keyExtractor={item => item?._id}
           renderItem={({ item }) => (
             <ListItem
               item={item}
               handleOpenEditEarningModal={handleOpenEditEarningModal}
+              isAccumulated={isAccumulated}
             />
           )}
         />

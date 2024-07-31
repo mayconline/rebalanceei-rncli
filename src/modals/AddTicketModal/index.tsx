@@ -189,7 +189,7 @@ const AddTicketModal = ({ onClose, contentModal }: IAddTicketModalProps) => {
                   color={color.titleNotImport}
                 />
                 <SuggestButtonText accessibilityRole="button">
-                  Clique para Buscar e Selecione um Ativo
+                  Clique para buscar e selecione um ativo
                 </SuggestButtonText>
               </SuggestButton>
             </FormRow>

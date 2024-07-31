@@ -54,6 +54,9 @@ export default {
     editItemColor: colors.primary['700'],
     menuIconColor: colors.primary['850'],
     bgSelectWallet: colors.primary['100'],
+    placeholderColor: `${colors.neutral['900']}50`,
+    switchSuccessColor: colors.primary['500'],
+    switchDefaultColor: colors.secondary['600'],
   },
   gradient: {
     darkToLightGreen: ['#31AD2C', '#2D9B28'],

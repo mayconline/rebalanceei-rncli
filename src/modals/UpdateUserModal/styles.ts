@@ -8,7 +8,7 @@ export const FormRow = styled.View`
 
 export const ContainerButtons = styled.View`
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  margin: 12% 0;
+  justify-content: space-evenly;
+  margin: 12% auto;
+  gap: 16px;
 `;

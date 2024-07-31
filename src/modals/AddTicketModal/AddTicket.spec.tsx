@@ -58,7 +58,7 @@ describe('AddTicket Tab', () => {
 
     const suggestButton = getAllByA11yRole('button')[0];
     expect(suggestButton).toHaveProperty('children', [
-      'Clique para Buscar e Selecione um Ativo',
+      'Clique para buscar e selecione um ativo',
     ]);
 
     getByText(/Ativo Selecionado/i);
@@ -68,7 +68,7 @@ describe('AddTicket Tab', () => {
 
     await act(async () => fireEvent.press(suggestButton));
 
-    getByText(/Pesquise e Selecione um Ativo/i);
+    getByText(/Pesquise e selecione um ativo/i);
     const inputSuggestions = getByPlaceholderText(/RBLC3/i);
     fireEvent.changeText(inputSuggestions, 'SAPR4');
     getByDisplayValue('SAPR4');
