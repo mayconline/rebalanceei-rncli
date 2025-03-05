@@ -2840,16 +2840,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react-native@npm:9.1.0":
-  version: 9.1.0
-  resolution: "@testing-library/react-native@npm:9.1.0"
+"@testing-library/react-native@npm:13.2.0":
+  version: 13.2.0
+  resolution: "@testing-library/react-native@npm:13.2.0"
   dependencies:
-    pretty-format: "npm:^27.0.0"
+    chalk: "npm:^4.1.2"
+    jest-matcher-utils: "npm:^29.7.0"
+    pretty-format: "npm:^29.7.0"
+    redent: "npm:^3.0.0"
   peerDependencies:
-    react: ">=16.0.0"
-    react-native: ">=0.59"
-    react-test-renderer: ">=16.0.0"
-  checksum: 10c0/f61a1308eafac249f67a6d360264832f3903a69b72045d196fa0bd997a0fbc315eefb20a6abc38e220769384330564874bd12c294ecd9fd6c32bd78b62a8dc5a
+    jest: ">=29.0.0"
+    react: ">=18.2.0"
+    react-native: ">=0.71"
+    react-test-renderer: ">=18.2.0"
+  peerDependenciesMeta:
+    jest:
+      optional: true
+  checksum: 10c0/5ed8e09f82f45c057f12a716008f31abf934e6a3d84955540e2ab96d7534c82b9afdb0af050e986d8b63ae9dd8272f8a752c45ecb847a11e7549f30de3d84427
   languageName: node
   linkType: hard
 
@@ -8879,17 +8886,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^27.0.0":
-  version: 27.5.1
-  resolution: "pretty-format@npm:27.5.1"
-  dependencies:
-    ansi-regex: "npm:^5.0.1"
-    ansi-styles: "npm:^5.0.0"
-    react-is: "npm:^17.0.1"
-  checksum: 10c0/0cbda1031aa30c659e10921fa94e0dd3f903ecbbbe7184a729ad66f2b6e7f17891e8c7d7654c458fa4ccb1a411ffb695b4f17bbcd3fe075fabe181027c4040ed
-  languageName: node
-  linkType: hard
-
 "pretty-format@npm:^29.0.0, pretty-format@npm:^29.0.3, pretty-format@npm:^29.7.0":
   version: 29.7.0
   resolution: "pretty-format@npm:29.7.0"
@@ -9387,7 +9383,7 @@ __metadata:
     "@react-navigation/stack": "npm:6.4.0"
     "@testing-library/jest-native": "npm:5.4.2"
     "@testing-library/react-hooks": "npm:8.0.1"
-    "@testing-library/react-native": "npm:9.1.0"
+    "@testing-library/react-native": "npm:13.2.0"
     "@types/jest": "npm:29.4.2"
     "@types/react": "npm:^18.2.6"
     "@types/react-native": "npm:0.71.3"
