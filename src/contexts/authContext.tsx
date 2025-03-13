@@ -12,15 +12,9 @@ import { useNetInfo } from '@react-native-community/netinfo';
 import { useApolloClient } from '@apollo/client';
 
 import {
-  restoreSubscription,
-  setNewSubscriptionsDate,
-  validHasSubscription,
-} from '../services/Iap';
-import {
   multiGetLocalStorage,
   multiRemoveLocalStorage,
   multiSetLocalStorage,
-  setLocalStorage,
 } from '../utils/localStorage';
 import themes, { themeMode, Theme } from '../themes';
 import { ThemeProvider } from 'styled-components/native';
@@ -31,20 +25,7 @@ interface ISignIn {
   token: string;
   refreshToken: string;
   role: string;
-  plan?: IPlan;
-}
-
-type IStatePlan = 'ACTIVE' | 'PENDING' | 'CANCEL' | null;
-
-export interface IPlan {
-  transactionDate?: number;
-  renewDate?: number;
-  description?: string;
-  localizedPrice?: string;
-  productId?: string;
-  subscriptionPeriodAndroid?: string;
-  packageName?: string;
-  transactionId?: string;
+  email: string;
 }
 
 interface IAuthContext {
@@ -55,8 +36,7 @@ interface IAuthContext {
   wallet: string | null;
   walletName: string | null;
   userID: string | null;
-  plan: IPlan | null;
-  statePlan: IStatePlan;
+  userEmail: string | null;
   handleSetWallet(walletID: string, walletName: string | null): void;
   handleSignIn(user: ISignIn): Promise<void>;
   handleSignOut(): Promise<void>;
@@ -79,9 +59,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [showBanner, setShowBanner] = useState(false);
   const [loading, setLoading] = useState(false);
   const [userID, setUserID] = useState<string | null>(null);
-  const [plan, setPlan] = useState<IPlan | null>(null);
-  const [statePlan, setStatePlan] = useState<IStatePlan>(null);
   const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   const setSelectTheme = useCallback(
     async (selectedTheme: 'LIGHT' | 'DARK') => {
@@ -107,22 +86,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         storageWallet,
         storageWalletName,
         storageID,
-        storagePlan,
+        storageEmail,
       ] = await multiGetLocalStorage([
         '@authRole',
         '@authToken',
         '@authWallet',
         '@authWalletName',
         '@authID',
-        '@authPlan',
+        '@userEmail',
       ]);
 
       if (storageRole[1] === 'USER') {
         setShowBanner(true);
-      }
-
-      if (storageRole[1] === 'PREMIUM' && storagePlan[1]) {
-        await handleVerificationPlan(JSON.parse(storagePlan[1]));
       }
 
       if (storageWallet[1] && storageWalletName[1]) {
@@ -132,6 +107,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (storageID[1]) {
         setUserID(storageID[1]);
+      }
+
+      if (storageEmail[1]) {
+        setUserEmail(storageEmail[1]);
       }
 
       if (storageToken[1]) {
@@ -151,18 +130,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handleSignIn = useCallback(async (userLogin: ISignIn) => {
     setLoading(true);
     try {
-      const { token, refreshToken, role, _id, plan } = userLogin;
+      const { token, refreshToken, role, _id, email } = userLogin;
 
       await multiSetLocalStorage([
         ['@authRole', role],
         ['@authToken', token],
         ['@refreshToken', refreshToken],
         ['@authID', _id],
+        ['@userEmail', email],
       ]);
 
       if (role === 'USER') setShowBanner(true);
-      if (role === 'PREMIUM' && !!plan) await handleVerificationPlan(plan);
 
+      setUserEmail(email);
       setUserID(_id);
       setSigned(true);
     } catch (err: any) {
@@ -180,17 +160,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       '@authEmail',
       '@authPass',
       '@authRole',
-      '@authPlan',
       '@authID',
+      '@userEmail',
     ]);
-    setStatePlan(null);
     setShowBanner(false);
     setWallet('');
     setWalletName(null);
-    setPlan(null);
     setUserID(null);
     setLoading(false);
     setSigned(false);
+    setUserEmail(null);
   }, []);
 
   const handleSetWallet = useCallback(
@@ -211,45 +190,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     [],
   );
 
-  const handleVerificationPlan = useCallback(async (plan: IPlan) => {
-    const hasSubscription = await validHasSubscription(plan);
-
-    if (hasSubscription) {
-      setPlan(plan);
-      await setLocalStorage('@authPlan', JSON.stringify(plan));
-      setStatePlan('ACTIVE');
-    } else {
-      const purchases = await restoreSubscription();
-
-      if (!!purchases.length) {
-        const { transactionDate, renewDate, subscriptionPeriodAndroid } = plan;
-
-        const { newTransactionDate, newRenewDate } =
-          await setNewSubscriptionsDate({
-            transactionDate: Number(transactionDate),
-            subscriptionPeriodAndroid: String(subscriptionPeriodAndroid),
-            renewDate: Number(renewDate),
-          });
-
-        const transactionData = {
-          ...plan,
-          transactionDate: newTransactionDate,
-          renewDate: newRenewDate,
-          transactionId: purchases[0]?.transactionId,
-        };
-
-        setStatePlan('PENDING');
-
-        setPlan(transactionData);
-        await setLocalStorage('@authPlan', JSON.stringify(transactionData));
-      } else {
-        setStatePlan('CANCEL');
-        setPlan(plan);
-        await setLocalStorage('@authPlan', JSON.stringify(plan));
-      }
-    }
-  }, []);
-
   return (
     <AuthContext.Provider
       value={{
@@ -265,15 +205,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         loading,
         isConnected,
         userID,
-        plan,
-        statePlan,
+        userEmail,
       }}
     >
       <ThemeProvider theme={theme}>
         <StatusBar
-          barStyle={'default'}
+          barStyle={'dark-content'}
           translucent={true}
-          backgroundColor={theme.color.primary}
+          backgroundColor="transparent"
         />
 
         {loading && (

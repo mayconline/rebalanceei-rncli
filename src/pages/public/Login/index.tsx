@@ -1,18 +1,10 @@
-import React, { useContext, useState, useCallback } from 'react';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import React, { useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
-import { ThemeContext } from 'styled-components/native';
+
 import { useAuth } from '../../../contexts/authContext';
 
-import {
-  FormRow,
-  ContainerTextLink,
-  TextLink,
-  ContainerForgotPassword,
-  TextForgotPassword,
-} from './styles';
-
-import ImageLogin from '../../../../assets/svg/ImageLogin';
+import { FormRow, ContainerForgotPassword, TextForgotPassword } from './styles';
 
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
@@ -32,17 +24,22 @@ interface ILogin {
     token: string;
     refreshToken: string;
     role: string;
+    email: string;
   };
 }
 
-const Login = () => {
+interface ILoginProps {
+  onClose: () => void;
+  handleOpenModal: (modal: 'SignUp' | 'ForgotPassword') => void;
+}
+
+const Login = ({ onClose, handleOpenModal }: ILoginProps) => {
   const { logEvent } = useAmplitude();
-  const { gradient } = useContext(ThemeContext);
+
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountLogin);
 
   const { handleSignIn, handleSetLoading } = useAuth();
-  const navigation = useNavigation();
 
   useFocusEffect(
     useCallback(() => {
@@ -65,7 +62,9 @@ const Login = () => {
     })
       .then(response => {
         logEvent('successful Login');
-        return response?.data?.login && handleSignIn(response.data.login);
+
+        response?.data?.login && handleSignIn(response.data.login);
+        onClose();
       })
       .catch(err => {
         logEvent('error on Login');
@@ -98,7 +97,7 @@ const Login = () => {
 
   const handleNavigate = useCallback((route: 'SignUp' | 'ForgotPassword') => {
     logEvent(`click on Navigate to ${route} at Login`);
-    navigation.navigate(route);
+    handleOpenModal(route);
   }, []);
 
   useFocusEffect(
@@ -108,7 +107,7 @@ const Login = () => {
   );
 
   return (
-    <LayoutForm img={ImageLogin} title="Bem Vindo de Volta" routeName="Login">
+    <LayoutForm title="Bem Vindo de Volta" routeName="Login" goBack={onClose}>
       <FormRow>
         <InputForm
           label="E-mail"
@@ -147,17 +146,13 @@ const Login = () => {
       {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
       <Button
-        colors={gradient.darkToLightBlue}
         onPress={handleSubmit}
         loading={mutationLoading}
         disabled={mutationLoading}
+        mb={48}
       >
         Entrar
       </Button>
-
-      <ContainerTextLink onPress={() => handleNavigate('SignUp')}>
-        <TextLink>Ainda não possui uma conta?</TextLink>
-      </ContainerTextLink>
     </LayoutForm>
   );
 };
@@ -169,6 +164,7 @@ export const LOGIN = gql`
       token
       refreshToken
       role
+      email
       plan {
         transactionDate
         renewDate

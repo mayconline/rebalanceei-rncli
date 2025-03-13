@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Pressable } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
 import { ThemeContext } from 'styled-components/native';
 
 import {
@@ -8,7 +8,9 @@ import {
   YearText,
   YearContainer,
   YearSubtitle,
+  YearButton,
 } from './styles';
+import Divider from '../Divider';
 
 interface IYearFilter {
   currentYear: number;
@@ -24,45 +26,40 @@ const YearFilter = ({
   const { color } = useContext(ThemeContext);
 
   return (
-    <ContainerYearFilter>
-      <Pressable
-        onPress={() => setCurrentYear(current => current - 1)}
-        accessibilityRole="button"
-        accessibilityLabel="Ano Anterior"
-        disabled={isAccumulated}
-      >
-        <MaterialCommunityIcons
-          name="chevron-left-circle"
-          size={32}
-          color={isAccumulated ? color.filterDisabled : color.blue}
-        />
-      </Pressable>
-
-      <YearContainer>
-        <YearText
-          accessibilityLabel="Ano Selecionado"
-          accessibilityValue={{
-            now: currentYear,
-          }}
+    <>
+      <Divider mt={'16px'} />
+      <ContainerYearFilter>
+        <YearButton
+          onPress={() => setCurrentYear(current => current - 1)}
+          accessibilityRole="button"
+          accessibilityLabel="Ano Anterior"
+          disabled={isAccumulated}
         >
-          {isAccumulated ? 'Todos' : currentYear}
-        </YearText>
-        <YearSubtitle>Ano selecionado</YearSubtitle>
-      </YearContainer>
+          <Feather name="arrow-left-circle" size={24} color={color.title} />
+        </YearButton>
 
-      <Pressable
-        onPress={() => setCurrentYear(current => current + 1)}
-        accessibilityRole="button"
-        accessibilityLabel="Próximo Ano"
-        disabled={isAccumulated}
-      >
-        <MaterialCommunityIcons
-          name="chevron-right-circle"
-          size={32}
-          color={isAccumulated ? color.filterDisabled : color.blue}
-        />
-      </Pressable>
-    </ContainerYearFilter>
+        <YearContainer>
+          <YearText
+            accessibilityLabel="Ano Selecionado"
+            accessibilityValue={{
+              now: currentYear,
+            }}
+          >
+            {isAccumulated ? 'Todos' : currentYear}
+          </YearText>
+          <YearSubtitle>Ano selecionado</YearSubtitle>
+        </YearContainer>
+
+        <YearButton
+          onPress={() => setCurrentYear(current => current + 1)}
+          accessibilityRole="button"
+          accessibilityLabel="Próximo Ano"
+          disabled={isAccumulated}
+        >
+          <Feather name="arrow-right-circle" size={24} color={color.title} />
+        </YearButton>
+      </ContainerYearFilter>
+    </>
   );
 };
 

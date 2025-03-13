@@ -1,16 +1,15 @@
-import React, { useContext, useState, useCallback } from 'react';
-import { Alert } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import React, { useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
-import { ThemeContext } from 'styled-components/native';
 import { FormRow, ContainerButtons } from './styles';
-import ImageRecoveryPassword from '../../../../assets/svg/ImageRecoveryPassword';
+
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
 import TextError from '../../../components/TextError';
 import LayoutForm from '../../../components/LayoutForm';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useAuth } from '../../../contexts/authContext';
+import { useModalStore } from '../../../store/useModalStore';
 
 interface IAccountLogin {
   email: string;
@@ -20,19 +19,24 @@ interface ISendRecovery {
   sendRecovery: boolean;
 }
 
-const ForgotPassword = () => {
+interface IForgotPasswordProps {
+  onClose: () => void;
+  handleOpenModal: (modal: 'ChangePassword', data: any) => Promise<void>;
+}
+
+const ForgotPassword = ({ onClose, handleOpenModal }: IForgotPasswordProps) => {
   const { handleSetLoading } = useAuth();
   const { logEvent } = useAmplitude();
-  const { gradient } = useContext(ThemeContext);
+
+  const { openConfirmModal } = useModalStore(({ openConfirmModal }) => ({
+    openConfirmModal,
+  }));
+
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountLogin);
 
-  const navigation = useNavigation();
-
-  const [
-    sendRecovery,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation<ISendRecovery, IAccountLogin>(SEND_RECOVERY);
+  const [sendRecovery, { loading: mutationLoading, error: mutationError }] =
+    useMutation<ISendRecovery, IAccountLogin>(SEND_RECOVERY);
 
   useFocusEffect(
     useCallback(() => {
@@ -52,25 +56,15 @@ const ForgotPassword = () => {
       .then(
         response =>
           !!response?.data?.sendRecovery &&
-          Alert.alert(
-            'Verifique seu e-mail',
-            'Um código de redefinição de senha foi enviado para seu e-mail.',
-            [
-              {
-                text: 'Continuar',
-                style: 'destructive',
-                onPress: () => {
-                  logEvent(
-                    `click on Navigate to ChangePassword at ForgotPassword`,
-                  );
-                  navigation.navigate('ChangePassword', {
-                    email: account.email,
-                  });
-                },
-              },
-            ],
-            { cancelable: false },
-          ),
+          openConfirmModal({
+            description: 'Verifique seu e-mail',
+            legend: `Um código de redefinição de senha foi enviado para seu e-mail.`,
+            onConfirm: () =>
+              handleOpenModal('ChangePassword', {
+                email: account.email,
+              }),
+            isOnlyConfirm: true,
+          }),
       )
       .catch(err => {
         logEvent('error on sendRecovery');
@@ -95,9 +89,9 @@ const ForgotPassword = () => {
 
   return (
     <LayoutForm
-      img={ImageRecoveryPassword}
       title="Recuperar Senha"
       routeName="ForgotPassword"
+      goBack={onClose}
     >
       <FormRow>
         <InputForm
@@ -119,10 +113,10 @@ const ForgotPassword = () => {
 
       <ContainerButtons>
         <Button
-          colors={gradient.darkToLightBlue}
           onPress={handleSubmit}
           loading={mutationLoading}
           disabled={mutationLoading}
+          mb={48}
         >
           Recuperar Senha
         </Button>

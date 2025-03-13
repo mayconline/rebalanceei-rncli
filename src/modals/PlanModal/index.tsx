@@ -5,11 +5,10 @@ import { ThemeContext } from 'styled-components/native';
 
 import { Wrapper, ScrollView, ContainerTitle, BackIcon, Title } from './styles';
 
-import AntDesign from 'react-native-vector-icons/AntDesign';
-
 import Free from './components/Free';
 import Premium from './components/Premium';
 import { useAuth } from '../../contexts/authContext';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface PlanModal {
   onClose(): void;
@@ -35,7 +34,7 @@ const PlanModal = ({ onClose }: PlanModal) => {
 
   return (
     <Wrapper>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <ContainerTitle>
           <Title accessibilityRole="header">Meu Plano Atual</Title>
           <BackIcon
@@ -43,10 +42,10 @@ const PlanModal = ({ onClose }: PlanModal) => {
             accessibilityLabel="Voltar"
             onPress={onClose}
           >
-            <AntDesign
-              name="closecircleo"
+            <MaterialCommunityIcons
+              name="close"
               size={24}
-              color={color.shadowBackdrop}
+              color={color.closeIcon}
             />
           </BackIcon>
         </ContainerTitle>

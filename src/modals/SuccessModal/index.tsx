@@ -1,31 +1,29 @@
 import React, { useContext, useCallback, useState, useEffect } from 'react';
-import { Modal } from 'react-native';
+
 import { ThemeContext } from 'styled-components/native';
 import { Wrapper, ContainerTitle, Title, LootieContainer } from './styles';
 import LottieView from 'lottie-react-native';
 import Button from '../../components/Button';
 import { getLocalStorage, setLocalStorage } from '../../utils/localStorage';
 import { useInterstitialAd, INTER_ID } from '../../services/AdMob';
-import PlanModal from '../PlanModal';
+
 import { useAuth } from '../../contexts/authContext';
 import useAmplitude from '../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
+import { useModalStore } from '../../store/useModalStore';
 
 interface ISuccessModal {
   onClose(): void;
-  beforeModalClose(): void;
 }
 
-const SuccessModal: React.FC<ISuccessModal> = ({
-  onClose,
-  beforeModalClose,
-}) => {
+const SuccessModal: React.FC<ISuccessModal> = ({ onClose }) => {
   const { logEvent } = useAmplitude();
-  const { color, gradient } = useContext(ThemeContext);
+  const { color } = useContext(ThemeContext);
   const { showBanner } = useAuth();
+  const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
+
   const { load, show, isLoaded, isClosed, error } = useInterstitialAd(INTER_ID);
 
-  const [openModal, setOpenModal] = useState<'Plan' | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [openAD, setOpenAd] = useState<boolean>(false);
 
@@ -50,7 +48,7 @@ const SuccessModal: React.FC<ISuccessModal> = ({
   useEffect(() => {
     if (isClosed) {
       setLoading(false);
-      setOpenModal('Plan');
+      openModal('PLAN');
     }
     () => setOpenAd(false);
   }, [isClosed, isLoaded, openAD]);
@@ -82,16 +80,12 @@ const SuccessModal: React.FC<ISuccessModal> = ({
 
     if (showBanner && viewCount % 4 === 0) {
       setOpenAd(true);
+
       logEvent('show adMob interticial');
     } else {
       setLoading(false);
-      beforeModalClose();
       onClose();
     }
-  }, []);
-
-  const handleClosePlanModal = useCallback(async () => {
-    setOpenModal(null);
   }, []);
 
   return (
@@ -115,26 +109,10 @@ const SuccessModal: React.FC<ISuccessModal> = ({
             loop={false}
           />
         </LootieContainer>
-        <Button
-          colors={gradient.lightToDarkGreen}
-          onPress={handleClose}
-          loading={loading}
-          disabled={loading}
-        >
+        <Button onPress={handleClose} loading={loading} disabled={loading}>
           Concluir
         </Button>
       </Wrapper>
-
-      {openModal === 'Plan' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'Plan'}
-          statusBarTranslucent={true}
-        >
-          <PlanModal onClose={handleClosePlanModal} />
-        </Modal>
-      )}
     </>
   );
 };

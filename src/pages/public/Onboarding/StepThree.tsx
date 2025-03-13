@@ -1,9 +1,7 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { ThemeContext } from 'styled-components/native';
 
 import {
-  StepContainer,
   Step,
   ContainerIndicator,
   StepIndicator,
@@ -13,14 +11,14 @@ import {
 } from './styles';
 
 import Button from '../../../components/Button';
-import LayoutForm from '../../../components/LayoutForm';
 import OnboardingImgThree from '../../../../assets/svg/OnboardingImgThree';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { setLocalStorage } from '../../../utils/localStorage';
+import LayoutOnboarding from '../../../components/LayoutOnboarding';
 
 const StepThree = () => {
   const { logEvent } = useAmplitude();
-  const { gradient } = useContext(ThemeContext);
+
   const navigation = useNavigation();
 
   useFocusEffect(
@@ -32,31 +30,27 @@ const StepThree = () => {
   const handleNext = async () => {
     logEvent('click on start button at Onboarding Step Three');
     await setLocalStorage('@authFirstAccess', 'true');
-    navigation.navigate('SignUp');
+    navigation.navigate('Welcome');
   };
 
   return (
-    <LayoutForm img={OnboardingImgThree} routeName="StepThree">
-      <StepContainer>
-        <Step>
-          <ContainerIndicator>
-            <StepIndicator />
-            <StepIndicator />
-            <StepIndicator active={true} />
-          </ContainerIndicator>
-          <ContainerTitle>
-            <Title>Acompanhe de perto sua carteira</Title>
-            <Subtitle>
-              Veja a variação de seus ativos e rebalanceeie eles como desejar!
-            </Subtitle>
-          </ContainerTitle>
+    <LayoutOnboarding img={OnboardingImgThree}>
+      <Step>
+        <ContainerIndicator>
+          <StepIndicator />
+          <StepIndicator />
+          <StepIndicator active={true} />
+        </ContainerIndicator>
+        <ContainerTitle>
+          <Title>Acompanhe de perto sua carteira</Title>
+          <Subtitle>
+            Veja a variação de seus ativos e rebalanceeie eles como desejar!
+          </Subtitle>
+        </ContainerTitle>
 
-          <Button colors={gradient.darkToLightBlue} onPress={handleNext}>
-            Vamos Começar
-          </Button>
-        </Step>
-      </StepContainer>
-    </LayoutForm>
+        <Button onPress={handleNext}>Vamos Começar</Button>
+      </Step>
+    </LayoutOnboarding>
   );
 };
 

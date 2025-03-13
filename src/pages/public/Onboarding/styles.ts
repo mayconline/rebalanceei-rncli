@@ -9,7 +9,7 @@ export const Icon = styled.TouchableOpacity`
 
 export const ContainerTitle = styled.View`
   align-items: center;
-  margin-bottom: 36px;
+  margin: 36px 24px;
 `;
 
 export const ContainerIndicator = styled.View`
@@ -24,32 +24,27 @@ export const StepIndicator = styled.View<IStepIndicator>`
   height: 8px;
   border-radius: 4px;
   background-color: ${({ theme, active }) =>
-    active ? theme.color.blue : theme.color.blueLight};
+    active ? theme.color.activeStep : theme.color.inactiveStep};
   margin: 0 4px;
 `;
 
 export const Title = styled.Text`
-  color: ${({ theme }) => theme.color.title};
-  font: 600 36px/44px 'TitilliumWeb-SemiBold';
+  color: ${({ theme }) => theme.color.onboardingTitle};
+  font: 600 36px/44px 'TitilliumWeb-Bold';
   text-align: center;
+  margin: 0 16px 16px;
+  font-smooth: 'antialiased';
 `;
 
 export const Subtitle = styled.Text`
-  color: ${({ theme }) => theme.color.titleNotImport};
-  font: 400 16px/24px 'TitilliumWeb-Regular';
+  color: ${({ theme }) => theme.color.onboardingSubtitle};
+  font: 400 18px/24px 'TitilliumWeb-Regular';
   text-align: center;
-`;
-
-export const StepContainer = styled.View`
-  flex: 1;
-  max-height: 316px;
+  font-smooth: 'antialiased';
 `;
 
 export const Step = styled.View`
-  background-color: ${({ theme }) => theme.color.secondary};
-  padding: 20px 20px 4px;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  min-height: 500px;
   width: 100%;
+  align-items: center;
+  margin-bottom: 24%;
 `;

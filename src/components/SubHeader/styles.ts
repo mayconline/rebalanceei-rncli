@@ -5,7 +5,6 @@ interface IFocused {
 }
 
 export const Wrapper = styled.SafeAreaView`
-  background-color: ${({ theme }) => theme.color.secondary};
   padding: 20px 20px 4px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
@@ -14,16 +13,19 @@ export const Wrapper = styled.SafeAreaView`
 export const ContainerTitle = styled.View`
   justify-content: space-between;
   flex-direction: row;
+  margin-top: 20px;
 `;
 
 export const SubTitle = styled.Text`
   color: ${({ theme }) => theme.color.title};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font: 400 18px 'TitilliumWeb-Regular';
+  font-smooth: antialiased;
 `;
 
 export const Title = styled.Text`
   color: ${({ theme }) => theme.color.title};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  font: 400 18px 'TitilliumWeb-Regular';
+  font-smooth: antialiased;
 `;
 
 export const FiltersContainer = styled.View`
@@ -43,27 +45,7 @@ export const TextFilter = styled.Text<IFocused>`
   color: ${({ focused, theme }) =>
     focused ? theme.color.filterFocused : theme.color.filterDisabled};
   padding: 4px 12px;
-  border-radius: 16px;
+  border-radius: 8px;
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
-`;
-
-export const MenuButton = styled.TouchableOpacity`
-  flex: 1;
-`;
-
-export const MenuButtonText = styled.Text<IFocused>`
-  background-color: ${({ focused, theme }) =>
-    focused
-      ? theme.color.bgMenuSubheaderActive
-      : theme.color.bgMenuSubheaderInative};
-  color: ${({ focused, theme }) =>
-    focused ? theme.color.filterFocused : theme.color.filterDisabled};
-
-  border-radius: ${({ focused }) => (focused ? '40px' : '20px')};
-
-  padding: 16px;
-  margin: -16px -16px 0;
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
-  align-items: center;
-  justify-content: center;
+  font-smooth: antialiased;
 `;

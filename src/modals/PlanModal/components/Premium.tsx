@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { ActivityIndicator, Alert } from 'react-native';
-import { useAuth } from '../../../contexts/authContext';
+import { ActivityIndicator } from 'react-native';
+
 import { ThemeContext } from 'styled-components/native';
 
 import CopyPremmium from '../../../components/CopyPremmium';
@@ -12,11 +12,20 @@ import { getLinkCancelPlan } from '../../../utils/CancelPlan';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
 import { formatDate } from '../../../utils/format';
+import { useModalStore } from '../../../store/useModalStore';
+import useRoleUser from '../../../hooks/useRoleUser';
 
 const Premium = () => {
   const { logEvent } = useAmplitude();
-  const { gradient, color } = useContext(ThemeContext);
-  const { plan } = useAuth();
+
+  const { plan } = useRoleUser();
+
+  const { openConfirmModal } = useModalStore(({ openConfirmModal }) => ({
+    openConfirmModal,
+  }));
+
+  const { color } = useContext(ThemeContext);
+
   const [loading, setLoading] = useState(true);
 
   useFocusEffect(
@@ -29,44 +38,17 @@ const Premium = () => {
     !!plan && setLoading(false);
   }, [plan]);
 
-  const handleCancelSubscription = useCallback(() => {
+  const handleCancelSubscription = useCallback(async () => {
     logEvent('click on cancel plan');
 
-    Alert.alert(
-      'Deseja mesmo cancelar?',
-      `Seu plano continuará ativo até o fim do ciclo contratado:
-      
-      Início: ${new Date(Number(plan?.transactionDate)).toLocaleDateString()}
-      Final: ${new Date(Number(plan?.renewDate)).toLocaleDateString()}
-      `,
-      [
-        {
-          text: 'Voltar',
-          style: 'cancel',
-        },
-        {
-          text: 'Continuar',
-          style: 'destructive',
-          onPress: () => {
-            logEvent('successful cancel plan');
-
-            return getLinkCancelPlan(
-              String(plan?.packageName),
-              String(plan?.productId),
-            );
-          },
-        },
-      ],
-      { cancelable: false },
-    );
-
-    return;
+    await getLinkCancelPlan(String(plan?.packageName), String(plan?.productId));
   }, [plan]);
 
   return loading ? (
     <ActivityIndicator size="large" color={color.filterDisabled} />
   ) : (
     <>
+      <CopyPremmium isPremmium />
       <CardPlan
         title={`✅ ${plan?.description} - Ativo`}
         descriptions={[
@@ -82,13 +64,21 @@ const Premium = () => {
       <SubTitle>
         *Seu Plano será renovado automáticamente na data da renovação.
       </SubTitle>
-      <CopyPremmium isPremmium />
+
       <ContainerButtons>
         <Button
-          colors={gradient.lightToDarkRed}
-          onPress={handleCancelSubscription}
+          onPress={() =>
+            openConfirmModal({
+              description: 'Tem certeza que deseja cancelar o plano?',
+              legend: `Seu plano continuará ativo até o fim do ciclo contratado: ${new Date(
+                Number(plan?.renewDate),
+              ).toLocaleDateString()}`,
+              onConfirm: () => handleCancelSubscription(),
+            })
+          }
           loading={loading}
           disabled={loading}
+          outlined
         >
           Cancelar Plano
         </Button>

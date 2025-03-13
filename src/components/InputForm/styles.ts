@@ -22,16 +22,17 @@ export const InputGroup = styled.View`
 `;
 
 export const Label = styled.Text<IFocusProps>`
-  color: ${({ theme, autoFocus, filled }) =>
-    autoFocus || filled ? theme.color.success : theme.color.titleNotImport};
-  font: 600 16px/24px 'TitilliumWeb-SemiBold';
+  color: ${({ theme, autoFocus }) =>
+    autoFocus ? theme.color.success : theme.color.titleItemCard};
+  font: 400 16px 'TitilliumWeb-Regular';
+  font-smooth: 'antialiased';
 `;
 
 export const TextCustomInput = styled.TextInput`
-  color: ${({ theme }) => theme.color.title};
+  color: ${({ theme }) => theme.color.titleItemCard};
   height: 40px;
-  font: 400 16px/24px 'TitilliumWeb-Regular';
-  opacity: ${({ editable = true }) => (!editable ? 0.6 : 1)};
+  font: 600 16px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;
 
 export const InputIcon = styled.TouchableOpacity`

@@ -1,8 +1,9 @@
 import styled from 'styled-components/native';
-import LinearGradient from 'react-native-linear-gradient';
 
-export const Wrapper = styled(LinearGradient)<any>`
-  min-height: 12%;
+export const Wrapper = styled.SafeAreaView`
+  height: 20%;
+  flex-direction: column;
+  margin: 0 16px;
 `;
 
 export const MenuBar = styled.SafeAreaView`
@@ -12,19 +13,34 @@ export const MenuBar = styled.SafeAreaView`
   justify-content: space-between;
 `;
 
+export const UserNameWrapper = styled.View``;
+
 export const Wallet = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  padding: 4% 8%;
   justify-content: space-between;
-  max-width: 70%;
+  background-color: ${({ theme }) => theme.color.bgSelectWallet};
+  border: 1px solid ${({ theme }) => theme.color.success};
+  border-radius: 8px;
+  margin: 12px auto 8px;
+  width: 64%;
+  padding: 4px 16px;
+`;
+
+export const WalletTitle = styled.Text`
+  font: 400 18px 'TitilliumWeb-Regular';
+  font-smooth: antialiased;
+  text-transform: capitalize;
+  color: ${({ theme }) => theme.color.title};
+  margin: 0 auto 2px;
 `;
 
 export const Title = styled.Text`
-  color: ${({ theme }) => theme.color.activeText};
-  font: 600 24px/32px 'TitilliumWeb-SemiBold';
-  margin-right: 4%;
-  max-width: 70%;
+  color: ${({ theme }) => theme.color.headerPrimary};
+  font: 400 24px 'TitilliumWeb-Regular';
+  margin-right: 8px;
+  font-smooth: antialiased;
+  text-transform: capitalize;
 `;
 
 export const Icons = styled.View`
@@ -33,6 +49,16 @@ export const Icons = styled.View`
   justify-content: space-between;
 `;
 
-export const Menu = styled.TouchableOpacity`
-  padding: 0 24px;
+export const Menu = styled.TouchableOpacity``;
+
+export const Logo = styled.View`
+  height: 68px;
+  width: 68px;
+`;
+
+export const WrapperLogo = styled.View`
+  flex-direction: row;
+  align-items: center;
+  width: 80%;
+  margin-left: -8px;
 `;

@@ -6,28 +6,75 @@ import {
   resetCaches,
   gql,
   fromPromise,
+  Observable,
+  FetchResult,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { getLocalStorage, multiSetLocalStorage } from '../utils/localStorage';
 
-const httpLink = createHttpLink({
-  uri: 'https://rebalanceei-app.adaptable.app',
+// Links para os servidores
+const primaryHttpLink = createHttpLink({
+  uri: 'https://graphql-apollo-server-one.vercel.app',
   credentials: 'include',
 });
 
+const secondaryHttpLink = createHttpLink({
+  uri: 'https://app-rebalanceei.onrender.com',
+  credentials: 'include',
+});
+
+// Link para gerenciar o retry
+const retryLink = new ApolloLink((operation, forward) => {
+  return new Observable<FetchResult>(observer => {
+    const subscription = forward(operation).subscribe({
+      next(response) {
+        if (response?.errors) {
+          // Se houver erro, tenta o segundo link
+          const secondaryObservable = secondaryHttpLink.request(operation);
+          if (secondaryObservable) {
+            secondaryObservable.subscribe({
+              next(secondaryResponse) {
+                observer.next(secondaryResponse);
+                observer.complete();
+              },
+              error(err) {
+                observer.error(err);
+              },
+            });
+          } else {
+            observer.error(new Error('Secondary link returned null.'));
+          }
+        } else {
+          observer.next(response);
+          observer.complete();
+        }
+      },
+      error(err) {
+        observer.error(err);
+      },
+    });
+
+    // Retornar a função de limpeza da assinatura
+    return () => {
+      subscription.unsubscribe();
+    };
+  });
+});
+
+// Link de tratamento de erro de autenticação
 const authErrorLink = onError(({ graphQLErrors, operation, forward }) => {
   if (operation.operationName === 'updateRefreshToken') return;
 
   if (graphQLErrors) {
-    for (let err of graphQLErrors) {
+    for (const err of graphQLErrors) {
       switch (err.message) {
         case 'Context creation failed: Token Invalid or Expired':
           return fromPromise(getNewToken())
             .filter(value => Boolean(value))
             .flatMap(accessToken => {
               const oldHeaders = operation.getContext().headers;
-              // modify the operation context with a new token
+              // Modificar o contexto da operação com um novo token
               operation.setContext({
                 headers: {
                   ...oldHeaders,
@@ -35,7 +82,7 @@ const authErrorLink = onError(({ graphQLErrors, operation, forward }) => {
                 },
               });
 
-              // retry the request, returning the new observable
+              // Retry a requisição, retornando o novo observable
               return forward(operation);
             });
       }
@@ -43,6 +90,7 @@ const authErrorLink = onError(({ graphQLErrors, operation, forward }) => {
   }
 });
 
+// Link de autenticação
 const authLink = setContext(async ({ operationName }, { headers }) => {
   const storageToken = await getLocalStorage('@authToken');
 
@@ -58,8 +106,9 @@ const authLink = setContext(async ({ operationName }, { headers }) => {
   };
 });
 
+// Configuração do Apollo Client
 export const client = new ApolloClient({
-  link: ApolloLink.from([authErrorLink, authLink, httpLink]),
+  link: ApolloLink.from([retryLink, authErrorLink, authLink, primaryHttpLink]),
   cache: new InMemoryCache({
     typePolicies: {
       Query: {
@@ -89,45 +138,46 @@ export const client = new ApolloClient({
               return incoming;
             },
           },
+          getUserByToken: {
+            merge(existing, incoming) {
+              return incoming;
+            },
+          },
         },
       },
     },
   }),
 });
 
-const getNewToken = () => {
-  return getLocalStorage('@refreshToken')
-    .then(refreshToken => {
-      return client
-        .mutate({
-          mutation: REFRESH_TOKEN,
-          variables: {
-            refreshToken: refreshToken ? refreshToken : '',
-          },
-        })
-        .then(async response => {
-          const { token, refreshToken } = response.data.updateRefreshToken;
-
-          await multiSetLocalStorage([
-            ['@authToken', token],
-            ['@refreshToken', refreshToken],
-          ]);
-
-          return token;
-        })
-        .catch(error => {
-          resetCaches();
-
-          throw error;
-        });
-    })
-    .catch(async err => {
-      resetCaches();
-
-      throw err;
+// Função para obter um novo token
+const getNewToken = async () => {
+  try {
+    const refreshToken = await getLocalStorage('@refreshToken');
+    const response = await client.mutate({
+      mutation: REFRESH_TOKEN,
+      variables: {
+        refreshToken: refreshToken || '',
+      },
     });
+
+    const { token, refreshToken: newRefreshToken } = response?.data
+      ?.updateRefreshToken || { token: null, refreshToken: null };
+
+    if (token && newRefreshToken) {
+      await multiSetLocalStorage([
+        ['@authToken', token],
+        ['@refreshToken', newRefreshToken],
+      ]);
+    }
+
+    return token;
+  } catch (error) {
+    resetCaches();
+    throw error;
+  }
 };
 
+// Mutação para atualizar o token
 const REFRESH_TOKEN = gql`
   mutation updateRefreshToken($refreshToken: String!) {
     updateRefreshToken(input: { refreshToken: $refreshToken }) {

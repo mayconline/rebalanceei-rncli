@@ -11,6 +11,7 @@ import {
   PlanRadioSelect,
   CardPlanHeaderGroup,
 } from './styles';
+import { colors } from '../../themes/colors';
 
 interface ICardPlan extends TouchableOpacityProps {
   title?: string;
@@ -28,14 +29,21 @@ const CardPlan = ({
   active = false,
   ...rest
 }: ICardPlan) => (
-  <Wrapper currentPlan={currentPlan} active={active} {...rest}>
+  <Wrapper
+    currentPlan={currentPlan}
+    active={active}
+    style={colors.shadow.card}
+    {...rest}
+  >
     <CardPlanHeaderGroup>
-      <CardPlanTitle>{title}</CardPlanTitle>
       {!currentPlan && <PlanRadioSelect selected={active} />}
     </CardPlanHeaderGroup>
 
     <CardPlanGroup>
       <CardPlanContainerDescription>
+        <CardPlanTitle hasDescriptions={!!descriptions?.length}>
+          {title}
+        </CardPlanTitle>
         {descriptions?.map((description, index) => (
           <CardPlanDescription key={index}>{description}</CardPlanDescription>
         ))}

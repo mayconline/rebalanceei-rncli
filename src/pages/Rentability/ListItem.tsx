@@ -1,26 +1,9 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from 'styled-components/native';
+import React from 'react';
 
-import {
-  Content,
-  CardTitleContainer,
-  CardTicket,
-  Card,
-  CardContent,
-  CardTitle,
-  SubTitleContant,
-  CardSubTitle,
-  CardSubTitleLegend,
-  AmountContainer,
-  Amount,
-  Variation,
-  VariationContainer,
-} from './styles';
-
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { formatNumber, formatPercent, formatTicket } from '../../utils/format';
+import { formatNumber, formatPercent } from '../../utils/format';
 import { IGetRentability } from './index';
 import AdBanner from '../../components/AdBanner';
+import { CardItem } from '../../components/CardItem';
 
 const ListItem = ({
   item,
@@ -29,73 +12,55 @@ const ListItem = ({
   item: IGetRentability;
   showAdBanner: boolean;
 }) => {
-  const { color, gradient } = useContext(ThemeContext);
-
   return (
     <>
       {showAdBanner && <AdBanner />}
-      <Content>
-        <Card colors={gradient.lightToGray} variation={item.variationPercent}>
-          <CardContent>
-            <CardTitleContainer>
-              <CardTicket
-                accessibilityLabel="Código do Ativo"
-                accessibilityValue={{ text: item.symbol }}
-              >
-                {formatTicket(item.symbol)}
-              </CardTicket>
-              <CardTitle
-                accessibilityLabel="Nome do Ativo"
-                accessibilityValue={{ text: item.longName }}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {' '}
-                - {formatTicket(item.longName)}
-              </CardTitle>
-            </CardTitleContainer>
-            <SubTitleContant>
-              <CardSubTitle
-                accessibilityLabel="Saldo aplicado no ativo"
-                accessibilityValue={{ now: item.costAmount }}
-              >
-                {formatNumber(item.costAmount)}
-              </CardSubTitle>
-              <CardSubTitleLegend>Saldo aplicado</CardSubTitleLegend>
-            </SubTitleContant>
-          </CardContent>
-          <AmountContainer>
-            <VariationContainer>
-              <Variation
-                accessibilityLabel="Porcentagem de variação do ativo"
-                accessibilityValue={{ now: item.variationPercent }}
-                variation={item.variationPercent}
-              >
-                {formatPercent(item.variationPercent)}
-              </Variation>
-              {item.variationPercent !== 0 && (
-                <FontAwesome5
-                  name={item.variationPercent > 0 ? 'caret-up' : 'caret-down'}
-                  size={16}
-                  color={
-                    item.variationPercent > 0 ? color.success : color.danger
-                  }
-                />
-              )}
-            </VariationContainer>
-            <Amount
-              accessibilityLabel="Saldo atual do ativo"
-              accessibilityValue={{ now: item.currentAmount }}
-              variation={item.variationPercent}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {formatNumber(item.currentAmount)}
-            </Amount>
-            <CardSubTitleLegend>Saldo atual</CardSubTitleLegend>
-          </AmountContainer>
-        </Card>
-      </Content>
+
+      <CardItem>
+        <CardItem.Content>
+          <CardItem.Title symbol={item?.symbol} name={item?.longName} />
+
+          <CardItem.SubTitle
+            accessibilityLabel="Saldo aplicado no ativo"
+            accessibilityValue={{ now: item.costAmount }}
+            text={formatNumber(item.costAmount)}
+          />
+
+          <CardItem.SubTitle
+            accessibilityLabel="Saldo aplicado"
+            accessibilityValue={{ text: 'Saldo aplicado' }}
+            text="Saldo aplicado"
+            size={12}
+            opacity={0.5}
+          />
+        </CardItem.Content>
+
+        <CardItem.AmountContent>
+          <CardItem.AmountText
+            accessibilityLabel="Porcentagem de variação do ativo"
+            accessibilityValue={{ now: item.variationPercent }}
+            variation={item.variationPercent}
+            text={formatPercent(item.variationPercent)}
+            size={14}
+          />
+
+          <CardItem.AmountText
+            accessibilityLabel="Saldo atual do ativo"
+            accessibilityValue={{ now: item.currentAmount }}
+            variation={item.variationPercent}
+            text={formatNumber(item.currentAmount)}
+            size={14}
+          />
+
+          <CardItem.SubTitle
+            accessibilityLabel="Saldo atual"
+            accessibilityValue={{ text: 'Saldo atual' }}
+            text="Saldo atual"
+            size={12}
+            opacity={0.5}
+          />
+        </CardItem.AmountContent>
+      </CardItem>
     </>
   );
 };

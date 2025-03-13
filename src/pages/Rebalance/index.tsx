@@ -50,13 +50,11 @@ const Rebalance = () => {
     [] as IRebalances[],
   );
 
-  const [
-    rebalances,
-    { data, loading: queryLoading, error: queryError },
-  ] = useLazyQuery<IDataTickets>(REBALANCES, {
-    variables: { walletID: wallet, sort: 'targetAmount' },
-    fetchPolicy: 'cache-and-network',
-  });
+  const [rebalances, { data, loading: queryLoading, error: queryError }] =
+    useLazyQuery<IDataTickets>(REBALANCES, {
+      variables: { walletID: wallet, sort: 'targetAmount' },
+      fetchPolicy: 'cache-and-network',
+    });
 
   useFocusEffect(
     useCallback(() => {
@@ -81,7 +79,7 @@ const Rebalance = () => {
 
   return (
     <LayoutTab
-      title="Rebalancear"
+      title="Rebalancear ativos"
       routeName="Rebalance"
       count={rebalanceData.length}
       initialFilter={initialFilter}

@@ -1,80 +1,70 @@
-import React, { useContext, useState } from 'react';
-import { Modal } from 'react-native';
+import React, { useContext } from 'react';
+
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
 import Entypo from 'react-native-vector-icons/Entypo';
+
+import {
+  Wrapper,
+  Wallet,
+  Title,
+  Icons,
+  Menu,
+  MenuBar,
+  Logo,
+  WrapperLogo,
+  UserNameWrapper,
+  WalletTitle,
+} from './styles';
+
+import { useModalStore } from '../../store/useModalStore';
+import RebalanceeiLogo from '../../../assets/svg/RebalanceeiLogo';
+import Divider from '../Divider';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { Wrapper, Wallet, Title, Icons, Menu, MenuBar } from './styles';
-
-import WalletModal from '../../modals/WalletModal';
-import MenuModal from '../../modals/MenuModal';
-
 const Header = () => {
-  const { walletName, setSelectTheme } = useAuth();
-  const { color, gradient, name } = useContext(ThemeContext);
+  const { walletName, userEmail } = useAuth();
+  const { color, name } = useContext(ThemeContext);
 
-  const [openModal, setOpenModal] = useState<'Wallet' | 'Menu' | null>(null);
+  const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
+
+  const userName = `${userEmail?.split('@')[0]}`;
 
   return (
-    <>
-      <Wrapper colors={gradient.darkToLightGreen}>
-        <MenuBar>
-          <Wallet onPress={() => setOpenModal('Wallet')}>
-            <Title numberOfLines={1} ellipsizeMode="tail">
-              {walletName ?? 'Selecionar Carteira'}
-            </Title>
-            <Entypo
-              name="chevron-thin-down"
-              size={20}
-              color={color.activeText}
+    <Wrapper>
+      <MenuBar>
+        <WrapperLogo>
+          <Logo>
+            <RebalanceeiLogo
+              type={name === 'LIGHT' ? 'secondary' : 'primary'}
             />
-          </Wallet>
-          <Icons>
-            <Menu
-              onPress={() =>
-                setSelectTheme(name === 'LIGHT' ? 'DARK' : 'LIGHT')
-              }
-            >
-              <MaterialCommunityIcons
-                name="theme-light-dark"
-                size={28}
-                color={color.activeText}
-              />
-            </Menu>
-            <Menu onPress={() => setOpenModal('Menu')}>
-              <Entypo
-                name="dots-three-vertical"
-                size={20}
-                color={color.activeText}
-              />
-            </Menu>
-          </Icons>
-        </MenuBar>
-      </Wrapper>
+          </Logo>
 
-      {openModal === 'Wallet' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'Wallet'}
-          statusBarTranslucent={true}
-        >
-          <WalletModal onClose={() => setOpenModal(null)} />
-        </Modal>
-      )}
+          <UserNameWrapper>
+            <Title numberOfLines={1} ellipsizeMode="tail">
+              {`Olá, ${userName}!`}
+            </Title>
+          </UserNameWrapper>
+        </WrapperLogo>
+        <Icons>
+          <Menu onPress={() => openModal('Menu')}>
+            <MaterialCommunityIcons
+              name="menu"
+              size={32}
+              color={color.headerPrimary}
+            />
+          </Menu>
+        </Icons>
+      </MenuBar>
+      <Divider mt={'4px'} />
 
-      {openModal === 'Menu' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'Menu'}
-          statusBarTranslucent={true}
-        >
-          <MenuModal onClose={() => setOpenModal(null)} />
-        </Modal>
-      )}
-    </>
+      <Wallet onPress={() => openModal('Wallet')}>
+        <WalletTitle numberOfLines={1} ellipsizeMode="tail">
+          {walletName ?? 'Selecionar Carteira'}
+        </WalletTitle>
+        <Entypo name="chevron-thin-down" size={16} color={color.title} />
+      </Wallet>
+    </Wrapper>
   );
 };
 

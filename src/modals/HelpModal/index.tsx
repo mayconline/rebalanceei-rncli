@@ -11,13 +11,14 @@ import {
   Container,
   Question,
 } from './styles';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+
 import Collapse from '../../components/Collapse';
 import ListTicket from '../../components/ListTicket';
 import ImageHelp from '../../../assets/svg/ImageHelp';
 import TextError from '../../components/TextError';
 import useAmplitude from '../../hooks/useAmplitude';
 import { useAuth } from '../../contexts/authContext';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface IHelpModal {
   onClose(): void;
@@ -44,10 +45,8 @@ const HelpModal = ({ onClose }: IHelpModal) => {
     }, []),
   );
 
-  const [
-    questions,
-    { data, loading: queryLoading, error: queryError },
-  ] = useLazyQuery<IGetQuestion>(GET_QUESTIONS);
+  const [questions, { data, loading: queryLoading, error: queryError }] =
+    useLazyQuery<IGetQuestion>(GET_QUESTIONS);
 
   useFocusEffect(
     useCallback(() => {
@@ -64,13 +63,17 @@ const HelpModal = ({ onClose }: IHelpModal) => {
   return (
     <Wrapper>
       <ContainerTitle>
-        <Title accessibilityRole="header">Precisa de Ajuda?</Title>
+        <Title accessibilityRole="header">Ajuda</Title>
         <BackIcon
           accessibilityRole="imagebutton"
           accessibilityLabel="Voltar"
           onPress={onClose}
         >
-          <AntDesign name="closecircleo" size={24} color={color.activeText} />
+          <MaterialCommunityIcons
+            name="close"
+            size={24}
+            color={color.closeIcon}
+          />
         </BackIcon>
       </ContainerTitle>
       <Image>

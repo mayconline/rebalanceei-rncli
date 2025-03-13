@@ -1,18 +1,11 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Switch, Alert } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { Switch } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useMutation, gql } from '@apollo/client';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../../contexts/authContext';
 
-import {
-  FormRow,
-  ContainerTextLink,
-  TextLink,
-  ContainerTerms,
-  TextTermsLink,
-} from './styles';
-import ImageRegister from '../../../../assets/svg/ImageRegister';
+import { FormRow, ContainerTerms, TextTermsLink } from './styles';
 
 import Button from '../../../components/Button';
 import InputForm from '../../../components/InputForm';
@@ -22,6 +15,7 @@ import LayoutForm from '../../../components/LayoutForm';
 import { getTerms } from '../../../utils/Terms';
 
 import useAmplitude from '../../../hooks/useAmplitude';
+import { useModalStore } from '../../../store/useModalStore';
 
 interface IAccountRegister {
   email: string;
@@ -35,17 +29,25 @@ interface ICreateUser {
     token: string;
     refreshToken: string;
     role: string;
+    email: string;
   };
 }
 
-const SignUp = () => {
+interface ISignUpProps {
+  onClose: () => void;
+}
+
+const SignUp = ({ onClose }: ISignUpProps) => {
   const { logEvent } = useAmplitude();
-  const { color, gradient } = useContext(ThemeContext);
+  const { color } = useContext(ThemeContext);
   const [focus, setFocus] = useState(0);
   const [account, setAccount] = useState({} as IAccountRegister);
 
   const { handleSignIn, handleSetLoading } = useAuth();
-  const navigation = useNavigation();
+
+  const { openConfirmModal } = useModalStore(({ openConfirmModal }) => ({
+    openConfirmModal,
+  }));
 
   useFocusEffect(
     useCallback(() => {
@@ -63,22 +65,13 @@ const SignUp = () => {
       return;
     }
     if (!account.checkTerms) {
-      return Alert.alert(
-        'Termos de Uso e Política de Privacidade',
-        'É preciso aceitar os termos de uso para utilizar o app.',
-        [
-          {
-            text: 'Voltar',
-            style: 'cancel',
-          },
-          {
-            text: 'Continuar',
-            style: 'destructive',
-            onPress: handleToogleSwitch,
-          },
-        ],
-        { cancelable: false },
-      );
+      openConfirmModal({
+        description: 'Termos de Uso e Política de Privacidade',
+        legend: `É preciso aceitar os termos de uso para utilizar o app.`,
+        onConfirm: () => handleToogleSwitch(),
+      });
+
+      return;
     }
 
     createUser({
@@ -86,9 +79,10 @@ const SignUp = () => {
     })
       .then(response => {
         logEvent('successful create account');
-        return (
-          response?.data?.createUser && handleSignIn(response.data.createUser)
-        );
+
+        response?.data?.createUser && handleSignIn(response.data.createUser);
+
+        onClose();
       })
       .catch(err => {
         logEvent('error on create account');
@@ -111,12 +105,12 @@ const SignUp = () => {
     }));
   }, []);
 
-  const handleToogleSwitch = useCallback(() => {
+  const handleToogleSwitch = useCallback(async () => {
     setAccount(account => ({
       ...account,
       checkTerms: !account.checkTerms,
     }));
-    logEvent('change toogle switch at Signup');
+    await logEvent('change toogle switch at Signup');
   }, []);
 
   const onEndInputEditing = useCallback(
@@ -127,11 +121,6 @@ const SignUp = () => {
     [],
   );
 
-  const handleNavigate = useCallback((route: 'Login') => {
-    logEvent(`click on Navigate to ${route} at SignUp`);
-    navigation.navigate(route);
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
       mutationLoading && handleSetLoading(true);
@@ -139,7 +128,7 @@ const SignUp = () => {
   );
 
   return (
-    <LayoutForm img={ImageRegister} title="Criar Conta" routeName="SignUp">
+    <LayoutForm title="Criar Conta" routeName="SignUp" goBack={onClose}>
       <FormRow>
         <InputForm
           label="E-mail"
@@ -178,11 +167,15 @@ const SignUp = () => {
         </ContainerTerms>
         <Switch
           trackColor={{
-            false: color.inactiveTabs,
-            true: color.success,
+            false: color.switchDefaultColor,
+            true: color.switchSuccessColor,
           }}
-          thumbColor={account.checkTerms ? color.success : color.titleNotImport}
-          ios_backgroundColor={color.titleNotImport}
+          thumbColor={
+            account.checkTerms
+              ? color.switchSuccessColor
+              : color.switchDefaultColor
+          }
+          ios_backgroundColor={color.switchSuccessColor}
           onValueChange={handleToogleSwitch}
           value={account.checkTerms}
           accessibilityRole="switch"
@@ -192,17 +185,13 @@ const SignUp = () => {
       {!!mutationError && <TextError>{mutationError?.message}</TextError>}
 
       <Button
-        colors={gradient.darkToLightBlue}
         onPress={handleSubmit}
         loading={mutationLoading}
         disabled={mutationLoading}
+        mb={48}
       >
         Criar Conta
       </Button>
-
-      <ContainerTextLink onPress={() => handleNavigate('Login')}>
-        <TextLink>Já possui uma conta?</TextLink>
-      </ContainerTextLink>
     </LayoutForm>
   );
 };
@@ -220,6 +209,7 @@ export const CREATE_USER = gql`
       token
       refreshToken
       role
+      email
       plan {
         transactionDate
         renewDate

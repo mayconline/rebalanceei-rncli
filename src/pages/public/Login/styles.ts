@@ -1,21 +1,10 @@
 import styled from 'styled-components/native';
 
-export const FormRow = styled.View`
+export const FormRow = styled.SafeAreaView`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-`;
-
-export const ContainerTextLink = styled.TouchableOpacity`
-  justify-content: center;
-  align-items: center;
-  margin-top: 24px;
-`;
-
-export const TextLink = styled.Text`
-  color: ${({ theme }) => theme.color.titleNotImport};
-  font: 400 16px/24px 'TitilliumWeb-Regular';
 `;
 
 export const ContainerForgotPassword = styled.TouchableOpacity`
@@ -28,4 +17,5 @@ export const TextForgotPassword = styled.Text`
   color: ${({ theme }) => theme.color.blue};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
   text-align: right;
+  font-smooth: 'antialiased';
 `;

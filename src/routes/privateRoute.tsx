@@ -9,9 +9,11 @@ import AddButton from '../components/AddButton';
 
 import Ticket from '../pages/Ticket';
 import Rebalance from '../pages/Rebalance';
-import AddTicket from '../pages/AddTicket';
+
 import Rentability from '../pages/Rentability';
 import Chart from '../pages/Chart';
+import { useModalStore } from '../store/useModalStore';
+import AddTicketModal from '../modals/AddTicketModal';
 
 interface labelProps {
   focused: boolean;
@@ -20,9 +22,10 @@ interface labelProps {
 
 const Label = styled.Text<labelProps>`
   color: ${({ color }) => color};
-  border-bottom-width: ${({ focused }) => (focused ? '2px' : 0)};
+  border-bottom-width: ${({ focused }) => (focused ? '4px' : 0)};
   border-bottom-color: ${({ color }) => color};
-  font: 600 12px/16px 'TitilliumWeb-SemiBold';
+  font: 600 14px/16px 'TitilliumWeb-SemiBold';
+  font-smooth: 'antialiased';
 `;
 
 const Tab = createBottomTabNavigator();
@@ -63,19 +66,19 @@ const icons: Icons = {
 const privateRoute = () => {
   const { color } = useContext(ThemeContext);
 
+  const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
+
   return (
     <Tab.Navigator
-      screenOptions={({ route, navigation }) => ({
+      screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size, focused }) => {
           if (route.name === 'AddTicket') {
             return (
               <AddButton
-                onPress={() =>
-                  navigation.navigate('AddTicket', { ticket: null })
-                }
+                onPress={() => openModal('AddTicket')}
                 focused={focused}
-                size={60}
-                mb={24}
+                size={64}
+                mb={64}
               />
             );
           }
@@ -97,16 +100,30 @@ const privateRoute = () => {
           );
         },
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: color.activeText,
-        tabBarInactiveTintColor: color.inactiveTabs,
+        tabBarActiveTintColor: color.activeMenuItem,
+        tabBarInactiveTintColor: color.inactiveMenuItem,
         tabBarItemStyle: {
-          backgroundColor: color.primary,
-          borderTopColor: color.divider,
-          padding: 4,
+          backgroundColor: color.bgTabMenu,
+          paddingVertical: 12,
+          borderTopLeftRadius: route.name === 'Ticket' ? 24 : 0,
+          borderTopRightRadius: route.name === 'Chart' ? 24 : 0,
+          borderTopColor: color.borderTabMenu,
+          borderLeftColor:
+            route.name === 'Ticket' ? color.borderTabMenu : color.bgTabMenu,
+          borderRightColor:
+            route.name === 'Chart' ? color.borderTabMenu : color.bgTabMenu,
+          borderWidth: 1,
+          marginHorizontal: -1,
         },
         tabBarStyle: [
           {
             display: 'flex',
+            height: 84,
+            backgroundColor: color.bgHeaderEmpty,
+            borderTopColor: color.bgHeaderEmpty,
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
           },
           null,
         ],
@@ -129,10 +146,15 @@ const privateRoute = () => {
       />
       <Tab.Screen
         name="AddTicket"
-        component={AddTicket}
+        component={AddTicketModal}
         options={{
           title: '',
         }}
+        listeners={() => ({
+          tabPress: e => {
+            e.preventDefault();
+          },
+        })}
       />
       <Tab.Screen
         name="Rentability"

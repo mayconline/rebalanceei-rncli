@@ -8,18 +8,6 @@ export const FormRow = styled.View`
   width: 100%;
 `;
 
-export const ContainerTextLink = styled.TouchableOpacity`
-  justify-content: center;
-  align-items: center;
-  margin-top: 24px;
-`;
-
-export const TextLink = styled.Text`
-  color: ${({ theme }) => theme.color.titleNotImport};
-  font: 400 16px/24px 'TitilliumWeb-Regular';
-  text-align: center;
-`;
-
 export const ContainerTerms = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
@@ -30,4 +18,5 @@ export const TextTermsLink = styled.Text`
   color: ${({ theme }) => theme.color.titleNotImport};
   font: 600 16px/24px 'TitilliumWeb-SemiBold';
   text-align: center;
+  font-smooth: 'antialiased';
 `;

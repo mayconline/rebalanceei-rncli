@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useRef, useState } from 'react';
-import { Modal, ScrollView } from 'react-native';
+import React, { useCallback, useContext, useRef } from 'react';
+import { ScrollView } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {
@@ -10,13 +10,12 @@ import {
   FiltersContainer,
   Filter,
   TextFilter,
-  MenuButton,
-  MenuButtonText,
 } from './styles';
 import { formatFilter, PREMIUM_FILTER } from '../../utils/format';
 import useAmplitude from '../../hooks/useAmplitude';
+import { RentabilityMenuTab } from '../RentabilityMenuTab';
 import { useAuth } from '../../contexts/authContext';
-import PlanModal from '../../modals/PlanModal';
+import { useModalStore } from '../../store/useModalStore';
 
 interface ISubHeaderProps {
   title: string;
@@ -28,6 +27,8 @@ interface ISubHeaderProps {
   menuTitles?: string[];
   selectedMenu?: string;
   children?: React.ReactNode;
+  childrenBeforeTitle?: React.ReactNode;
+  showCount?: boolean;
 }
 
 interface IFilters {
@@ -44,74 +45,47 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
   handleChangeMenu,
   menuTitles,
   selectedMenu,
+  childrenBeforeTitle,
+  showCount,
 }) => {
   const { logEvent } = useAmplitude();
   const { showBanner } = useAuth();
+  const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
 
   const { color } = useContext(ThemeContext);
-  const [openModal, setOpenModal] = useState<'Plan' | null>(null);
-
   const scrollViewRef = useRef<ScrollView>(null);
-
-  const handleSelectFilter = useCallback((filterName: string) => {
-    logEvent(`selected ${filterName} filter`);
-
-    if (verifyPremiumFilter(filterName)) {
-      setOpenModal('Plan');
-    } else {
-      onPress(filterName);
-    }
-  }, []);
-
-  const handleSelectMenu = useCallback((menu: string) => {
-    logEvent(`selected ${menu} menu`);
-
-    if (verifyPremiumFilter(menu)) {
-      setOpenModal('Plan');
-    } else {
-      handleChangeMenu && handleChangeMenu(menu);
-    }
-  }, []);
 
   const verifyPremiumFilter = useCallback((filterName: string) => {
     return PREMIUM_FILTER.includes(filterName) && showBanner;
   }, []);
 
-  const handleClosePlanModal = useCallback(async () => {
-    setOpenModal(null);
+  const handleSelectFilter = useCallback((filterName: string) => {
+    logEvent(`selected ${filterName} filter`);
+
+    if (verifyPremiumFilter(filterName)) {
+      openModal('PLAN');
+    } else {
+      onPress(filterName);
+    }
   }, []);
 
   return (
     <>
       <Wrapper>
+        {handleChangeMenu && !!menuTitles?.length && (
+          <RentabilityMenuTab
+            menuTitles={menuTitles}
+            selectedMenu={selectedMenu}
+            handleChangeMenu={handleChangeMenu}
+            verifyPremiumFilter={verifyPremiumFilter}
+          />
+        )}
+
+        {childrenBeforeTitle}
+
         <ContainerTitle>
-          {!!menuTitles?.length && handleChangeMenu ? (
-            menuTitles?.map(menu => (
-              <MenuButton key={menu} onPress={() => handleSelectMenu(menu)}>
-                <MenuButtonText
-                  focused={menu === selectedMenu}
-                  accessibilityRole="header"
-                >
-                  <FontAwesome5
-                    name={menu === 'Proventos' ? 'donate' : 'wallet'}
-                    size={20}
-                    color={
-                      menu === selectedMenu
-                        ? color.filterFocused
-                        : color.filterDisabled
-                    }
-                  />
-                  {'   '}
-                  {menu}
-                </MenuButtonText>
-              </MenuButton>
-            ))
-          ) : (
-            <>
-              <Title accessibilityRole="header">{title}</Title>
-              <SubTitle>{count} Itens</SubTitle>
-            </>
-          )}
+          <Title accessibilityRole="header">{title}</Title>
+          {showCount && <SubTitle>{count} Itens</SubTitle>}
         </ContainerTitle>
 
         {children}
@@ -139,17 +113,6 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
           <FontAwesome5 name="sort-amount-up" size={24} color={color.title} />
         </FiltersContainer>
       </Wrapper>
-
-      {openModal === 'Plan' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'Plan'}
-          statusBarTranslucent={true}
-        >
-          <PlanModal onClose={handleClosePlanModal} />
-        </Modal>
-      )}
     </>
   );
 };

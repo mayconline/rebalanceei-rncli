@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { memo, useCallback, useContext } from 'react';
+import React, { memo, ReactNode, useCallback, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
@@ -8,8 +8,6 @@ import useAmplitude from '../../hooks/useAmplitude';
 import Empty from '../Empty';
 import Header from '../Header';
 import SubHeader from '../SubHeader';
-import TextError from '../TextError';
-import YearFilter from '../YearFilter';
 
 const fatalErrors = [
   'Error: Token Not Exists',
@@ -17,7 +15,7 @@ const fatalErrors = [
 ];
 
 interface LayoutTabProps {
-  children?: any;
+  children?: ReactNode;
   title: string;
   routeName: string;
   queryLoading: boolean;
@@ -30,8 +28,9 @@ interface LayoutTabProps {
   menuTitles?: string[];
   handleChangeMenu?: (menu: 'Carteira' | 'Proventos') => void;
   selectedMenu?: string;
-  currentYear?: number;
-  setCurrentYear?: React.Dispatch<React.SetStateAction<number>>;
+  childrenBeforeFilter?: ReactNode;
+  childrenBeforeTitle?: ReactNode;
+  showCount?: boolean;
 }
 
 const LayoutTab = ({
@@ -48,8 +47,9 @@ const LayoutTab = ({
   menuTitles,
   handleChangeMenu,
   selectedMenu,
-  currentYear,
-  setCurrentYear,
+  childrenBeforeFilter,
+  childrenBeforeTitle,
+  showCount,
 }: LayoutTabProps) => {
   const { color } = useContext(ThemeContext);
   const { logEvent } = useAmplitude();
@@ -74,11 +74,8 @@ const LayoutTab = ({
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: color.primary }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color.bgHeaderEmpty }}>
       <Header />
-      {!!queryError && (
-        <TextError isTabs={true}>{queryError?.message}</TextError>
-      )}
 
       {hasEmptyTickets ? (
         <Empty errorMessage={queryError?.message} />
@@ -87,21 +84,18 @@ const LayoutTab = ({
           <SubHeader
             title={title}
             count={count}
+            showCount={showCount}
             filters={initialFilter}
             selectedFilter={selectedFilter}
             onPress={handleChangeFilter}
             menuTitles={menuTitles}
             handleChangeMenu={handleChangeMenu}
             selectedMenu={selectedMenu}
+            childrenBeforeTitle={childrenBeforeTitle}
           >
-            {routeName === 'Earning' && (
-              <YearFilter
-                currentYear={currentYear!}
-                setCurrentYear={setCurrentYear!}
-                isAccumulated={selectedFilter === 'accumulated'}
-              />
-            )}
+            {childrenBeforeFilter}
           </SubHeader>
+
           {children}
         </>
       )}

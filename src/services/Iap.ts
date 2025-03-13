@@ -9,7 +9,7 @@ import {
   SubscriptionOffer,
   flushFailedPurchasesCachedAsPendingAndroid,
 } from 'react-native-iap';
-import { IPlan } from '../contexts/authContext';
+import { IPlan } from '../types/plan-types';
 
 type SubscriptionTransaction = {
   transactionDate: number;

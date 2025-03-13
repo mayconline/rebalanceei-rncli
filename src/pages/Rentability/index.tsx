@@ -6,13 +6,13 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getArraySortByParams } from '../../utils/sort';
 import { getPositionAdBanner } from '../../utils/format';
 
-import AmountWallet from '../../components/AmountWallet';
-
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
 
 import Earning from '../Earning';
 import LayoutTab from '../../components/LayoutTab';
+
+import AmountVariation from '../../components/AmountVariation';
 
 const initialFilter = [
   {
@@ -84,13 +84,11 @@ const Rentability = () => {
     }, []),
   );
 
-  const [
-    getRentability,
-    { data, loading: queryLoading, error: queryError },
-  ] = useLazyQuery<IDataTickets>(GET_RENTABILITY, {
-    variables: { walletID: wallet, sort: 'currentAmount' },
-    fetchPolicy: 'cache-and-network',
-  });
+  const [getRentability, { data, loading: queryLoading, error: queryError }] =
+    useLazyQuery<IDataTickets>(GET_RENTABILITY, {
+      variables: { walletID: wallet, sort: 'currentAmount' },
+      fetchPolicy: 'cache-and-network',
+    });
 
   useFocusEffect(
     useCallback(() => {
@@ -123,7 +121,7 @@ const Rentability = () => {
 
   return selectedMenu === 'Carteira' ? (
     <LayoutTab
-      title="Variação da carteira"
+      title="Variação"
       routeName="Rentability"
       count={rentabilityData.length}
       initialFilter={initialFilter}
@@ -135,18 +133,23 @@ const Rentability = () => {
       menuTitles={initialMenuTitles}
       handleChangeMenu={handleChangeMenu}
       selectedMenu={selectedMenu}
+      childrenBeforeFilter={
+        <AmountVariation
+          previousTitle="Saldo aplicado"
+          previousValue={dataWallet?.getWalletById.sumCostWallet}
+          currentTitle="Saldo atual"
+          currentValue={dataWallet?.getWalletById?.sumAmountWallet}
+          variationTitle="Percentual de variação da carteira"
+          variationValue={dataWallet?.getWalletById?.percentRentabilityWallet}
+          queryLoading={queryWalletLoading}
+          queryError={queryWalletError}
+        />
+      }
     >
       <ListTicket
         data={rentabilityData}
         extraData={rentabilityData}
         keyExtractor={item => item._id}
-        ListHeaderComponent={
-          <AmountWallet
-            data={dataWallet}
-            queryLoading={queryWalletLoading}
-            queryError={queryWalletError}
-          />
-        }
         renderItem={({ item, index }) => (
           <ListItem
             item={item}

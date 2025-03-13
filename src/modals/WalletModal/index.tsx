@@ -2,7 +2,7 @@ import React, { useContext, useState, useCallback } from 'react';
 import { Modal } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+
 import { useLazyQuery, gql } from '@apollo/client';
 import { useAuth } from '../../contexts/authContext';
 import {
@@ -16,13 +16,14 @@ import {
 } from './styles';
 
 import AddButton from '../../components/AddButton';
-import ShadowBackdrop from '../../components/ShadowBackdrop';
+
 import TextError from '../../components/TextError';
 import AddWalletModal from '../AddWalletModal';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
 import { formatNumber } from '../../utils/format';
 import useAmplitude from '../../hooks/useAmplitude';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface IWalletProps {
   onClose(): void;
@@ -62,12 +63,10 @@ const WalletModal = ({ onClose }: IWalletProps) => {
     }, []),
   );
 
-  const [
-    getWalletByUser,
-    { data, loading: queryLoading, error: queryError },
-  ] = useLazyQuery<IDataWallet>(GET_WALLET_BY_USER, {
-    fetchPolicy: 'cache-first',
-  });
+  const [getWalletByUser, { data, loading: queryLoading, error: queryError }] =
+    useLazyQuery<IDataWallet>(GET_WALLET_BY_USER, {
+      fetchPolicy: 'cache-first',
+    });
 
   useFocusEffect(
     useCallback(() => {
@@ -109,7 +108,6 @@ const WalletModal = ({ onClose }: IWalletProps) => {
 
   return (
     <>
-      <ShadowBackdrop />
       <Wrapper>
         <TitleContainer>
           <Title accessibilityRole="header">Carteiras</Title>
@@ -118,10 +116,10 @@ const WalletModal = ({ onClose }: IWalletProps) => {
             accessibilityLabel="Voltar"
             onPress={onClose}
           >
-            <AntDesign
-              name="closecircleo"
+            <MaterialCommunityIcons
+              name="close"
               size={24}
-              color={color.shadowBackdrop}
+              color={color.closeIcon}
             />
           </BackIcon>
         </TitleContainer>
@@ -130,6 +128,14 @@ const WalletModal = ({ onClose }: IWalletProps) => {
           data={data?.getWalletByUser}
           extraData={!!queryLoading}
           keyExtractor={item => item._id}
+          renderItem={({ item }) => (
+            <ListItem
+              item={item}
+              handleSelectWallet={handleSelectWallet}
+              selectedWallet={selectedWallet}
+              handleEditWallet={handleEditWallet}
+            />
+          )}
           ListFooterComponent={
             <>
               <Title
@@ -143,20 +149,12 @@ const WalletModal = ({ onClose }: IWalletProps) => {
                 {formatNumber(data?.getWalletByUser[0]?.sumAmountAllWallet)}
               </Title>
               <Title>
-                {!!data?.getWalletByUser?.length
-                  ? `${data?.getWalletByUser?.length} Itens`
-                  : 'Adicione uma Carteira clicando no botão abaixo.'}
+                {!data?.getWalletByUser?.length &&
+                  'Adicione uma Carteira clicando no botão abaixo.'}
               </Title>
             </>
           }
-          renderItem={({ item }) => (
-            <ListItem
-              item={item}
-              handleSelectWallet={handleSelectWallet}
-              selectedWallet={selectedWallet}
-              handleEditWallet={handleEditWallet}
-            />
-          )}
+          ListFooterComponentStyle={{ marginTop: 16 }}
         />
         {!!queryError && <TextError>{queryError?.message}</TextError>}
 
@@ -173,11 +171,10 @@ const WalletModal = ({ onClose }: IWalletProps) => {
           animationType="slide"
           transparent={true}
           visible={openModal}
-          statusBarTranslucent={false}
+          statusBarTranslucent={true}
         >
           <AddWalletModal
             onClose={handleAddWallet}
-            beforeModalClose={onClose}
             walletData={editWallet}
             handleResetEditWallet={handleResetEditWallet}
           />
