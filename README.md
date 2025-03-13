@@ -10,7 +10,8 @@
 
 #### :pushpin: Prototype
 
-- [Figma](https://www.figma.com/proto/qfuBhnUegnf4mvHtFPEUsO/Untitled?node-id=25%3A885&scaling=scale-down)
+- [Design](https://www.behance.net/gallery/198515361/Redesign-Rebalanceei)
+- [Figma](https://www.figma.com/proto/e194dfB7pAGHdOfaBzShbS?kind=proto&node-id=11-11458&page-id=0%3A1&scaling=scale-down&starting-point-node-id=41%3A1242&t=b4c7a6Ktnwb6rvVD-1&viewport=536%2C970%2C0.06&fuid=840010999771933536)
 
 #### :rocket: User Stack Status
 
