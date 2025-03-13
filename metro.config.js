@@ -13,6 +13,7 @@ const config = {
     ...defaultResolver,
     sourceExts: [...defaultResolver.sourceExts, 'cjs'],
   },
+  resetCache: true,
 };
 
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);

@@ -1,7 +1,8 @@
 import axios from 'axios';
+import Config from '../config/envs';
 
 const api = axios.create({
-  baseURL: 'https://query2.finance.yahoo.com/v1/finance',
+  baseURL: Config?.suggestionsApiUrl,
 });
 
 export default api;

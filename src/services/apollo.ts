@@ -13,14 +13,11 @@ import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { getLocalStorage, multiSetLocalStorage } from '../utils/localStorage';
 
+import Config from '../config/envs';
+
 // Links para os servidores
 const primaryHttpLink = createHttpLink({
-  uri: 'https://graphql-apollo-server-one.vercel.app',
-  credentials: 'include',
-});
-
-const secondaryHttpLink = createHttpLink({
-  uri: 'https://app-rebalanceei.onrender.com',
+  uri: Config?.backApiUrl,
   credentials: 'include',
 });
 
@@ -31,7 +28,7 @@ const retryLink = new ApolloLink((operation, forward) => {
       next(response) {
         if (response?.errors) {
           // Se houver erro, tenta o segundo link
-          const secondaryObservable = secondaryHttpLink.request(operation);
+          const secondaryObservable = primaryHttpLink.request(operation);
           if (secondaryObservable) {
             secondaryObservable.subscribe({
               next(secondaryResponse) {

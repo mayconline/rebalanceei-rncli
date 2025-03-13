@@ -1,10 +1,9 @@
 import { Amplitude } from '@amplitude/react-native';
 
-const DEV_KEY = '57549736bd55c979fad08a8e10e140a0';
-const PROD_KEY = 'ee843415251026d68d635fc4adca0aa8';
+import Config from '../config/envs';
 
 const ampInstance = Amplitude.getInstance();
-ampInstance.init(PROD_KEY);
+ampInstance.init(Config?.amplitudeKey);
 
 const useAmplitude = () => {
   const logEvent = (event: string) => {
