@@ -1840,7 +1840,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/core@npm:^29.6.3, @jest/core@npm:^29.7.0":
+"@jest/core@npm:^29.7.0":
   version: 29.7.0
   resolution: "@jest/core@npm:29.7.0"
   dependencies:
@@ -2028,7 +2028,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/transform@npm:^29.6.3, @jest/transform@npm:^29.7.0":
+"@jest/transform@npm:^29.7.0":
   version: 29.7.0
   resolution: "@jest/transform@npm:29.7.0"
   dependencies:
@@ -2977,13 +2977,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:29.4.2":
-  version: 29.4.2
-  resolution: "@types/jest@npm:29.4.2"
+"@types/jest@npm:29.5.14":
+  version: 29.5.14
+  resolution: "@types/jest@npm:29.5.14"
   dependencies:
     expect: "npm:^29.0.0"
     pretty-format: "npm:^29.0.0"
-  checksum: 10c0/84217f3a5a763b8fd8663a382c453fd75043c64e724b285735056855454776e8fbc7440e738e7d3c2d57da17a917a81cf2d1be08bdc81f9b1fbd4ba23cf806d5
+  checksum: 10c0/18e0712d818890db8a8dab3d91e9ea9f7f19e3f83c2e50b312f557017dc81466207a71f3ed79cf4428e813ba939954fa26ffa0a9a7f153181ba174581b1c2aed
   languageName: node
   linkType: hard
 
@@ -3899,24 +3899,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-jest@npm:29.6.3":
-  version: 29.6.3
-  resolution: "babel-jest@npm:29.6.3"
-  dependencies:
-    "@jest/transform": "npm:^29.6.3"
-    "@types/babel__core": "npm:^7.1.14"
-    babel-plugin-istanbul: "npm:^6.1.1"
-    babel-preset-jest: "npm:^29.6.3"
-    chalk: "npm:^4.0.0"
-    graceful-fs: "npm:^4.2.9"
-    slash: "npm:^3.0.0"
-  peerDependencies:
-    "@babel/core": ^7.8.0
-  checksum: 10c0/1e5dea99427e803253970cdf54c20e2bcef8c7641f4f8712d26f242aaee368800fa004319b52778796316d0dca51d89e1c544d138bbf44cd6ef8144e53e3076d
-  languageName: node
-  linkType: hard
-
-"babel-jest@npm:^29.7.0":
+"babel-jest@npm:29.7.0, babel-jest@npm:^29.7.0":
   version: 29.7.0
   resolution: "babel-jest@npm:29.7.0"
   dependencies:
@@ -6965,7 +6948,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-cli@npm:^29.6.3":
+"jest-cli@npm:^29.7.0":
   version: 29.7.0
   resolution: "jest-cli@npm:29.7.0"
   dependencies:
@@ -7290,14 +7273,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-styled-components@npm:7.1.1":
-  version: 7.1.1
-  resolution: "jest-styled-components@npm:7.1.1"
+"jest-styled-components@npm:7.2.0":
+  version: 7.2.0
+  resolution: "jest-styled-components@npm:7.2.0"
   dependencies:
     "@adobe/css-tools": "npm:^4.0.1"
   peerDependencies:
     styled-components: ">= 5"
-  checksum: 10c0/24eef0a700e24439d59e7aaa0a5e8bc24a1633a6cde0b6184dacc2f3143e0144492a66f0acfdf0ddc78fce103cbfdf661e589ce1c274897e07d17ed933fcb5fd
+  checksum: 10c0/44eecf73cd1ee50686c9c16517222e2c012422dd7d90a07813f82f3ccce4059563e620d25aed60274e05d31fe6375b1f31a3486033aa39ea5e82fd94afcfa32f
   languageName: node
   linkType: hard
 
@@ -7357,14 +7340,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:29.6.3":
-  version: 29.6.3
-  resolution: "jest@npm:29.6.3"
+"jest@npm:29.7.0":
+  version: 29.7.0
+  resolution: "jest@npm:29.7.0"
   dependencies:
-    "@jest/core": "npm:^29.6.3"
+    "@jest/core": "npm:^29.7.0"
     "@jest/types": "npm:^29.6.3"
     import-local: "npm:^3.0.2"
-    jest-cli: "npm:^29.6.3"
+    jest-cli: "npm:^29.7.0"
   peerDependencies:
     node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
   peerDependenciesMeta:
@@ -7372,7 +7355,7 @@ __metadata:
       optional: true
   bin:
     jest: bin/jest.js
-  checksum: 10c0/6539f8c31d2fd4845b74302d53f65247f42c54411c12054aeed41846e56dfd967bfc76b15356aa0a52ed70acfab1a28a2b0960e2a61a514e6a3ced62384a8e35
+  checksum: 10c0/f40eb8171cf147c617cc6ada49d062fbb03b4da666cb8d39cdbfb739a7d75eea4c3ca150fb072d0d273dce0c753db4d0467d54906ad0293f59c54f9db4a09d8b
   languageName: node
   linkType: hard
 
@@ -9411,7 +9394,7 @@ __metadata:
     "@testing-library/jest-native": "npm:5.4.2"
     "@testing-library/react-hooks": "npm:8.0.1"
     "@testing-library/react-native": "npm:9.1.0"
-    "@types/jest": "npm:29.4.2"
+    "@types/jest": "npm:29.5.14"
     "@types/react": "npm:^18.2.6"
     "@types/react-native": "npm:0.71.3"
     "@types/react-native-svg-charts": "npm:5.0.12"
@@ -9423,12 +9406,12 @@ __metadata:
     "@typescript-eslint/parser": "npm:5.55.0"
     axios: "npm:1.7.2"
     axios-mock-adapter: "npm:1.21.2"
-    babel-jest: "npm:29.6.3"
+    babel-jest: "npm:29.7.0"
     eslint: "npm:8.36.0"
     graphql: "npm:16.9.0"
     husky: "npm:8.0.3"
-    jest: "npm:29.6.3"
-    jest-styled-components: "npm:7.1.1"
+    jest: "npm:29.7.0"
+    jest-styled-components: "npm:7.2.0"
     lottie-react-native: "npm:6.7.2"
     react: "npm:18.3.1"
     react-native: "npm:0.74.3"
