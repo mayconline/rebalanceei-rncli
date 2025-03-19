@@ -3,7 +3,7 @@ import React from 'react';
 import { Grade } from './styles';
 
 import { formatNumber } from '../../utils/format';
-import { ITickets } from './index';
+import type { ITickets } from './index';
 import AdBanner from '../../components/AdBanner';
 import { CardItem } from '../../components/CardItem';
 

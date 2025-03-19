@@ -1,6 +1,6 @@
 import React from 'react';
 import AddTicket, { CREATE_TICKET } from './index';
-import { UPDATE_TICKET, DELETE_TICKET } from '../../components/EditTicket';
+import { UPDATE_TICKET, DELETE_TICKET } from '../EditTicket';
 import { GET_TICKETS_BY_WALLET } from '../../pages/Ticket';
 import { render, fireEvent, act, waitFor } from '../../utils/testProvider';
 import { GraphQLError } from 'graphql';
@@ -75,11 +75,6 @@ describe('AddTicket Tab', () => {
 
     await waitFor(() => {
       const itemList = getAllByA11yRole('button')[2];
-      expect(itemList).toHaveProperty('children', [
-        'SAPR4.SA',
-        '- ',
-        'Companhia de Saneamento do Paraná - SANEPAR',
-      ]);
 
       act(() => fireEvent.press(itemList));
     });
@@ -110,9 +105,10 @@ describe('AddTicket Tab', () => {
       getAllByA11yRole,
       getByA11yLabel,
       getByDisplayValue,
-      setParams,
+      mockOpenConfirmModal,
+      mockOpenModal,
     } = render(
-      <AddTicket />,
+      <AddTicket contentModal={MOCKED_PARAMS} />,
       [
         SUCCESSFUL_EDIT_TICKET,
         SUCCESSFUL_LIST_TICKETS('symbol'),
@@ -144,19 +140,30 @@ describe('AddTicket Tab', () => {
     fireEvent.changeText(inputQuantity, '200');
     expect(inputQuantity.props.value).toBe('200');
 
-    const submitButton = getAllByA11yRole('button')[1];
-    expect(submitButton).toHaveProperty('children', ['Alterar']);
+    const submitButton = getAllByA11yRole('button')[0];
+    expect(submitButton).toHaveProperty('children', ['Alterar Ativo']);
 
     await act(async () => fireEvent.press(submitButton));
 
-    expect(setParams).toHaveBeenCalledTimes(1);
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
 
-    expect(setParams).toHaveBeenCalledWith({ ticket: null });
+    expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
+      'Tem certeza que deseja alterar o ativo?',
+    );
+
+    await act(async () => {
+      mockOpenConfirmModal.mock.calls[0][0].onConfirm();
+    });
+
+    await waitFor(() => {
+      expect(mockOpenModal).toHaveBeenCalledTimes(1);
+      expect(mockOpenModal).toHaveBeenCalledWith('SUCCESS');
+    });
   });
 
   it('should successfully delete ticket', async () => {
-    const { findAllByA11yRole, goBack, setParams } = render(
-      <AddTicket />,
+    const { findAllByA11yRole, mockOpenConfirmModal } = render(
+      <AddTicket contentModal={MOCKED_PARAMS} />,
       [
         SUCCESSFUL_DELETE_TICKET,
         SUCCESSFUL_LIST_TICKETS('symbol'),
@@ -168,45 +175,53 @@ describe('AddTicket Tab', () => {
     );
 
     const submitButton = await findAllByA11yRole('button');
-    expect(submitButton[0]).toHaveProperty('children', ['Deletar']);
+    expect(submitButton[1]).toHaveProperty('children', ['Excluir Ativo']);
 
-    await act(async () => fireEvent.press(submitButton[0]));
+    await act(async () => fireEvent.press(submitButton[1]));
 
-    expect(setParams).toHaveBeenCalledWith({ ticket: null });
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
+
+    expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
+      'Tem certeza que deseja excluir o ativo?',
+    );
   });
 
   it('should throw error on create ticket', async () => {
-    apiMock.onGet('/autoc?').reply(200, {
-      ResultSet: {
-        Query: 'sapr4',
-        Result: [
-          {
-            symbol: 'SAPR4.SA',
-            name: 'Companhia de Saneamento do Paraná - SANEPAR',
-            exch: 'SAO',
-            type: 'S',
-            exchDisp: 'São Paulo',
-            typeDisp: 'Ação',
-          },
-        ],
-      },
+    apiMock.onGet('/search?').reply(200, {
+      quotes: [
+        {
+          symbol: 'SAPR4.SA',
+          longname: 'Companhia de Saneamento do Paraná - SANEPAR',
+        },
+      ],
     });
 
-    const { getAllByA11yRole, getByText, getByPlaceholderText } = render(
-      <AddTicket />,
-      [INVALID_CREATE_TICKET],
-    );
+    const {
+      getAllByA11yRole,
+      getByText,
+      getByPlaceholderText,
+      getByDisplayValue,
+    } = render(<AddTicket />, [INVALID_CREATE_TICKET]);
 
     const suggestButton = getAllByA11yRole('button')[0];
     await act(async () => fireEvent.press(suggestButton));
 
+    const inputSelectedTicket = getByPlaceholderText(
+      /Nenhum ativo selecionado/i,
+    );
+
+    getByText(/Pesquise e selecione um ativo/i);
     const inputSuggestions = getByPlaceholderText(/RBLC3/i);
-    fireEvent.changeText(inputSuggestions, 'SAPR4');
+
+    await act(async () => fireEvent.changeText(inputSuggestions, 'SAPR4'));
+    getByDisplayValue('SAPR4');
 
     await waitFor(() => {
-      const itemList = getAllByA11yRole('button')[2];
-      act(() => fireEvent.press(itemList));
+      const itemList = getAllByA11yRole('button');
+      act(() => fireEvent.press(itemList[2]));
     });
+
+    expect(inputSelectedTicket.props.value).toBe('SAPR4');
 
     const inputGrade = getByPlaceholderText(/0 a 100/i);
     fireEvent.changeText(inputGrade, '6');
@@ -222,37 +237,57 @@ describe('AddTicket Tab', () => {
 
     await act(async () => fireEvent.press(submitButton));
 
-    await act(async () => getByText(/Ativo já existe na carteira./i));
+    await act(async () => getByText(/Ativo já cadastrado./i));
   });
 
   it('should throw error on edit ticket', async () => {
-    const { getByText, findAllByA11yRole } = render(
-      <AddTicket />,
+    const { findAllByA11yRole, findByText, mockOpenConfirmModal } = render(
+      <AddTicket contentModal={MOCKED_PARAMS} />,
       [INVALID_EDIT_TICKET],
       MOCKED_PARAMS,
     );
 
     const submitButton = await findAllByA11yRole('button');
-    expect(submitButton[1]).toHaveProperty('children', ['Alterar']);
+    expect(submitButton[0]).toHaveProperty('children', ['Alterar Ativo']);
 
-    await act(async () => fireEvent.press(submitButton[1]));
+    await act(async () => fireEvent.press(submitButton[0]));
 
-    await act(async () => getByText(/Sem conexão com o banco de dados./i));
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
+
+    expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
+      'Tem certeza que deseja alterar o ativo?',
+    );
+
+    await act(async () => {
+      mockOpenConfirmModal.mock.calls[0][0].onConfirm();
+    });
+
+    findByText(/Sem conexão com o banco de dados./i);
   });
 
   it('should throw error on delete ticket', async () => {
-    const { getByText, findAllByA11yRole } = render(
-      <AddTicket />,
+    const { findAllByA11yRole, findByText, mockOpenConfirmModal } = render(
+      <AddTicket contentModal={MOCKED_PARAMS} />,
       [INVALID_DELETE_TICKET],
       MOCKED_PARAMS,
     );
 
     const submitButton = await findAllByA11yRole('button');
-    expect(submitButton[0]).toHaveProperty('children', ['Deletar']);
+    expect(submitButton[1]).toHaveProperty('children', ['Excluir Ativo']);
 
-    await act(async () => fireEvent.press(submitButton[0]));
+    await act(async () => fireEvent.press(submitButton[1]));
 
-    await act(async () => getByText(/Sem conexão com o banco de dados./i));
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
+
+    expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
+      'Tem certeza que deseja excluir o ativo?',
+    );
+
+    await act(async () => {
+      mockOpenConfirmModal.mock.calls[0][0].onConfirm();
+    });
+
+    findByText(/Sem conexão com o banco de dados./i);
   });
 });
 
@@ -404,7 +439,7 @@ const INVALID_CREATE_TICKET = {
   },
   result: {
     data: undefined,
-    errors: [new GraphQLError('Ativo já existe na carteira.')],
+    errors: [new GraphQLError('Ativo já cadastrado.')],
   },
 };
 

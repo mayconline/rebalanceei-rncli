@@ -14,6 +14,10 @@ jest.mock('../../contexts/authContext', () => ({
 jest.mock('../../components/AdBanner', () => () => null);
 
 describe('Ticket Tab', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should successfully list tickets', async () => {
     const {
       findByA11yRole,
@@ -21,31 +25,27 @@ describe('Ticket Tab', () => {
       getAllByA11yRole,
       getAllByA11yLabel,
       findByText,
-      setParams,
-      navigate,
+      mockOpenModal,
     } = render(<Ticket />, [SUCCESSFUL_LIST_TICKETS]);
 
     await findByA11yRole('header');
     await findByText('Meus Ativos');
 
-    const symbolItemOne = (await findAllByA11yLabel(/Código do Ativo/i))[0];
-    expect(symbolItemOne).toHaveProperty('children', ['SAPR4']);
+    const symbolItemOne = (
+      await findAllByA11yLabel(/Código do Ativo - Nome do Ativo/i)
+    )[0];
 
-    const nameItemOne = getAllByA11yLabel(/Nome do Ativo/i)[0];
-    expect(nameItemOne).toHaveProperty('children', [
-      ' ',
-      '- ',
+    expect(symbolItemOne).toHaveProperty('children', [
+      'SAPR4',
+      ' - ',
       'Companhia de Saneamento do Paraná - SANEPAR',
     ]);
 
     const quantityItemOne = getAllByA11yLabel(
       /Quantidade e Preço Médio do Ativo/i,
     )[0];
-    expect(quantityItemOne).toHaveProperty('children', [
-      '174',
-      'x ',
-      'R$ 5,42',
-    ]);
+
+    expect(quantityItemOne).toHaveProperty('children', ['174x R$ 5,42']);
 
     const gradeItemOne = getAllByA11yLabel(
       /Nota para o peso do ativo esperado pela carteira/i,
@@ -55,9 +55,14 @@ describe('Ticket Tab', () => {
     const listItems = getAllByA11yRole('button');
     expect(listItems).toHaveLength(5);
 
-    act(() => fireEvent.press(listItems[0]));
-    expect(setParams).toHaveBeenCalledTimes(1);
-    expect(navigate).toHaveBeenCalledWith('AddTicket', {
+    const editButton = getAllByA11yLabel('Editar')[0];
+
+    await act(async () => {
+      fireEvent.press(editButton);
+    });
+
+    expect(mockOpenModal).toHaveBeenCalledTimes(1);
+    expect(mockOpenModal).toHaveBeenCalledWith('AddTicket', {
       ticket: {
         __typename: 'Ticket',
         _id: '5fa479c9f704ca0f84523c00',
@@ -72,7 +77,7 @@ describe('Ticket Tab', () => {
   });
 
   it('should render empty component', async () => {
-    const { findByA11yRole, getByA11yRole, findByText, navigate } = render(
+    const { findByA11yRole, getByA11yRole, findByText, mockOpenModal } = render(
       <Ticket />,
       [EMPTY_LIST_TICKETS],
     );
@@ -88,15 +93,18 @@ describe('Ticket Tab', () => {
     const addButton = getByA11yRole('button');
     expect(addButton).toHaveProperty('children', ['Adicionar Ativo']);
 
-    act(() => fireEvent.press(addButton));
+    await act(async () => {
+      fireEvent.press(addButton);
+    });
 
-    expect(navigate).toHaveBeenCalledWith('AddTicket');
+    expect(mockOpenModal).toHaveBeenCalledTimes(1);
+    expect(mockOpenModal).toHaveBeenCalledWith('AddTicket');
   });
 
   it('should throw error', async () => {
     const { findByText } = render(<Ticket />, [INVALID_LIST_TICKETS]);
 
-    await findByText(/Sem conexão com o banco de dados./i);
+    findByText(/nenhum item encontrado/i);
   });
 });
 
@@ -181,7 +189,7 @@ const EMPTY_LIST_TICKETS = {
   },
   result: {
     data: {
-      getWalletByUser: [],
+      getTicketsByWallet: [],
     },
   },
 };

@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/authContext';
 import { useMutation, gql } from '@apollo/client';
 import { FormRow, ContainerButtons } from './styles';
 
-import { ITickets } from '../../pages/Ticket';
+import type { ITickets } from '../../pages/Ticket';
 
 import { useFocusEffect } from '@react-navigation/native';
 import Button from '../../components/Button';
@@ -106,7 +106,7 @@ const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
     try {
       await updateTicket({
         variables: dataTicket,
-        refetchQueries: refetchQuery(wallet!, !showBanner),
+        refetchQueries: refetchQuery(wallet, !showBanner),
         awaitRefetchQueries: true,
       });
 
@@ -120,7 +120,17 @@ const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
     } finally {
       setLoading(false);
     }
-  }, [ticketForm]);
+  }, [
+    ticketForm,
+    logEvent,
+    onClose,
+    openModal,
+    showBanner,
+    wallet,
+    setLoading,
+    updateTicket,
+    mutationError,
+  ]);
 
   const handleDeleteSubmit = useCallback(async () => {
     if (!ticketForm._id || !wallet) {
@@ -136,7 +146,7 @@ const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
           _id: ticketForm._id,
           walletID: wallet,
         },
-        refetchQueries: refetchQuery(wallet!, !showBanner),
+        refetchQueries: refetchQuery(wallet, !showBanner),
         awaitRefetchQueries: true,
       });
 
@@ -149,7 +159,17 @@ const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
     } finally {
       setLoading(false);
     }
-  }, [ticketForm]);
+  }, [
+    ticketForm,
+    logEvent,
+    onClose,
+    openModal,
+    showBanner,
+    wallet,
+    setLoading,
+    deleteTicket,
+    mutationDeleteError,
+  ]);
 
   const handleSetGrade = useCallback((grade: string) => {
     setTicketForm(ticketForm => ({ ...ticketForm, grade }));
@@ -174,7 +194,7 @@ const EditTicket = ({ ticket, openModal, onClose }: IEditWalletModal) => {
       setFocus(nextFocus);
       logEvent(`filled ${nameInput} input at Edit Ticket`);
     },
-    [],
+    [logEvent],
   );
 
   return (

@@ -1,4 +1,9 @@
-import { memo, NamedExoticComponent, ReactNode, useContext } from 'react';
+import {
+  memo,
+  type NamedExoticComponent,
+  type ReactNode,
+  useContext,
+} from 'react';
 import {
   CardContent,
   CardTitleStyle,
@@ -12,7 +17,7 @@ import {
 import { colors } from '../../themes/colors';
 import Feather from 'react-native-vector-icons/Feather';
 import { formatTicket } from '../../utils/format';
-import { TextProps } from 'react-native';
+import type { TextProps } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
 
 interface ICardItemProps {

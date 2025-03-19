@@ -1,5 +1,4 @@
 import React, { useContext, useState, useCallback, useEffect } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
 import { Modal } from 'react-native';
 import { useAuth } from '../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
@@ -14,7 +13,7 @@ import {
 import SuggestionsModal from '../../modals/SuggestionsModal';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import EditTicket from '../EditTicket';
-import { ITickets } from '../../pages/Ticket';
+import type { ITickets } from '../../pages/Ticket';
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
@@ -24,7 +23,6 @@ import {
   openPlanModalOnError,
 } from '../../utils/format';
 import useAmplitude from '../../hooks/useAmplitude';
-import PlanModal from '../../modals/PlanModal';
 import LayoutForm from '../../components/LayoutForm';
 import { refetchQuery } from '../../utils/refetchQuery';
 import { useModalStore } from '../../store/useModalStore';
@@ -64,8 +62,8 @@ const AddTicketModal = ({ onClose, contentModal }: IAddTicketModalProps) => {
   const handleGoBack = useCallback(() => {
     setTicketForm({} as ITicketForm);
 
-    onClose && onClose();
-  }, []);
+    onClose?.();
+  }, [onClose]);
 
   const HandleOpenSuggestionsModal = useCallback(() => {
     if (!wallet) return;
@@ -129,7 +127,15 @@ const AddTicketModal = ({ onClose, contentModal }: IAddTicketModalProps) => {
       logEvent('error on createTicket at Add Ticket');
       console.error(mutationError?.message + err);
     }
-  }, [ticketForm, wallet]);
+  }, [
+    ticketForm,
+    wallet,
+    showBanner,
+    logEvent,
+    openModal,
+    createTicket,
+    mutationError,
+  ]);
 
   useEffect(() => {
     if (
@@ -138,7 +144,7 @@ const AddTicketModal = ({ onClose, contentModal }: IAddTicketModalProps) => {
     ) {
       openModal('PLAN');
     }
-  }, [mutationError]);
+  }, [mutationError, openModal]);
 
   const handleSetGrade = useCallback((grade: string) => {
     setTicketForm(ticketForm => ({ ...ticketForm, grade }));
@@ -163,7 +169,7 @@ const AddTicketModal = ({ onClose, contentModal }: IAddTicketModalProps) => {
       setFocus(nextFocus);
       logEvent(`filled ${nameInput} input at Add Ticket`);
     },
-    [],
+    [logEvent],
   );
 
   return (

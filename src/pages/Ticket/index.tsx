@@ -54,7 +54,7 @@ const Ticket = () => {
   useFocusEffect(
     useCallback(() => {
       !data?.getTicketsByWallet && getTicketsByWallet();
-    }, [data?.getTicketsByWallet]),
+    }, [data?.getTicketsByWallet, getTicketsByWallet]),
   );
 
   useFocusEffect(
@@ -73,9 +73,12 @@ const Ticket = () => {
     setSelectFilter(filterName);
   }, []);
 
-  const handleOpenEditModal = useCallback((item: ITickets) => {
-    openModal('AddTicket', { ticket: item });
-  }, []);
+  const handleOpenEditModal = useCallback(
+    (item: ITickets) => {
+      openModal('AddTicket', { ticket: item });
+    },
+    [openModal],
+  );
 
   const hasEmptyTickets = !wallet || (!queryLoading && !ticketData?.length);
 
@@ -83,7 +86,7 @@ const Ticket = () => {
     <LayoutTab
       title="Meus Ativos"
       routeName="Ticket"
-      count={ticketData?.length!}
+      count={ticketData?.length ?? 0}
       initialFilter={initialFilter}
       selectedFilter={selectedFilter}
       handleChangeFilter={handleChangeFilter}
@@ -99,7 +102,7 @@ const Ticket = () => {
         renderItem={({ item, index }) => (
           <ListItem
             item={item}
-            showAdBanner={getPositionAdBanner(index, ticketData?.length!)}
+            showAdBanner={getPositionAdBanner(index, ticketData?.length ?? 0)}
             handleOpenEditModal={handleOpenEditModal}
           />
         )}

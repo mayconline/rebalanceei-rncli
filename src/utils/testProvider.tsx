@@ -3,19 +3,20 @@ import { render } from '@testing-library/react-native';
 import { MockedProvider } from '@apollo/client/testing';
 import { ThemeProvider } from 'styled-components/native';
 import themes from '../themes';
-import { DocumentNode, GraphQLError } from 'graphql';
+import type { DocumentNode, GraphQLError } from 'graphql';
 import {
   NavigationContext,
   NavigationRouteContext,
 } from '@react-navigation/native';
+import * as modalStore from '../store/useModalStore';
 
 interface IMocks {
   request: {
     query: DocumentNode;
-    variables?: Object;
+    variables?: Record<string, unknown>;
   };
   result: {
-    data?: Object;
+    data?: Record<string, unknown>;
     errors?: GraphQLError[];
   };
 }
@@ -25,6 +26,14 @@ export const testProvider = (
   mocks: Array<IMocks> = [],
   params?: object,
 ) => {
+  const mockOpenModal = jest.fn();
+  const mockOpenConfirmModal = jest.fn();
+  jest.spyOn(modalStore, 'useModalStore').mockImplementation(() => ({
+    openModal: mockOpenModal,
+    openConfirmModal: mockOpenConfirmModal,
+    setLoading: jest.fn(),
+  }));
+
   const setParams = jest.fn(jest.fn());
   const navigate = jest.fn(jest.fn());
   const goBack = jest.fn(jest.fn);
@@ -55,6 +64,8 @@ export const testProvider = (
     setParams,
     navigate,
     goBack,
+    mockOpenModal,
+    mockOpenConfirmModal,
   };
 };
 
