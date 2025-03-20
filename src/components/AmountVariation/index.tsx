@@ -1,7 +1,7 @@
 import React, { memo, useContext } from 'react';
 import { ThemeContext } from 'styled-components/native';
 import { ActivityIndicator } from 'react-native';
-import { ApolloError } from '@apollo/client';
+import type { ApolloError } from '@apollo/client';
 import {
   Wrapper,
   WalletContainer,

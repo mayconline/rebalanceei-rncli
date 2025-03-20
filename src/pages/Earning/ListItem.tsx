@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { formatNumber, formatMonth } from '../../utils/format';
-import { IEarning } from './index';
+import type { IEarning } from './index';
 import { CardItem } from '../../components/CardItem';
 
 interface IListItem {
@@ -21,9 +21,9 @@ const ListItem = ({
         <CardItem.AmountText
           accessibilityLabel={isAccumulated ? 'Ano' : 'Mês'}
           accessibilityValue={{
-            text: isAccumulated ? String(item.year) : formatMonth(item.month!),
+            text: isAccumulated ? String(item.year) : formatMonth(item?.month),
           }}
-          text={isAccumulated ? String(item.year) : formatMonth(item.month!)!}
+          text={isAccumulated ? String(item.year) : formatMonth(item?.month)}
         />
 
         <CardItem.SubTitle

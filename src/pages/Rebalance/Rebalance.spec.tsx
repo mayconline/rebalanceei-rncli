@@ -11,6 +11,10 @@ jest.mock('../../contexts/authContext', () => ({
 }));
 
 describe('Rebalance Tab', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should successfully list rebalances', async () => {
     const {
       findByA11yRole,

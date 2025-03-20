@@ -1,7 +1,7 @@
 export const formatNumber = (amount?: number) => {
-  if (!amount) return `R$ 0,00`;
+  if (!amount) return 'R$ 0,00';
 
-  let money = amount
+  const money = amount
     ?.toFixed(2)
     .replace('.', ',')
     .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -117,7 +117,7 @@ export const formatDate = (dateNumber: number) => {
   return `${date} às ${time}`;
 };
 
-export const formatMonth = (month: number) =>
+export const formatMonth = (month: number): string =>
   ({
     1: 'Janeiro',
     2: 'Fevereiro',
@@ -131,4 +131,4 @@ export const formatMonth = (month: number) =>
     10: 'Outubro',
     11: 'Novembro',
     12: 'Dezembro',
-  }[month]);
+  }[month] ?? '');

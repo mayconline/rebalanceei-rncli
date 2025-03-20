@@ -22,6 +22,10 @@ const mockedInitialMenuTitles = ['Carteira', 'Proventos'];
 const mockedHandleChangeMenu = jest.fn();
 
 describe('Earning Tab', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should successfully list earnings', async () => {
     const {
       findAllByA11yRole,
@@ -36,7 +40,14 @@ describe('Earning Tab', () => {
         initialMenuTitles={mockedInitialMenuTitles}
         selectedMenu="Proventos"
       />,
-      [SUCCESSFUL_LIST_EARNINGS(2022), SUCCESSFUL_SUM_EARNINGS(2022)],
+      [
+        SUCCESSFUL_LIST_EARNINGS(2022),
+        SUCCESSFUL_SUM_EARNINGS(2022),
+        SUCCESSFUL_LIST_EARNINGS(2023),
+        SUCCESSFUL_SUM_EARNINGS(2023),
+        SUCCESSFUL_LIST_EARNINGS(2021),
+        SUCCESSFUL_SUM_EARNINGS(2021),
+      ],
     );
 
     await findAllByA11yRole('header');
@@ -51,25 +62,23 @@ describe('Earning Tab', () => {
     const listAmount = getAllByA11yLabel(/Total do Mês/i);
     expect(listAmount[0]).toHaveProperty('children', ['R$ 100,00']);
 
-    const oldYearAmount = getByA11yLabel('Total de Proventos do Ano Anterior');
+    const oldYearAmount = getByA11yLabel('Ano anterior');
     expect(oldYearAmount).toHaveProperty('children', ['R$ 40,00']);
 
-    const currentYearAmount = getByA11yLabel(
-      'Total de Proventos do Ano Selecionado',
-    );
+    const currentYearAmount = getByA11yLabel('Ano selecionado');
     expect(currentYearAmount).toHaveProperty('children', ['R$ 181,00']);
 
     getAllByA11yRole('button');
     const nextYearButton = getByA11yLabel('Próximo Ano');
 
-    act(() => fireEvent.press(nextYearButton));
+    await act(async () => fireEvent.press(nextYearButton));
     await waitFor(() =>
       expect(selectedYear).toHaveProperty('children', ['2023']),
     );
 
     const OldYearButton = getByA11yLabel('Ano Anterior');
-    act(() => fireEvent.press(OldYearButton));
-    act(() => fireEvent.press(OldYearButton));
+    await act(async () => fireEvent.press(OldYearButton));
+    await act(async () => fireEvent.press(OldYearButton));
 
     await waitFor(() =>
       expect(selectedYear).toHaveProperty('children', ['2021']),
@@ -83,6 +92,8 @@ describe('Earning Tab', () => {
       getAllByA11yLabel,
       findByA11yLabel,
       findAllByA11yLabel,
+
+      debug,
     } = render(
       <Earning
         handleChangeMenu={mockedHandleChangeMenu}
@@ -105,18 +116,16 @@ describe('Earning Tab', () => {
     const selectedYear = getByA11yLabel(/^Ano Selecionado$/i);
     expect(selectedYear).toHaveProperty('children', ['Todos']);
 
-    const earningTotalAcc = await findByA11yLabel(
-      'Total de Proventos Acumulado',
-    );
+    const earningTotalAcc = await findByA11yLabel('Total acumulado');
     expect(earningTotalAcc).toHaveProperty('children', ['R$ 3.000,00']);
 
-    const yieldOnCost = getByA11yLabel('Yield on Cost');
-    expect(yieldOnCost).toHaveProperty('children', [' (+12.0%)']);
+    getByText('Yield on cost');
+    getByText('(+12.0%)');
 
     const listYear = await findAllByA11yLabel('Ano');
     expect(listYear[0]).toHaveProperty('children', ['2022']);
 
-    const listAmount = getAllByA11yLabel('Total do Ano');
+    const listAmount = getAllByA11yLabel('Total do ano');
     expect(listAmount[0]).toHaveProperty('children', ['R$ 300,00']);
   });
 });

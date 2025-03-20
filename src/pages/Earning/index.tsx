@@ -44,7 +44,7 @@ export interface IDataSumEarning {
 export interface IEarning {
   _id: string;
   year: number;
-  month?: number;
+  month: number;
   amount: number;
 }
 
@@ -107,19 +107,25 @@ const Earning = ({
   useFocusEffect(
     useCallback(() => {
       !data?.getEarningByWallet && getEarningByWallet();
-    }, [data?.getEarningByWallet]),
+    }, [data?.getEarningByWallet, getEarningByWallet]),
   );
 
   useFocusEffect(
     useCallback(() => {
       !dataSumEarning?.getSumEarning && getSumEarning();
-    }, [dataSumEarning?.getSumEarning]),
+    }, [dataSumEarning?.getSumEarning, getSumEarning]),
   );
 
   useFocusEffect(
     useCallback(() => {
-      !dataAccEarning?.getEarningAccByYear && getEarningAccByYear();
-    }, [dataAccEarning?.getEarningAccByYear]),
+      selectedFilter === 'accumulated' &&
+        !dataAccEarning?.getEarningAccByYear &&
+        getEarningAccByYear();
+    }, [
+      dataAccEarning?.getEarningAccByYear,
+      selectedFilter,
+      getEarningAccByYear,
+    ]),
   );
 
   useFocusEffect(
@@ -130,7 +136,7 @@ const Earning = ({
         ? setEarningData(data?.getEarningByWallet)
         : setEarningData(
             getArraySortByParams<IEarning>(
-              data?.getEarningByWallet!,
+              data?.getEarningByWallet || [],
               selectedFilter,
             ),
           );
@@ -141,11 +147,14 @@ const Earning = ({
     setSelectFilter(filterName);
   }, []);
 
-  const handleOpenEditEarningModal = useCallback((item: IEarning) => {
-    setEditEarningData(item);
-    setOpenModal(true);
-    logEvent('click on edit earning');
-  }, []);
+  const handleOpenEditEarningModal = useCallback(
+    (item: IEarning) => {
+      setEditEarningData(item);
+      setOpenModal(true);
+      logEvent('click on edit earning');
+    },
+    [logEvent],
+  );
 
   const hasEmptyTickets =
     !wallet || (!queryLoading && data?.getEarningByWallet?.length === 0);
@@ -157,7 +166,7 @@ const Earning = ({
       <LayoutTab
         title=""
         routeName="Earning"
-        count={earningData?.length!}
+        count={earningData?.length ?? 0}
         initialFilter={initialFilter}
         selectedFilter={selectedFilter}
         handleChangeFilter={handleChangeFilter}
@@ -169,8 +178,8 @@ const Earning = ({
         queryLoading={queryLoading}
         childrenBeforeTitle={
           <YearFilter
-            currentYear={currentYear!}
-            setCurrentYear={setCurrentYear!}
+            currentYear={currentYear}
+            setCurrentYear={setCurrentYear}
             isAccumulated={isAccumulated}
           />
         }
@@ -191,8 +200,8 @@ const Earning = ({
             variationValue={
               isAccumulated ? dataSumEarning?.getSumEarning?.yieldOnCost : null
             }
-            queryLoading={querySumLoading}
-            queryError={querySumError}
+            queryLoading={querySumLoading || queryAccLoading}
+            queryError={querySumError || queryAccError}
           />
         }
       >
