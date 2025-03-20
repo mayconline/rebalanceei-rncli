@@ -1,7 +1,7 @@
 import React from 'react';
 import Rentability, { GET_RENTABILITY, GET_WALLET_BY_ID } from './index';
 
-import { act, render } from '../../utils/testProvider';
+import { render } from '../../utils/testProvider';
 import { GraphQLError } from 'graphql';
 
 jest.mock('../../contexts/authContext', () => ({
@@ -12,6 +12,10 @@ jest.mock('../../contexts/authContext', () => ({
 }));
 
 describe('Rentability Tab', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should successfully list rentability', async () => {
     const {
       findAllByA11yRole,
@@ -28,13 +32,12 @@ describe('Rentability Tab', () => {
     getByText('Carteira');
     getByText('Proventos');
 
-    const symbolItemOne = (await findAllByA11yLabel(/Código do Ativo/i))[0];
-    expect(symbolItemOne).toHaveProperty('children', ['MGLU3']);
-
-    const nameItemOne = getAllByA11yLabel(/Nome do Ativo/i)[0];
-    expect(nameItemOne).toHaveProperty('children', [
-      ' ',
-      '- ',
+    const symbolItemOne = (
+      await findAllByA11yLabel(/Código do Ativo - Nome do Ativo/i)
+    )[0];
+    expect(symbolItemOne).toHaveProperty('children', [
+      'MGLU3',
+      ' - ',
       'Magazine Luiza S',
     ]);
 
@@ -49,30 +52,21 @@ describe('Rentability Tab', () => {
     const currentAmountItemOne = getAllByA11yLabel(/Saldo atual do ativo/i)[0];
     expect(currentAmountItemOne).toHaveProperty('children', ['R$ 1.876,00']);
 
-    await act(async () => {
-      const walletCost = findByA11yLabel(/Saldo aplicado na carteira/i);
-      expect((await walletCost).props.children).toBe('R$ 16.900,63');
-    });
+    const walletCost = (await findAllByA11yLabel('Saldo aplicado'))[0];
+    expect(walletCost).toHaveProperty('children', ['R$ 16.900,63']);
 
-    await act(async () => {
-      const walletCurrentAmount = findByA11yLabel(/Saldo atual da carteira/i);
-      expect((await walletCurrentAmount).props.children).toBe('R$ 18.816,10');
-    });
+    const walletCurrentAmount = (await findAllByA11yLabel('Saldo atual'))[0];
+    expect((await walletCurrentAmount).props.children).toBe('R$ 18.816,10');
 
-    await act(async () => {
-      const walletVariation = findByA11yLabel(
-        /Percentual de variação da carteira/i,
-      );
-      expect((await walletVariation).props.children).toBe(' (+11.3%)');
-    });
+    const walletVariation = await findByA11yLabel(
+      /Percentual de variação da carteira/i,
+    );
+    expect((await walletVariation).props.children).toBe(' (+11.3%)');
 
     const symbolItemTwo = getAllByA11yLabel(/Código do Ativo/i)[1];
-    expect(symbolItemTwo).toHaveProperty('children', ['PSSA3']);
-
-    const nameItemTwo = getAllByA11yLabel(/Nome do Ativo/i)[1];
-    expect(nameItemTwo).toHaveProperty('children', [
-      ' ',
-      '- ',
+    expect(symbolItemTwo).toHaveProperty('children', [
+      'PSSA3',
+      ' - ',
       'Porto Seguro S',
     ]);
 
@@ -89,9 +83,12 @@ describe('Rentability Tab', () => {
   });
 
   it('should throw error', async () => {
-    const { findByText } = render(<Rentability />, [INVALID_LIST_RENTABILITY]);
+    const { findByText } = render(<Rentability />, [
+      INVALID_LIST_RENTABILITY,
+      INVALID_LIST_WALLET_BY_ID,
+    ]);
 
-    await findByText(/Sem conexão com o banco de dados./i);
+    await findByText(/nenhum item encontrado/i);
   });
 });
 
@@ -154,6 +151,17 @@ const INVALID_LIST_RENTABILITY = {
   request: {
     query: GET_RENTABILITY,
     variables: { walletID: '5fa1d752a8c5892a48c69b35', sort: 'currentAmount' },
+  },
+  result: {
+    data: undefined,
+    errors: [new GraphQLError('Sem conexão com o banco de dados.')],
+  },
+};
+
+const INVALID_LIST_WALLET_BY_ID = {
+  request: {
+    query: GET_WALLET_BY_ID,
+    variables: { _id: '5fa1d752a8c5892a48c69b35' },
   },
   result: {
     data: undefined,

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { formatNumber, formatPercent } from '../../utils/format';
-import { IGetRentability } from './index';
+import type { IGetRentability } from './index';
 import AdBanner from '../../components/AdBanner';
 import { CardItem } from '../../components/CardItem';
 

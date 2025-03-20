@@ -81,7 +81,7 @@ const Rentability = () => {
   useFocusEffect(
     useCallback(() => {
       getWalletById();
-    }, []),
+    }, [getWalletById]),
   );
 
   const [getRentability, { data, loading: queryLoading, error: queryError }] =
@@ -93,7 +93,7 @@ const Rentability = () => {
   useFocusEffect(
     useCallback(() => {
       getRentability();
-    }, []),
+    }, [getRentability]),
   );
 
   useFocusEffect(
