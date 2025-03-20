@@ -1,6 +1,6 @@
-import React, { act } from 'react';
+import React from 'react';
 import Welcome from './index';
-import { render, fireEvent, waitFor } from '../../../utils/testProvider';
+import { render, fireEvent, act } from '../../../utils/testProvider';
 import * as localStorage from '../../../utils/localStorage';
 
 const mockedGetLocalStorage = jest.spyOn(localStorage, 'getLocalStorage');

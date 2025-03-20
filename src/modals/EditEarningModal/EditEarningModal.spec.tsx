@@ -23,6 +23,10 @@ const mockedEarningData = ({ isEdit = true }: { isEdit?: boolean }) => ({
 });
 
 describe('Edit Earning Modal', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should successfully edit earning', async () => {
     const {
       findByA11yRole,
@@ -30,6 +34,7 @@ describe('Edit Earning Modal', () => {
       getByText,
       getByPlaceholderText,
       getByDisplayValue,
+      mockOpenConfirmModal,
     } = render(
       <EditEarningModal
         onClose={mockedOnClose}
@@ -52,14 +57,22 @@ describe('Edit Earning Modal', () => {
     const inputEarning = getByPlaceholderText('R$ 0000,00');
     getByDisplayValue('R$ 20,00');
 
-    act(() => fireEvent.changeText(inputEarning, 'R$ 100,00'));
+    await act(async () => fireEvent.changeText(inputEarning, 'R$ 100,00'));
 
     const submitButton = getByA11yRole('button');
     expect(submitButton).toHaveProperty('children', ['Alterar Valor']);
 
-    act(() => fireEvent.press(submitButton));
+    await act(async () => fireEvent.press(submitButton));
 
-    await waitFor(() => expect(mockedOnClose).toHaveBeenCalledTimes(1));
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
+    expect(mockOpenConfirmModal).toHaveBeenCalledWith({
+      description: 'Tem certeza que deseja alterar o valor do provento?',
+      onConfirm: expect.any(Function),
+    });
+
+    await act(async () => mockOpenConfirmModal.mock.calls[0][0].onConfirm());
+
+    expect(mockedOnClose).toHaveBeenCalledTimes(1);
   });
 
   it('should successfully add new earning', async () => {
@@ -68,7 +81,7 @@ describe('Edit Earning Modal', () => {
       getByA11yRole,
       getByText,
       getByPlaceholderText,
-      getByDisplayValue,
+      mockOpenConfirmModal,
     } = render(
       <EditEarningModal
         onClose={mockedOnClose}
@@ -97,7 +110,15 @@ describe('Edit Earning Modal', () => {
 
     act(() => fireEvent.press(submitButton));
 
-    await waitFor(() => expect(mockedOnClose).toHaveBeenCalledTimes(1));
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
+    expect(mockOpenConfirmModal).toHaveBeenCalledWith({
+      description: 'Tem certeza que deseja alterar o valor do provento?',
+      onConfirm: expect.any(Function),
+    });
+
+    await act(async () => mockOpenConfirmModal.mock.calls[0][0].onConfirm());
+
+    expect(mockedOnClose).toHaveBeenCalledTimes(1);
   });
 });
 

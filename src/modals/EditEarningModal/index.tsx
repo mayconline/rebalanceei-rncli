@@ -8,12 +8,12 @@ import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
 import useAmplitude from '../../hooks/useAmplitude';
-import { useFocusEffect } from '@react-navigation/native';
+
 import {
   GET_EARNING_BY_WALLET,
   GET_SUM_EARNING,
   GET_EARNING_ACC_BY_YEAR,
-  IEarning,
+  type IEarning,
 } from '../../pages/Earning';
 import {
   formatAveragePricePreview,
@@ -112,24 +112,29 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
     } finally {
       setLoading(false);
     }
-  }, [wallet, amount]);
+  }, [
+    wallet,
+    amount,
+    earningData,
+    logEvent,
+    setLoading,
+    updateEarning,
+    mutationError,
+  ]);
 
-  const handleSetAmount = useCallback(
-    (amountValue: string) => {
-      const { value, preview } = formatAveragePricePreview(amountValue);
+  const handleSetAmount = useCallback((amountValue: string) => {
+    const { value, preview } = formatAveragePricePreview(amountValue);
 
-      setAmount(current => ({
-        ...current,
-        value: value,
-        preview: preview,
-      }));
-    },
-    [amount],
-  );
+    setAmount(current => ({
+      ...current,
+      value: value,
+      preview: preview,
+    }));
+  }, []);
 
   const handleGoBack = useCallback(() => {
     onClose();
-  }, []);
+  }, [onClose]);
 
   return (
     <LayoutForm
@@ -139,7 +144,7 @@ const EditEarningModal = ({ onClose, earningData }: IEditEarningModal) => {
     >
       <FormRow>
         <InputForm
-          label={`Total de ${formatMonth(earningData?.month!)}`}
+          label={`Total de ${formatMonth(earningData?.month)}`}
           value={amount?.preview}
           defaultValue={
             earningData?.amount ? formatNumber(earningData?.amount) : ''
