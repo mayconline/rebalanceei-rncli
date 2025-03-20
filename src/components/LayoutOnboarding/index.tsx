@@ -1,4 +1,4 @@
-import React, { memo, ReactNode, useCallback } from 'react';
+import React, { memo, type ReactNode, useCallback } from 'react';
 import {
   WrapperOnboarding,
   ContainerTextLink,
@@ -20,7 +20,7 @@ const LayoutOnboarding = ({ img: IMG, children }: ILayoutOnboardingProps) => {
   const handleSkip = useCallback(async () => {
     await setLocalStorage('@authFirstAccess', 'true');
     navigation.navigate('Welcome');
-  }, []);
+  }, [navigation]);
 
   return (
     <WrapperOnboarding>

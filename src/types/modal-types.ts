@@ -9,6 +9,6 @@ export type IModals =
 export interface IContentConfirmModalProps {
   description: string;
   legend?: string;
-  onConfirm: () => Promise<void>;
+  onConfirm: () => void;
   isOnlyConfirm?: boolean;
 }

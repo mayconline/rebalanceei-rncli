@@ -24,7 +24,7 @@ const StepThree = () => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Onboarding Step Three');
-    }, []),
+    }, [logEvent]),
   );
 
   const handleNext = async () => {

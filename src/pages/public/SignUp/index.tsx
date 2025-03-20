@@ -52,7 +52,7 @@ const SignUp = ({ onClose }: ISignUpProps) => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open signUp');
-    }, []),
+    }, [logEvent]),
   );
 
   const [createUser, { loading: mutationLoading, error: mutationError }] =
@@ -67,7 +67,7 @@ const SignUp = ({ onClose }: ISignUpProps) => {
     if (!account.checkTerms) {
       openConfirmModal({
         description: 'Termos de Uso e Política de Privacidade',
-        legend: `É preciso aceitar os termos de uso para utilizar o app.`,
+        legend: 'É preciso aceitar os termos de uso para utilizar o app.',
         onConfirm: () => handleToogleSwitch(),
       });
 
@@ -111,20 +111,20 @@ const SignUp = ({ onClose }: ISignUpProps) => {
       checkTerms: !account.checkTerms,
     }));
     await logEvent('change toogle switch at Signup');
-  }, []);
+  }, [logEvent]);
 
   const onEndInputEditing = useCallback(
     (nextFocus: number, nameInput: string) => {
       setFocus(nextFocus);
       logEvent(`filled ${nameInput} input at SignUp`);
     },
-    [],
+    [logEvent],
   );
 
   useFocusEffect(
     useCallback(() => {
       mutationLoading && handleSetLoading(true);
-    }, [mutationLoading]),
+    }, [mutationLoading, handleSetLoading]),
   );
 
   return (

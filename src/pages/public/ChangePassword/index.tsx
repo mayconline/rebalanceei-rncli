@@ -25,7 +25,7 @@ interface IDataParamsForm {
 
 interface IChangePasswordProps {
   modalData: IDataParamsForm;
-  onClose: () => Promise<void>;
+  onClose: () => void;
 }
 
 const ChangePassword = ({ modalData, onClose }: IChangePasswordProps) => {
@@ -42,7 +42,7 @@ const ChangePassword = ({ modalData, onClose }: IChangePasswordProps) => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open ChangePassword');
-    }, []),
+    }, [logEvent]),
   );
 
   const [resetPassword, { loading: mutationLoading, error: mutationError }] =
@@ -51,7 +51,7 @@ const ChangePassword = ({ modalData, onClose }: IChangePasswordProps) => {
   useFocusEffect(
     useCallback(() => {
       handleSetLoading(mutationLoading);
-    }, [mutationLoading]),
+    }, [mutationLoading, handleSetLoading]),
   );
 
   const handleSubmit = () => {
@@ -101,7 +101,7 @@ const ChangePassword = ({ modalData, onClose }: IChangePasswordProps) => {
       setFocus(nextFocus);
       logEvent(`filled ${nameInput} input at ChangePassword`);
     },
-    [],
+    [logEvent],
   );
 
   return (

@@ -37,7 +37,7 @@ const Welcome = () => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Welcome');
-    }, []),
+    }, [logEvent]),
   );
 
   const handleEnter = useCallback(async () => {
@@ -52,7 +52,7 @@ const Welcome = () => {
       logEvent('redirect user to Onboarding from Welcome');
       navigation.navigate('StepOne');
     }
-  }, []);
+  }, [logEvent, navigation]);
 
   const handleOpenModal = useCallback(
     (
@@ -78,11 +78,19 @@ const Welcome = () => {
           </ContainerTitle>
         </Header>
         <Footer>
-          <ButtonContainer onPress={handleEnter}>
+          <ButtonContainer
+            accessibilityRole="button"
+            accessibilityLabel="Entrar"
+            onPress={handleEnter}
+          >
             <ButtonText>Entrar</ButtonText>
           </ButtonContainer>
 
-          <ContainerTextLink onPress={() => handleOpenModal('SignUp')}>
+          <ContainerTextLink
+            accessibilityRole="button"
+            accessibilityLabel="Ainda não possui uma conta ? Clique aqui!"
+            onPress={() => handleOpenModal('SignUp')}
+          >
             <TextLink>Ainda não possui uma conta ?</TextLink>
             <TextLink strong>Clique aqui !</TextLink>
           </ContainerTextLink>

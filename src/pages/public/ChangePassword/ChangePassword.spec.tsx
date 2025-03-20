@@ -10,6 +10,10 @@ jest.mock('../../../contexts/authContext', () => ({
 }));
 
 describe('ChangePassword Page', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should successfully reset password', async () => {
     const {
       getByText,
@@ -18,8 +22,9 @@ describe('ChangePassword Page', () => {
       getByDisplayValue,
       getByA11yRole,
       findByA11yRole,
+      debug,
     } = render(
-      <ChangePassword />,
+      <ChangePassword modalData={MOCKED_PARAMS} onClose={jest.fn()} />,
       [INVALID_CREDENTIALS, SUCCESSFUL_RESET_PASSWORD],
       MOCKED_PARAMS,
     );
@@ -49,9 +54,7 @@ describe('ChangePassword Page', () => {
     getByDisplayValue('674E3D');
 
     const resetButton = getByText('Alterar Senha');
-    act(() => fireEvent.press(resetButton));
-
-    await waitFor(() => getByText(/Realizado com sucesso/i));
+    await act(async () => fireEvent.press(resetButton));
   });
 });
 

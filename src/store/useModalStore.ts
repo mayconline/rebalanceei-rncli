@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { IContentConfirmModalProps, IModals } from '../types/modal-types';
+import type { IContentConfirmModalProps, IModals } from '../types/modal-types';
 
 interface IModalStore {
   modalType: IModals;

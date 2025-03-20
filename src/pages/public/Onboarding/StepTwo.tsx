@@ -23,7 +23,7 @@ const StepTwo = () => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Onboarding Step Two');
-    }, []),
+    }, [logEvent]),
   );
 
   const handleNext = () => {

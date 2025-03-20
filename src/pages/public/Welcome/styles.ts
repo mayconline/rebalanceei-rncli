@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { TextProps } from 'react-native';
+import type { TextProps } from 'react-native';
 
 interface ITextLinkProps extends TextProps {
   strong?: boolean;

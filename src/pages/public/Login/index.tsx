@@ -44,7 +44,7 @@ const Login = ({ onClose, handleOpenModal }: ILoginProps) => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Login');
-    }, []),
+    }, [logEvent]),
   );
 
   const [login, { loading: mutationLoading, error: mutationError }] =
@@ -92,18 +92,21 @@ const Login = ({ onClose, handleOpenModal }: ILoginProps) => {
       setFocus(nextFocus);
       logEvent(`filled ${nameInput} input at Login`);
     },
-    [],
+    [logEvent],
   );
 
-  const handleNavigate = useCallback((route: 'SignUp' | 'ForgotPassword') => {
-    logEvent(`click on Navigate to ${route} at Login`);
-    handleOpenModal(route);
-  }, []);
+  const handleNavigate = useCallback(
+    (route: 'SignUp' | 'ForgotPassword') => {
+      logEvent(`click on Navigate to ${route} at Login`);
+      handleOpenModal(route);
+    },
+    [logEvent, handleOpenModal],
+  );
 
   useFocusEffect(
     useCallback(() => {
       mutationLoading && handleSetLoading(true);
-    }, [mutationLoading]),
+    }, [mutationLoading, handleSetLoading]),
   );
 
   return (

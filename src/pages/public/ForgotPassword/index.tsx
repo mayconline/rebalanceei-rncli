@@ -21,7 +21,7 @@ interface ISendRecovery {
 
 interface IForgotPasswordProps {
   onClose: () => void;
-  handleOpenModal: (modal: 'ChangePassword', data: any) => Promise<void>;
+  handleOpenModal: (modal: 'ChangePassword', data: any) => void;
 }
 
 const ForgotPassword = ({ onClose, handleOpenModal }: IForgotPasswordProps) => {
@@ -41,7 +41,7 @@ const ForgotPassword = ({ onClose, handleOpenModal }: IForgotPasswordProps) => {
   useFocusEffect(
     useCallback(() => {
       handleSetLoading(mutationLoading);
-    }, [mutationLoading]),
+    }, [mutationLoading, handleSetLoading]),
   );
 
   const handleSubmit = () => {
@@ -58,7 +58,8 @@ const ForgotPassword = ({ onClose, handleOpenModal }: IForgotPasswordProps) => {
           !!response?.data?.sendRecovery &&
           openConfirmModal({
             description: 'Verifique seu e-mail',
-            legend: `Um código de redefinição de senha foi enviado para seu e-mail.`,
+            legend:
+              'Um código de redefinição de senha foi enviado para seu e-mail.',
             onConfirm: () =>
               handleOpenModal('ChangePassword', {
                 email: account.email,
@@ -84,7 +85,7 @@ const ForgotPassword = ({ onClose, handleOpenModal }: IForgotPasswordProps) => {
       setFocus(nextFocus);
       logEvent(`filled ${nameInput} input at ForgotPassword`);
     },
-    [],
+    [logEvent],
   );
 
   return (

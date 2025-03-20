@@ -4,6 +4,7 @@ import { render, fireEvent, waitFor, act } from '../../../utils/testProvider';
 import { GraphQLError } from 'graphql';
 
 const mockedHandleSignIn = jest.fn();
+const mockedHandleOpenModal = jest.fn();
 
 jest.mock('../../../contexts/authContext', () => ({
   useAuth: () => ({
@@ -13,6 +14,10 @@ jest.mock('../../../contexts/authContext', () => ({
 }));
 
 describe('Login Page', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should successfully login user', async () => {
     const {
       getByText,
@@ -20,7 +25,10 @@ describe('Login Page', () => {
       getByDisplayValue,
       getByA11yRole,
       findByA11yRole,
-    } = render(<Login />, [INVALID_LOGIN_USER, SUCCESSFUL_LOGIN_USER]);
+    } = render(
+      <Login handleOpenModal={mockedHandleOpenModal} onClose={jest.fn()} />,
+      [INVALID_LOGIN_USER, SUCCESSFUL_LOGIN_USER],
+    );
 
     const title = await findByA11yRole('header');
     expect(title).toHaveProperty('children', ['Bem Vindo de Volta']);
@@ -61,21 +69,15 @@ describe('Login Page', () => {
   });
 
   it('should links work correctly', async () => {
-    const { getByText, getByA11yRole, navigate, goBack } = render(<Login />);
-
-    const signUpLink = getByText(/Ainda não possui uma conta\?/i);
-    act(() => fireEvent.press(signUpLink));
-    expect(navigate).toHaveBeenCalledWith('SignUp');
+    const { getByText } = render(
+      <Login handleOpenModal={mockedHandleOpenModal} onClose={jest.fn()} />,
+    );
 
     const forgotPasswordLink = getByText(/Esqueceu a senha\?/i);
-    act(() => fireEvent.press(forgotPasswordLink));
-    expect(navigate).toHaveBeenCalledWith('ForgotPassword');
+    await act(async () => fireEvent.press(forgotPasswordLink));
 
-    const iconBackButton = getByA11yRole('imagebutton');
-    expect(iconBackButton).toBeTruthy();
-    act(() => fireEvent.press(iconBackButton));
-
-    await waitFor(() => expect(goBack).toHaveBeenCalledTimes(1));
+    expect(mockedHandleOpenModal).toHaveBeenCalledTimes(1);
+    expect(mockedHandleOpenModal).toHaveBeenCalledWith('ForgotPassword');
   });
 });
 

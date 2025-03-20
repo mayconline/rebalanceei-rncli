@@ -1,6 +1,6 @@
 import React from 'react';
 import StepOne from './StepOne';
-import { render, fireEvent, waitFor } from '../../../utils/testProvider';
+import { render, fireEvent, act } from '../../../utils/testProvider';
 import * as localStorage from '../../../utils/localStorage';
 
 const mockedSetLocalStorage = jest.spyOn(localStorage, 'setLocalStorage');
@@ -11,16 +11,14 @@ describe('Onboarding StepOne', () => {
 
     const skipButton = await findByText(/Pular/i);
 
-    fireEvent.press(skipButton);
+    await act(async () => fireEvent.press(skipButton));
 
-    await waitFor(() =>
-      expect(mockedSetLocalStorage).toHaveBeenCalledWith(
-        '@authFirstAccess',
-        'true',
-      ),
+    expect(mockedSetLocalStorage).toHaveBeenCalledWith(
+      '@authFirstAccess',
+      'true',
     );
 
-    expect(navigate).toBeCalledWith('SignUp');
+    expect(navigate).toBeCalledWith('Welcome');
 
     getByText(/Bem vindo ao Rebalanceei/i);
     getByText(/Rebalanceeie seus ativos em sua carteira!/i);
@@ -28,7 +26,7 @@ describe('Onboarding StepOne', () => {
 
     const nextButton = await findByText(/Próximo/i);
 
-    fireEvent.press(nextButton);
+    await act(async () => fireEvent.press(nextButton));
     expect(navigate).toBeCalledWith('StepTwo');
   });
 });
