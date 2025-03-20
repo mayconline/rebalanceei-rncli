@@ -20,15 +20,12 @@ describe('Rebalance Tab', () => {
     } = render(<Rebalance />, [SUCCESSFUL_LIST_REBALANCES]);
 
     await findByA11yRole('header');
-    await findByText('Rebalancear');
+    await findByText('Rebalancear ativos');
 
     const symbolItemOne = (await findAllByA11yLabel(/Código do Ativo/i))[0];
-    expect(symbolItemOne).toHaveProperty('children', ['IRBR3']);
-
-    const nameItemOne = getAllByA11yLabel(/Nome do Ativo/i)[0];
-    expect(nameItemOne).toHaveProperty('children', [
-      ' ',
-      '- ',
+    expect(symbolItemOne).toHaveProperty('children', [
+      'IRBR3',
+      ' - ',
       'IRB-Brasil Resseguros S',
     ]);
 
@@ -36,15 +33,13 @@ describe('Rebalance Tab', () => {
       /Porcentagem atual do ativo/i,
     )[0];
     expect(currentPercentItemOne).toHaveProperty('children', [
-      ' % Atual: 1.6 %',
+      '% Atual: 1.6 %',
     ]);
 
     const targetPercentItemOne = getAllByA11yLabel(
       /Porcentagem ideal do ativo/i,
     )[0];
-    expect(targetPercentItemOne).toHaveProperty('children', [
-      ' % Ideal: 3.0 %',
-    ]);
+    expect(targetPercentItemOne).toHaveProperty('children', ['% Ideal: 3.0 %']);
 
     const statusItemOne = getAllByA11yLabel(/Status do ativo/i)[0];
     expect(statusItemOne).toHaveProperty('children', ['Comprar']);
@@ -55,23 +50,24 @@ describe('Rebalance Tab', () => {
     expect(targetAmountItemOne).toHaveProperty('children', ['R$ 456,66']);
 
     const symbolItemThree = getAllByA11yLabel(/Código do Ativo/i)[2];
-    expect(symbolItemThree).toHaveProperty('children', ['FLRY3']);
-
-    const nameItemThree = getAllByA11yLabel(/Nome do Ativo/i)[2];
-    expect(nameItemThree).toHaveProperty('children', [' ', '- ', 'Fleury S']);
+    expect(symbolItemThree).toHaveProperty('children', [
+      'FLRY3',
+      ' - ',
+      'Fleury S',
+    ]);
 
     const currentPercentItemThree = getAllByA11yLabel(
       /Porcentagem atual do ativo/i,
     )[2];
     expect(currentPercentItemThree).toHaveProperty('children', [
-      ' % Atual: 5.0 %',
+      '% Atual: 5.0 %',
     ]);
 
     const targetPercentItemThree = getAllByA11yLabel(
       /Porcentagem ideal do ativo/i,
     )[2];
     expect(targetPercentItemThree).toHaveProperty('children', [
-      ' % Ideal: 5.0 %',
+      '% Ideal: 5.0 %',
     ]);
 
     const statusItemThree = getAllByA11yLabel(/Status do ativo/i)[2];
@@ -83,12 +79,9 @@ describe('Rebalance Tab', () => {
     expect(targetAmountItemThree).toHaveProperty('children', ['R$ 0,00']);
 
     const symbolItemFour = getAllByA11yLabel(/Código do Ativo/i)[3];
-    expect(symbolItemFour).toHaveProperty('children', ['EGIE3']);
-
-    const nameItemFour = getAllByA11yLabel(/Nome do Ativo/i)[3];
-    expect(nameItemFour).toHaveProperty('children', [
-      ' ',
-      '- ',
+    expect(symbolItemFour).toHaveProperty('children', [
+      'EGIE3',
+      ' - ',
       'Engie Brasil Energia S',
     ]);
 
@@ -96,14 +89,14 @@ describe('Rebalance Tab', () => {
       /Porcentagem atual do ativo/i,
     )[3];
     expect(currentPercentItemFour).toHaveProperty('children', [
-      ' % Atual: 6.6 %',
+      '% Atual: 6.6 %',
     ]);
 
     const targetPercentItemFour = getAllByA11yLabel(
       /Porcentagem ideal do ativo/i,
     )[3];
     expect(targetPercentItemFour).toHaveProperty('children', [
-      ' % Ideal: 6.0 %',
+      '% Ideal: 6.0 %',
     ]);
 
     const statusItemFour = getAllByA11yLabel(/Status do ativo/i)[3];
@@ -118,7 +111,7 @@ describe('Rebalance Tab', () => {
   it('should throw error', async () => {
     const { findByText } = render(<Rebalance />, [INVALID_LIST_REBALANCES]);
 
-    await findByText(/Sem conexão com o banco de dados./i);
+    await findByText(/nenhum item encontrado/i);
   });
 });
 

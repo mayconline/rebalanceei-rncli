@@ -59,7 +59,7 @@ const Rebalance = () => {
   useFocusEffect(
     useCallback(() => {
       rebalances();
-    }, []),
+    }, [rebalances]),
   );
 
   useFocusEffect(

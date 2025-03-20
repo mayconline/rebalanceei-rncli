@@ -5,7 +5,7 @@ import { CardContainerProgress } from './styles';
 
 import { formatNumber, formatStatus, formatProgress } from '../../utils/format';
 
-import { IRebalances } from './index';
+import type { IRebalances } from './index';
 import AdBanner from '../../components/AdBanner';
 import { colors } from '../../themes/colors';
 import { CardItem } from '../../components/CardItem';
