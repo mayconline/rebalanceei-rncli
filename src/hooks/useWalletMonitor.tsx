@@ -10,12 +10,12 @@ const useWalletMonitor = (message?: string) => {
   const handleSetServerFailed = useCallback(() => {
     setHasServerFailed(true);
     handleSetWallet('', null);
-  }, []);
+  }, [handleSetWallet]);
 
   const handleSetInvalidWallet = useCallback(() => {
     sethasInvalidWallet(true);
     handleSetWallet('', null);
-  }, []);
+  }, [handleSetWallet]);
 
   useEffect(() => {
     switch (message) {
@@ -32,7 +32,7 @@ const useWalletMonitor = (message?: string) => {
       default:
         return sethasInvalidWallet(false);
     }
-  }, [message]);
+  }, [message, handleSetInvalidWallet, handleSetServerFailed]);
 
   return {
     hasServerFailed,

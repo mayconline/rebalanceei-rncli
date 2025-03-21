@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useContext,
   useCallback,
-  ReactNode,
+  type ReactNode,
 } from 'react';
 import { Modal, StatusBar, useColorScheme } from 'react-native';
 
@@ -16,7 +16,7 @@ import {
   multiRemoveLocalStorage,
   multiSetLocalStorage,
 } from '../utils/localStorage';
-import themes, { themeMode, Theme } from '../themes';
+import themes, { type themeMode, type Theme } from '../themes';
 import { ThemeProvider } from 'styled-components/native';
 import Loading from '../modals/Loading';
 
@@ -125,7 +125,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     loadStorageData();
-  }, []);
+  }, [loadStorageData]);
 
   const handleSignIn = useCallback(async (userLogin: ISignIn) => {
     setLoading(true);
@@ -170,7 +170,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(false);
     setSigned(false);
     setUserEmail(null);
-  }, []);
+  }, [client.clearStore]);
 
   const handleSetWallet = useCallback(
     async (walletID: string, walletName: string | null) => {

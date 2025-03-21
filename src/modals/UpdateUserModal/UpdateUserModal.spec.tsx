@@ -1,12 +1,12 @@
 import React from 'react';
-import { Alert } from 'react-native';
-import UpdateUserModal, { UPDATE_USER, GET_USER_BY_TOKEN } from './index';
+import UpdateUserModal from './index';
 import { render, fireEvent, waitFor, act } from '../../utils/testProvider';
 import { GraphQLError } from 'graphql';
+import { UPDATE_USER } from '../../graphql/mutations';
+import { GET_USER_BY_TOKEN } from '../../graphql/queries';
 
 const mockedOnClose = jest.fn();
 const mockedHandleSignOut = jest.fn();
-const mockedAlert = (Alert.alert = jest.fn());
 
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
@@ -16,6 +16,10 @@ jest.mock('../../contexts/authContext', () => ({
 }));
 
 describe('Update User Modal', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should successfully update user', async () => {
     const {
       findByA11yRole,
@@ -24,6 +28,7 @@ describe('Update User Modal', () => {
       getByPlaceholderText,
       getByDisplayValue,
       findByText,
+      mockOpenConfirmModal,
     } = render(<UpdateUserModal onClose={mockedOnClose} />, [
       SUCCESSFUL_GET_USER_BY_TOKEN,
       SUCCESSFUL_UPDATE_USER,
@@ -31,30 +36,41 @@ describe('Update User Modal', () => {
     ]);
 
     const title = await findByA11yRole('header');
-    expect(title).toHaveProperty('children', ['Alterar Usuário']);
+    expect(title).toHaveProperty('children', ['Minha Conta']);
 
     await findByText(/E-mail/i);
     const inputEmail = getByPlaceholderText(/meuemail@teste.com.br/i);
     expect(inputEmail.props.defaultValue).toBe('exemple@test.com');
 
-    fireEvent.changeText(inputEmail, 'testeupdate@teste.com');
+    await act(async () =>
+      fireEvent.changeText(inputEmail, 'testeupdate@teste.com'),
+    );
     getByDisplayValue('testeupdate@teste.com');
 
-    getByText(/Senha/i);
+    getByText(/Nova Senha/i);
     const inputPassword = getByPlaceholderText('Caso queira alterar');
-    fireEvent.changeText(inputPassword, '1234');
+    await act(async () => fireEvent.changeText(inputPassword, '1234'));
     getByDisplayValue('1234');
 
-    const submitButton = getAllByA11yRole('button')[1];
-    expect(submitButton).toHaveProperty('children', ['Alterar']);
+    const submitButton = getAllByA11yRole('button')[0];
+    expect(submitButton).toHaveProperty('children', ['Alterar Senha']);
 
     await act(async () => fireEvent.press(submitButton));
+
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
+    expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
+      'Tem certeza que deseja alterar a senha?',
+    );
+
+    await act(async () => {
+      mockOpenConfirmModal.mock.calls[0][0].onConfirm();
+    });
 
     await waitFor(() => expect(mockedOnClose).toHaveBeenCalledTimes(1));
   });
 
   it('should successfully disabled user', async () => {
-    const { findAllByA11yRole } = render(
+    const { findAllByA11yRole, mockOpenConfirmModal } = render(
       <UpdateUserModal onClose={mockedOnClose} />,
       [
         SUCCESSFUL_GET_USER_BY_TOKEN,
@@ -64,17 +80,21 @@ describe('Update User Modal', () => {
     );
 
     const disabledButton = await findAllByA11yRole('button');
-    expect(disabledButton[0]).toHaveProperty('children', ['Desativar']);
+    expect(disabledButton[1]).toHaveProperty('children', ['Desativar Conta']);
 
-    await act(async () => fireEvent.press(disabledButton[0]));
+    await act(async () => fireEvent.press(disabledButton[1]));
 
-    expect(mockedAlert).toHaveBeenCalledTimes(1);
-    expect(mockedAlert.mock.calls[0][0]).toBe('Desativar Conta');
-    expect(mockedAlert.mock.calls[0][1]).toBe(
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
+    expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
+      'Tem certeza que deseja desativar a conta?',
+    );
+    expect(mockOpenConfirmModal.mock.calls[0][0].legend).toBe(
       'Se você continuar, sua conta será desativada e perderá o acesso a ela.',
     );
 
-    await act(async () => mockedAlert.mock.calls[0][2][1].onPress());
+    await act(async () => {
+      mockOpenConfirmModal.mock.calls[0][0].onConfirm();
+    });
 
     await waitFor(() => expect(mockedHandleSignOut).toHaveBeenCalledTimes(1));
   });
@@ -85,6 +105,7 @@ describe('Update User Modal', () => {
       getByText,
       getByPlaceholderText,
       findByText,
+      mockOpenConfirmModal,
     } = render(<UpdateUserModal onClose={mockedOnClose} />, [
       SUCCESSFUL_GET_USER_BY_TOKEN,
       INVALID_UPDATE_USER,
@@ -98,21 +119,26 @@ describe('Update User Modal', () => {
 
     fireEvent.changeText(inputEmail, 'testeupdate@teste.com');
 
-    await act(async () => fireEvent.press(submitButton[1]));
+    await act(async () => fireEvent.press(submitButton[0]));
 
-    await act(async () =>
-      waitFor(() => getByText(/Sem conexão com o banco de dados./i)),
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
+    expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
+      'Tem certeza que deseja alterar a senha?',
     );
+
+    await act(async () => {
+      mockOpenConfirmModal.mock.calls[0][0].onConfirm();
+    });
+
+    await findByText(/Sem conexão com o banco de dados./i);
   });
 
   it('should throw error when get user by token', async () => {
-    const { getByText } = render(<UpdateUserModal onClose={mockedOnClose} />, [
+    const { findByText } = render(<UpdateUserModal onClose={mockedOnClose} />, [
       INVALID_GET_USER_BY_TOKEN,
     ]);
 
-    await act(async () =>
-      waitFor(() => getByText(/Sem conexão com o banco de dados./i)),
-    );
+    await findByText(/Sem conexão com o banco de dados./i);
   });
 });
 

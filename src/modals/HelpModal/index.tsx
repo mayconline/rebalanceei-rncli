@@ -42,7 +42,7 @@ const HelpModal = ({ onClose }: IHelpModal) => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Help Modal');
-    }, []),
+    }, [logEvent]),
   );
 
   const [questions, { data, loading: queryLoading, error: queryError }] =
@@ -51,13 +51,13 @@ const HelpModal = ({ onClose }: IHelpModal) => {
   useFocusEffect(
     useCallback(() => {
       questions();
-    }, []),
+    }, [questions]),
   );
 
   useFocusEffect(
     useCallback(() => {
       handleSetLoading(queryLoading);
-    }, [queryLoading]),
+    }, [queryLoading, handleSetLoading]),
   );
 
   return (

@@ -55,12 +55,12 @@ const WalletModal = ({ onClose }: IWalletProps) => {
   const { handleSetWallet, wallet, handleSetLoading } = useAuth();
   const [openModal, setOpenModal] = useState(false);
   const [editWallet, setEditWallet] = useState<IWalletData>({} as IWalletData);
-  const [selectedWallet, setSelectedWallet] = useState<String | null>(wallet);
+  const [selectedWallet, setSelectedWallet] = useState<string | null>(wallet);
 
   useFocusEffect(
     useCallback(() => {
       logEvent('open Wallet Modal');
-    }, []),
+    }, [logEvent]),
   );
 
   const [getWalletByUser, { data, loading: queryLoading, error: queryError }] =
@@ -71,13 +71,13 @@ const WalletModal = ({ onClose }: IWalletProps) => {
   useFocusEffect(
     useCallback(() => {
       handleSetLoading(queryLoading);
-    }, [queryLoading]),
+    }, [queryLoading, handleSetLoading]),
   );
 
   useFocusEffect(
     useCallback(() => {
       !data?.getWalletByUser && getWalletByUser();
-    }, [data?.getWalletByUser]),
+    }, [data?.getWalletByUser, getWalletByUser]),
   );
 
   const handleSelectWallet = useCallback(
@@ -88,19 +88,22 @@ const WalletModal = ({ onClose }: IWalletProps) => {
       logEvent('click on select wallet');
       onClose();
     },
-    [],
+    [handleSetWallet, onClose, logEvent],
   );
 
   const handleAddWallet = useCallback(() => {
     setOpenModal(openModal => !openModal);
     logEvent('click on add wallet');
-  }, []);
+  }, [logEvent]);
 
-  const handleEditWallet = useCallback((_id: string, description: string) => {
-    setEditWallet({ _id, description });
-    setOpenModal(openModal => !openModal);
-    logEvent('click on edit wallet');
-  }, []);
+  const handleEditWallet = useCallback(
+    (_id: string, description: string) => {
+      setEditWallet({ _id, description });
+      setOpenModal(openModal => !openModal);
+      logEvent('click on edit wallet');
+    },
+    [logEvent],
+  );
 
   const handleResetEditWallet = useCallback(() => {
     setEditWallet({} as IWalletData);

@@ -13,8 +13,8 @@ import CopyPremmium from '../../../components/CopyPremmium';
 import CardPlan from '../../../components/CardPlan';
 import Button from '../../../components/Button';
 
-import { ContainerButtons, SubTitle } from '../styles';
-import { IPlanName } from '../index';
+import { ContainerButtons } from '../styles';
+import type { IPlanName } from '../index';
 
 import TextError from '../../../components/TextError';
 
@@ -22,27 +22,18 @@ import {
   calculateInitialRenewSubscription,
   useIAP,
   listSku,
-  Subscription,
-  Purchase,
+  type Subscription,
+  type Purchase,
   sendRequestSubscription,
   flushFailedPurchasesCachedAsPendingAndroid,
 } from '../../../services/Iap';
 
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import useAmplitude from '../../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
 import { useModalStore } from '../../../store/useModalStore';
-import { IPlan } from '../../../types/plan-types';
-
-interface IUser {
-  _id: string;
-  role: string;
-  plan?: IPlan;
-}
-
-export interface IUpdateRole {
-  updateRole: IUser;
-}
+import type { IUpdateRole } from '../../../types/plan-types';
+import { UPDATE_ROLE } from '../../../graphql/mutations';
 
 interface IFree {
   mutationLoading?: boolean;
@@ -75,45 +66,48 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Plan Free Modal');
-    }, []),
+    }, [logEvent]),
   );
 
   const [updateRole, { loading: mutationLoading, error: mutationError }] =
     useMutation<IUpdateRole>(UPDATE_ROLE);
 
-  const handleChangePlan = useCallback(async (plan: object) => {
-    try {
-      await updateRole({
-        variables: {
-          role: 'PREMIUM',
-          ...plan,
-        },
-      });
+  const handleChangePlan = useCallback(
+    async (plan: object) => {
+      try {
+        await updateRole({
+          variables: {
+            role: 'PREMIUM',
+            ...plan,
+          },
+        });
 
-      logEvent('successful updateRole at Plan Free Modal');
+        logEvent('successful updateRole at Plan Free Modal');
 
-      openConfirmModal({
-        description: 'Compra realizada com sucesso!',
-        legend: 'Por favor entre novamente no aplicativo.',
-        onConfirm: () => handleSignOut(),
-        isOnlyConfirm: true,
-      });
-    } catch (err: any) {
-      logEvent('error on updateRole at Plan Free Modal');
-      console.error(mutationError?.message + err);
-    }
-  }, []);
+        openConfirmModal({
+          description: 'Compra realizada com sucesso!',
+          legend: 'Por favor entre novamente no aplicativo.',
+          onConfirm: () => handleSignOut(),
+          isOnlyConfirm: true,
+        });
+      } catch (err: any) {
+        logEvent('error on updateRole at Plan Free Modal');
+        console.error(mutationError?.message + err);
+      }
+    },
+    [handleSignOut, logEvent, openConfirmModal, updateRole, mutationError],
+  );
 
   useEffect(() => {
-    if (!!listSku.length && connected) {
+    if (listSku.length && connected) {
       flushFailedPurchasesCachedAsPendingAndroid().then(() =>
         getSubscriptions({ skus: listSku }),
       );
     }
-  }, [getSubscriptions, listSku, connected]);
+  }, [getSubscriptions, connected]);
 
   useEffect(() => {
-    if (!!subscriptions.length) {
+    if (subscriptions.length) {
       setSkuID(subscriptions[1]);
     }
 
@@ -172,7 +166,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     };
 
     checkCurrentPurchase(currentPurchase);
-  }, [currentPurchase, finishTransaction]);
+  }, [currentPurchase, finishTransaction, handleChangePlan, logEvent, skuID]);
 
   useEffect(() => {
     if (!!currentPurchaseError) {
@@ -184,11 +178,11 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
   const handlePurchaseSubscription = useCallback(async () => {
     setLoading(true);
 
-    if (!!skuID) {
+    if (skuID) {
       await sendRequestSubscription(skuID.productId, [
         {
           sku: skuID.productId,
-          offerToken: skuID.subscriptionOfferDetails?.[0]?.offerToken!,
+          offerToken: skuID.subscriptionOfferDetails?.[0]?.offerToken,
         },
       ]);
     }
@@ -200,7 +194,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       !!duration && handleSelectPlan(duration);
       setErrorMessage(undefined);
     },
-    [],
+    [handleSelectPlan],
   );
 
   const inverseSubscriptions = useMemo(
@@ -221,7 +215,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       />
       {!!inverseSubscriptions?.length && <CopyPremmium />}
 
-      {!!inverseSubscriptions?.length ? (
+      {inverseSubscriptions?.length ? (
         inverseSubscriptions?.map(subscription => {
           const subsDetails =
             subscription?.subscriptionOfferDetails?.[0]?.pricingPhases
@@ -270,50 +264,3 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 };
 
 export default Free;
-
-export const UPDATE_ROLE = gql`
-  mutation updateRole(
-    $role: Role!
-    $transactionDate: Float
-    $renewDate: Float
-    $description: String
-    $localizedPrice: String
-    $productId: String
-    $subscriptionPeriodAndroid: String
-    $packageName: String
-    $transactionId: String
-  ) {
-    updateRole(
-      input: {
-        role: $role
-        plan: {
-          transactionDate: $transactionDate
-          renewDate: $renewDate
-          description: $description
-          localizedPrice: $localizedPrice
-          productId: $productId
-          subscriptionPeriodAndroid: $subscriptionPeriodAndroid
-          packageName: $packageName
-          transactionId: $transactionId
-        }
-      }
-    ) {
-      _id
-      email
-      active
-      checkTerms
-      role
-      token
-      plan {
-        transactionDate
-        renewDate
-        description
-        localizedPrice
-        productId
-        subscriptionPeriodAndroid
-        packageName
-        transactionId
-      }
-    }
-  }
-`;

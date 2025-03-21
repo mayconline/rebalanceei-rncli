@@ -1,12 +1,11 @@
 import React from 'react';
 import AddWalletModal, { CREATE_WALLET } from './index';
-import { DELETE_WALLET, UPDATE_WALLET } from '../../components/EditWallet';
+import { DELETE_WALLET, UPDATE_WALLET } from '../EditWallet';
 import { render, fireEvent, waitFor, act } from '../../utils/testProvider';
 import { GraphQLError } from 'graphql';
 import { GET_WALLET_BY_USER } from '../WalletModal';
 
 const mockedhandleResetEditWallet = jest.fn();
-const mockedbeforeModalClose = jest.fn();
 const mockedOnClose = jest.fn();
 const mockedHandleSetWallet = jest.fn();
 
@@ -18,9 +17,8 @@ jest.mock('../../contexts/authContext', () => ({
 }));
 
 describe('Add Wallet Modal', () => {
-  beforeEach(() => {
-    mockedHandleSetWallet.mockClear();
-    mockedhandleResetEditWallet.mockClear();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should successfully create wallet', async () => {
@@ -30,35 +28,36 @@ describe('Add Wallet Modal', () => {
       getByText,
       getByPlaceholderText,
       getByDisplayValue,
-    } = render(
-      <AddWalletModal
-        beforeModalClose={mockedbeforeModalClose}
-        onClose={mockedOnClose}
-      />,
-      [SUCCESSFUL_CREATE_WALLET, SUCCESSFUL_LIST_WALLET],
-    );
+      mockOpenModal,
+    } = render(<AddWalletModal onClose={mockedOnClose} />, [
+      SUCCESSFUL_CREATE_WALLET,
+      SUCCESSFUL_LIST_WALLET,
+    ]);
 
     const title = await findByA11yRole('header');
     expect(title).toHaveProperty('children', ['Criar Nova Carteira']);
 
     const submitButton = getByA11yRole('button');
-    expect(submitButton).toHaveProperty('children', ['Adicionar Carteira']);
+    expect(submitButton).toHaveProperty('children', ['Criar Carteira']);
 
-    act(() => fireEvent.press(submitButton));
+    await act(async () => fireEvent.press(submitButton));
 
     getByText(/Nome da Carteira/i);
     const inputWallet = getByPlaceholderText(/Minha Nova Carteira/i);
-    fireEvent.changeText(inputWallet, 'My New Wallet');
+    await act(async () => fireEvent.changeText(inputWallet, 'My New Wallet'));
     getByDisplayValue('My New Wallet');
 
-    act(() => fireEvent.press(submitButton));
+    await act(async () => fireEvent.press(submitButton));
 
-    await waitFor(() =>
-      expect(mockedHandleSetWallet).toHaveBeenCalledWith(
-        'id_wallet',
-        'My New Wallet',
-      ),
+    expect(mockedHandleSetWallet).toHaveBeenCalledWith(
+      'id_wallet',
+      'My New Wallet',
     );
+
+    await waitFor(() => {
+      expect(mockOpenModal).toHaveBeenCalledTimes(1);
+      expect(mockOpenModal).toHaveBeenCalledWith('SUCCESS');
+    });
   });
 
   it('should not allow create wallet', async () => {
@@ -67,42 +66,33 @@ describe('Add Wallet Modal', () => {
       getByText,
       getByPlaceholderText,
       getByDisplayValue,
-    } = render(
-      <AddWalletModal
-        beforeModalClose={mockedbeforeModalClose}
-        onClose={mockedOnClose}
-      />,
-      [INVALID_CREATE_WALLET],
-    );
+    } = render(<AddWalletModal onClose={mockedOnClose} />, [
+      INVALID_CREATE_WALLET,
+    ]);
 
     getByText(/Nome da Carteira/i);
     const inputWallet = getByPlaceholderText(/Minha Nova Carteira/i);
-    fireEvent.changeText(inputWallet, 'My New Wallet 3');
+    await act(async () => fireEvent.changeText(inputWallet, 'My New Wallet 3'));
     getByDisplayValue('My New Wallet 3');
 
     const submitButton = getByA11yRole('button');
-    act(() => fireEvent.press(submitButton));
+    await act(async () => fireEvent.press(submitButton));
 
-    await act(async () =>
-      waitFor(() => getByText(/Wallets são limitadas a 2 quantidades./i)),
-    );
+    getByText(/Wallets são limitadas a 2 quantidades./i);
 
     expect(mockedHandleSetWallet).not.toHaveBeenCalled();
   });
 
   it('should links work correctly', async () => {
     const { getByA11yRole } = render(
-      <AddWalletModal
-        beforeModalClose={mockedbeforeModalClose}
-        onClose={mockedOnClose}
-      />,
+      <AddWalletModal onClose={mockedOnClose} />,
     );
 
     const iconBackButton = getByA11yRole('imagebutton');
     expect(iconBackButton).toBeTruthy();
-    act(() => fireEvent.press(iconBackButton));
+    await act(async () => fireEvent.press(iconBackButton));
 
-    await waitFor(() => expect(mockedOnClose).toHaveBeenCalledTimes(1));
+    expect(mockedOnClose).toHaveBeenCalledTimes(1);
   });
 
   it('should successfully update wallet', async () => {
@@ -112,9 +102,10 @@ describe('Add Wallet Modal', () => {
       getByPlaceholderText,
       getByDisplayValue,
       findByText,
+      mockOpenConfirmModal,
+      mockOpenModal,
     } = render(
       <AddWalletModal
-        beforeModalClose={mockedbeforeModalClose}
         onClose={mockedOnClose}
         handleResetEditWallet={mockedhandleResetEditWallet}
         walletData={{
@@ -132,23 +123,41 @@ describe('Add Wallet Modal', () => {
     const inputWallet = getByPlaceholderText(/Minha Nova Carteira/i);
     expect(inputWallet.props.defaultValue).toBe('My Wallet');
 
-    fireEvent.changeText(inputWallet, 'My Edit Wallet');
+    await act(async () => fireEvent.changeText(inputWallet, 'My Edit Wallet'));
     getByDisplayValue('My Edit Wallet');
 
-    const submitButton = getAllByA11yRole('button')[1];
-    expect(submitButton).toHaveProperty('children', ['Alterar']);
+    const submitButton = getAllByA11yRole('button')[0];
+    expect(submitButton).toHaveProperty('children', ['Alterar Carteira']);
 
-    act(() => fireEvent.press(submitButton));
+    await act(async () => fireEvent.press(submitButton));
 
-    await waitFor(() =>
-      expect(mockedhandleResetEditWallet).toHaveBeenCalledTimes(1),
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
+
+    expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
+      'Tem certeza que deseja alterar a carteira?',
     );
+
+    await act(async () => {
+      mockOpenConfirmModal.mock.calls[0][0].onConfirm();
+    });
+
+    await waitFor(() => {
+      expect(mockOpenModal).toHaveBeenCalledTimes(1);
+      expect(mockOpenModal).toHaveBeenCalledWith('SUCCESS');
+    });
+
+    expect(mockedhandleResetEditWallet).toHaveBeenCalledTimes(1);
   });
 
   it('should successfully delete wallet', async () => {
-    const { findAllByA11yRole, findByText, getByPlaceholderText } = render(
+    const {
+      findAllByA11yRole,
+      findByText,
+      getByPlaceholderText,
+      mockOpenModal,
+      mockOpenConfirmModal,
+    } = render(
       <AddWalletModal
-        beforeModalClose={mockedbeforeModalClose}
         onClose={mockedOnClose}
         handleResetEditWallet={mockedhandleResetEditWallet}
         walletData={{
@@ -164,13 +173,26 @@ describe('Add Wallet Modal', () => {
     expect(inputWallet.props.defaultValue).toBe('My Wallet');
 
     const submitButton = await findAllByA11yRole('button');
-    expect(submitButton[0]).toHaveProperty('children', ['Deletar']);
+    expect(submitButton[1]).toHaveProperty('children', ['Excluir Carteira']);
 
-    await act(async () => fireEvent.press(submitButton[0]));
+    await act(async () => fireEvent.press(submitButton[1]));
 
-    await waitFor(() =>
-      expect(mockedhandleResetEditWallet).toHaveBeenCalledTimes(1),
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
+
+    expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
+      'Tem certeza que deseja excluir a carteira?',
     );
+
+    await act(async () => {
+      mockOpenConfirmModal.mock.calls[0][0].onConfirm();
+    });
+
+    await waitFor(() => {
+      expect(mockOpenModal).toHaveBeenCalledTimes(1);
+      expect(mockOpenModal).toHaveBeenCalledWith('SUCCESS');
+    });
+
+    expect(mockedhandleResetEditWallet).toHaveBeenCalledTimes(1);
   });
 });
 

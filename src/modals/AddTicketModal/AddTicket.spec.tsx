@@ -24,6 +24,10 @@ jest.mock('../../contexts/authContext', () => ({
 }));
 
 describe('AddTicket Tab', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should successfully create ticket', async () => {
     apiMock.onGet('/search?').reply(200, {
       quotes: [
@@ -40,6 +44,7 @@ describe('AddTicket Tab', () => {
       getByText,
       getByPlaceholderText,
       getByDisplayValue,
+      mockOpenModal,
     } = render(<AddTicket />, [
       SUCCESSFUL_CREATE_TICKET,
       SUCCESSFUL_LIST_TICKETS('symbol'),
@@ -97,6 +102,9 @@ describe('AddTicket Tab', () => {
     expect(inputSelectedTicket.props.value).toBe('SAPR4');
 
     await act(async () => fireEvent.press(submitButton));
+
+    expect(mockOpenModal).toHaveBeenCalledTimes(1);
+    expect(mockOpenModal).toHaveBeenCalledWith('SUCCESS');
   });
 
   it('should successfully edit ticket', async () => {
@@ -162,7 +170,7 @@ describe('AddTicket Tab', () => {
   });
 
   it('should successfully delete ticket', async () => {
-    const { findAllByA11yRole, mockOpenConfirmModal } = render(
+    const { findAllByA11yRole, mockOpenConfirmModal, mockOpenModal } = render(
       <AddTicket contentModal={MOCKED_PARAMS} />,
       [
         SUCCESSFUL_DELETE_TICKET,
@@ -184,6 +192,15 @@ describe('AddTicket Tab', () => {
     expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
       'Tem certeza que deseja excluir o ativo?',
     );
+
+    await act(async () => {
+      mockOpenConfirmModal.mock.calls[0][0].onConfirm();
+    });
+
+    await waitFor(() => {
+      expect(mockOpenModal).toHaveBeenCalledTimes(1);
+      expect(mockOpenModal).toHaveBeenCalledWith('SUCCESS');
+    });
   });
 
   it('should throw error on create ticket', async () => {

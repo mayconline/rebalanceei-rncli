@@ -6,7 +6,7 @@ import { FormRow, ContainerButtons } from './styles';
 import Button from '../../components/Button';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
-import { GET_WALLET_BY_USER, IWalletData } from '../WalletModal';
+import { GET_WALLET_BY_USER, type IWalletData } from '../WalletModal';
 import EditWallet from '../EditWallet';
 import useAmplitude from '../../hooks/useAmplitude';
 import LayoutForm from '../../components/LayoutForm';
@@ -70,7 +70,14 @@ const AddWalletModal = ({
       logEvent('error on createWallet at Add Wallet');
       console.error(mutationError?.message + err);
     }
-  }, [wallet]);
+  }, [
+    wallet,
+    createWallet,
+    logEvent,
+    openModal,
+    handleSetWallet,
+    mutationError,
+  ]);
 
   useEffect(() => {
     if (
@@ -79,23 +86,23 @@ const AddWalletModal = ({
     ) {
       openModal('PLAN');
     }
-  }, [mutationError]);
+  }, [mutationError, openModal]);
 
   const handleSetName = useCallback((walletName: string) => {
     setWallet(walletName);
   }, []);
 
   const handleGoBack = useCallback(() => {
-    handleResetEditWallet && handleResetEditWallet();
+    handleResetEditWallet?.();
     onClose();
-  }, []);
+  }, [handleResetEditWallet, onClose]);
 
   const onEndInputEditing = useCallback(
     (nextFocus: number, nameInput: string) => {
       setFocus(nextFocus);
       logEvent(`filled ${nameInput} input at Add Wallet`);
     },
-    [],
+    [logEvent],
   );
 
   return (

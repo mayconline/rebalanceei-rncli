@@ -3,7 +3,7 @@ import { ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
-import { useMutation, useLazyQuery, gql } from '@apollo/client';
+import { useMutation, useLazyQuery } from '@apollo/client';
 import { FormRow, ContainerButtons } from './styles';
 
 import Button from '../../components/Button';
@@ -12,24 +12,10 @@ import TextError from '../../components/TextError';
 import useAmplitude from '../../hooks/useAmplitude';
 import LayoutForm from '../../components/LayoutForm';
 import { useModalStore } from '../../store/useModalStore';
-import { IPlan } from '../../types/plan-types';
 
-interface IUser {
-  _id: string;
-  email: string;
-  active: boolean;
-  checkTerms: boolean;
-  password?: string;
-  plan?: IPlan;
-}
-
-interface IUpdateUser {
-  updateUser: IUser;
-}
-
-export interface IGetUser {
-  getUserByToken: IUser;
-}
+import { UPDATE_USER } from '../../graphql/mutations';
+import { GET_USER_BY_TOKEN } from '../../graphql/queries';
+import type { IGetUser, IUpdateUser, IUser } from '../../types/plan-types';
 
 interface IUpdateUserModal {
   onClose(): void;
@@ -60,7 +46,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
   useFocusEffect(
     useCallback(() => {
       getUserByToken();
-    }, []),
+    }, [getUserByToken]),
   );
 
   const handleDisabledSubmit = useCallback(async () => {
@@ -90,7 +76,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [handleSignOut, logEvent, setLoading, updateUser]);
 
   const handleSubmit = useCallback(async () => {
     logEvent('click on update account');
@@ -117,7 +103,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, logEvent, setLoading, updateUser, onClose]);
 
   const handleSetEmail = useCallback((email: string) => {
     setUser(user => ({
@@ -138,7 +124,7 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
       setFocus(nextFocus);
       logEvent(`filled ${nameInput} input at Update User Modal`);
     },
-    [],
+    [logEvent],
   );
 
   return (
@@ -223,49 +209,5 @@ const UpdateUserModal = ({ onClose }: IUpdateUserModal) => {
     </LayoutForm>
   );
 };
-
-export const UPDATE_USER = gql`
-  mutation updateUser(
-    $email: String
-    $password: String
-    $active: Boolean
-    $checkTerms: Boolean
-  ) {
-    updateUser(
-      input: {
-        email: $email
-        password: $password
-        active: $active
-        checkTerms: $checkTerms
-      }
-    ) {
-      _id
-      email
-      active
-      checkTerms
-    }
-  }
-`;
-
-export const GET_USER_BY_TOKEN = gql`
-  query getUserByToken {
-    getUserByToken {
-      _id
-      email
-      checkTerms
-      active
-      plan {
-        transactionDate
-        renewDate
-        description
-        localizedPrice
-        productId
-        subscriptionPeriodAndroid
-        packageName
-        transactionId
-      }
-    }
-  }
-`;
 
 export default UpdateUserModal;

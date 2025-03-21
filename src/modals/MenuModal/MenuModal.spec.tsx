@@ -2,28 +2,30 @@ import React from 'react';
 import MenuModal from './index';
 import { render, fireEvent, waitFor, act } from '../../utils/testProvider';
 import * as Terms from '../../utils/Terms';
+import { GET_QUESTIONS } from '../HelpModal';
+import { GET_USER_BY_TOKEN } from '../../graphql/queries';
 
 const mockedTerms = jest.spyOn(Terms, 'getTerms');
 const mockedOnClose = jest.fn();
 const mockedhandleSignOut = jest.fn();
+const mockedSetSelectTheme = jest.fn();
 
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
     handleSignOut: mockedhandleSignOut,
     handleSetLoading: jest.fn(),
+    setSelectTheme: mockedSetSelectTheme,
   }),
 }));
 
 describe('Menu Modal', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should display menu items', async () => {
-    const {
-      findByText,
-      getByText,
-      findByA11yRole,
-      getByA11yRole,
-      getAllByA11yRole,
-      findAllByA11yRole,
-    } = render(<MenuModal onClose={mockedOnClose} />);
+    const { getByText, findByA11yRole, getByA11yRole, getAllByA11yRole } =
+      render(<MenuModal onClose={mockedOnClose} />);
 
     const title = await findByA11yRole('header');
     expect(title).toHaveProperty('children', ['Menu']);
@@ -31,33 +33,128 @@ describe('Menu Modal', () => {
     getByA11yRole('menu');
 
     const menuItems = getAllByA11yRole('menuitem');
-    expect(menuItems).toHaveLength(6);
+    expect(menuItems).toHaveLength(7);
 
-    const myData = getByText(/Meus Dados/i);
-    act(() => fireEvent.press(myData));
-    await findByText('Alterar Usuário');
+    getByText(/Minha Conta/i);
 
-    const myPlan = getByText(/Meu Plano Atual/i);
-    act(() => fireEvent.press(myPlan));
-    const titlePlan = await findAllByA11yRole('header');
-    expect(titlePlan[1]).toHaveProperty('children', ['Meu Plano Atual']);
+    getByText(/Meu Plano Atual/i);
 
-    const terms = getByText(/Termos de Uso/i);
-    act(() => fireEvent.press(terms));
-    expect(mockedTerms).toHaveBeenCalledTimes(1);
+    getByText(/Modo Escuro/i);
 
-    const help = getByText(/Ajuda/i);
-    act(() => fireEvent.press(help));
-    await findByText('Precisa de Ajuda?');
+    getByText(/Termos de Uso/i);
+
+    getByText(/Ajuda/i);
 
     getByText(/Versão do APP/i);
 
-    const signOut = getByText(/Sair/i);
-    act(() => fireEvent.press(signOut));
-    expect(mockedhandleSignOut).toHaveBeenCalledTimes(1);
+    getByText(/Sair/i);
 
     const iconBackButton = getAllByA11yRole('imagebutton')[0];
-    act(() => fireEvent.press(iconBackButton));
+    await act(async () => fireEvent.press(iconBackButton));
     await waitFor(() => expect(mockedOnClose).toHaveBeenCalledTimes(1));
   });
+
+  it('should open my account modal', async () => {
+    const { getByText } = render(<MenuModal onClose={mockedOnClose} />, [
+      SUCCESSFUL_GET_USER_BY_TOKEN,
+    ]);
+
+    const myAccount = getByText(/Minha Conta/i);
+    await act(async () => fireEvent.press(myAccount));
+
+    getByText(/Desativar Conta/i);
+  });
+
+  it('should open my plan modal', async () => {
+    const { getByText } = render(<MenuModal onClose={mockedOnClose} />);
+
+    const myCurrentPlan = getByText(/Meu Plano Atual/i);
+    await act(async () => fireEvent.press(myCurrentPlan));
+  });
+
+  it('should toggle dark mode', async () => {
+    const { getByText } = render(<MenuModal onClose={mockedOnClose} />);
+
+    const darkMode = getByText(/Modo Escuro/i);
+    await act(async () => fireEvent.press(darkMode));
+
+    expect(mockedSetSelectTheme).toHaveBeenCalledTimes(1);
+    expect(mockedSetSelectTheme).toHaveBeenCalledWith('DARK');
+  });
+
+  it('should open terms modal', async () => {
+    const { getByText } = render(<MenuModal onClose={mockedOnClose} />);
+
+    const terms = getByText(/Termos de Uso/i);
+    await act(async () => fireEvent.press(terms));
+
+    expect(mockedTerms).toHaveBeenCalledTimes(1);
+  });
+
+  it('should open help modal', async () => {
+    const { getByText, findAllByA11yRole } = render(
+      <MenuModal onClose={mockedOnClose} />,
+      [SUCCESSFUL_LIST_QUESTIONS],
+    );
+
+    const help = getByText(/Ajuda/i);
+    await act(async () => fireEvent.press(help));
+
+    const title = await findAllByA11yRole('header');
+    expect(title[1]).toHaveProperty('children', ['Ajuda']);
+    expect(title[2]).toHaveProperty('children', [
+      'Como faço para adicionar um ativo ?',
+    ]);
+  });
+
+  it('should sign out', async () => {
+    const { getByText } = render(<MenuModal onClose={mockedOnClose} />);
+
+    const signOut = getByText(/Sair/i);
+    await act(async () => fireEvent.press(signOut));
+
+    expect(mockedhandleSignOut).toHaveBeenCalledTimes(1);
+  });
 });
+
+const SUCCESSFUL_LIST_QUESTIONS = {
+  request: {
+    query: GET_QUESTIONS,
+  },
+  result: {
+    data: {
+      questions: [
+        {
+          _id: '5fe10802361e4f25c446c5f2',
+          ask: 'Como faço para adicionar um ativo ?',
+          answer:
+            'Clicando no botão azul de (+) no meio das abas, abrirá uma aba para que seja cadastrado os ativos, é preciso clicar em pesquisar ativo, e procurar pelo codigo dele, e após clicar em adicionar, e continuar preenchendo as informações de Nota, Quantidade e Preço Médio.',
+        },
+        {
+          _id: '5fe108403edb9f3ce0f19e56',
+          ask: 'Como adicionar um ativo internacional ?',
+          answer:
+            'Da mesma forma que um ativo nacional, porém convertendo o valor em Dolar para Reais antes de adicionar o ativo na aba Ativos.',
+        },
+      ],
+    },
+  },
+};
+
+const SUCCESSFUL_GET_USER_BY_TOKEN = {
+  request: {
+    query: GET_USER_BY_TOKEN,
+  },
+  result: {
+    data: {
+      getUserByToken: {
+        _id: '5fa1d103a8c5892a48c69b31',
+        email: 'exemple@test.com',
+        role: 'USER',
+        checkTerms: true,
+        active: true,
+        __typename: 'User',
+      },
+    },
+  },
+};

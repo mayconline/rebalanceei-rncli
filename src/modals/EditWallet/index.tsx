@@ -6,7 +6,7 @@ import { useMutation, gql } from '@apollo/client';
 
 import { FormRow, ContainerButtons } from './styles';
 
-import { IWalletData, GET_WALLET_BY_USER } from '../../modals/WalletModal';
+import { type IWalletData, GET_WALLET_BY_USER } from '../../modals/WalletModal';
 import InputForm from '../../components/InputForm';
 import TextError from '../../components/TextError';
 import Button from '../../components/Button';
@@ -60,10 +60,10 @@ const EditWallet = ({
 
   const handleGoBack = useCallback(() => {
     setWallet({} as IWalletData);
-    handleResetEditWallet && handleResetEditWallet();
+    handleResetEditWallet?.();
 
     onClose();
-  }, []);
+  }, [handleResetEditWallet, onClose]);
 
   const [updateWallet, { loading: mutationLoading, error: mutationError }] =
     useMutation<IWalletData>(UPDATE_WALLET);
@@ -106,7 +106,17 @@ const EditWallet = ({
     } finally {
       setLoading(false);
     }
-  }, [wallet]);
+  }, [
+    wallet,
+    currentWallet,
+    handleSetWallet,
+    setLoading,
+    openModal,
+    handleGoBack,
+    logEvent,
+    updateWallet,
+    mutationError,
+  ]);
 
   const handleDeleteSubmit = useCallback(async () => {
     if (!wallet._id) {
@@ -138,14 +148,24 @@ const EditWallet = ({
     } finally {
       setLoading(false);
     }
-  }, [wallet]);
+  }, [
+    wallet,
+    currentWallet,
+    handleSetWallet,
+    setLoading,
+    openModal,
+    handleGoBack,
+    logEvent,
+    deleteWallet,
+    mutationDeleteError,
+  ]);
 
   const onEndInputEditing = useCallback(
     (nextFocus: number, nameInput: string) => {
       setFocus(nextFocus);
       logEvent(`filled ${nameInput} input at Add Wallet`);
     },
-    [],
+    [logEvent],
   );
 
   return (

@@ -31,7 +31,7 @@ const Premium = () => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Plan Premium Modal');
-    }, []),
+    }, [logEvent]),
   );
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const Premium = () => {
     logEvent('click on cancel plan');
 
     await getLinkCancelPlan(String(plan?.packageName), String(plan?.productId));
-  }, [plan]);
+  }, [plan, logEvent]);
 
   return loading ? (
     <ActivityIndicator size="large" color={color.filterDisabled} />

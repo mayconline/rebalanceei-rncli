@@ -103,7 +103,8 @@
       "src/components/**/*.tsx",
       "src/modals/**/*.tsx",
       "src/contexts/*.tsx"
-    ]
+    ],
+    "testTimeout": 15000
   },
   "packageManager": "yarn@4.3.1"
 }

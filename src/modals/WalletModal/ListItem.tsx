@@ -13,7 +13,7 @@ import {
   WalletRadioSelect,
 } from './styles';
 
-import { IObjectWallet } from './index';
+import type { IObjectWallet } from './index';
 import { formatNumber, formatPercent } from '../../utils/format';
 
 import { CardItem } from '../../components/CardItem';
@@ -21,7 +21,7 @@ import { CardItem } from '../../components/CardItem';
 interface IListItem {
   item: IObjectWallet;
   handleSelectWallet(id: string, description: string): void;
-  selectedWallet: String | null;
+  selectedWallet: string | null;
   handleEditWallet(id: string, description: string): void;
 }
 

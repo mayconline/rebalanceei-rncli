@@ -1,15 +1,12 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   createContext,
-  ReactNode,
+  type ReactNode,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import {
-  IUpdateRole,
-  UPDATE_ROLE,
-} from '../../modals/PlanModal/components/Free';
+
 import { useModalStore } from '../../store/useModalStore';
 import { useAuth } from '../authContext';
 import {
@@ -17,8 +14,9 @@ import {
   restoreSubscription,
   setNewSubscriptionsDate,
 } from '../../services/Iap';
-import { IPlan } from '../../types/plan-types';
-import { GET_USER_BY_TOKEN, IGetUser } from '../../modals/UpdateUserModal';
+import type { IGetUser, IPlan, IUpdateRole } from '../../types/plan-types';
+import { GET_USER_BY_TOKEN } from '../../graphql/queries';
+import { UPDATE_ROLE } from '../../graphql/mutations';
 
 type IStatePlan = 'ACTIVE' | 'PENDING' | 'CANCEL' | null;
 
@@ -63,7 +61,7 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
         }
       })
       .catch(err => console.error(err));
-  }, [getUserByToken]);
+  }, [getUserByToken, queryLoading]);
 
   const handleVerificationPlan = useCallback(async (plan: IPlan) => {
     const hasSubscription = await validHasSubscription(plan);
@@ -73,7 +71,7 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
     } else {
       const purchases = await restoreSubscription();
 
-      if (!!purchases.length) {
+      if (purchases.length) {
         const { transactionDate, renewDate, subscriptionPeriodAndroid } = plan;
 
         const { newTransactionDate, newRenewDate } =
@@ -101,7 +99,7 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
 
   useEffect(() => {
     if (!showBanner && !!plan) handleVerificationPlan(plan);
-  }, [plan, handleVerificationPlan]);
+  }, [plan, handleVerificationPlan, showBanner]);
 
   const handleUpdateRoleUser = useCallback(() => {
     if (!!plan && !!statePlan && statePlan !== 'ACTIVE') {
@@ -128,7 +126,14 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
         console.error(mutationError?.message + err);
       }
     }
-  }, [plan, statePlan]);
+  }, [
+    plan,
+    statePlan,
+    handleSignOut,
+    openConfirmModal,
+    updateRole,
+    mutationError,
+  ]);
 
   useEffect(() => {
     handleUpdateRoleUser();

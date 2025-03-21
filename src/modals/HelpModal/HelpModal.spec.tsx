@@ -12,6 +12,10 @@ jest.mock('../../contexts/authContext', () => ({
 }));
 
 describe('HelpModal', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should successfully list questions', async () => {
     const { findByText, getByText } = render(
       <HelpModal onClose={mockedOnClose} />,
@@ -19,7 +23,7 @@ describe('HelpModal', () => {
     );
 
     const ask = await findByText(/Como faço para adicionar um ativo ?/i);
-    act(() => fireEvent.press(ask));
+    await act(async () => fireEvent.press(ask));
 
     getByText(
       /Clicando no botão azul de \(\+\) no meio das abas, abrirá uma aba para que seja cadastrado os ativos, é preciso clicar em pesquisar ativo, e procurar pelo codigo dele, e após clicar em adicionar, e continuar preenchendo as informações de Nota, Quantidade e Preço Médio./i,

@@ -14,8 +14,8 @@ jest.mock('../../contexts/authContext', () => ({
 }));
 
 describe('Wallet Modal', () => {
-  beforeEach(() => {
-    mockedOnClose.mockClear();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should successfully list wallet', async () => {
@@ -24,7 +24,6 @@ describe('Wallet Modal', () => {
       getAllByA11yRole,
       getByA11yLabel,
       getAllByA11yLabel,
-      getByText,
     } = render(<WalletModal onClose={mockedOnClose} />, [
       SUCCESSFUL_LIST_WALLET,
     ]);
@@ -76,7 +75,7 @@ describe('Wallet Modal', () => {
     const buttons = getAllByA11yRole('button');
     expect(buttons).toHaveLength(3);
 
-    act(() => fireEvent.press(radioOptionOne));
+    await act(async () => fireEvent.press(radioOptionOne));
     expect(mockedHandleSetWallet).toHaveBeenCalledWith(
       '5fa1d752a8c5892a48c69b35',
       'Nova cart',
@@ -84,7 +83,7 @@ describe('Wallet Modal', () => {
     expect(radioOptionOne.props.accessibilityState.selected).toBeTruthy();
     expect(radioOptionTwo.props.accessibilityState.selected).toBeFalsy();
 
-    act(() => fireEvent.press(radioOptionTwo));
+    await act(async () => fireEvent.press(radioOptionTwo));
     expect(mockedHandleSetWallet).toHaveBeenCalledWith(
       '5faea26914131f13ecb37538',
       'MINHA CARTEIRA ADM',
@@ -92,10 +91,11 @@ describe('Wallet Modal', () => {
     expect(radioOptionOne.props.accessibilityState.selected).toBeFalsy();
     expect(radioOptionTwo.props.accessibilityState.selected).toBeTruthy();
 
-    const editOptionOne = getByA11yLabel('Editar carteira Nova cart');
-    act(() => fireEvent.press(editOptionOne));
+    const editOptionOne = getAllByA11yLabel('Editar')[0];
+    await act(async () => fireEvent.press(editOptionOne));
 
-    getByText('Alterar Carteira');
+    const editWalletTicket = getAllByA11yRole('header')[1];
+    expect(editWalletTicket).toHaveProperty('children', ['Alterar Carteira']);
   });
 
   it('should buttons work correctly', async () => {
@@ -107,11 +107,11 @@ describe('Wallet Modal', () => {
     const addButton = getByA11yRole('button');
     expect(addButton).toHaveProperty('children', ['Adicionar Carteira']);
 
-    act(() => fireEvent.press(addButton));
+    await act(async () => fireEvent.press(addButton));
     getByText(/Criar Nova Carteira/i);
 
     const closeButton = getAllByA11yRole('imagebutton')[0];
-    act(() => fireEvent.press(closeButton));
+    await act(async () => fireEvent.press(closeButton));
     expect(mockedOnClose).toHaveBeenCalledTimes(1);
   });
 

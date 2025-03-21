@@ -82,13 +82,13 @@ const MenuModal = ({ onClose }: MenuProps) => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Menu Modal');
-    }, []),
+    }, [logEvent]),
   );
 
   const onSignOut = useCallback(() => {
     onClose();
     handleSignOut();
-  }, []);
+  }, [onClose, handleSignOut]);
 
   const handleClickMenu = (description: string) => {
     logEvent(`click on ${description} at Menu Modal`);

@@ -28,6 +28,7 @@ describe('Auth Context', () => {
         token: 'token_logged',
         refreshToken: 'rft_logged',
         role: 'role_logged',
+        email: 'email_logged',
       });
     });
 
@@ -41,6 +42,7 @@ describe('Auth Context', () => {
       ['@authToken', 'token_logged'],
       ['@refreshToken', 'rft_logged'],
       ['@authID', 'id_logged'],
+      ['@userEmail', 'email_logged'],
     ]);
 
     expect(result.current.signed).toBeTruthy();
@@ -62,7 +64,7 @@ describe('Auth Context', () => {
       '@authWallet',
       '@authWalletName',
       '@authID',
-      '@authPlan',
+      '@userEmail',
     ]);
   });
 
@@ -85,17 +87,17 @@ describe('Auth Context', () => {
       '@authEmail',
       '@authPass',
       '@authRole',
-      '@authPlan',
       '@authID',
+      '@userEmail',
     ]);
 
-    expect(result.current.signed).toBeFalsy();
+    expect(result.current.showBanner).toBeFalsy();
     expect(result.current.wallet).toBeFalsy();
     expect(result.current.walletName).toBeNull();
-    expect(result.current.statePlan).toBeNull();
     expect(result.current.userID).toBeNull();
-    expect(result.current.showBanner).toBeFalsy();
     expect(result.current.loading).toBeFalsy();
+    expect(result.current.signed).toBeFalsy();
+    expect(result.current.userEmail).toBeNull();
   });
 
   it('should be able to setWallet', async () => {
