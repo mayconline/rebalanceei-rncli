@@ -102,7 +102,9 @@
       "src/pages/**/**/*.tsx",
       "src/components/**/*.tsx",
       "src/modals/**/*.tsx",
-      "src/contexts/*.tsx"
+      "src/contexts/*.tsx",
+      "src/contexts/**/*.tsx",
+      "src/hooks/*.tsx"
     ],
     "testTimeout": 15000
   },
