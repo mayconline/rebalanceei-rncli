@@ -1,6 +1,6 @@
-import { ApolloError } from '@apollo/client';
+import type { ApolloError } from '@apollo/client';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { memo, ReactNode, useCallback, useContext } from 'react';
+import React, { memo, type ReactNode, useCallback, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
@@ -58,19 +58,19 @@ const LayoutTab = ({
   useFocusEffect(
     useCallback(() => {
       logEvent(`open ${routeName}`);
-    }, []),
+    }, [logEvent, routeName]),
   );
 
   useFocusEffect(
     useCallback(() => {
       handleSetLoading(queryLoading);
-    }, [queryLoading]),
+    }, [queryLoading, handleSetLoading]),
   );
 
   useFocusEffect(
     useCallback(() => {
       fatalErrors.includes(String(queryError)) && handleSignOut();
-    }, [queryError]),
+    }, [queryError, handleSignOut]),
   );
 
   return (

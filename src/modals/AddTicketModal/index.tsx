@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback, useEffect } from 'react';
-import { Modal } from 'react-native';
+import { Modal } from '../../components/Modal';
 import { useAuth } from '../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
 import { useMutation, gql } from '@apollo/client';
@@ -272,9 +272,9 @@ const AddTicketModal = ({ onClose, contentModal }: IAddTicketModalProps) => {
       {hasSuggestions && (
         <Modal
           animationType="fade"
-          transparent={true}
           visible={hasSuggestions}
           statusBarTranslucent={false}
+          navigationBarTranslucent={false}
         >
           <SuggestionsModal
             onClose={() => setHasSuggestions(false)}

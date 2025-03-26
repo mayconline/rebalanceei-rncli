@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Modal } from 'react-native';
+import { Modal } from '../../components/Modal';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 
@@ -160,12 +160,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
       </Wrapper>
 
       {openModal && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal}
-          statusBarTranslucent={true}
-        >
+        <Modal visible={openModal}>
           <AddWalletModal
             onClose={handleAddWallet}
             walletData={editWallet}

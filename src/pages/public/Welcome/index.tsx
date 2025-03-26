@@ -19,7 +19,7 @@ import RebalanceeiLogo from '../../../../assets/svg/RebalanceeiLogo';
 import { getLocalStorage } from '../../../utils/localStorage';
 import useAmplitude from '../../../hooks/useAmplitude';
 import Login from '../Login';
-import { Modal } from 'react-native';
+import { Modal } from '../../../components/Modal';
 import SignUp from '../SignUp';
 import ForgotPassword from '../ForgotPassword';
 import ChangePassword from '../ChangePassword';
@@ -98,12 +98,7 @@ const Welcome = () => {
       </Wrapper>
 
       {openModal === 'Login' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'Login'}
-          statusBarTranslucent={true}
-        >
+        <Modal visible={openModal === 'Login'}>
           <Login
             onClose={() => setOpenModal(null)}
             handleOpenModal={handleOpenModal}
@@ -112,23 +107,13 @@ const Welcome = () => {
       )}
 
       {openModal === 'SignUp' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'SignUp'}
-          statusBarTranslucent={true}
-        >
+        <Modal visible={openModal === 'SignUp'}>
           <SignUp onClose={() => setOpenModal(null)} />
         </Modal>
       )}
 
       {openModal === 'ForgotPassword' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'ForgotPassword'}
-          statusBarTranslucent={true}
-        >
+        <Modal visible={openModal === 'ForgotPassword'}>
           <ForgotPassword
             onClose={() => setOpenModal(null)}
             handleOpenModal={handleOpenModal}
@@ -137,12 +122,7 @@ const Welcome = () => {
       )}
 
       {openModal === 'ChangePassword' && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal === 'ChangePassword'}
-          statusBarTranslucent={true}
-        >
+        <Modal visible={openModal === 'ChangePassword'}>
           <ChangePassword
             modalData={modalData}
             onClose={() => setOpenModal(null)}

@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { Modal as RNModal, ModalProps } from 'react-native';
+import type { ReactNode } from 'react';
+import { Modal as RNModal, type ModalProps } from 'react-native';
 import ShadowBackdrop from '../ShadowBackdrop';
 
 interface IModalProps extends ModalProps {
@@ -13,6 +13,7 @@ export const Modal = ({ children, ...props }: IModalProps) => {
       transparent
       visible
       statusBarTranslucent
+      navigationBarTranslucent
       {...props}
     >
       <ShadowBackdrop>{children}</ShadowBackdrop>

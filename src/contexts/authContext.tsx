@@ -6,7 +6,8 @@ import React, {
   useCallback,
   type ReactNode,
 } from 'react';
-import { Modal, StatusBar, useColorScheme } from 'react-native';
+import { StatusBar, useColorScheme } from 'react-native';
+import { Modal } from '../components/Modal';
 
 import { useNetInfo } from '@react-native-community/netinfo';
 import { useApolloClient } from '@apollo/client';
@@ -216,12 +217,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         />
 
         {loading && (
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={loading}
-            statusBarTranslucent={true}
-          >
+          <Modal animationType="fade" visible={loading}>
             <Loading />
           </Modal>
         )}

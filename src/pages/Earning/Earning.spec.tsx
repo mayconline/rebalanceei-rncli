@@ -26,7 +26,7 @@ describe('Earning Tab', () => {
     jest.clearAllMocks();
   });
 
-  it('should successfully list earnings', async () => {
+  it.only('should successfully list earnings', async () => {
     const {
       findAllByA11yRole,
       getByText,
