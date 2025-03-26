@@ -39,5 +39,5 @@ jest.mock('@react-native-community/netinfo', () => {
 });
 jest.mock('react-native-iap', () => null);
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage);
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+//jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 jest.mock('./hooks/useAmplitude', () => () => ({ logEvent: () => {} }));
