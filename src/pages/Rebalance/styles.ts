@@ -4,5 +4,5 @@ export const CardContainerProgress = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: -4px;
+  margin-bottom: 2px;
 `;

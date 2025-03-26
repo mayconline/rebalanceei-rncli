@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProgressBar } from '@react-native-community/progress-bar-android';
+import { Bar as ProgressBar } from 'react-native-progress';
 
 import { CardContainerProgress } from './styles';
 
@@ -50,10 +50,13 @@ const ListItem = ({
           </CardContainerProgress>
 
           <ProgressBar
-            styleAttr="Horizontal"
             indeterminate={false}
             progress={formatProgress(item.gradePercent, item.currentPercent)}
             color={colors.primary['600']}
+            unfilledColor={`${colors.primary['600']}40`}
+            width={null}
+            borderRadius={0}
+            borderWidth={0}
           />
         </CardItem.Content>
         <CardItem.AmountContent>
