@@ -23,17 +23,17 @@ describe('Login Page', () => {
       getByText,
       getByPlaceholderText,
       getByDisplayValue,
-      getByA11yRole,
-      findByA11yRole,
+      getByRole,
+      findByRole,
     } = render(
       <Login handleOpenModal={mockedHandleOpenModal} onClose={jest.fn()} />,
       [INVALID_LOGIN_USER, SUCCESSFUL_LOGIN_USER],
     );
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Bem Vindo de Volta']);
 
-    const submitButton = getByA11yRole('button');
+    const submitButton = getByRole('button');
     expect(submitButton).toHaveProperty('children', ['Entrar']);
 
     await act(async () => fireEvent.press(submitButton));

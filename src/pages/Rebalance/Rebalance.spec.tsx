@@ -1,6 +1,6 @@
 import React from 'react';
 import Rebalance, { REBALANCES } from './index';
-import { render } from '../../utils/testProvider';
+import { render, waitFor } from '../../utils/testProvider';
 import { GraphQLError } from 'graphql';
 
 jest.mock('../../contexts/authContext', () => ({
@@ -16,97 +16,94 @@ describe('Rebalance Tab', () => {
   });
 
   it('should successfully list rebalances', async () => {
-    const {
-      findByA11yRole,
-      getAllByA11yLabel,
-      findAllByA11yLabel,
-      findByText,
-    } = render(<Rebalance />, [SUCCESSFUL_LIST_REBALANCES]);
+    const { getByRole, getAllByLabelText, findAllByLabelText } = render(
+      <Rebalance />,
+      [SUCCESSFUL_LIST_REBALANCES],
+    );
 
-    await findByA11yRole('header');
-    await findByText('Rebalancear ativos');
+    const header = getByRole('header');
+    expect(header).toHaveTextContent(/Rebalancear Ativos/i);
 
-    const symbolItemOne = (await findAllByA11yLabel(/Código do Ativo/i))[0];
-    expect(symbolItemOne).toHaveProperty('children', [
-      'IRBR3',
-      ' - ',
-      'IRB-Brasil Resseguros S',
-    ]);
+    const symbolItemOne = await findAllByLabelText(/Código do Ativo/i);
 
-    const currentPercentItemOne = getAllByA11yLabel(
+    expect(symbolItemOne[0]).toHaveTextContent(
+      'IRBR3 - IRB-Brasil Resseguros S',
+    );
+
+    const currentPercentItemOne = getAllByLabelText(
       /Porcentagem atual do ativo/i,
     )[0];
     expect(currentPercentItemOne).toHaveProperty('children', [
       '% Atual: 1.6 %',
     ]);
 
-    const targetPercentItemOne = getAllByA11yLabel(
+    const targetPercentItemOne = getAllByLabelText(
       /Porcentagem ideal do ativo/i,
     )[0];
     expect(targetPercentItemOne).toHaveProperty('children', ['% Ideal: 3.0 %']);
 
-    const statusItemOne = getAllByA11yLabel(/Status do ativo/i)[0];
+    const statusItemOne = getAllByLabelText(/Status do ativo/i)[0];
     expect(statusItemOne).toHaveProperty('children', ['Comprar']);
 
-    const targetAmountItemOne = getAllByA11yLabel(
+    const targetAmountItemOne = getAllByLabelText(
       /Valor para rebalancear o ativo na carteira/i,
     )[0];
     expect(targetAmountItemOne).toHaveProperty('children', ['R$ 456,66']);
 
-    const symbolItemThree = getAllByA11yLabel(/Código do Ativo/i)[2];
+    const symbolItemThree = getAllByLabelText(/Código do Ativo/i)[2];
     expect(symbolItemThree).toHaveProperty('children', [
       'FLRY3',
       ' - ',
       'Fleury S',
     ]);
 
-    const currentPercentItemThree = getAllByA11yLabel(
+    const currentPercentItemThree = getAllByLabelText(
       /Porcentagem atual do ativo/i,
     )[2];
     expect(currentPercentItemThree).toHaveProperty('children', [
       '% Atual: 5.0 %',
     ]);
 
-    const targetPercentItemThree = getAllByA11yLabel(
+    const targetPercentItemThree = getAllByLabelText(
       /Porcentagem ideal do ativo/i,
     )[2];
     expect(targetPercentItemThree).toHaveProperty('children', [
       '% Ideal: 5.0 %',
     ]);
 
-    const statusItemThree = getAllByA11yLabel(/Status do ativo/i)[2];
+    const statusItemThree = getAllByLabelText(/Status do ativo/i)[2];
     expect(statusItemThree).toHaveProperty('children', ['Aguardar']);
 
-    const targetAmountItemThree = getAllByA11yLabel(
+    const targetAmountItemThree = getAllByLabelText(
       /Valor para rebalancear o ativo na carteira/i,
     )[2];
     expect(targetAmountItemThree).toHaveProperty('children', ['R$ 0,00']);
 
-    const symbolItemFour = getAllByA11yLabel(/Código do Ativo/i)[3];
+    const symbolItemFour = getAllByLabelText(/Código do Ativo/i)[3];
     expect(symbolItemFour).toHaveProperty('children', [
       'EGIE3',
       ' - ',
       'Engie Brasil Energia S',
     ]);
 
-    const currentPercentItemFour = getAllByA11yLabel(
+    const currentPercentItemFour = getAllByLabelText(
       /Porcentagem atual do ativo/i,
     )[3];
     expect(currentPercentItemFour).toHaveProperty('children', [
       '% Atual: 6.6 %',
     ]);
 
-    const targetPercentItemFour = getAllByA11yLabel(
+    const targetPercentItemFour = getAllByLabelText(
       /Porcentagem ideal do ativo/i,
     )[3];
     expect(targetPercentItemFour).toHaveProperty('children', [
       '% Ideal: 6.0 %',
     ]);
 
-    const statusItemFour = getAllByA11yLabel(/Status do ativo/i)[3];
+    const statusItemFour = getAllByLabelText(/Status do ativo/i)[3];
     expect(statusItemFour).toHaveProperty('children', ['Analizar']);
 
-    const targetAmountItemFour = getAllByA11yLabel(
+    const targetAmountItemFour = getAllByLabelText(
       /Valor para rebalancear o ativo na carteira/i,
     )[3];
     expect(targetAmountItemFour).toHaveProperty('children', ['R$ -112,83']);

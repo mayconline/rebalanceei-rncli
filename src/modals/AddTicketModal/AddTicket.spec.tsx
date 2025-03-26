@@ -39,8 +39,8 @@ describe('AddTicket Tab', () => {
     });
 
     const {
-      findByA11yRole,
-      getAllByA11yRole,
+      findByRole,
+      getAllByRole,
       getByText,
       getByPlaceholderText,
       getByDisplayValue,
@@ -53,15 +53,15 @@ describe('AddTicket Tab', () => {
       SUCCESSFUL_SUM_EARNINGS(2022),
     ]);
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Adicionar Ativo']);
 
-    const submitButton = getAllByA11yRole('button')[1];
+    const submitButton = getAllByRole('button')[1];
     expect(submitButton).toHaveProperty('children', ['Adicionar']);
 
     await act(async () => fireEvent.press(submitButton));
 
-    const suggestButton = getAllByA11yRole('button')[0];
+    const suggestButton = getAllByRole('button')[0];
     expect(suggestButton).toHaveProperty('children', [
       'Clique para buscar e selecione um ativo',
     ]);
@@ -79,10 +79,12 @@ describe('AddTicket Tab', () => {
     getByDisplayValue('SAPR4');
 
     await waitFor(() => {
-      const itemList = getAllByA11yRole('button')[2];
-
-      act(() => fireEvent.press(itemList));
+      const buttons = getAllByRole('button');
+      expect(buttons.length).toBeGreaterThan(2);
     });
+
+    const itemList = getAllByRole('button')[2];
+    await act(async () => fireEvent.press(itemList));
 
     getByText(/Dê uma Nota/i);
     const inputGrade = getByPlaceholderText(/0 a 100/i);
@@ -109,9 +111,9 @@ describe('AddTicket Tab', () => {
 
   it('should successfully edit ticket', async () => {
     const {
-      findByA11yRole,
-      getAllByA11yRole,
-      getByA11yLabel,
+      findByRole,
+      getAllByRole,
+      getByLabelText,
       getByDisplayValue,
       mockOpenConfirmModal,
       mockOpenModal,
@@ -127,28 +129,28 @@ describe('AddTicket Tab', () => {
       MOCKED_PARAMS,
     );
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Alterar Ativo']);
 
-    getByA11yLabel(/Ativo Selecionado/i);
+    getByLabelText(/Ativo Selecionado/i);
     getByDisplayValue(/SAPR4/i);
 
-    getByA11yLabel(/Dê uma Nota/i);
+    getByLabelText(/Dê uma Nota/i);
     const inputGrade = getByDisplayValue(/6/i);
     fireEvent.changeText(inputGrade, '10');
     expect(inputGrade.props.value).toBe('10');
 
-    getByA11yLabel(/Dê uma Nota/i);
+    getByLabelText(/Dê uma Nota/i);
     const inputAveragePrice = getByDisplayValue('R$ 5.42');
     fireEvent.changeText(inputAveragePrice, '4,30');
     expect(inputAveragePrice.props.value).toBe('R$ 4.30');
 
-    getByA11yLabel(/Quantidade/i);
+    getByLabelText(/Quantidade/i);
     const inputQuantity = getByDisplayValue(/174/i);
     fireEvent.changeText(inputQuantity, '200');
     expect(inputQuantity.props.value).toBe('200');
 
-    const submitButton = getAllByA11yRole('button')[0];
+    const submitButton = getAllByRole('button')[0];
     expect(submitButton).toHaveProperty('children', ['Alterar Ativo']);
 
     await act(async () => fireEvent.press(submitButton));
@@ -170,7 +172,7 @@ describe('AddTicket Tab', () => {
   });
 
   it('should successfully delete ticket', async () => {
-    const { findAllByA11yRole, mockOpenConfirmModal, mockOpenModal } = render(
+    const { findAllByRole, mockOpenConfirmModal, mockOpenModal } = render(
       <AddTicket contentModal={MOCKED_PARAMS} />,
       [
         SUCCESSFUL_DELETE_TICKET,
@@ -182,7 +184,7 @@ describe('AddTicket Tab', () => {
       MOCKED_PARAMS,
     );
 
-    const submitButton = await findAllByA11yRole('button');
+    const submitButton = await findAllByRole('button');
     expect(submitButton[1]).toHaveProperty('children', ['Excluir Ativo']);
 
     await act(async () => fireEvent.press(submitButton[1]));
@@ -213,14 +215,10 @@ describe('AddTicket Tab', () => {
       ],
     });
 
-    const {
-      getAllByA11yRole,
-      getByText,
-      getByPlaceholderText,
-      getByDisplayValue,
-    } = render(<AddTicket />, [INVALID_CREATE_TICKET]);
+    const { getAllByRole, getByText, getByPlaceholderText, getByDisplayValue } =
+      render(<AddTicket />, [INVALID_CREATE_TICKET]);
 
-    const suggestButton = getAllByA11yRole('button')[0];
+    const suggestButton = getAllByRole('button')[0];
     await act(async () => fireEvent.press(suggestButton));
 
     const inputSelectedTicket = getByPlaceholderText(
@@ -234,9 +232,12 @@ describe('AddTicket Tab', () => {
     getByDisplayValue('SAPR4');
 
     await waitFor(() => {
-      const itemList = getAllByA11yRole('button');
-      act(() => fireEvent.press(itemList[2]));
+      const itemList = getAllByRole('button');
+      expect(itemList.length).toBeGreaterThan(2);
     });
+
+    const itemList = getAllByRole('button')[2];
+    await act(async () => fireEvent.press(itemList));
 
     expect(inputSelectedTicket.props.value).toBe('SAPR4');
 
@@ -249,7 +250,7 @@ describe('AddTicket Tab', () => {
     const inputQuantity = getByPlaceholderText(/9999/i);
     fireEvent.changeText(inputQuantity, '174');
 
-    const submitButton = getAllByA11yRole('button')[1];
+    const submitButton = getAllByRole('button')[1];
     expect(submitButton).toHaveProperty('children', ['Adicionar']);
 
     await act(async () => fireEvent.press(submitButton));
@@ -258,13 +259,13 @@ describe('AddTicket Tab', () => {
   });
 
   it('should throw error on edit ticket', async () => {
-    const { findAllByA11yRole, findByText, mockOpenConfirmModal } = render(
+    const { findAllByRole, findByText, mockOpenConfirmModal } = render(
       <AddTicket contentModal={MOCKED_PARAMS} />,
       [INVALID_EDIT_TICKET],
       MOCKED_PARAMS,
     );
 
-    const submitButton = await findAllByA11yRole('button');
+    const submitButton = await findAllByRole('button');
     expect(submitButton[0]).toHaveProperty('children', ['Alterar Ativo']);
 
     await act(async () => fireEvent.press(submitButton[0]));
@@ -283,13 +284,13 @@ describe('AddTicket Tab', () => {
   });
 
   it('should throw error on delete ticket', async () => {
-    const { findAllByA11yRole, findByText, mockOpenConfirmModal } = render(
+    const { findAllByRole, findByText, mockOpenConfirmModal } = render(
       <AddTicket contentModal={MOCKED_PARAMS} />,
       [INVALID_DELETE_TICKET],
       MOCKED_PARAMS,
     );
 
-    const submitButton = await findAllByA11yRole('button');
+    const submitButton = await findAllByRole('button');
     expect(submitButton[1]).toHaveProperty('children', ['Excluir Ativo']);
 
     await act(async () => fireEvent.press(submitButton[1]));

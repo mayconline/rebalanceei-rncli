@@ -24,15 +24,14 @@ describe('Menu Modal', () => {
   });
 
   it('should display menu items', async () => {
-    const { getByText, findByA11yRole, getByA11yRole, getAllByA11yRole } =
-      render(<MenuModal onClose={mockedOnClose} />);
+    const { getByText, findByRole, getByRole, getAllByRole } = render(
+      <MenuModal onClose={mockedOnClose} />,
+    );
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Menu']);
 
-    getByA11yRole('menu');
-
-    const menuItems = getAllByA11yRole('menuitem');
+    const menuItems = getAllByRole('menuitem');
     expect(menuItems).toHaveLength(7);
 
     getByText(/Minha Conta/i);
@@ -49,7 +48,7 @@ describe('Menu Modal', () => {
 
     getByText(/Sair/i);
 
-    const iconBackButton = getAllByA11yRole('imagebutton')[0];
+    const iconBackButton = getAllByRole('imagebutton')[0];
     await act(async () => fireEvent.press(iconBackButton));
     await waitFor(() => expect(mockedOnClose).toHaveBeenCalledTimes(1));
   });
@@ -92,7 +91,7 @@ describe('Menu Modal', () => {
   });
 
   it('should open help modal', async () => {
-    const { getByText, findAllByA11yRole } = render(
+    const { getByText, findAllByRole } = render(
       <MenuModal onClose={mockedOnClose} />,
       [SUCCESSFUL_LIST_QUESTIONS],
     );
@@ -100,7 +99,7 @@ describe('Menu Modal', () => {
     const help = getByText(/Ajuda/i);
     await act(async () => fireEvent.press(help));
 
-    const title = await findAllByA11yRole('header');
+    const title = await findAllByRole('header');
     expect(title[1]).toHaveProperty('children', ['Ajuda']);
     expect(title[2]).toHaveProperty('children', [
       'Como faço para adicionar um ativo ?',

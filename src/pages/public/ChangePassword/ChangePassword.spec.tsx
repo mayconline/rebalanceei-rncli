@@ -20,8 +20,8 @@ describe('ChangePassword Page', () => {
       getAllByText,
       getByPlaceholderText,
       getByDisplayValue,
-      getByA11yRole,
-      findByA11yRole,
+      getByRole,
+      findByRole,
       debug,
     } = render(
       <ChangePassword modalData={MOCKED_PARAMS} onClose={jest.fn()} />,
@@ -29,10 +29,10 @@ describe('ChangePassword Page', () => {
       MOCKED_PARAMS,
     );
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Nova Senha']);
 
-    const submitButton = getByA11yRole('button');
+    const submitButton = getByRole('button');
     expect(submitButton).toHaveProperty('children', ['Alterar Senha']);
 
     fireEvent.press(submitButton);

@@ -1,7 +1,10 @@
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
-import { setUpTests } from 'react-native-reanimated';
 
-setUpTests();
+jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock');
+  Reanimated.default.call = () => {};
+  return Reanimated;
+});
 
 jest.mock('./services/AdMob', () => ({
   useInterstitialAd: () => ({
@@ -13,6 +16,7 @@ jest.mock('./services/AdMob', () => ({
   }),
   BannerAd: () => null,
 }));
+
 jest.mock('@react-native-community/netinfo', () => {
   const defaultState = {
     type: 'cellular',
@@ -37,7 +41,11 @@ jest.mock('@react-native-community/netinfo', () => {
 
   return RNCNetInfoMock;
 });
+
 jest.mock('react-native-iap', () => null);
 jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage);
-//jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 jest.mock('./hooks/useAmplitude', () => () => ({ logEvent: () => {} }));
+jest.mock('react-native-vector-icons/Feather', () => 'Icon');
+jest.mock('react-native-progress', () => ({
+  Bar: () => 'ProgressBar',
+}));

@@ -26,14 +26,12 @@ describe('Earning Tab', () => {
     jest.clearAllMocks();
   });
 
-  it.only('should successfully list earnings', async () => {
+  it('should successfully list earnings', async () => {
     const {
-      findAllByA11yRole,
-      getByText,
-      findAllByA11yLabel,
-      getByA11yLabel,
-      getAllByA11yLabel,
-      getAllByA11yRole,
+      getByLabelText,
+      getAllByLabelText,
+      getAllByRole,
+      findAllByLabelText,
     } = render(
       <Earning
         handleChangeMenu={mockedHandleChangeMenu}
@@ -50,33 +48,34 @@ describe('Earning Tab', () => {
       ],
     );
 
-    await findAllByA11yRole('header');
-    getByText('Proventos');
+    const headers = getAllByRole('header');
+    expect(headers[0]).toHaveTextContent(/Carteira/i);
+    expect(headers[1]).toHaveTextContent(/Proventos/i);
 
-    const selectedYear = getByA11yLabel(/^Ano Selecionado$/i);
+    const selectedYear = getByLabelText(/^Ano Selecionado$/i);
     expect(selectedYear).toHaveProperty('children', ['2022']);
 
-    const listMonth = await findAllByA11yLabel(/Mês/i);
+    const listMonth = await findAllByLabelText(/Mês/i);
     expect(listMonth[0]).toHaveProperty('children', ['Janeiro']);
 
-    const listAmount = getAllByA11yLabel(/Total do Mês/i);
+    const listAmount = getAllByLabelText(/Total do Mês/i);
     expect(listAmount[0]).toHaveProperty('children', ['R$ 100,00']);
 
-    const oldYearAmount = getByA11yLabel('Ano anterior');
+    const oldYearAmount = getByLabelText('Ano anterior');
     expect(oldYearAmount).toHaveProperty('children', ['R$ 40,00']);
 
-    const currentYearAmount = getByA11yLabel('Ano selecionado');
+    const currentYearAmount = getByLabelText('Ano selecionado');
     expect(currentYearAmount).toHaveProperty('children', ['R$ 181,00']);
 
-    getAllByA11yRole('button');
-    const nextYearButton = getByA11yLabel('Próximo Ano');
+    getAllByRole('button');
+    const nextYearButton = getByLabelText('Próximo Ano');
 
     await act(async () => fireEvent.press(nextYearButton));
     await waitFor(() =>
       expect(selectedYear).toHaveProperty('children', ['2023']),
     );
 
-    const OldYearButton = getByA11yLabel('Ano Anterior');
+    const OldYearButton = getByLabelText('Ano Anterior');
     await act(async () => fireEvent.press(OldYearButton));
     await act(async () => fireEvent.press(OldYearButton));
 
@@ -86,14 +85,12 @@ describe('Earning Tab', () => {
   });
   it('should successfully list earnings accumulated', async () => {
     const {
-      findAllByA11yRole,
+      getAllByRole,
       getByText,
-      getByA11yLabel,
-      getAllByA11yLabel,
-      findByA11yLabel,
-      findAllByA11yLabel,
-
-      debug,
+      getByLabelText,
+      getAllByLabelText,
+      findByLabelText,
+      findAllByLabelText,
     } = render(
       <Earning
         handleChangeMenu={mockedHandleChangeMenu}
@@ -107,25 +104,27 @@ describe('Earning Tab', () => {
       ],
     );
 
-    await findAllByA11yRole('header');
-    getByText('Proventos');
+    const headers = getAllByRole('header');
+    expect(headers[0]).toHaveTextContent(/Carteira/i);
+    expect(headers[1]).toHaveTextContent(/Proventos/i);
+
     const AccFilter = getByText('Acumulado');
 
-    act(() => fireEvent.press(AccFilter));
+    await act(async () => fireEvent.press(AccFilter));
 
-    const selectedYear = getByA11yLabel(/^Ano Selecionado$/i);
+    const selectedYear = getByLabelText(/^Ano Selecionado$/i);
     expect(selectedYear).toHaveProperty('children', ['Todos']);
 
-    const earningTotalAcc = await findByA11yLabel('Total acumulado');
+    const earningTotalAcc = await findByLabelText('Total acumulado');
     expect(earningTotalAcc).toHaveProperty('children', ['R$ 3.000,00']);
 
     getByText('Yield on cost');
     getByText('(+12.0%)');
 
-    const listYear = await findAllByA11yLabel('Ano');
+    const listYear = await findAllByLabelText('Ano');
     expect(listYear[0]).toHaveProperty('children', ['2022']);
 
-    const listAmount = getAllByA11yLabel('Total do ano');
+    const listAmount = getAllByLabelText('Total do ano');
     expect(listAmount[0]).toHaveProperty('children', ['R$ 300,00']);
   });
 });

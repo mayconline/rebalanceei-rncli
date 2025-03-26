@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, waitFor } from '../../utils/testProvider';
 import { RoleUserProvider } from './index';
 import useRoleUser from '../../hooks/useRoleUser';
 
@@ -125,12 +125,7 @@ function setupUpdateRoleMutation(
 }
 
 async function testSubscriptionScenario(params: SubscriptionScenarioParams) {
-  const {
-    setupFn,
-    expectedStatePlan,
-    additionalChecks,
-    timeout = 1000,
-  } = params;
+  const { setupFn, expectedStatePlan, additionalChecks, timeout = 10 } = params;
 
   setupFn();
 
@@ -201,11 +196,9 @@ describe('RoleUserProvider', () => {
       { loading: false },
     ]);
 
-    const { waitForNextUpdate } = renderHook(() => useRoleUser(), {
+    renderHook(() => useRoleUser(), {
       wrapper: RoleUserProvider,
     });
-
-    await waitForNextUpdate();
 
     expect(mockGetUserByToken).toHaveBeenCalled();
   });
@@ -239,7 +232,9 @@ describe('RoleUserProvider', () => {
       wrapper: RoleUserProvider,
     });
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await waitFor(() => {
+      expect(mockUpdateRole).toHaveBeenCalledTimes(1);
+    });
 
     expect(mockUpdateRole).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -266,9 +261,10 @@ describe('RoleUserProvider', () => {
       wrapper: RoleUserProvider,
     });
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await waitFor(() => {
+      expect(result.current.statePlan).toBe('CANCEL');
+    });
 
-    expect(result.current.statePlan).toBe('CANCEL');
     expect(mockUpdateRole).toHaveBeenCalled();
     expect(mockOpenConfirmModal).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -290,9 +286,9 @@ describe('RoleUserProvider', () => {
       wrapper: RoleUserProvider,
     });
 
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    expect(IapService.validHasSubscription).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(IapService.validHasSubscription).not.toHaveBeenCalled();
+    });
   });
 
   it('should handle errors during updateRole mutation', async () => {

@@ -22,8 +22,8 @@ describe('ForgotPassword Page', () => {
       getAllByText,
       getByPlaceholderText,
       getByDisplayValue,
-      getByA11yRole,
-      findByA11yRole,
+      getByRole,
+      findByRole,
       mockOpenConfirmModal,
     } = render(
       <ForgotPassword
@@ -33,10 +33,10 @@ describe('ForgotPassword Page', () => {
       [INVALID_USER, SUCCESSFUL_SEND_RECOVERY],
     );
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Recuperar Senha']);
 
-    const submitButton = getByA11yRole('button');
+    const submitButton = getByRole('button');
     expect(submitButton).toHaveProperty('children', ['Recuperar Senha']);
 
     await act(async () => fireEvent.press(submitButton));

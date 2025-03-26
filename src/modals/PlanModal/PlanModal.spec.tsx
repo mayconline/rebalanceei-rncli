@@ -94,15 +94,10 @@ describe('PlanModal', () => {
       showBanner: true,
     });
 
-    const {
-      findAllByA11yRole,
-      getByText,
-      getAllByText,
-      getByA11yRole,
-      findByText,
-    } = render(<PlanModal onClose={mockedOnClose} />);
+    const { findAllByRole, getByText, getAllByText, getByRole, findByText } =
+      render(<PlanModal onClose={mockedOnClose} />);
 
-    const title = await findAllByA11yRole('header');
+    const title = await findAllByRole('header');
     expect(title[0]).toHaveProperty('children', ['Meu Plano Atual']);
 
     await findByText(/Plano Básico - Ativo/i);
@@ -125,7 +120,7 @@ describe('PlanModal', () => {
 
     getAllByText(/Renovação automática/i);
 
-    const submitButton = getByA11yRole('button');
+    const submitButton = getByRole('button');
     expect(submitButton).toHaveProperty('children', ['Assine já']);
 
     await act(async () => fireEvent.press(submitButton));
@@ -162,14 +157,14 @@ describe('PlanModal', () => {
     });
 
     const {
-      findAllByA11yRole,
+      findAllByRole,
       findByText,
       getByText,
-      getByA11yRole,
+      getByRole,
       mockOpenConfirmModal,
     } = render(<PlanModal onClose={mockedOnClose} />);
 
-    const title = await findAllByA11yRole('header');
+    const title = await findAllByRole('header');
     expect(title[0]).toHaveProperty('children', ['Meu Plano Atual']);
     expect(title[1]).toHaveProperty('children', ['Premium']);
 
@@ -188,7 +183,7 @@ describe('PlanModal', () => {
     getByText(/Ativos ilimitados/i);
     getByText(/Sem Anúncios/i);
 
-    const cancelButton = getByA11yRole('button');
+    const cancelButton = getByRole('button');
     expect(cancelButton).toHaveProperty('children', ['Cancelar Plano']);
 
     getByText(/\*Seu Plano continuará ativo até o fim do ciclo contratado./i);

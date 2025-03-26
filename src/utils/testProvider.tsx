@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { act, type JSX } from 'react';
 import { render } from '@testing-library/react-native';
-import { MockedProvider } from '@apollo/client/testing';
+import { MockedProvider, type MockedResponse } from '@apollo/client/testing';
 import { ThemeProvider } from 'styled-components/native';
 import themes from '../themes';
 import type { DocumentNode, GraphQLError } from 'graphql';
@@ -10,7 +10,7 @@ import {
 } from '@react-navigation/native';
 import * as modalStore from '../store/useModalStore';
 
-interface IMocks {
+interface IMocks extends MockedResponse {
   request: {
     query: DocumentNode;
     variables?: Record<string, unknown>;
@@ -69,5 +69,10 @@ export const testProvider = (
   };
 };
 
+const asyncAct = (fn: () => void | Promise<void>) =>
+  new Promise(resolve => {
+    act(fn).then(resolve);
+  });
+
 export * from '@testing-library/react-native';
-export { testProvider as render };
+export { testProvider as render, asyncAct };
