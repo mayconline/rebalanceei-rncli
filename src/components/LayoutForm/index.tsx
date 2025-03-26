@@ -27,14 +27,14 @@ const LayoutForm = ({
   useFocusEffect(
     useCallback(() => {
       logEvent(`open ${routeName}`);
-    }, []),
+    }, [logEvent, routeName]),
   );
 
   const handleGoBack = useCallback(() => {
     logEvent(`click on backButton at ${routeName}`);
 
     goBack ? goBack() : navigation.goBack();
-  }, []);
+  }, [logEvent, routeName, goBack, navigation]);
 
   return (
     <SafeAreaView

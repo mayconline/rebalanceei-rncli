@@ -55,6 +55,7 @@ const ListItem = ({
             color={colors.primary['600']}
             unfilledColor={`${colors.primary['600']}40`}
             width={null}
+            height={4}
             borderRadius={0}
             borderWidth={0}
           />
