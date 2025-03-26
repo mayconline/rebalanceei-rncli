@@ -3,7 +3,12 @@ import { ProgressBar } from '@react-native-community/progress-bar-android';
 
 import { CardContainerProgress } from './styles';
 
-import { formatNumber, formatStatus, formatProgress } from '../../utils/format';
+import {
+  formatNumber,
+  formatNumberRound,
+  formatStatus,
+  formatProgress,
+} from '../../utils/format';
 
 import type { IRebalances } from './index';
 import AdBanner from '../../components/AdBanner';
@@ -28,14 +33,16 @@ const ListItem = ({
           <CardContainerProgress>
             <CardItem.SubTitle
               accessibilityLabel="Porcentagem atual do ativo"
-              accessibilityValue={{ now: item.currentPercent }}
+              accessibilityValue={{
+                now: formatNumberRound(item.currentPercent),
+              }}
               text={`% Atual: ${item.currentPercent.toFixed(1)} %`}
               size={12}
             />
 
             <CardItem.AmountText
               accessibilityLabel="Porcentagem ideal do ativo"
-              accessibilityValue={{ now: item.gradePercent }}
+              accessibilityValue={{ now: formatNumberRound(item.gradePercent) }}
               status={item.status}
               text={`% Ideal: ${item.gradePercent.toFixed(1)} %`}
               size={12}
@@ -59,7 +66,7 @@ const ListItem = ({
 
           <CardItem.AmountText
             accessibilityLabel="Valor para rebalancear o ativo na carteira"
-            accessibilityValue={{ now: item.targetAmount }}
+            accessibilityValue={{ now: formatNumberRound(item.targetAmount) }}
             status={item.status}
             text={formatNumber(item.targetAmount)}
           />

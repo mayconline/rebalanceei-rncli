@@ -12,7 +12,11 @@ import {
   AmountTitle,
   AmountValue,
 } from './styles';
-import { formatNumber, formatPercent } from '../../utils/format';
+import {
+  formatNumber,
+  formatNumberRound,
+  formatPercent,
+} from '../../utils/format';
 import TextError from '../TextError';
 
 interface IAmountVariationProps {
@@ -51,7 +55,7 @@ const AmountVariation = ({
           <AmountTitle>{previousTitle}</AmountTitle>
           <AmountValue
             accessibilityLabel={previousTitle}
-            accessibilityValue={{ now: previousValue }}
+            accessibilityValue={{ now: formatNumberRound(previousValue) }}
           >
             {formatNumber(previousValue)}
           </AmountValue>
@@ -63,7 +67,7 @@ const AmountVariation = ({
               <AmountValue
                 accessibilityLabel={currentTitle}
                 accessibilityValue={{
-                  now: currentValue,
+                  now: formatNumberRound(currentValue),
                 }}
               >
                 {formatNumber(currentValue)}
@@ -74,7 +78,7 @@ const AmountVariation = ({
               <VariationAmount
                 accessibilityLabel={variationTitle}
                 accessibilityValue={{
-                  now: variationValue,
+                  now: formatNumberRound(variationValue),
                 }}
                 variation={variationValue}
               >

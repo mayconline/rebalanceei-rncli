@@ -14,7 +14,11 @@ import {
 } from './styles';
 
 import type { IObjectWallet } from './index';
-import { formatNumber, formatPercent } from '../../utils/format';
+import {
+  formatNumber,
+  formatNumberRound,
+  formatPercent,
+} from '../../utils/format';
 
 import { CardItem } from '../../components/CardItem';
 
@@ -50,7 +54,9 @@ const ListItem = ({
           <CardSubTitle>
             <CurrentAmount
               accessibilityLabel="Valor atual da carteira"
-              accessibilityValue={{ now: item.sumAmountWallet }}
+              accessibilityValue={{
+                now: formatNumberRound(item.sumAmountWallet),
+              }}
             >
               {formatNumber(item.sumAmountWallet)}
             </CurrentAmount>
@@ -58,7 +64,7 @@ const ListItem = ({
               value={item.percentRentabilityWallet}
               accessibilityLabel="Percentual de valorização da carteira"
               accessibilityValue={{
-                now: item.percentRentabilityWallet,
+                now: formatNumberRound(item.percentRentabilityWallet),
               }}
             >
               {formatPercent(item.percentRentabilityWallet)}
@@ -71,10 +77,10 @@ const ListItem = ({
           <CurrentPercent
             accessibilityLabel="Porcentagem atual do valor alocado na carteira"
             accessibilityValue={{
-              now: item.percentPositionWallet,
+              now: formatNumberRound(item.percentPositionWallet),
             }}
           >
-            {`${item.percentPositionWallet.toFixed(0)}%`}
+            {`${formatNumberRound(item.percentPositionWallet)}%`}
           </CurrentPercent>
         </PercentWallet>
 

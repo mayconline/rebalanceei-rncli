@@ -132,3 +132,9 @@ export const formatMonth = (month: number): string =>
     11: 'Novembro',
     12: 'Dezembro',
   }[month] ?? '');
+
+export const formatNumberRound = (number?: number) => {
+  if (!number) return 0;
+
+  return Math.round(number);
+};
