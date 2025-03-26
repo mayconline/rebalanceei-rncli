@@ -171,7 +171,7 @@ describe('PlanModal', () => {
     await findByText(/Premium Mensal - Ativo/i);
     getByText(/R\$ 37,97 \/ Mês/i);
     getByText(/^Data da Renovação$/i);
-    getByText(formatDate(1613978855335));
+    getByText(formatDate({ dateNumber: 1613978855335 }));
     getByText(
       /\*Seu Plano será renovado automáticamente na data da renovação./i,
     );
@@ -195,7 +195,10 @@ describe('PlanModal', () => {
       'Tem certeza que deseja cancelar o plano?',
     );
     expect(mockOpenConfirmModal.mock.calls[0][0].legend).toBe(
-      'Seu plano continuará ativo até o fim do ciclo contratado: 22/02/2021',
+      `Seu plano continuará ativo até o fim do ciclo contratado: ${formatDate({
+        dateNumber: 1613978855335,
+        withTime: false,
+      })}`,
     );
 
     await act(async () => {

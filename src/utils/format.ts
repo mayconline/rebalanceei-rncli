@@ -110,11 +110,17 @@ export const openPlanModalOnError = (errorMessage?: string) => {
   return openPlanModal;
 };
 
-export const formatDate = (dateNumber: number) => {
+export const formatDate = ({
+  dateNumber,
+  withTime = true,
+}: {
+  dateNumber: number;
+  withTime?: boolean;
+}) => {
   const date = new Date(dateNumber).toLocaleDateString();
   const time = new Date(dateNumber).toLocaleTimeString();
 
-  return `${date} às ${time}`;
+  return withTime ? `${date} às ${time}` : date;
 };
 
 export const formatMonth = (month: number): string =>
