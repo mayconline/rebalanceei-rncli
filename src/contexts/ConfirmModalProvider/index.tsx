@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext } from 'react';
+import React, { type ReactNode, createContext } from 'react';
 import { useModalStore } from '../../store/useModalStore';
 import { Modal } from '../../components/Modal';
 import ConfirmModal from '../../modals/ConfirmModal';
