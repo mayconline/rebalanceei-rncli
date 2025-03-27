@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { ThemeContext } from 'styled-components/native';
-import { TextInputProps } from 'react-native';
+import type { TextInputProps } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 import {
@@ -37,6 +37,7 @@ const InputForm = ({
   onEndEditing,
   onSubmitEditing,
   width,
+  ...props
 }: IInputProps) => {
   const { color } = useContext(ThemeContext);
   const [visiblePassword, setVisiblePassword] = useState(true);
@@ -70,6 +71,7 @@ const InputForm = ({
           accessibilityValue={{ text: value }}
           autoCorrect={false}
           autoCapitalize={autoCapitalize}
+          {...props}
         />
       </InputGroup>
       {isSecure && (

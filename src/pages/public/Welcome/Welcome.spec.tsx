@@ -28,36 +28,36 @@ describe('Welcome Page', () => {
   it('should open login modal', async () => {
     mockedGetLocalStorage.mockResolvedValue('true');
 
-    const { getByText, findByA11yLabel, findByA11yRole, navigate } = render(
+    const { getByText, findByLabelText, findByRole, navigate } = render(
       <Welcome />,
     );
 
     getByText(/Seja Bem Vindo/i);
     getByText(/Rebalanceei/i);
 
-    const button = await findByA11yLabel(/Entrar/i);
+    const button = await findByLabelText(/Entrar/i);
     await act(async () => fireEvent.press(button));
 
     expect(mockedGetLocalStorage).toHaveBeenCalledWith('@authFirstAccess');
 
     expect(navigate).toHaveBeenCalledTimes(0);
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Bem Vindo de Volta']);
   });
 
   it('should open signup modal', async () => {
     mockedGetLocalStorage.mockResolvedValue('true');
 
-    const { getByText, findByA11yLabel, findByA11yRole } = render(<Welcome />);
+    const { getByText, findByLabelText, findByRole } = render(<Welcome />);
 
     getByText(/Seja Bem Vindo/i);
     getByText(/Rebalanceei/i);
 
-    const button = await findByA11yLabel(/Ainda não possui uma conta/i);
+    const button = await findByLabelText(/Ainda não possui uma conta/i);
     await act(async () => fireEvent.press(button));
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Criar Conta']);
   });
 });

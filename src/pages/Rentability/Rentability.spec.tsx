@@ -18,22 +18,21 @@ describe('Rentability Tab', () => {
 
   it('should successfully list rentability', async () => {
     const {
-      findAllByA11yRole,
-      getAllByA11yLabel,
-      findByA11yLabel,
-      getByText,
-      findAllByA11yLabel,
+      getAllByLabelText,
+      findByLabelText,
+      findAllByLabelText,
+      getAllByRole,
     } = render(<Rentability />, [
       SUCCESSFUL_GET_WALLET_BY_ID,
       SUCCESSFUL_LIST_RENTABILITY,
     ]);
 
-    await findAllByA11yRole('header');
-    getByText('Carteira');
-    getByText('Proventos');
+    const headers = getAllByRole('header');
+    expect(headers[0]).toHaveTextContent(/Carteira/i);
+    expect(headers[1]).toHaveTextContent(/Proventos/i);
 
     const symbolItemOne = (
-      await findAllByA11yLabel(/Código do Ativo - Nome do Ativo/i)
+      await findAllByLabelText(/Código do Ativo - Nome do Ativo/i)
     )[0];
     expect(symbolItemOne).toHaveProperty('children', [
       'MGLU3',
@@ -41,44 +40,44 @@ describe('Rentability Tab', () => {
       'Magazine Luiza S',
     ]);
 
-    const costItemOne = getAllByA11yLabel(/Saldo aplicado no ativo/i)[0];
+    const costItemOne = getAllByLabelText(/Saldo aplicado no ativo/i)[0];
     expect(costItemOne).toHaveProperty('children', ['R$ 1.371,20']);
 
-    const variationPercentItemOne = getAllByA11yLabel(
+    const variationPercentItemOne = getAllByLabelText(
       /Porcentagem de variação do ativo/i,
     )[0];
     expect(variationPercentItemOne).toHaveProperty('children', [' (+36.8%)']);
 
-    const currentAmountItemOne = getAllByA11yLabel(/Saldo atual do ativo/i)[0];
+    const currentAmountItemOne = getAllByLabelText(/Saldo atual do ativo/i)[0];
     expect(currentAmountItemOne).toHaveProperty('children', ['R$ 1.876,00']);
 
-    const walletCost = (await findAllByA11yLabel('Saldo aplicado'))[0];
+    const walletCost = (await findAllByLabelText('Saldo aplicado'))[0];
     expect(walletCost).toHaveProperty('children', ['R$ 16.900,63']);
 
-    const walletCurrentAmount = (await findAllByA11yLabel('Saldo atual'))[0];
+    const walletCurrentAmount = (await findAllByLabelText('Saldo atual'))[0];
     expect((await walletCurrentAmount).props.children).toBe('R$ 18.816,10');
 
-    const walletVariation = await findByA11yLabel(
+    const walletVariation = await findByLabelText(
       /Percentual de variação da carteira/i,
     );
     expect((await walletVariation).props.children).toBe(' (+11.3%)');
 
-    const symbolItemTwo = getAllByA11yLabel(/Código do Ativo/i)[1];
+    const symbolItemTwo = getAllByLabelText(/Código do Ativo/i)[1];
     expect(symbolItemTwo).toHaveProperty('children', [
       'PSSA3',
       ' - ',
       'Porto Seguro S',
     ]);
 
-    const costItemTwo = getAllByA11yLabel(/Saldo aplicado no ativo/i)[1];
+    const costItemTwo = getAllByLabelText(/Saldo aplicado no ativo/i)[1];
     expect(costItemTwo).toHaveProperty('children', ['R$ 1.158,30']);
 
-    const variationPercentItemTwo = getAllByA11yLabel(
+    const variationPercentItemTwo = getAllByLabelText(
       /Porcentagem de variação do ativo/i,
     )[1];
     expect(variationPercentItemTwo).toHaveProperty('children', [' (-11.9%)']);
 
-    const currentAmountItemTwo = getAllByA11yLabel(/Saldo atual do ativo/i)[1];
+    const currentAmountItemTwo = getAllByLabelText(/Saldo atual do ativo/i)[1];
     expect(currentAmountItemTwo).toHaveProperty('children', ['R$ 1.019,92']);
   });
 

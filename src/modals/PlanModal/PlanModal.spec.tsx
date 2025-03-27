@@ -94,15 +94,10 @@ describe('PlanModal', () => {
       showBanner: true,
     });
 
-    const {
-      findAllByA11yRole,
-      getByText,
-      getAllByText,
-      getByA11yRole,
-      findByText,
-    } = render(<PlanModal onClose={mockedOnClose} />);
+    const { findAllByRole, getByText, getAllByText, getByRole, findByText } =
+      render(<PlanModal onClose={mockedOnClose} />);
 
-    const title = await findAllByA11yRole('header');
+    const title = await findAllByRole('header');
     expect(title[0]).toHaveProperty('children', ['Meu Plano Atual']);
 
     await findByText(/Plano Básico - Ativo/i);
@@ -125,7 +120,7 @@ describe('PlanModal', () => {
 
     getAllByText(/Renovação automática/i);
 
-    const submitButton = getByA11yRole('button');
+    const submitButton = getByRole('button');
     expect(submitButton).toHaveProperty('children', ['Assine já']);
 
     await act(async () => fireEvent.press(submitButton));
@@ -162,21 +157,21 @@ describe('PlanModal', () => {
     });
 
     const {
-      findAllByA11yRole,
+      findAllByRole,
       findByText,
       getByText,
-      getByA11yRole,
+      getByRole,
       mockOpenConfirmModal,
     } = render(<PlanModal onClose={mockedOnClose} />);
 
-    const title = await findAllByA11yRole('header');
+    const title = await findAllByRole('header');
     expect(title[0]).toHaveProperty('children', ['Meu Plano Atual']);
     expect(title[1]).toHaveProperty('children', ['Premium']);
 
     await findByText(/Premium Mensal - Ativo/i);
     getByText(/R\$ 37,97 \/ Mês/i);
     getByText(/^Data da Renovação$/i);
-    getByText(formatDate(1613978855335));
+    getByText(formatDate({ dateNumber: 1613978855335 }));
     getByText(
       /\*Seu Plano será renovado automáticamente na data da renovação./i,
     );
@@ -188,7 +183,7 @@ describe('PlanModal', () => {
     getByText(/Ativos ilimitados/i);
     getByText(/Sem Anúncios/i);
 
-    const cancelButton = getByA11yRole('button');
+    const cancelButton = getByRole('button');
     expect(cancelButton).toHaveProperty('children', ['Cancelar Plano']);
 
     getByText(/\*Seu Plano continuará ativo até o fim do ciclo contratado./i);
@@ -200,7 +195,10 @@ describe('PlanModal', () => {
       'Tem certeza que deseja cancelar o plano?',
     );
     expect(mockOpenConfirmModal.mock.calls[0][0].legend).toBe(
-      'Seu plano continuará ativo até o fim do ciclo contratado: 22/02/2021',
+      `Seu plano continuará ativo até o fim do ciclo contratado: ${formatDate({
+        dateNumber: 1613978855335,
+        withTime: false,
+      })}`,
     );
 
     await act(async () => {

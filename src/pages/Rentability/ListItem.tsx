@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { formatNumber, formatPercent } from '../../utils/format';
+import {
+  formatNumber,
+  formatPercent,
+  formatNumberRound,
+} from '../../utils/format';
 import type { IGetRentability } from './index';
 import AdBanner from '../../components/AdBanner';
 import { CardItem } from '../../components/CardItem';
@@ -22,7 +26,7 @@ const ListItem = ({
 
           <CardItem.SubTitle
             accessibilityLabel="Saldo aplicado no ativo"
-            accessibilityValue={{ now: item.costAmount }}
+            accessibilityValue={{ now: formatNumberRound(item.costAmount) }}
             text={formatNumber(item.costAmount)}
           />
 
@@ -38,7 +42,9 @@ const ListItem = ({
         <CardItem.AmountContent>
           <CardItem.AmountText
             accessibilityLabel="Porcentagem de variação do ativo"
-            accessibilityValue={{ now: item.variationPercent }}
+            accessibilityValue={{
+              now: formatNumberRound(item.variationPercent),
+            }}
             variation={item.variationPercent}
             text={formatPercent(item.variationPercent)}
             size={14}
@@ -46,7 +52,7 @@ const ListItem = ({
 
           <CardItem.AmountText
             accessibilityLabel="Saldo atual do ativo"
-            accessibilityValue={{ now: item.currentAmount }}
+            accessibilityValue={{ now: formatNumberRound(item.currentAmount) }}
             variation={item.variationPercent}
             text={formatNumber(item.currentAmount)}
             size={14}

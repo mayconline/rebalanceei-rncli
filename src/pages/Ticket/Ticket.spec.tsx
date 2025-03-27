@@ -14,25 +14,25 @@ jest.mock('../../contexts/authContext', () => ({
 jest.mock('../../components/AdBanner', () => () => null);
 
 describe('Ticket Tab', () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('should successfully list tickets', async () => {
     const {
-      findByA11yRole,
-      findAllByA11yLabel,
-      getAllByA11yRole,
-      getAllByA11yLabel,
+      findByRole,
+      findAllByLabelText,
+      getAllByRole,
+      getAllByLabelText,
       findByText,
       mockOpenModal,
     } = render(<Ticket />, [SUCCESSFUL_LIST_TICKETS]);
 
-    await findByA11yRole('header');
+    await findByRole('header');
     await findByText('Meus Ativos');
 
     const symbolItemOne = (
-      await findAllByA11yLabel(/Código do Ativo - Nome do Ativo/i)
+      await findAllByLabelText(/Código do Ativo - Nome do Ativo/i)
     )[0];
 
     expect(symbolItemOne).toHaveProperty('children', [
@@ -41,21 +41,21 @@ describe('Ticket Tab', () => {
       'Companhia de Saneamento do Paraná - SANEPAR',
     ]);
 
-    const quantityItemOne = getAllByA11yLabel(
+    const quantityItemOne = getAllByLabelText(
       /Quantidade e Preço Médio do Ativo/i,
     )[0];
 
     expect(quantityItemOne).toHaveProperty('children', ['174x R$ 5,42']);
 
-    const gradeItemOne = getAllByA11yLabel(
+    const gradeItemOne = getAllByLabelText(
       /Nota para o peso do ativo esperado pela carteira/i,
     )[0];
     expect(gradeItemOne).toHaveProperty('children', ['6']);
 
-    const listItems = getAllByA11yRole('button');
+    const listItems = getAllByRole('button');
     expect(listItems).toHaveLength(5);
 
-    const editButton = getAllByA11yLabel('Editar')[0];
+    const editButton = getAllByLabelText('Editar')[0];
 
     await act(async () => {
       fireEvent.press(editButton);
@@ -64,7 +64,6 @@ describe('Ticket Tab', () => {
     expect(mockOpenModal).toHaveBeenCalledTimes(1);
     expect(mockOpenModal).toHaveBeenCalledWith('AddTicket', {
       ticket: {
-        __typename: 'Ticket',
         _id: '5fa479c9f704ca0f84523c00',
         averagePrice: 5.42,
         grade: 6,
@@ -77,20 +76,25 @@ describe('Ticket Tab', () => {
   });
 
   it('should render empty component', async () => {
-    const { findByA11yRole, getByA11yRole, findByText, mockOpenModal } = render(
+    const { getByText, findByText, getByRole, mockOpenModal } = render(
       <Ticket />,
       [EMPTY_LIST_TICKETS],
     );
 
-    await findByA11yRole('header');
-    await findByText('Adicione um ativo dando uma nota para ele.');
+    const title = await findByText('Meus Ativos');
+    expect(title).toBeTruthy();
 
-    const subTitle = getByA11yRole('text');
-    expect(subTitle).toHaveProperty('children', [
+    const emptyMessage = await findByText(
+      'Adicione um ativo dando uma nota para ele.',
+    );
+    expect(emptyMessage).toBeTruthy();
+
+    const subTitleText = getByText(
       'Usaremos essa nota para calcular a % ideal desse ativo nessa carteira.',
-    ]);
+    );
+    expect(subTitleText).toBeTruthy();
 
-    const addButton = getByA11yRole('button');
+    const addButton = getByRole('button');
     expect(addButton).toHaveProperty('children', ['Adicionar Ativo']);
 
     await act(async () => {
@@ -117,7 +121,6 @@ const SUCCESSFUL_LIST_TICKETS = {
     data: {
       getTicketsByWallet: [
         {
-          __typename: 'Ticket',
           _id: '5fa479c9f704ca0f84523c00',
           averagePrice: 5.42,
           grade: 6,
@@ -127,7 +130,6 @@ const SUCCESSFUL_LIST_TICKETS = {
           classSymbol: 'Ação',
         },
         {
-          __typename: 'Ticket',
           _id: '5fa479f7f704ca0f84523c01',
           averagePrice: 54.76,
           grade: 6,
@@ -137,7 +139,6 @@ const SUCCESSFUL_LIST_TICKETS = {
           classSymbol: 'Ação',
         },
         {
-          __typename: 'Ticket',
           _id: '5fa47a1ff704ca0f84523c02',
           averagePrice: 11.36,
           grade: 6,
@@ -147,7 +148,6 @@ const SUCCESSFUL_LIST_TICKETS = {
           classSymbol: 'Ação',
         },
         {
-          __typename: 'Ticket',
           _id: '5fa47a4bf704ca0f84523c03',
           averagePrice: 42.44,
           grade: 6,
@@ -157,7 +157,6 @@ const SUCCESSFUL_LIST_TICKETS = {
           classSymbol: 'Ação',
         },
         {
-          __typename: 'Ticket',
           _id: '5fa47a6df704ca0f84523c04',
           averagePrice: 19.98,
           grade: 6,

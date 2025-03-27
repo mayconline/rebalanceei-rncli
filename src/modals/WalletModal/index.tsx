@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { Modal } from 'react-native';
+import { Modal } from '../../components/Modal';
 import { useFocusEffect } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components/native';
 
@@ -21,9 +21,9 @@ import TextError from '../../components/TextError';
 import AddWalletModal from '../AddWalletModal';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
-import { formatNumber } from '../../utils/format';
 import useAmplitude from '../../hooks/useAmplitude';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ListFooter } from './ListFooter';
 
 interface IWalletProps {
   onClose(): void;
@@ -140,22 +140,12 @@ const WalletModal = ({ onClose }: IWalletProps) => {
             />
           )}
           ListFooterComponent={
-            <>
-              <Title
-                accessibilityRole="summary"
-                accessibilityLabel="Valor total somado das carteiras"
-                accessibilityValue={{
-                  now: data?.getWalletByUser[0]?.sumAmountAllWallet,
-                }}
-              >
-                Total:{' '}
-                {formatNumber(data?.getWalletByUser[0]?.sumAmountAllWallet)}
-              </Title>
-              <Title>
-                {!data?.getWalletByUser?.length &&
-                  'Adicione uma Carteira clicando no botão abaixo.'}
-              </Title>
-            </>
+            <ListFooter
+              sumAmountAllWallet={
+                data?.getWalletByUser[0]?.sumAmountAllWallet ?? 0
+              }
+              walletLength={data?.getWalletByUser?.length ?? 0}
+            />
           }
           ListFooterComponentStyle={{ marginTop: 16 }}
         />
@@ -170,12 +160,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
       </Wrapper>
 
       {openModal && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openModal}
-          statusBarTranslucent={true}
-        >
+        <Modal visible={openModal}>
           <AddWalletModal
             onClose={handleAddWallet}
             walletData={editWallet}

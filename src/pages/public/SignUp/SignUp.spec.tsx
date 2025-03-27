@@ -26,18 +26,18 @@ describe('SignUp Page', () => {
       getAllByText,
       getByPlaceholderText,
       getByDisplayValue,
-      getByA11yRole,
-      findByA11yRole,
+      getByRole,
+      findByRole,
       mockOpenConfirmModal,
     } = render(<SignUp onClose={jest.fn()} />, [
       INVALID_USER,
       SUCCESSFUL_CREATE_USER,
     ]);
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Criar Conta']);
 
-    const submitButton = getByA11yRole('button');
+    const submitButton = getByRole('button');
     expect(submitButton).toHaveProperty('children', ['Criar Conta']);
 
     await act(async () => fireEvent.press(submitButton));
@@ -56,7 +56,7 @@ describe('SignUp Page', () => {
 
     getByText(/Aceito os Termos de Uso e Política de Privacidade/i);
 
-    const switchTerms = getByA11yRole('switch');
+    const switchTerms = getByRole('switch');
     expect(switchTerms).toBeTruthy();
 
     await act(async () => fireEvent.press(submitButton));

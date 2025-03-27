@@ -1,9 +1,8 @@
 import React from 'react';
-import { FlatList, FlatListProps } from 'react-native';
+import { FlatList, type FlatListProps } from 'react-native';
 
-import ImageEmptyList from '../../../assets/svg/imageEmptyList';
-
-import { List, Image, TextLink, ContainerTitle } from './styles';
+import { List } from './styles';
+import { ListEmpty } from './ListEmpty';
 
 const ListTicket = (props: FlatListProps<any>) => {
   return (
@@ -16,16 +15,7 @@ const ListTicket = (props: FlatListProps<any>) => {
         updateCellsBatchingPeriod={600}
         automaticallyAdjustContentInsets={false}
         style={{ flex: 0 }}
-        ListEmptyComponent={
-          <>
-            <Image>
-              <ImageEmptyList />
-            </Image>
-            <ContainerTitle>
-              <TextLink>Nenhum item encontrado</TextLink>
-            </ContainerTitle>
-          </>
-        }
+        ListEmptyComponent={<ListEmpty />}
         contentContainerStyle={{ paddingVertical: 4, paddingHorizontal: 12 }}
       />
     </List>

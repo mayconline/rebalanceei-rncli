@@ -5,9 +5,10 @@ import PrivateRoute from './privateRoute';
 import PublicRoute from './publicRoute';
 
 import Offline from '../components/Offline';
-import { ITickets } from '../pages/Ticket';
+import type { ITickets } from '../pages/Ticket';
 import { PrivatesModalProvider } from '../contexts/PrivatesModalProvider';
 import { RoleUserProvider } from '../contexts/RoleUserProvider';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 declare global {
   namespace ReactNavigation {
@@ -34,14 +35,18 @@ const Routes = () => {
 
   if (!isConnected && !loading) return <Offline />;
 
-  return signed ? (
-    <RoleUserProvider>
-      <PrivatesModalProvider>
-        <PrivateRoute />
-      </PrivatesModalProvider>
-    </RoleUserProvider>
-  ) : (
-    <PublicRoute />
+  return (
+    <SafeAreaProvider>
+      {signed ? (
+        <RoleUserProvider>
+          <PrivatesModalProvider>
+            <PrivateRoute />
+          </PrivatesModalProvider>
+        </RoleUserProvider>
+      ) : (
+        <PublicRoute />
+      )}
+    </SafeAreaProvider>
   );
 };
 

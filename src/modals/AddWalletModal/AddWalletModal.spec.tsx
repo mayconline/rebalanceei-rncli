@@ -23,8 +23,8 @@ describe('Add Wallet Modal', () => {
 
   it('should successfully create wallet', async () => {
     const {
-      findByA11yRole,
-      getByA11yRole,
+      findByRole,
+      getByRole,
       getByText,
       getByPlaceholderText,
       getByDisplayValue,
@@ -34,10 +34,10 @@ describe('Add Wallet Modal', () => {
       SUCCESSFUL_LIST_WALLET,
     ]);
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Criar Nova Carteira']);
 
-    const submitButton = getByA11yRole('button');
+    const submitButton = getByRole('button');
     expect(submitButton).toHaveProperty('children', ['Criar Carteira']);
 
     await act(async () => fireEvent.press(submitButton));
@@ -61,21 +61,17 @@ describe('Add Wallet Modal', () => {
   });
 
   it('should not allow create wallet', async () => {
-    const {
-      getByA11yRole,
-      getByText,
-      getByPlaceholderText,
-      getByDisplayValue,
-    } = render(<AddWalletModal onClose={mockedOnClose} />, [
-      INVALID_CREATE_WALLET,
-    ]);
+    const { getByRole, getByText, getByPlaceholderText, getByDisplayValue } =
+      render(<AddWalletModal onClose={mockedOnClose} />, [
+        INVALID_CREATE_WALLET,
+      ]);
 
     getByText(/Nome da Carteira/i);
     const inputWallet = getByPlaceholderText(/Minha Nova Carteira/i);
     await act(async () => fireEvent.changeText(inputWallet, 'My New Wallet 3'));
     getByDisplayValue('My New Wallet 3');
 
-    const submitButton = getByA11yRole('button');
+    const submitButton = getByRole('button');
     await act(async () => fireEvent.press(submitButton));
 
     getByText(/Wallets são limitadas a 2 quantidades./i);
@@ -84,11 +80,9 @@ describe('Add Wallet Modal', () => {
   });
 
   it('should links work correctly', async () => {
-    const { getByA11yRole } = render(
-      <AddWalletModal onClose={mockedOnClose} />,
-    );
+    const { getByRole } = render(<AddWalletModal onClose={mockedOnClose} />);
 
-    const iconBackButton = getByA11yRole('imagebutton');
+    const iconBackButton = getByRole('imagebutton');
     expect(iconBackButton).toBeTruthy();
     await act(async () => fireEvent.press(iconBackButton));
 
@@ -97,8 +91,8 @@ describe('Add Wallet Modal', () => {
 
   it('should successfully update wallet', async () => {
     const {
-      findByA11yRole,
-      getAllByA11yRole,
+      findByRole,
+      getAllByRole,
       getByPlaceholderText,
       getByDisplayValue,
       findByText,
@@ -116,7 +110,7 @@ describe('Add Wallet Modal', () => {
       [SUCCESSFUL_UPDATE_WALLET, SUCCESSFUL_LIST_WALLET],
     );
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Alterar Carteira']);
 
     await findByText(/Nome da Carteira/i);
@@ -126,7 +120,7 @@ describe('Add Wallet Modal', () => {
     await act(async () => fireEvent.changeText(inputWallet, 'My Edit Wallet'));
     getByDisplayValue('My Edit Wallet');
 
-    const submitButton = getAllByA11yRole('button')[0];
+    const submitButton = getAllByRole('button')[0];
     expect(submitButton).toHaveProperty('children', ['Alterar Carteira']);
 
     await act(async () => fireEvent.press(submitButton));
@@ -151,7 +145,7 @@ describe('Add Wallet Modal', () => {
 
   it('should successfully delete wallet', async () => {
     const {
-      findAllByA11yRole,
+      findAllByRole,
       findByText,
       getByPlaceholderText,
       mockOpenModal,
@@ -172,7 +166,7 @@ describe('Add Wallet Modal', () => {
     const inputWallet = getByPlaceholderText(/Minha Nova Carteira/i);
     expect(inputWallet.props.defaultValue).toBe('My Wallet');
 
-    const submitButton = await findAllByA11yRole('button');
+    const submitButton = await findAllByRole('button');
     expect(submitButton[1]).toHaveProperty('children', ['Excluir Carteira']);
 
     await act(async () => fireEvent.press(submitButton[1]));

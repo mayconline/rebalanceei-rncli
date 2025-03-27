@@ -22,8 +22,8 @@ describe('Update User Modal', () => {
 
   it('should successfully update user', async () => {
     const {
-      findByA11yRole,
-      getAllByA11yRole,
+      findByRole,
+      getAllByRole,
       getByText,
       getByPlaceholderText,
       getByDisplayValue,
@@ -35,7 +35,7 @@ describe('Update User Modal', () => {
       SUCCESSFUL_GET_USER_BY_TOKEN,
     ]);
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Minha Conta']);
 
     await findByText(/E-mail/i);
@@ -52,7 +52,7 @@ describe('Update User Modal', () => {
     await act(async () => fireEvent.changeText(inputPassword, '1234'));
     getByDisplayValue('1234');
 
-    const submitButton = getAllByA11yRole('button')[0];
+    const submitButton = getAllByRole('button')[0];
     expect(submitButton).toHaveProperty('children', ['Alterar Senha']);
 
     await act(async () => fireEvent.press(submitButton));
@@ -70,7 +70,7 @@ describe('Update User Modal', () => {
   });
 
   it('should successfully disabled user', async () => {
-    const { findAllByA11yRole, mockOpenConfirmModal } = render(
+    const { findAllByRole, mockOpenConfirmModal } = render(
       <UpdateUserModal onClose={mockedOnClose} />,
       [
         SUCCESSFUL_GET_USER_BY_TOKEN,
@@ -79,7 +79,7 @@ describe('Update User Modal', () => {
       ],
     );
 
-    const disabledButton = await findAllByA11yRole('button');
+    const disabledButton = await findAllByRole('button');
     expect(disabledButton[1]).toHaveProperty('children', ['Desativar Conta']);
 
     await act(async () => fireEvent.press(disabledButton[1]));
@@ -101,7 +101,7 @@ describe('Update User Modal', () => {
 
   it('should throw error when update user', async () => {
     const {
-      findAllByA11yRole,
+      findAllByRole,
       getByText,
       getByPlaceholderText,
       findByText,
@@ -111,7 +111,7 @@ describe('Update User Modal', () => {
       INVALID_UPDATE_USER,
     ]);
 
-    const submitButton = await findAllByA11yRole('button');
+    const submitButton = await findAllByRole('button');
 
     await findByText(/E-mail/i);
     const inputEmail = getByPlaceholderText(/meuemail@teste.com.br/i);

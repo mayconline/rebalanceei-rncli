@@ -29,8 +29,8 @@ describe('Edit Earning Modal', () => {
 
   it('should successfully edit earning', async () => {
     const {
-      findByA11yRole,
-      getByA11yRole,
+      findByRole,
+      getByRole,
       getByText,
       getByPlaceholderText,
       getByDisplayValue,
@@ -50,7 +50,7 @@ describe('Edit Earning Modal', () => {
       ],
     );
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Lançamento Manual']);
 
     getByText('Total de Fevereiro');
@@ -59,7 +59,7 @@ describe('Edit Earning Modal', () => {
 
     await act(async () => fireEvent.changeText(inputEarning, 'R$ 100,00'));
 
-    const submitButton = getByA11yRole('button');
+    const submitButton = getByRole('button');
     expect(submitButton).toHaveProperty('children', ['Alterar Valor']);
 
     await act(async () => fireEvent.press(submitButton));
@@ -77,8 +77,8 @@ describe('Edit Earning Modal', () => {
 
   it('should successfully add new earning', async () => {
     const {
-      findByA11yRole,
-      getByA11yRole,
+      findByRole,
+      getByRole,
       getByText,
       getByPlaceholderText,
       mockOpenConfirmModal,
@@ -97,7 +97,7 @@ describe('Edit Earning Modal', () => {
       ],
     );
 
-    const title = await findByA11yRole('header');
+    const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Lançamento Manual']);
 
     getByText('Total de Fevereiro');
@@ -105,7 +105,7 @@ describe('Edit Earning Modal', () => {
 
     act(() => fireEvent.changeText(inputEarning, 'R$ 100,00'));
 
-    const submitButton = getByA11yRole('button');
+    const submitButton = getByRole('button');
     expect(submitButton).toHaveProperty('children', ['Alterar Valor']);
 
     act(() => fireEvent.press(submitButton));

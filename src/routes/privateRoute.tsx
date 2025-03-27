@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import styled, { ThemeContext } from 'styled-components/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
@@ -22,10 +23,16 @@ interface labelProps {
 
 const Label = styled.Text<labelProps>`
   color: ${({ color }) => color};
+  position: relative;
+  padding-bottom: 4px;
   border-bottom-width: ${({ focused }) => (focused ? '4px' : 0)};
   border-bottom-color: ${({ color }) => color};
-  font: 600 14px/16px 'TitilliumWeb-SemiBold';
+  font: 600 12px/14px 'TitilliumWeb-SemiBold';
   font-smooth: 'antialiased';
+  text-align: center;
+  width: 100%;
+  align-self: center;
+  margin-top: 4px;
 `;
 
 const Tab = createBottomTabNavigator();
@@ -65,8 +72,11 @@ const icons: Icons = {
 
 const privateRoute = () => {
   const { color } = useContext(ThemeContext);
+  const insets = useSafeAreaInsets();
 
-  const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
+  const { openModal, modalType } = useModalStore(
+    ({ openModal, modalType }) => ({ openModal, modalType }),
+  );
 
   return (
     <Tab.Navigator
@@ -100,11 +110,12 @@ const privateRoute = () => {
           );
         },
         tabBarHideOnKeyboard: true,
+        keyboardHidesTabBar: true,
         tabBarActiveTintColor: color.activeMenuItem,
         tabBarInactiveTintColor: color.inactiveMenuItem,
         tabBarItemStyle: {
           backgroundColor: color.bgTabMenu,
-          paddingVertical: 12,
+          paddingVertical: 8,
           borderTopLeftRadius: route.name === 'Ticket' ? 24 : 0,
           borderTopRightRadius: route.name === 'Chart' ? 24 : 0,
           borderTopColor: color.borderTabMenu,
@@ -114,20 +125,25 @@ const privateRoute = () => {
             route.name === 'Chart' ? color.borderTabMenu : color.bgTabMenu,
           borderWidth: 1,
           marginHorizontal: -1,
+          justifyContent: 'center',
+          alignItems: 'center',
         },
         tabBarStyle: [
           {
-            display: 'flex',
-            height: 84,
+            display: !modalType ? 'flex' : 'none',
+            height: 84 + insets.bottom,
             backgroundColor: color.bgHeaderEmpty,
             borderTopColor: color.bgHeaderEmpty,
+            borderTopWidth: 0,
             width: '100%',
             justifyContent: 'center',
             alignItems: 'center',
+            paddingBottom: insets.bottom,
           },
           null,
         ],
         headerShown: false,
+        animation: 'shift',
       })}
     >
       <Tab.Screen

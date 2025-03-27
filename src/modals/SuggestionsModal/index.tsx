@@ -1,4 +1,5 @@
-import React, { useState, useContext, useCallback } from 'react';
+import type React from 'react';
+import { useState, useContext, useCallback } from 'react';
 import { ThemeContext } from 'styled-components/native';
 import { ActivityIndicator } from 'react-native';
 import {
@@ -13,7 +14,6 @@ import {
 } from './styles';
 import api from '../../services/api';
 import { useDebouncedCallback } from 'use-debounce';
-import ShadowBackdrop from '../../components/ShadowBackdrop';
 import InputForm from '../../components/InputForm';
 import useAmplitude from '../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
@@ -43,17 +43,20 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
   useFocusEffect(
     useCallback(() => {
       logEvent('open Suggestion Modal');
-    }, []),
+    }, [logEvent]),
   );
 
-  const handleSuggestionsAutoComplete = useCallback((ticket: string) => {
-    setLoading(true);
-    setSelectTicket(ticket);
+  const handleSuggestionsAutoComplete = useCallback(
+    (ticket: string) => {
+      setLoading(true);
+      setSelectTicket(ticket);
 
-    logEvent('open suggestion list at Suggestion Modal');
+      logEvent('open suggestion list at Suggestion Modal');
 
-    displaySuggestionsAutoComplete(ticket);
-  }, []);
+      displaySuggestionsAutoComplete(ticket);
+    },
+    [logEvent],
+  );
 
   const displaySuggestionsAutoComplete = useDebouncedCallback(
     async (ticket: string) => {
@@ -64,7 +67,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
           },
         });
 
-        let suggest = response?.data?.quotes;
+        const suggest = response?.data?.quotes;
 
         if (!suggest.length) {
           setLoading(false);
@@ -81,68 +84,68 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
     300,
   );
 
-  const handleSelectSuggest = useCallback((symbol: string, name: string) => {
-    handleSelectTicket(symbol, name);
-    logEvent('click on selected ticket at Suggestion Modal');
-    onClose();
-  }, []);
+  const handleSelectSuggest = useCallback(
+    (symbol: string, name: string) => {
+      handleSelectTicket(symbol, name);
+      logEvent('click on selected ticket at Suggestion Modal');
+      onClose();
+    },
+    [handleSelectTicket, logEvent, onClose],
+  );
 
   return (
-    <>
-      <ShadowBackdrop />
-      <SuggestionContainer>
-        <InputForm
-          label="Pesquise e selecione um ativo"
-          value={selectTicket}
-          placeholder="RBLC3"
-          maxLength={10}
-          autoFocus
-          onChangeText={ticket => handleSuggestionsAutoComplete(ticket)}
-          autoCapitalize={'characters'}
-        />
+    <SuggestionContainer>
+      <InputForm
+        label="Pesquise e selecione um ativo"
+        value={selectTicket}
+        placeholder="RBLC3"
+        maxLength={10}
+        autoFocus
+        onChangeText={ticket => handleSuggestionsAutoComplete(ticket)}
+        autoCapitalize={'characters'}
+      />
 
-        {loading ? (
-          <ActivityIndicator size="large" color={color.filterDisabled} />
-        ) : !!suggestions?.length ? (
-          <SuggestionList showsVerticalScrollIndicator={false}>
-            {suggestions?.map(suggestion => (
-              <SuggestionItem key={suggestion.symbol}>
-                <SuggestionButton
-                  onPress={() =>
-                    handleSelectSuggest(
-                      suggestion?.symbol,
-                      !!suggestion?.longname
-                        ? suggestion?.longname
-                        : !!suggestion?.shortname
-                        ? suggestion?.shortname
-                        : suggestion?.symbol,
-                    )
-                  }
+      {loading ? (
+        <ActivityIndicator size="large" color={color.filterDisabled} />
+      ) : suggestions?.length ? (
+        <SuggestionList showsVerticalScrollIndicator={false}>
+          {suggestions?.map(suggestion => (
+            <SuggestionItem key={suggestion.symbol}>
+              <SuggestionButton
+                onPress={() =>
+                  handleSelectSuggest(
+                    suggestion?.symbol,
+                    !!suggestion?.longname
+                      ? suggestion?.longname
+                      : !!suggestion?.shortname
+                      ? suggestion?.shortname
+                      : suggestion?.symbol,
+                  )
+                }
+              >
+                <SuggestionText
+                  accessibilityRole="button"
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
                 >
-                  <SuggestionText
-                    accessibilityRole="button"
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    {suggestion.symbol}- {suggestion.longname}
-                  </SuggestionText>
-                </SuggestionButton>
-              </SuggestionItem>
-            ))}
-          </SuggestionList>
-        ) : (
-          error && (
-            <SuggestionError numberOfLines={1} ellipsizeMode="tail">
-              Ativo não encontrado
-            </SuggestionError>
-          )
-        )}
+                  {suggestion.symbol}- {suggestion.longname}
+                </SuggestionText>
+              </SuggestionButton>
+            </SuggestionItem>
+          ))}
+        </SuggestionList>
+      ) : (
+        error && (
+          <SuggestionError numberOfLines={1} ellipsizeMode="tail">
+            Ativo não encontrado
+          </SuggestionError>
+        )
+      )}
 
-        <BackButtonContainer onPress={() => onClose()}>
-          <BackButton>Fechar</BackButton>
-        </BackButtonContainer>
-      </SuggestionContainer>
-    </>
+      <BackButtonContainer onPress={() => onClose()}>
+        <BackButton>Fechar</BackButton>
+      </BackButtonContainer>
+    </SuggestionContainer>
   );
 };
 

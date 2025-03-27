@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Grade } from './styles';
 
-import { formatNumber } from '../../utils/format';
+import { formatNumber, formatNumberRound } from '../../utils/format';
 import type { ITickets } from './index';
 import AdBanner from '../../components/AdBanner';
 import { CardItem } from '../../components/CardItem';
@@ -25,7 +25,7 @@ const ListItem = ({
       <CardItem>
         <Grade
           accessibilityLabel="Nota para o peso do ativo esperado pela carteira"
-          accessibilityValue={{ now: item.grade }}
+          accessibilityValue={{ now: formatNumberRound(item.grade) }}
         >
           {item.grade}
         </Grade>

@@ -53,7 +53,10 @@ const Premium = () => {
         title={`✅ ${plan?.description} - Ativo`}
         descriptions={[
           'Data da Renovação',
-          `${formatDate(Number(plan?.renewDate))}`,
+          `${formatDate({
+            dateNumber: Number(plan?.renewDate),
+            withTime: true,
+          })}`,
         ]}
         plan={`${plan?.localizedPrice} / ${
           plan?.subscriptionPeriodAndroid === 'P1M' ? 'Mês' : 'Ano'
@@ -70,9 +73,12 @@ const Premium = () => {
           onPress={() =>
             openConfirmModal({
               description: 'Tem certeza que deseja cancelar o plano?',
-              legend: `Seu plano continuará ativo até o fim do ciclo contratado: ${new Date(
-                Number(plan?.renewDate),
-              ).toLocaleDateString()}`,
+              legend: `Seu plano continuará ativo até o fim do ciclo contratado: ${formatDate(
+                {
+                  dateNumber: Number(plan?.renewDate),
+                  withTime: false,
+                },
+              )}`,
               onConfirm: () => handleCancelSubscription(),
             })
           }

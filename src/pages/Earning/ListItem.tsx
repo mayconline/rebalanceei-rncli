@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { formatNumber, formatMonth } from '../../utils/format';
+import {
+  formatNumber,
+  formatMonth,
+  formatNumberRound,
+} from '../../utils/format';
 import type { IEarning } from './index';
 import { CardItem } from '../../components/CardItem';
 
@@ -38,7 +42,7 @@ const ListItem = ({
       <CardItem.AmountContent>
         <CardItem.AmountText
           accessibilityLabel={isAccumulated ? 'Total do ano' : 'Total do mês'}
-          accessibilityValue={{ now: item.amount }}
+          accessibilityValue={{ now: formatNumberRound(item.amount) }}
           variation={item.amount}
           text={formatNumber(item.amount)}
         />

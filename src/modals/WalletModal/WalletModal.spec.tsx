@@ -1,6 +1,6 @@
 import React from 'react';
 import WalletModal, { GET_WALLET_BY_USER } from './index';
-import { render, fireEvent, act } from '../../utils/testProvider';
+import { render, fireEvent, act, waitFor } from '../../utils/testProvider';
 import { GraphQLError } from 'graphql';
 
 const mockedOnClose = jest.fn();
@@ -19,52 +19,45 @@ describe('Wallet Modal', () => {
   });
 
   it('should successfully list wallet', async () => {
-    const {
-      findByA11yRole,
-      getAllByA11yRole,
-      getByA11yLabel,
-      getAllByA11yLabel,
-    } = render(<WalletModal onClose={mockedOnClose} />, [
-      SUCCESSFUL_LIST_WALLET,
-    ]);
+    const { getByRole, getAllByRole, getByLabelText, getAllByLabelText } =
+      render(<WalletModal onClose={mockedOnClose} />, [SUCCESSFUL_LIST_WALLET]);
 
-    const title = await findByA11yRole('header');
-    expect(title).toHaveProperty('children', ['Carteiras']);
+    const title = getByRole('header');
+    expect(title).toHaveTextContent('Carteiras');
 
-    const sumAllAmount = await findByA11yRole('summary');
-    expect(sumAllAmount).toHaveProperty('children', [
-      'Total:',
-      ' ',
-      'R$ 5.877,50',
-    ]);
+    const sumAllAmount = getByRole('summary');
 
-    const radioGroup = getAllByA11yRole('radio');
+    await waitFor(() => {
+      expect(sumAllAmount).toHaveTextContent('Total: R$ 5.877,50');
+    });
+
+    const radioGroup = getAllByRole('radio');
     expect(radioGroup).toHaveLength(2);
 
-    const radioOptionOne = getByA11yLabel('Nova cart');
-    const currentAmountOne = getAllByA11yLabel('Valor atual da carteira')[0];
+    const radioOptionOne = getByLabelText('Nova cart');
+    const currentAmountOne = getAllByLabelText('Valor atual da carteira')[0];
     expect(currentAmountOne).toHaveProperty('children', ['R$ 5.807,40']);
 
-    const currentPercentOne = getAllByA11yLabel(
+    const currentPercentOne = getAllByLabelText(
       'Percentual de valorização da carteira',
     )[0];
     expect(currentPercentOne).toHaveProperty('children', [' (+1.6%)']);
 
-    const currentPercentAmountOne = getAllByA11yLabel(
+    const currentPercentAmountOne = getAllByLabelText(
       'Porcentagem atual do valor alocado na carteira',
     )[0];
     expect(currentPercentAmountOne).toHaveProperty('children', ['99%']);
 
-    const radioOptionTwo = getByA11yLabel('MINHA CARTEIRA ADM');
-    const currentAmountTwo = getAllByA11yLabel('Valor atual da carteira')[1];
+    const radioOptionTwo = getByLabelText('MINHA CARTEIRA ADM');
+    const currentAmountTwo = getAllByLabelText('Valor atual da carteira')[1];
     expect(currentAmountTwo).toHaveProperty('children', ['R$ 70,10']);
 
-    const currentPercentTwo = getAllByA11yLabel(
+    const currentPercentTwo = getAllByLabelText(
       'Percentual de valorização da carteira',
     )[1];
     expect(currentPercentTwo).toHaveProperty('children', [' (+13.1%)']);
 
-    const currentPercentAmounTwo = getAllByA11yLabel(
+    const currentPercentAmounTwo = getAllByLabelText(
       'Porcentagem atual do valor alocado na carteira',
     )[1];
     expect(currentPercentAmounTwo).toHaveProperty('children', ['1%']);
@@ -72,7 +65,7 @@ describe('Wallet Modal', () => {
     expect(radioOptionOne.props.accessibilityState.selected).toBeFalsy();
     expect(radioOptionTwo.props.accessibilityState.selected).toBeFalsy();
 
-    const buttons = getAllByA11yRole('button');
+    const buttons = getAllByRole('button');
     expect(buttons).toHaveLength(3);
 
     await act(async () => fireEvent.press(radioOptionOne));
@@ -91,26 +84,26 @@ describe('Wallet Modal', () => {
     expect(radioOptionOne.props.accessibilityState.selected).toBeFalsy();
     expect(radioOptionTwo.props.accessibilityState.selected).toBeTruthy();
 
-    const editOptionOne = getAllByA11yLabel('Editar')[0];
+    const editOptionOne = getAllByLabelText('Editar')[0];
     await act(async () => fireEvent.press(editOptionOne));
 
-    const editWalletTicket = getAllByA11yRole('header')[1];
+    const editWalletTicket = getAllByRole('header')[1];
     expect(editWalletTicket).toHaveProperty('children', ['Alterar Carteira']);
   });
 
   it('should buttons work correctly', async () => {
-    const { getByA11yRole, getAllByA11yRole, getByText } = render(
+    const { getByRole, getAllByRole, getByText } = render(
       <WalletModal onClose={mockedOnClose} />,
       [EMPTY_LIST_WALLET],
     );
 
-    const addButton = getByA11yRole('button');
+    const addButton = getByRole('button');
     expect(addButton).toHaveProperty('children', ['Adicionar Carteira']);
 
     await act(async () => fireEvent.press(addButton));
     getByText(/Criar Nova Carteira/i);
 
-    const closeButton = getAllByA11yRole('imagebutton')[0];
+    const closeButton = getAllByRole('imagebutton')[0];
     await act(async () => fireEvent.press(closeButton));
     expect(mockedOnClose).toHaveBeenCalledTimes(1);
   });

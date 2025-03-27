@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { asyncAct, renderHook, waitFor } from '../utils/testProvider';
 import { useAuth, AuthProvider } from './authContext';
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 
@@ -18,11 +18,11 @@ jest.mock('@apollo/client', () => ({
 
 describe('Auth Context', () => {
   it('should be able to sign in', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useAuth(), {
+    const { result } = renderHook(() => useAuth(), {
       wrapper: AuthProvider,
     });
 
-    act(() => {
+    asyncAct(() => {
       result.current.handleSignIn({
         _id: 'id_logged',
         token: 'token_logged',
@@ -32,9 +32,9 @@ describe('Auth Context', () => {
       });
     });
 
-    expect(result.current.loading).toBeTruthy();
-
-    await waitForNextUpdate();
+    await waitFor(() => {
+      expect(result.current.loading).toBeTruthy();
+    });
 
     expect(multiSetSpy).toHaveBeenCalledTimes(1);
     expect(multiSetSpy).toHaveBeenCalledWith([
@@ -50,34 +50,36 @@ describe('Auth Context', () => {
   });
 
   it('should get data storage when app init', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useAuth(), {
+    const { result } = renderHook(() => useAuth(), {
       wrapper: AuthProvider,
     });
 
     expect(result.current.loading).toBeTruthy();
 
-    await waitForNextUpdate();
-
-    expect(multiGetSpy).toHaveBeenCalledWith([
-      '@authRole',
-      '@authToken',
-      '@authWallet',
-      '@authWalletName',
-      '@authID',
-      '@userEmail',
-    ]);
+    await waitFor(() => {
+      expect(multiGetSpy).toHaveBeenCalledWith([
+        '@authRole',
+        '@authToken',
+        '@authWallet',
+        '@authWalletName',
+        '@authID',
+        '@userEmail',
+      ]);
+    });
   });
 
   it('should be able to signOut', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useAuth(), {
+    const { result } = renderHook(() => useAuth(), {
       wrapper: AuthProvider,
     });
 
-    act(() => result.current.handleSignOut());
+    asyncAct(() => {
+      result.current.handleSignOut();
+    });
 
-    await waitForNextUpdate();
-
-    expect(mockedClearStore).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(mockedClearStore).toHaveBeenCalledTimes(1);
+    });
 
     expect(multiRemoveSpy).toHaveBeenCalledWith([
       '@authWallet',
@@ -101,30 +103,30 @@ describe('Auth Context', () => {
   });
 
   it('should be able to setWallet', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useAuth(), {
+    const { result } = renderHook(() => useAuth(), {
       wrapper: AuthProvider,
     });
 
-    act(() => result.current.handleSetWallet('1234', 'myNewWallet'));
+    asyncAct(() => result.current.handleSetWallet('1234', 'myNewWallet'));
 
-    await waitForNextUpdate();
-
-    expect(multiSetSpy).toHaveBeenCalledWith([
-      ['@authWallet', '1234'],
-      ['@authWalletName', 'myNewWallet'],
-    ]);
+    await waitFor(() => {
+      expect(multiSetSpy).toHaveBeenCalledWith([
+        ['@authWallet', '1234'],
+        ['@authWalletName', 'myNewWallet'],
+      ]);
+    });
 
     expect(result.current.wallet).toBe('1234');
     expect(result.current.walletName).toBe('myNewWallet');
 
-    act(() => result.current.handleSetWallet('', null));
+    asyncAct(() => result.current.handleSetWallet('', null));
 
-    await waitForNextUpdate();
-
-    expect(multiRemoveSpy).toHaveBeenCalledWith([
-      '@authWallet',
-      '@authWalletName',
-    ]);
+    await waitFor(() => {
+      expect(multiRemoveSpy).toHaveBeenCalledWith([
+        '@authWallet',
+        '@authWalletName',
+      ]);
+    });
 
     expect(result.current.wallet).toBeFalsy();
     expect(result.current.walletName).toBeNull();
@@ -135,10 +137,12 @@ describe('Auth Context', () => {
       wrapper: AuthProvider,
     });
 
-    act(() => result.current.handleSetLoading(true));
+    asyncAct(() => result.current.handleSetLoading(true));
     expect(result.current.loading).toBeTruthy();
 
-    act(() => result.current.handleSetLoading(false));
-    expect(result.current.loading).toBeFalsy();
+    asyncAct(() => result.current.handleSetLoading(false));
+    await waitFor(() => {
+      expect(result.current.loading).toBeFalsy();
+    });
   });
 });
