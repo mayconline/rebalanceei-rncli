@@ -49,3 +49,9 @@ jest.mock('react-native-vector-icons/Feather', () => 'Icon');
 jest.mock('react-native-progress', () => ({
   Bar: () => 'ProgressBar',
 }));
+
+jest.mock('./config/envs', () => ({
+  amplitudeKey: 'amplitude-key',
+  suggestionsApiUrl: 'suggestions-api-url',
+  backApiUrl: 'back-api-url',
+}));
