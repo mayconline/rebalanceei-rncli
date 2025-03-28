@@ -9055,16 +9055,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:4.9.2":
-  version: 4.9.2
-  resolution: "react-native-screens@npm:4.9.2"
+"react-native-screens@npm:4.10.0":
+  version: 4.10.0
+  resolution: "react-native-screens@npm:4.10.0"
   dependencies:
     react-freeze: "npm:^1.0.0"
     warn-once: "npm:^0.1.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/ea285f80c2cf836ee87e09daf91d8c085ccc55726cabb556d278cec76d42e8843943f307549a406f373987f958cf3d35b194eac7bb374b1d9c9876dadcec90cd
+  checksum: 10c0/09d1f55431b85e556ef7b5efd776ac5e85303e47d9138f910cb8c25ff3804effc43185f84e8842bcae2219e8fee12366b3725f955f638c109387efb82e0260f3
   languageName: node
   linkType: hard
 
@@ -9209,10 +9209,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:19.0.0":
-  version: 19.0.0
-  resolution: "react@npm:19.0.0"
-  checksum: 10c0/9cad8f103e8e3a16d15cb18a0d8115d8bd9f9e1ce3420310aea381eb42aa0a4f812cf047bb5441349257a05fba8a291515691e3cb51267279b2d2c3253f38471
+"react@npm:19.1.0":
+  version: 19.1.0
+  resolution: "react@npm:19.1.0"
+  checksum: 10c0/530fb9a62237d54137a13d2cfb67a7db6a2156faed43eecc423f4713d9b20c6f2728b026b45e28fcd72e8eadb9e9ed4b089e99f5e295d2f0ad3134251bdd3698
   languageName: node
   linkType: hard
 
@@ -9277,7 +9277,7 @@ __metadata:
     jest: "npm:29.7.0"
     jest-styled-components: "npm:7.2.0"
     lottie-react-native: "npm:7.2.2"
-    react: "npm:19.0.0"
+    react: "npm:19.1.0"
     react-native: "npm:0.78.1"
     react-native-dotenv: "npm:^3.4.11"
     react-native-gesture-handler: "npm:2.24.0"
@@ -9287,7 +9287,7 @@ __metadata:
     react-native-progress: "npm:^5.0.1"
     react-native-reanimated: "npm:3.17.1"
     react-native-safe-area-context: "npm:5.3.0"
-    react-native-screens: "npm:4.9.2"
+    react-native-screens: "npm:4.10.0"
     react-native-splash-screen: "npm:3.3.0"
     react-native-svg: "npm:15.11.2"
     react-native-svg-charts: "npm:5.4.0"
