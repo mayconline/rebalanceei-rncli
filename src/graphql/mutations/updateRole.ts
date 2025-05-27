@@ -11,6 +11,8 @@ const UPDATE_ROLE = gql`
     $subscriptionPeriodAndroid: String
     $packageName: String
     $transactionId: String
+    $purchaseToken: String
+    $platform: Platform
   ) {
     updateRole(
       input: {
@@ -24,6 +26,8 @@ const UPDATE_ROLE = gql`
           subscriptionPeriodAndroid: $subscriptionPeriodAndroid
           packageName: $packageName
           transactionId: $transactionId
+          purchaseToken: $purchaseToken
+          platform: $platform
         }
       }
     ) {
@@ -42,6 +46,8 @@ const UPDATE_ROLE = gql`
         subscriptionPeriodAndroid
         packageName
         transactionId
+        purchaseToken
+        platform
       }
     }
   }

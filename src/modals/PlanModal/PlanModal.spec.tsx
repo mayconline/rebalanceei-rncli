@@ -153,6 +153,8 @@ describe('PlanModal', () => {
         subscriptionPeriodAndroid: 'P1M',
         packageName: 'com.rebalanceei',
         transactionId: '12121221',
+        purchaseToken: 'token',
+        platform: 'ANDROID',
       },
     });
 

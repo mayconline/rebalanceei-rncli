@@ -86,6 +86,8 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
           transactionDate: newTransactionDate,
           renewDate: newRenewDate,
           transactionId: purchases[0]?.transactionId,
+          purchaseToken: purchases[0]?.purchaseToken,
+          productId: purchases[0]?.productId,
         };
 
         setStatePlan('PENDING');
@@ -110,6 +112,7 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
             ...plan,
             transactionDate: statePlan === 'CANCEL' ? 0 : plan?.transactionDate,
             renewDate: statePlan === 'CANCEL' ? 0 : plan?.renewDate,
+            purchaseToken: statePlan === 'CANCEL' ? '' : plan?.purchaseToken,
           },
         }).then(() => {
           if (statePlan === 'CANCEL') {

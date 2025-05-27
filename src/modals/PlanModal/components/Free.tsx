@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Platform } from 'react-native';
 import { useAuth } from '../../../contexts/authContext';
 import { ThemeContext } from 'styled-components/native';
 
@@ -130,7 +130,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
                   skuID?.subscriptionOfferDetails?.[0]?.pricingPhases
                     ?.pricingPhaseList?.[0]?.billingPeriod,
                 ),
-                isTest: false,
+                isTest: true,
               });
 
             const transactionData = {
@@ -146,6 +146,8 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
                   ?.pricingPhaseList?.[0]?.billingPeriod,
               packageName: purchase?.packageNameAndroid,
               transactionId: purchase?.transactionId,
+              purchaseToken: purchase?.purchaseToken,
+              platform: Platform.OS.toUpperCase(),
             };
 
             await finishTransaction({ purchase });
