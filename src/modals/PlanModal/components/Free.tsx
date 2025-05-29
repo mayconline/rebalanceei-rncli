@@ -19,7 +19,6 @@ import type { IPlanName } from '../index';
 import TextError from '../../../components/TextError';
 
 import {
-  calculateInitialRenewSubscription,
   useIAP,
   listSku,
   type Subscription,
@@ -33,7 +32,11 @@ import useAmplitude from '../../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
 import { useModalStore } from '../../../store/useModalStore';
 import type { IUpdateRole } from '../../../types/plan-types';
-import { UPDATE_ROLE } from '../../../graphql/mutations';
+import type {
+  IValidatePurchaseRequest,
+  IValidatePurchaseResponse,
+} from '../../../types/validate-purchase-types';
+import { UPDATE_ROLE, VALIDATE_PURCHASE } from '../../../graphql/mutations';
 
 interface IFree {
   mutationLoading?: boolean;
@@ -69,8 +72,33 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     }, [logEvent]),
   );
 
+  const [
+    validatePurchase,
+    { loading: validateMutationLoading, error: validateMutationError },
+  ] = useMutation<IValidatePurchaseResponse>(VALIDATE_PURCHASE);
+
   const [updateRole, { loading: mutationLoading, error: mutationError }] =
     useMutation<IUpdateRole>(UPDATE_ROLE);
+
+  const handleValidatePurchase = useCallback(
+    async (validatePurchaseRequest: IValidatePurchaseRequest) => {
+      try {
+        const { data } = await validatePurchase({
+          variables: {
+            validatePurchaseRequest,
+          },
+        });
+
+        logEvent('successful validatePurchase at Plan Free Modal');
+
+        return data?.validatePurchase;
+      } catch (err: any) {
+        logEvent('error on validatePurchase at Plan Free Modal');
+        console.error(validateMutationError?.message + err);
+      }
+    },
+    [validatePurchase, logEvent, validateMutationError],
+  );
 
   const handleChangePlan = useCallback(
     async (plan: object) => {
@@ -123,31 +151,34 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
           try {
             setErrorMessage(undefined);
 
-            const { renewSubscription } =
-              await calculateInitialRenewSubscription({
-                transactionDate: purchase?.transactionDate,
-                subscriptionPeriodAndroid: String(
-                  skuID?.subscriptionOfferDetails?.[0]?.pricingPhases
-                    ?.pricingPhaseList?.[0]?.billingPeriod,
-                ),
-                isTest: true,
-              });
+            const validatePurchaseRequest = {
+              platform: Platform.OS.toUpperCase(),
+              packageName: purchase?.packageNameAndroid,
+              productId: purchase?.productId,
+              purchaseToken: purchase?.purchaseToken,
+              subscription: true,
+            } as IValidatePurchaseRequest;
+
+            const validatedPurchase = await handleValidatePurchase(
+              validatePurchaseRequest,
+            );
 
             const transactionData = {
-              transactionDate: purchase?.transactionDate,
-              renewDate: renewSubscription,
+              transactionDate: validatedPurchase?.transactionDate,
+              renewDate: validatedPurchase?.renewDate,
+              productId: validatedPurchase?.productId,
+              packageName: validatedPurchase?.packageName,
+              transactionId: validatedPurchase?.orderId,
+              purchaseToken: validatedPurchase?.purchaseToken,
+              platform: validatedPurchase?.platform,
+              autoRenewing: validatedPurchase?.autoRenewing,
               description: skuID?.name,
               localizedPrice:
                 skuID?.subscriptionOfferDetails?.[0]?.pricingPhases
                   ?.pricingPhaseList?.[0]?.formattedPrice,
-              productId: purchase?.productId,
               subscriptionPeriodAndroid:
                 skuID?.subscriptionOfferDetails?.[0]?.pricingPhases
                   ?.pricingPhaseList?.[0]?.billingPeriod,
-              packageName: purchase?.packageNameAndroid,
-              transactionId: purchase?.transactionId,
-              purchaseToken: purchase?.purchaseToken,
-              platform: Platform.OS.toUpperCase(),
             };
 
             await finishTransaction({ purchase });
@@ -168,7 +199,14 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     };
 
     checkCurrentPurchase(currentPurchase);
-  }, [currentPurchase, finishTransaction, handleChangePlan, logEvent, skuID]);
+  }, [
+    currentPurchase,
+    finishTransaction,
+    handleChangePlan,
+    logEvent,
+    skuID,
+    handleValidatePurchase,
+  ]);
 
   useEffect(() => {
     if (!!currentPurchaseError) {
@@ -252,8 +290,8 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       <ContainerButtons>
         <Button
           onPress={handlePurchaseSubscription}
-          loading={mutationLoading || loading}
-          disabled={mutationLoading || loading}
+          loading={mutationLoading || validateMutationLoading || loading}
+          disabled={mutationLoading || validateMutationLoading || loading}
         >
           Assine já
         </Button>
@@ -261,6 +299,9 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
       {!!mutationError && <TextError>{mutationError?.message}</TextError>}
       {!!errorMessage && <TextError>{errorMessage}</TextError>}
+      {!!validateMutationError && (
+        <TextError>{validateMutationError?.message}</TextError>
+      )}
     </>
   );
 };

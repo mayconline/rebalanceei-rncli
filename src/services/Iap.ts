@@ -2,14 +2,14 @@ import {
   withIAPContext,
   useIAP,
   getAvailablePurchases,
-  Subscription as SubscriptionType,
-  Purchase as PurchaseType,
+  type Subscription as SubscriptionType,
+  type Purchase as PurchaseType,
   requestSubscription,
-  SubscriptionPurchase,
-  SubscriptionOffer,
+  type SubscriptionPurchase,
+  type SubscriptionOffer,
   flushFailedPurchasesCachedAsPendingAndroid,
 } from 'react-native-iap';
-import { IPlan } from '../types/plan-types';
+import type { IPlan } from '../types/plan-types';
 
 type SubscriptionTransaction = {
   transactionDate: number;

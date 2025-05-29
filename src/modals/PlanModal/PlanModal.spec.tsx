@@ -155,6 +155,7 @@ describe('PlanModal', () => {
         transactionId: '12121221',
         purchaseToken: 'token',
         platform: 'ANDROID',
+        autoRenewing: true,
       },
     });
 
