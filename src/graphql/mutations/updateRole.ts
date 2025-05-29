@@ -13,6 +13,7 @@ const UPDATE_ROLE = gql`
     $transactionId: String
     $purchaseToken: String
     $platform: Platform
+    $autoRenewing: Boolean
   ) {
     updateRole(
       input: {
@@ -28,6 +29,7 @@ const UPDATE_ROLE = gql`
           transactionId: $transactionId
           purchaseToken: $purchaseToken
           platform: $platform
+          autoRenewing: $autoRenewing
         }
       }
     ) {
@@ -48,6 +50,7 @@ const UPDATE_ROLE = gql`
         transactionId
         purchaseToken
         platform
+        autoRenewing
       }
     }
   }

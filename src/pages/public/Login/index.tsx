@@ -177,6 +177,9 @@ export const LOGIN = gql`
         subscriptionPeriodAndroid
         packageName
         transactionId
+        purchaseToken
+        platform
+        autoRenewing
       }
     }
   }

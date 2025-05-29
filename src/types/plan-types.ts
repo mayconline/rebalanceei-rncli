@@ -9,6 +9,7 @@ export interface IPlan {
   transactionId?: string;
   purchaseToken?: string;
   platform?: 'ANDROID' | 'IOS';
+  autoRenewing?: boolean;
 }
 
 export interface IUpdateRole {

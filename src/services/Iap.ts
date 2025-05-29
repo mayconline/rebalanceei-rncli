@@ -24,20 +24,11 @@ export const listSku = [
 export const validHasSubscription = async (plan?: IPlan) => {
   if (!plan) return false;
 
-  const { transactionDate, renewDate } = plan;
+  const { renewDate } = plan;
 
   const today = new Date().getTime();
 
-  const purchaseDay = new Date(Number(transactionDate));
-  const beforeExpire = purchaseDay.setDate(purchaseDay.getDate() + 1);
-  const afterExpire = purchaseDay.setDate(purchaseDay.getDate() + 2);
-  const refundExpire = today > beforeExpire && today < afterExpire;
-
-  if (refundExpire) return false;
-
-  if (today > Number(renewDate)) return false;
-
-  return true;
+  return today < Number(renewDate);
 };
 
 export const setNewSubscriptionsDate = async ({

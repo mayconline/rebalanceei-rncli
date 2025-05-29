@@ -219,6 +219,9 @@ export const CREATE_USER = gql`
         subscriptionPeriodAndroid
         packageName
         transactionId
+        purchaseToken
+        platform
+        autoRenewing
       }
     }
   }
