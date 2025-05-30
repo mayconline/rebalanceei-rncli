@@ -12,11 +12,9 @@ import { useAuth } from '../authContext';
 import { validHasSubscription, restoreSubscription } from '../../services/Iap';
 import type { IGetUser, IPlan, IUpdateRole } from '../../types/plan-types';
 import { GET_USER_BY_TOKEN } from '../../graphql/queries';
-import { UPDATE_ROLE, VALIDATE_PURCHASE } from '../../graphql/mutations';
-import type {
-  IValidatePurchaseRequest,
-  IValidatePurchaseResponse,
-} from '../../types/validate-purchase-types';
+import { UPDATE_ROLE } from '../../graphql/mutations';
+import type { IValidatePurchaseRequest } from '../../types/validate-purchase-types';
+import useValidatePurchase from '../../hooks/useValidatePurchase';
 
 type IStatePlan = 'ACTIVE' | 'PENDING' | 'CANCEL' | null;
 
@@ -38,13 +36,11 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
   const [statePlan, setStatePlan] = useState<IStatePlan>(null);
 
   const { handleSignOut, showBanner } = useAuth();
+  const { handleValidatePurchase } = useValidatePurchase();
 
   const { openConfirmModal } = useModalStore(({ openConfirmModal }) => ({
     openConfirmModal,
   }));
-
-  const [validatePurchase, { error: validateMutationError }] =
-    useMutation<IValidatePurchaseResponse>(VALIDATE_PURCHASE);
 
   const [updateRole, { error: mutationError }] =
     useMutation<IUpdateRole>(UPDATE_ROLE);
@@ -65,23 +61,6 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
       })
       .catch(err => console.error(err));
   }, [getUserByToken, queryLoading]);
-
-  const handleValidatePurchase = useCallback(
-    async (validatePurchaseRequest: IValidatePurchaseRequest) => {
-      try {
-        const { data } = await validatePurchase({
-          variables: {
-            validatePurchaseRequest,
-          },
-        });
-
-        return data?.validatePurchase;
-      } catch (err: any) {
-        console.error(validateMutationError?.message + err);
-      }
-    },
-    [validatePurchase, validateMutationError],
-  );
 
   const handleVerificationPlan = useCallback(
     async (plan: IPlan) => {

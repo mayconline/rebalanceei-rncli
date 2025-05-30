@@ -5,16 +5,11 @@ import {
   type Subscription as SubscriptionType,
   type Purchase as PurchaseType,
   requestSubscription,
-  type SubscriptionPurchase,
   type SubscriptionOffer,
   flushFailedPurchasesCachedAsPendingAndroid,
+  type SubscriptionAndroid,
 } from 'react-native-iap';
 import type { IPlan } from '../types/plan-types';
-
-type SubscriptionTransaction = {
-  transactionDate: number;
-  subscriptionPeriodAndroid: string;
-};
 
 export const listSku = [
   'rebalanceei_premium_mensal_24',
@@ -31,106 +26,6 @@ export const validHasSubscription = async (plan?: IPlan) => {
   return today < Number(renewDate);
 };
 
-export const setNewSubscriptionsDate = async ({
-  transactionDate,
-  subscriptionPeriodAndroid,
-  renewDate,
-}: SubscriptionTransaction & { renewDate: number }) => {
-  const today = new Date().getTime();
-
-  if (today > Number(renewDate)) {
-    const { newTransactionDate, newRenewDate } =
-      await calculateRenovateSubscriptionDate({
-        transactionDate,
-        subscriptionPeriodAndroid,
-        isTest: false,
-      });
-
-    return {
-      newTransactionDate,
-      newRenewDate,
-    };
-  } else {
-    return {
-      newTransactionDate: transactionDate,
-      newRenewDate: renewDate,
-    };
-  }
-};
-
-const calculateRenovateSubscriptionDate = async ({
-  transactionDate,
-  subscriptionPeriodAndroid,
-  isTest,
-}: SubscriptionTransaction & {
-  isTest: boolean;
-}) => {
-  const purchaseDay = new Date(Number(transactionDate));
-
-  if (isTest) {
-    const period = subscriptionPeriodAndroid === 'P1M' ? 5 : 30;
-
-    const newTransactionDate = purchaseDay.setMinutes(
-      purchaseDay.getMinutes() + period,
-    );
-
-    const newInitalDate = new Date(newTransactionDate);
-
-    const newRenewDate = newInitalDate.setMinutes(
-      newInitalDate.getMinutes() + period,
-    );
-
-    return {
-      newTransactionDate,
-      newRenewDate,
-    };
-  } else {
-    const period = subscriptionPeriodAndroid === 'P1M' ? 34 : 369;
-
-    const newTransactionDate = purchaseDay.setDate(
-      purchaseDay.getDate() + period,
-    );
-    const newInitalDate = new Date(newTransactionDate);
-
-    const newRenewDate = newInitalDate.setDate(
-      newInitalDate.getDate() + period,
-    );
-
-    return {
-      newTransactionDate,
-      newRenewDate,
-    };
-  }
-};
-
-export const calculateInitialRenewSubscription = async ({
-  transactionDate,
-  subscriptionPeriodAndroid,
-  isTest,
-}: SubscriptionTransaction & { isTest: boolean }) => {
-  const initalDate = new Date(transactionDate);
-
-  if (isTest) {
-    const period = subscriptionPeriodAndroid === 'P1M' ? 5 : 30;
-
-    const renewSubscription = initalDate.setMinutes(
-      initalDate.getMinutes() + period,
-    );
-
-    return {
-      renewSubscription,
-    };
-  } else {
-    const period = subscriptionPeriodAndroid === 'P1M' ? 34 : 369;
-
-    const renewSubscription = initalDate.setDate(initalDate.getDate() + period);
-
-    return {
-      renewSubscription,
-    };
-  }
-};
-
 export const restoreSubscription = async () => {
   const purchases = await getAvailablePurchases();
 
@@ -140,11 +35,11 @@ export const restoreSubscription = async () => {
 export const sendRequestSubscription = async (
   sku: string,
   subscriptionOffers: SubscriptionOffer[],
-): Promise<void | SubscriptionPurchase | null> => {
+) => {
   return await requestSubscription({ sku, subscriptionOffers });
 };
 
-export type Subscription = SubscriptionType;
+export type Subscription = SubscriptionType & SubscriptionAndroid;
 export type Purchase = PurchaseType;
 
 export { withIAPContext, useIAP, flushFailedPurchasesCachedAsPendingAndroid };
