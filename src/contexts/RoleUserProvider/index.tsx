@@ -9,14 +9,12 @@ import {
 
 import { useModalStore } from '../../store/useModalStore';
 import { useAuth } from '../authContext';
-import {
-  validHasSubscription,
-  restoreSubscription,
-  setNewSubscriptionsDate,
-} from '../../services/Iap';
+import { validHasSubscription, restoreSubscription } from '../../services/Iap';
 import type { IGetUser, IPlan, IUpdateRole } from '../../types/plan-types';
 import { GET_USER_BY_TOKEN } from '../../graphql/queries';
 import { UPDATE_ROLE } from '../../graphql/mutations';
+import type { IValidatePurchaseRequest } from '../../types/validate-purchase-types';
+import useValidatePurchase from '../../hooks/useValidatePurchase';
 
 type IStatePlan = 'ACTIVE' | 'PENDING' | 'CANCEL' | null;
 
@@ -38,6 +36,7 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
   const [statePlan, setStatePlan] = useState<IStatePlan>(null);
 
   const { handleSignOut, showBanner } = useAuth();
+  const { handleValidatePurchase } = useValidatePurchase();
 
   const { openConfirmModal } = useModalStore(({ openConfirmModal }) => ({
     openConfirmModal,
@@ -63,39 +62,48 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
       .catch(err => console.error(err));
   }, [getUserByToken, queryLoading]);
 
-  const handleVerificationPlan = useCallback(async (plan: IPlan) => {
-    const hasSubscription = await validHasSubscription(plan);
-
-    if (hasSubscription) {
-      setStatePlan('ACTIVE');
-    } else {
-      const purchases = await restoreSubscription();
-
-      if (purchases.length) {
-        const { transactionDate, renewDate, subscriptionPeriodAndroid } = plan;
-
-        const { newTransactionDate, newRenewDate } =
-          await setNewSubscriptionsDate({
-            transactionDate: Number(transactionDate),
-            subscriptionPeriodAndroid: String(subscriptionPeriodAndroid),
-            renewDate: Number(renewDate),
-          });
-
-        const transactionData = {
-          ...plan,
-          transactionDate: newTransactionDate,
-          renewDate: newRenewDate,
-          transactionId: purchases[0]?.transactionId,
-        };
-
-        setStatePlan('PENDING');
-
-        setPlan(transactionData);
-      } else {
-        setStatePlan('CANCEL');
+  const handleVerificationPlan = useCallback(
+    async (plan: IPlan) => {
+      const hasSubscription = await validHasSubscription(plan);
+      if (hasSubscription) {
+        setStatePlan('ACTIVE');
+        return;
       }
-    }
-  }, []);
+
+      const purchases = await restoreSubscription();
+      if (!purchases.length) {
+        setStatePlan('CANCEL');
+        return;
+      }
+
+      const validatePurchaseRequest = {
+        platform: plan?.platform,
+        packageName: plan?.packageName,
+        productId: plan?.productId,
+        purchaseToken: plan?.purchaseToken,
+        subscription: true,
+      } as IValidatePurchaseRequest;
+
+      const validatePurchase = await handleValidatePurchase(
+        validatePurchaseRequest,
+      );
+
+      const transactionData = {
+        ...plan,
+        transactionDate: validatePurchase?.transactionDate,
+        renewDate: validatePurchase?.renewDate,
+        transactionId: validatePurchase?.orderId,
+        purchaseToken: validatePurchase?.purchaseToken,
+        productId: validatePurchase?.productId,
+        autoRenewing: validatePurchase?.autoRenewing,
+      };
+
+      setStatePlan('PENDING');
+
+      setPlan(transactionData);
+    },
+    [handleValidatePurchase],
+  );
 
   useEffect(() => {
     if (!showBanner && !!plan) handleVerificationPlan(plan);
