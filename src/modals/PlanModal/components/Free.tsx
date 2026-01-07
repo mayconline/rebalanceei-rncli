@@ -1,23 +1,23 @@
-import React, { useCallback, useContext } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { ThemeContext } from 'styled-components/native';
-import CopyPremmium from '../../../components/CopyPremmium';
-import CardPlan from '../../../components/CardPlan';
-import Button from '../../../components/Button';
-import { ContainerButtons } from '../styles';
-import type { IPlanName } from '../index';
-import TextError from '../../../components/TextError';
-import type { Subscription } from '../../../services/Iap';
-import usePurchase from '../../../hooks/usePurchase';
+import React, { useCallback, useContext } from 'react'
+import { ActivityIndicator } from 'react-native'
+import { ThemeContext } from 'styled-components/native'
+import CopyPremmium from '../../../components/CopyPremmium'
+import CardPlan from '../../../components/CardPlan'
+import Button from '../../../components/Button'
+import { ContainerButtons } from '../styles'
+import type { IPlanName } from '../index'
+import TextError from '../../../components/TextError'
+import type { Subscription } from '../../../services/Iap'
+import usePurchase from '../../../hooks/usePurchase'
 
 interface IFree {
-  mutationLoading?: boolean;
-  planName: IPlanName;
-  handleSelectPlan(plan: IPlanName): void;
+  mutationLoading?: boolean
+  planName: IPlanName
+  handleSelectPlan(plan: IPlanName): void
 }
 
 const Free = ({ planName, handleSelectPlan }: IFree) => {
-  const { color } = useContext(ThemeContext);
+  const { color } = useContext(ThemeContext)
 
   const {
     listSubscriptions,
@@ -31,24 +31,24 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
     handlePurchaseSubscription,
     setErrorMessage,
     setSelectedSku,
-  } = usePurchase();
+  } = usePurchase()
 
   const handleChangeOptionPlan = useCallback(
     async (sku: Subscription, duration: any) => {
       if (!sku || !duration) {
-        return;
+        return
       }
 
-      setSelectedSku(sku);
-      handleSelectPlan(duration);
-      setErrorMessage(undefined);
+      setSelectedSku(sku)
+      handleSelectPlan(duration)
+      setErrorMessage(undefined)
     },
-    [handleSelectPlan, setErrorMessage, setSelectedSku],
-  );
+    [handleSelectPlan, setErrorMessage, setSelectedSku]
+  )
 
   const hasPurchaseLoading = ['LOADING_LIST', 'PROCESSING_PAYMENT'].includes(
-    purchaseStatus,
-  );
+    purchaseStatus
+  )
 
   return hasPurchaseLoading ? (
     <ActivityIndicator size="large" color={color.filterDisabled} />
@@ -66,16 +66,16 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       {listSubscriptions?.length ? (
         listSubscriptions?.map(subscription => {
           const subsDetails =
-            subscription?.subscriptionOfferDetails?.[0]?.pricingPhases
-              ?.pricingPhaseList?.[0];
+            subscription?.subscriptionOfferDetailsAndroid?.[0]?.pricingPhases
+              ?.pricingPhaseList?.[0]
 
-          const subscriptionPeriodAndroid = subsDetails?.billingPeriod;
-          const localizedPrice = subsDetails?.formattedPrice;
+          const subscriptionPeriodAndroid = subsDetails?.billingPeriod
+          const localizedPrice = subsDetails?.formattedPrice
 
           return (
             <CardPlan
-              key={subscription.productId}
-              title={subscription.name}
+              key={subscription.id}
+              title={subscription.title}
               descriptions={
                 subscriptionPeriodAndroid === 'P1M'
                   ? []
@@ -89,7 +89,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
                 handleChangeOptionPlan(subscription, subscriptionPeriodAndroid)
               }
             />
-          );
+          )
         })
       ) : (
         <ActivityIndicator size="large" color={color.filterDisabled} />
@@ -115,7 +115,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
         <TextError>{validatePurchaseError?.message}</TextError>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Free;
+export default Free
