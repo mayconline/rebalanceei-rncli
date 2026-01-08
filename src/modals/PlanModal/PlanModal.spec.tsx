@@ -10,7 +10,7 @@ const mockedLinkCancelPlan = jest.spyOn(CancelPlan, 'getLinkCancelPlan')
 
 const SUBSCRIPTIONS_MOCK = [
   {
-    subscriptionOfferDetails: [
+    subscriptionOfferDetailsAndroid: [
       {
         pricingPhases: {
           pricingPhaseList: [
@@ -31,10 +31,10 @@ const SUBSCRIPTIONS_MOCK = [
     name: 'Premium Anual 2024',
     productType: 'subs',
     title: 'Premium Anual 2024 (Rebalanceei Investimento Ações)',
-    productId: 'rebalanceei_premium_anual_2024',
+    id: 'rebalanceei_premium_anual_2024',
   },
   {
-    subscriptionOfferDetails: [
+    subscriptionOfferDetailsAndroid: [
       {
         pricingPhases: {
           pricingPhaseList: [
@@ -55,7 +55,7 @@ const SUBSCRIPTIONS_MOCK = [
     name: 'Premium Mensal 2024',
     productType: 'subs',
     title: 'Premium Mensal 2024 (Rebalanceei Investimento Ações)',
-    productId: 'rebalanceei_premium_mensal_24',
+    id: 'rebalanceei_premium_mensal_24',
   },
 ]
 
@@ -126,12 +126,7 @@ describe('PlanModal', () => {
     expect(sendRequestSubscription).toHaveBeenCalledTimes(1)
     expect(sendRequestSubscription).toHaveBeenLastCalledWith(
       'rebalanceei_premium_mensal_24',
-      [
-        {
-          offerToken: 'tokenOfferMensal',
-          sku: 'rebalanceei_premium_mensal_24',
-        },
-      ]
+      'tokenOfferMensal'
     )
   })
 

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native';
-import { useAuth } from '../../contexts/authContext';
-import { BannerAd, BannerAdSize, BANNER_ID } from '../../services/AdMob';
+import React, { useState } from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useAuth } from '../../contexts/authContext'
+import { BannerAd, BannerAdSize, BANNER_ID } from '../../services/AdMob'
 
 const AdBanner = () => {
-  const { showBanner } = useAuth();
+  const { showBanner } = useAuth()
 
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<Error | null>(null)
 
   return showBanner && !error ? (
     <SafeAreaView
@@ -22,7 +22,7 @@ const AdBanner = () => {
         onAdLoaded={() => setError(null)}
       />
     </SafeAreaView>
-  ) : null;
-};
+  ) : null
+}
 
-export default AdBanner;
+export default AdBanner
