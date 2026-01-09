@@ -4,7 +4,7 @@ interface IFocused {
   focused: boolean;
 }
 
-export const Wrapper = styled.SafeAreaView`
+export const Wrapper = styled.View`
   padding: 20px 20px 4px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;

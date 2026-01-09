@@ -32,7 +32,7 @@ export const Title = styled.Text`
   font-smooth: 'antialiased';
 `;
 
-export const Container = styled.SafeAreaView`
+export const Container = styled.View`
   flex: 1;
   background-color: ${({ theme }) => theme.color.bgHeaderEmpty};
   padding: 20px 20px 4px;

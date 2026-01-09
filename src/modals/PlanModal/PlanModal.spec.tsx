@@ -1,12 +1,12 @@
-import React from 'react'
-import PlanModal from './index'
-import { render, fireEvent, act } from '../../utils/testProvider'
-import * as CancelPlan from '../../utils/CancelPlan'
-import { formatDate } from '../../utils/format'
-import { sendRequestSubscription } from '../../services/Iap'
+import React from 'react';
+import PlanModal from './index';
+import { render, fireEvent, act } from '../../utils/testProvider';
+import * as CancelPlan from '../../utils/CancelPlan';
+import { formatDate } from '../../utils/format';
+import { sendRequestSubscription } from '../../services/Iap';
 
-const mockedOnClose = jest.fn()
-const mockedLinkCancelPlan = jest.spyOn(CancelPlan, 'getLinkCancelPlan')
+const mockedOnClose = jest.fn();
+const mockedLinkCancelPlan = jest.spyOn(CancelPlan, 'getLinkCancelPlan');
 
 const SUBSCRIPTIONS_MOCK = [
   {
@@ -28,7 +28,7 @@ const SUBSCRIPTIONS_MOCK = [
         offerToken: 'tokenOfferAnual',
       },
     ],
-    name: 'Premium Anual 2024',
+    nameAndroid: 'Premium Anual 2024',
     productType: 'subs',
     title: 'Premium Anual 2024 (Rebalanceei Investimento Ações)',
     id: 'rebalanceei_premium_anual_2024',
@@ -52,23 +52,23 @@ const SUBSCRIPTIONS_MOCK = [
         offerToken: 'tokenOfferMensal',
       },
     ],
-    name: 'Premium Mensal 2024',
+    nameAndroid: 'Premium Mensal 2024',
     productType: 'subs',
     title: 'Premium Mensal 2024 (Rebalanceei Investimento Ações)',
     id: 'rebalanceei_premium_mensal_24',
   },
-]
+];
 
-const mockedUseAuth = jest.fn()
-const mockedUseRoleUser = jest.fn()
+const mockedUseAuth = jest.fn();
+const mockedUseRoleUser = jest.fn();
 
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => mockedUseAuth(),
-}))
+}));
 
 jest.mock('../../hooks/useRoleUser', () => {
-  return jest.fn(() => mockedUseRoleUser())
-})
+  return jest.fn(() => mockedUseRoleUser());
+});
 
 jest.mock('../../services/Iap', () => ({
   listSku: ['rebalanceei_premium_mensal_24', 'rebalanceei_premium_anual_2024'],
@@ -79,62 +79,62 @@ jest.mock('../../services/Iap', () => ({
     finishTransaction: jest.fn(),
   }),
   sendRequestSubscription: jest.fn(),
-}))
+}));
 
 describe('PlanModal', () => {
   afterEach(() => {
-    jest.clearAllMocks()
-  })
+    jest.clearAllMocks();
+  });
 
   it('should successfully list current plan and options premium', async () => {
     mockedUseAuth.mockReturnValue({
       handleSetLoading: jest.fn(),
       showBanner: true,
-    })
+    });
 
     const { findAllByRole, getByText, getAllByText, getByRole, findByText } =
-      render(<PlanModal onClose={mockedOnClose} />)
+      render(<PlanModal onClose={mockedOnClose} />);
 
-    const title = await findAllByRole('header')
-    expect(title[0]).toHaveProperty('children', ['Meu Plano Atual'])
+    const title = await findAllByRole('header');
+    expect(title[0]).toHaveProperty('children', ['Meu Plano Atual']);
 
-    await findByText(/Plano Básico - Ativo/i)
-    getByText(/Grátis/i)
+    await findByText(/Plano Básico - Ativo/i);
+    getByText(/Grátis/i);
 
-    expect(title[1]).toHaveProperty('children', ['Torne-se Premium 👇'])
+    expect(title[1]).toHaveProperty('children', ['Torne-se Premium 👇']);
 
-    getByText(/Menu de Proventos/i)
-    getByText(/Gráficos exclusivos/i)
-    getByText(/Carteiras ilimitadas/i)
-    getByText(/Ativos ilimitados/i)
-    getByText(/Sem Anúncios/i)
+    getByText(/Menu de Proventos/i);
+    getByText(/Gráficos exclusivos/i);
+    getByText(/Carteiras ilimitadas/i);
+    getByText(/Ativos ilimitados/i);
+    getByText(/Sem Anúncios/i);
 
-    getByText(/Premium Anual/i)
-    getByText(/R\$ 120,00 OFF Anual/i)
-    getByText(/R\$ 335,64 \/ Ano/i)
+    getByText(/Premium Anual/i);
+    getByText(/R\$ 120,00 OFF Anual/i);
+    getByText(/R\$ 335,64 \/ Ano/i);
 
-    getByText(/Premium Mensal/i)
-    getByText(/R\$ 37,97 \/ Mês/i)
+    getByText(/Premium Mensal/i);
+    getByText(/R\$ 37,97 \/ Mês/i);
 
-    getAllByText(/Renovação automática/i)
+    getAllByText(/Renovação automática/i);
 
-    const submitButton = getByRole('button')
-    expect(submitButton).toHaveProperty('children', ['Assine já'])
+    const submitButton = getByRole('button');
+    expect(submitButton).toHaveProperty('children', ['Assine já']);
 
-    await act(async () => fireEvent.press(submitButton))
+    await act(async () => fireEvent.press(submitButton));
 
-    expect(sendRequestSubscription).toHaveBeenCalledTimes(1)
+    expect(sendRequestSubscription).toHaveBeenCalledTimes(1);
     expect(sendRequestSubscription).toHaveBeenLastCalledWith(
       'rebalanceei_premium_mensal_24',
       'tokenOfferMensal'
-    )
-  })
+    );
+  });
 
   it('should successfully list current plan premium', async () => {
     mockedUseAuth.mockReturnValue({
       handleSetLoading: jest.fn(),
       showBanner: false,
-    })
+    });
 
     mockedUseRoleUser.mockReturnValue({
       plan: {
@@ -150,7 +150,7 @@ describe('PlanModal', () => {
         platform: 'ANDROID',
         autoRenewing: true,
       },
-    })
+    });
 
     const {
       findAllByRole,
@@ -158,53 +158,53 @@ describe('PlanModal', () => {
       getByText,
       getByRole,
       mockOpenConfirmModal,
-    } = render(<PlanModal onClose={mockedOnClose} />)
+    } = render(<PlanModal onClose={mockedOnClose} />);
 
-    const title = await findAllByRole('header')
-    expect(title[0]).toHaveProperty('children', ['Meu Plano Atual'])
-    expect(title[1]).toHaveProperty('children', ['Premium'])
+    const title = await findAllByRole('header');
+    expect(title[0]).toHaveProperty('children', ['Meu Plano Atual']);
+    expect(title[1]).toHaveProperty('children', ['Premium']);
 
-    await findByText(/Premium Mensal - Ativo/i)
-    getByText(/R\$ 37,97 \/ Mês/i)
-    getByText(/^Data da Renovação$/i)
-    getByText(formatDate({ dateNumber: 1613978855335 }))
+    await findByText(/Premium Mensal - Ativo/i);
+    getByText(/R\$ 37,97 \/ Mês/i);
+    getByText(/^Data da Renovação$/i);
+    getByText(formatDate({ dateNumber: 1613978855335 }));
     getByText(
       /\*Seu Plano será renovado automáticamente na data da renovação./i
-    )
+    );
 
-    getByText('Premium')
-    getByText(/Menu de Proventos/i)
-    getByText(/Gráficos exclusivos/i)
-    getByText(/Carteiras ilimitadas/i)
-    getByText(/Ativos ilimitados/i)
-    getByText(/Sem Anúncios/i)
+    getByText('Premium');
+    getByText(/Menu de Proventos/i);
+    getByText(/Gráficos exclusivos/i);
+    getByText(/Carteiras ilimitadas/i);
+    getByText(/Ativos ilimitados/i);
+    getByText(/Sem Anúncios/i);
 
-    const cancelButton = getByRole('button')
-    expect(cancelButton).toHaveProperty('children', ['Cancelar Plano'])
+    const cancelButton = getByRole('button');
+    expect(cancelButton).toHaveProperty('children', ['Cancelar Plano']);
 
-    getByText(/\*Seu Plano continuará ativo até o fim do ciclo contratado./i)
+    getByText(/\*Seu Plano continuará ativo até o fim do ciclo contratado./i);
 
-    await act(async () => fireEvent.press(cancelButton))
+    await act(async () => fireEvent.press(cancelButton));
 
-    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1)
+    expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
     expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
       'Tem certeza que deseja cancelar o plano?'
-    )
+    );
     expect(mockOpenConfirmModal.mock.calls[0][0].legend).toBe(
       `Seu plano continuará ativo até o fim do ciclo contratado: ${formatDate({
         dateNumber: 1613978855335,
         withTime: false,
       })}`
-    )
+    );
 
     await act(async () => {
-      mockOpenConfirmModal.mock.calls[0][0].onConfirm()
-    })
+      mockOpenConfirmModal.mock.calls[0][0].onConfirm();
+    });
 
-    expect(mockedLinkCancelPlan).toHaveBeenCalledTimes(1)
+    expect(mockedLinkCancelPlan).toHaveBeenCalledTimes(1);
     expect(mockedLinkCancelPlan).toHaveBeenCalledWith(
       'com.rebalanceei',
       'rebalanceei_premium_mensal_24'
-    )
-  })
-})
+    );
+  });
+});

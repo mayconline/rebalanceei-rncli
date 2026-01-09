@@ -4,7 +4,8 @@ export const FormRow = styled.View``;
 
 export const ContainerButtons = styled.View`
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: center;
   margin: 20% auto;
   gap: 16px;
+  
 `;
