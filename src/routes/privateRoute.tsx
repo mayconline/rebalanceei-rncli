@@ -2,9 +2,7 @@ import React, { useContext } from 'react';
 import styled, { ThemeContext } from 'styled-components/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Entypo from 'react-native-vector-icons/Entypo';
-import Feather from 'react-native-vector-icons/Feather';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { Entypo, Feather, FontAwesome } from '../services/icons';
 
 import AddButton from '../components/AddButton';
 
@@ -15,6 +13,7 @@ import Rentability from '../pages/Rentability';
 import Chart from '../pages/Chart';
 import { useModalStore } from '../store/useModalStore';
 import AddTicketModal from '../modals/AddTicketModal';
+import { useNavigation } from '@react-navigation/native';
 
 interface labelProps {
   focused: boolean;
@@ -73,10 +72,16 @@ const icons: Icons = {
 const privateRoute = () => {
   const { color } = useContext(ThemeContext);
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
 
   const { openModal, modalType } = useModalStore(
-    ({ openModal, modalType }) => ({ openModal, modalType }),
+    ({ openModal, modalType }) => ({ openModal, modalType })
   );
+
+  const handleClickAddTicket = () => {
+    navigation.navigate('Ticket');
+    openModal('AddTicket');
+  };
 
   return (
     <Tab.Navigator
@@ -85,7 +90,7 @@ const privateRoute = () => {
           if (route.name === 'AddTicket') {
             return (
               <AddButton
-                onPress={() => openModal('AddTicket')}
+                onPress={handleClickAddTicket}
                 focused={focused}
                 size={64}
                 mb={64}
@@ -167,7 +172,7 @@ const privateRoute = () => {
           title: '',
         }}
         listeners={() => ({
-          tabPress: e => {
+          tabPress: (e) => {
             e.preventDefault();
           },
         })}

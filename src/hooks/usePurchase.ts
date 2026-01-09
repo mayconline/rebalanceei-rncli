@@ -6,7 +6,7 @@ import {
   type Subscription,
   type Purchase,
   sendRequestSubscription,
-  flushFailedPurchasesCachedAsPendingAndroid,
+  ErrorCode,
 } from '../services/Iap';
 import { useModalStore } from '../store/useModalStore';
 import useValidatePurchase from './useValidatePurchase';
@@ -42,29 +42,85 @@ const usePurchase = () => {
     validatePurchaseError,
   } = useValidatePurchase();
 
-  const {
-    connected,
-    subscriptions,
-    getSubscriptions,
-    finishTransaction,
-    currentPurchase,
-    currentPurchaseError,
-  } = useIAP();
+  const { connected, subscriptions, fetchProducts, finishTransaction } = useIAP(
+    {
+      onPurchaseSuccess: async (purchase) => {
+        const checkCurrentPurchase = async (
+          purchase: Purchase
+        ): Promise<void> => {
+          if (purchase && purchaseStatus === 'PROCESSING_PAYMENT') {
+            const transactionId = purchase?.transactionId;
+
+            if (transactionId) {
+              try {
+                setErrorMessage(undefined);
+
+                const validatePurchaseRequest = {
+                  platform: platform,
+                  packageName: purchase?.packageNameAndroid,
+                  productId: purchase?.productId,
+                  purchaseToken: purchase?.purchaseToken,
+                  subscription: true,
+                } as IValidatePurchaseRequest;
+
+                const validatedPurchase = await handleValidatePurchase(
+                  validatePurchaseRequest
+                );
+
+                const transactionData = {
+                  transactionDate: validatedPurchase?.transactionDate,
+                  renewDate: validatedPurchase?.renewDate,
+                  productId: validatedPurchase?.productId,
+                  packageName: validatedPurchase?.packageName,
+                  transactionId: validatedPurchase?.orderId,
+                  purchaseToken: validatedPurchase?.purchaseToken,
+                  platform: validatedPurchase?.platform,
+                  autoRenewing: validatedPurchase?.autoRenewing,
+                  description: selectedSku?.nameAndroid,
+                  localizedPrice:
+                    selectedSku?.subscriptionOfferDetailsAndroid?.[0]
+                      ?.pricingPhases?.pricingPhaseList?.[0]?.formattedPrice,
+                  subscriptionPeriodAndroid:
+                    selectedSku?.subscriptionOfferDetailsAndroid?.[0]
+                      ?.pricingPhases?.pricingPhaseList?.[0]?.billingPeriod,
+                };
+
+                await finishTransaction({ purchase });
+
+                await handleChangePlan(transactionData);
+
+                setPurchaseStatus('SUCCESS');
+              } catch (err: any) {
+                setErrorMessage(err);
+                setPurchaseStatus('ERROR');
+              }
+            }
+          }
+        };
+
+        await checkCurrentPurchase(purchase);
+      },
+      onPurchaseError(error) {
+        if (error.code !== ErrorCode.UserCancelled) {
+          setErrorMessage(error.message);
+        }
+        setPurchaseStatus('ERROR');
+      },
+    }
+  );
 
   const { handleSignOut } = useAuth();
 
   const inverseSubscriptions = useMemo(
     () => subscriptions?.reverse() as Subscription[],
-    [subscriptions],
+    [subscriptions]
   );
 
   useEffect(() => {
     if (listSku.length && connected) {
-      flushFailedPurchasesCachedAsPendingAndroid().then(() =>
-        getSubscriptions({ skus: listSku }),
-      );
+      fetchProducts({ skus: listSku, type: 'subs' });
     }
-  }, [getSubscriptions, connected]);
+  }, [fetchProducts, connected]);
 
   const [updateRole, { loading: updateRoleLoading, error: updateRoleError }] =
     useMutation<IUpdateRole>(UPDATE_ROLE);
@@ -89,77 +145,8 @@ const usePurchase = () => {
         throw new Error(err);
       }
     },
-    [handleSignOut, openConfirmModal, updateRole],
+    [handleSignOut, openConfirmModal, updateRole]
   );
-
-  useEffect(() => {
-    const checkCurrentPurchase = async (purchase?: Purchase): Promise<void> => {
-      if (purchase && purchaseStatus === 'PROCESSING_PAYMENT') {
-        const receipt = purchase.transactionReceipt;
-
-        if (receipt) {
-          try {
-            setErrorMessage(undefined);
-
-            const validatePurchaseRequest = {
-              platform: platform,
-              packageName: purchase?.packageNameAndroid,
-              productId: purchase?.productId,
-              purchaseToken: purchase?.purchaseToken,
-              subscription: true,
-            } as IValidatePurchaseRequest;
-
-            const validatedPurchase = await handleValidatePurchase(
-              validatePurchaseRequest,
-            );
-
-            const transactionData = {
-              transactionDate: validatedPurchase?.transactionDate,
-              renewDate: validatedPurchase?.renewDate,
-              productId: validatedPurchase?.productId,
-              packageName: validatedPurchase?.packageName,
-              transactionId: validatedPurchase?.orderId,
-              purchaseToken: validatedPurchase?.purchaseToken,
-              platform: validatedPurchase?.platform,
-              autoRenewing: validatedPurchase?.autoRenewing,
-              description: selectedSku?.name,
-              localizedPrice:
-                selectedSku?.subscriptionOfferDetails?.[0]?.pricingPhases
-                  ?.pricingPhaseList?.[0]?.formattedPrice,
-              subscriptionPeriodAndroid:
-                selectedSku?.subscriptionOfferDetails?.[0]?.pricingPhases
-                  ?.pricingPhaseList?.[0]?.billingPeriod,
-            };
-
-            await finishTransaction({ purchase });
-
-            await handleChangePlan(transactionData);
-
-            setPurchaseStatus('SUCCESS');
-          } catch (err: any) {
-            setErrorMessage(err);
-            setPurchaseStatus('ERROR');
-          }
-        }
-      }
-    };
-
-    checkCurrentPurchase(currentPurchase);
-  }, [
-    currentPurchase,
-    finishTransaction,
-    handleChangePlan,
-    selectedSku,
-    handleValidatePurchase,
-    purchaseStatus,
-  ]);
-
-  useEffect(() => {
-    if (currentPurchaseError) {
-      setErrorMessage(currentPurchaseError.message);
-      setPurchaseStatus('ERROR');
-    }
-  }, [currentPurchaseError]);
 
   useEffect(() => {
     if (inverseSubscriptions?.length) {
@@ -176,14 +163,12 @@ const usePurchase = () => {
 
       setPurchaseStatus('PROCESSING_PAYMENT');
 
-      await sendRequestSubscription(skuID.productId, [
-        {
-          sku: skuID.productId,
-          offerToken: skuID.subscriptionOfferDetails?.[0]?.offerToken,
-        },
-      ]);
+      await sendRequestSubscription(
+        skuID?.id,
+        skuID?.subscriptionOfferDetailsAndroid?.[0]?.offerToken
+      );
     },
-    [],
+    []
   );
 
   return {

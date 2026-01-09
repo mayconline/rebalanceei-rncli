@@ -18,7 +18,7 @@ import ImageHelp from '../../../assets/svg/ImageHelp';
 import TextError from '../../components/TextError';
 import useAmplitude from '../../hooks/useAmplitude';
 import { useAuth } from '../../contexts/authContext';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '../../services/icons';
 
 interface IHelpModal {
   onClose(): void;
@@ -42,7 +42,7 @@ const HelpModal = ({ onClose }: IHelpModal) => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Help Modal');
-    }, [logEvent]),
+    }, [logEvent])
   );
 
   const [questions, { data, loading: queryLoading, error: queryError }] =
@@ -51,13 +51,13 @@ const HelpModal = ({ onClose }: IHelpModal) => {
   useFocusEffect(
     useCallback(() => {
       questions();
-    }, [questions]),
+    }, [questions])
   );
 
   useFocusEffect(
     useCallback(() => {
       handleSetLoading(queryLoading);
-    }, [queryLoading, handleSetLoading]),
+    }, [queryLoading, handleSetLoading])
   );
 
   return (
@@ -69,11 +69,7 @@ const HelpModal = ({ onClose }: IHelpModal) => {
           accessibilityLabel="Voltar"
           onPress={onClose}
         >
-          <MaterialCommunityIcons
-            name="close"
-            size={24}
-            color={color.closeIcon}
-          />
+          <MaterialDesignIcons name="close" size={24} color={color.closeIcon} />
         </BackIcon>
       </ContainerTitle>
       <Image>
@@ -83,7 +79,7 @@ const HelpModal = ({ onClose }: IHelpModal) => {
         {!!queryError && <TextError>{queryError?.message}</TextError>}
         <ListTicket
           data={data?.questions}
-          keyExtractor={item => item._id}
+          keyExtractor={(item) => item._id}
           ListFooterComponent={
             <Collapse title="Sua duvida não foi respondida ?">
               <Question>

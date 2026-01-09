@@ -11,6 +11,7 @@ import {
   SuggestionError,
   BackButton,
   BackButtonContainer,
+  FormContainer,
 } from './styles';
 import api from '../../services/api';
 import { useDebouncedCallback } from 'use-debounce';
@@ -43,7 +44,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
   useFocusEffect(
     useCallback(() => {
       logEvent('open Suggestion Modal');
-    }, [logEvent]),
+    }, [logEvent])
   );
 
   const handleSuggestionsAutoComplete = useCallback(
@@ -55,7 +56,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
 
       displaySuggestionsAutoComplete(ticket);
     },
-    [logEvent],
+    [logEvent]
   );
 
   const displaySuggestionsAutoComplete = useDebouncedCallback(
@@ -81,7 +82,7 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
         setError(true);
       }
     },
-    300,
+    300
   );
 
   const handleSelectSuggest = useCallback(
@@ -90,62 +91,64 @@ const SuggestionsModal: React.FC<ISuggestionsProps> = ({
       logEvent('click on selected ticket at Suggestion Modal');
       onClose();
     },
-    [handleSelectTicket, logEvent, onClose],
+    [handleSelectTicket, logEvent, onClose]
   );
 
   return (
-    <SuggestionContainer>
-      <InputForm
-        label="Pesquise e selecione um ativo"
-        value={selectTicket}
-        placeholder="RBLC3"
-        maxLength={10}
-        autoFocus
-        onChangeText={ticket => handleSuggestionsAutoComplete(ticket)}
-        autoCapitalize={'characters'}
-      />
+    <FormContainer behavior={'position'}>
+      <SuggestionContainer>
+        <InputForm
+          label="Pesquise e selecione um ativo"
+          value={selectTicket}
+          placeholder="RBLC3"
+          maxLength={10}
+          autoFocus
+          onChangeText={(ticket) => handleSuggestionsAutoComplete(ticket)}
+          autoCapitalize={'characters'}
+        />
 
-      {loading ? (
-        <ActivityIndicator size="large" color={color.filterDisabled} />
-      ) : suggestions?.length ? (
-        <SuggestionList showsVerticalScrollIndicator={false}>
-          {suggestions?.map(suggestion => (
-            <SuggestionItem key={suggestion.symbol}>
-              <SuggestionButton
-                onPress={() =>
-                  handleSelectSuggest(
-                    suggestion?.symbol,
-                    !!suggestion?.longname
-                      ? suggestion?.longname
-                      : !!suggestion?.shortname
-                      ? suggestion?.shortname
-                      : suggestion?.symbol,
-                  )
-                }
-              >
-                <SuggestionText
-                  accessibilityRole="button"
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
+        {loading ? (
+          <ActivityIndicator size="large" color={color.filterDisabled} />
+        ) : suggestions?.length ? (
+          <SuggestionList showsVerticalScrollIndicator={false}>
+            {suggestions?.map((suggestion) => (
+              <SuggestionItem key={suggestion.symbol}>
+                <SuggestionButton
+                  onPress={() =>
+                    handleSelectSuggest(
+                      suggestion?.symbol,
+                      suggestion?.longname
+                        ? suggestion?.longname
+                        : suggestion?.shortname
+                          ? suggestion?.shortname
+                          : suggestion?.symbol
+                    )
+                  }
                 >
-                  {suggestion.symbol}- {suggestion.longname}
-                </SuggestionText>
-              </SuggestionButton>
-            </SuggestionItem>
-          ))}
-        </SuggestionList>
-      ) : (
-        error && (
-          <SuggestionError numberOfLines={1} ellipsizeMode="tail">
-            Ativo não encontrado
-          </SuggestionError>
-        )
-      )}
+                  <SuggestionText
+                    accessibilityRole="button"
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {suggestion.symbol}- {suggestion.longname}
+                  </SuggestionText>
+                </SuggestionButton>
+              </SuggestionItem>
+            ))}
+          </SuggestionList>
+        ) : (
+          error && (
+            <SuggestionError numberOfLines={1} ellipsizeMode="tail">
+              Ativo não encontrado
+            </SuggestionError>
+          )
+        )}
 
-      <BackButtonContainer onPress={() => onClose()}>
-        <BackButton>Fechar</BackButton>
-      </BackButtonContainer>
-    </SuggestionContainer>
+        <BackButtonContainer onPress={() => onClose()}>
+          <BackButton>Fechar</BackButton>
+        </BackButtonContainer>
+      </SuggestionContainer>
+    </FormContainer>
   );
 };
 

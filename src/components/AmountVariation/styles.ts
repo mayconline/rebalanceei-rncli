@@ -8,7 +8,7 @@ interface ITextProps {
   opacity?: number;
 }
 
-export const Wrapper = styled.SafeAreaView`
+export const Wrapper = styled.View`
   margin: 16px 0;
 `;
 
@@ -56,8 +56,8 @@ export const VariationAmount = styled.Text<IFormatStatus>`
     variation > 0
       ? theme.color.success
       : variation < 0
-      ? theme.color.danger
-      : theme.color.titleItemCard};
+        ? theme.color.danger
+        : theme.color.titleItemCard};
   font: 600 18px 'TitilliumWeb-Semibold';
   align-self: flex-end;
   font-smooth: antialiased;

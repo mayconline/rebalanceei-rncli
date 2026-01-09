@@ -1,9 +1,8 @@
 module.exports = api => {
-  api.cache(false);
+  api.cache(false)
   return {
     plugins: [
       '@babel/plugin-transform-named-capturing-groups-regex',
-      'react-native-reanimated/plugin',
       [
         'module:react-native-dotenv',
         {
@@ -21,5 +20,5 @@ module.exports = api => {
       ],
     ],
     presets: ['module:@react-native/babel-preset'],
-  };
-};
+  }
+}

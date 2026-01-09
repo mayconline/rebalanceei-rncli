@@ -28,7 +28,7 @@ interface IRoleUserContext {
 }
 
 export const RoleUserContext = createContext<IRoleUserContext>(
-  {} as IRoleUserContext,
+  {} as IRoleUserContext
 );
 
 export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
@@ -49,17 +49,17 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
     GET_USER_BY_TOKEN,
     {
       fetchPolicy: 'cache-first',
-    },
+    }
   );
 
   useEffect(() => {
     getUserByToken()
-      .then(response => {
+      .then((response) => {
         if (!queryLoading && !!response?.data?.getUserByToken?.plan) {
           setPlan(response?.data?.getUserByToken?.plan);
         }
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
   }, [getUserByToken, queryLoading]);
 
   const handleVerificationPlan = useCallback(
@@ -71,6 +71,7 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
       }
 
       const purchases = await restoreSubscription();
+
       if (!purchases.length) {
         setStatePlan('CANCEL');
         return;
@@ -85,7 +86,7 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
       } as IValidatePurchaseRequest;
 
       const validatePurchase = await handleValidatePurchase(
-        validatePurchaseRequest,
+        validatePurchaseRequest
       );
 
       const transactionData = {
@@ -102,7 +103,7 @@ export const RoleUserProvider = ({ children }: IRoleUserProvider) => {
 
       setPlan(transactionData);
     },
-    [handleValidatePurchase],
+    [handleValidatePurchase]
   );
 
   useEffect(() => {

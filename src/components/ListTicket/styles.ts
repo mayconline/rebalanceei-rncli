@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-export const List = styled.SafeAreaView`
+export const List = styled.View`
   flex: 1;
 `;
 

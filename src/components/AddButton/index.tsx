@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components/native';
-import Feather from 'react-native-vector-icons/Feather';
+import { Feather } from '../../services/icons';
 
-import { AddButtonProps, Button } from './styles';
+import { type AddButtonProps, Button } from './styles';
 
 const AddButton = ({ onPress, focused, size, mb }: AddButtonProps) => {
   const { color } = useContext(ThemeContext);

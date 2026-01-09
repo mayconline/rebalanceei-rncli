@@ -1,12 +1,12 @@
 import styled from 'styled-components/native';
 
-export const Wrapper = styled.SafeAreaView`
+export const Wrapper = styled.View`
   height: 20%;
   flex-direction: column;
   margin: 0 16px;
 `;
 
-export const MenuBar = styled.SafeAreaView`
+export const MenuBar = styled.View`
   flex: 1;
   flex-direction: row;
   align-items: center;

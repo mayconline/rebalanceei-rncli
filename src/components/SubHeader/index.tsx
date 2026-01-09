@@ -1,7 +1,8 @@
-import React, { useCallback, useContext, useRef } from 'react';
+import type React from 'react';
+import { useCallback, useContext, useRef } from 'react';
 import { ScrollView } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { FontAwesome5 } from '../../services/icons';
 import {
   Wrapper,
   ContainerTitle,
@@ -55,19 +56,25 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
   const { color } = useContext(ThemeContext);
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const verifyPremiumFilter = useCallback((filterName: string) => {
-    return PREMIUM_FILTER.includes(filterName) && showBanner;
-  }, []);
+  const verifyPremiumFilter = useCallback(
+    (filterName: string) => {
+      return PREMIUM_FILTER.includes(filterName) && showBanner;
+    },
+    [showBanner]
+  );
 
-  const handleSelectFilter = useCallback((filterName: string) => {
-    logEvent(`selected ${filterName} filter`);
+  const handleSelectFilter = useCallback(
+    (filterName: string) => {
+      logEvent(`selected ${filterName} filter`);
 
-    if (verifyPremiumFilter(filterName)) {
-      openModal('PLAN');
-    } else {
-      onPress(filterName);
-    }
-  }, []);
+      if (verifyPremiumFilter(filterName)) {
+        openModal('PLAN');
+      } else {
+        onPress(filterName);
+      }
+    },
+    [verifyPremiumFilter, openModal, onPress, logEvent]
+  );
 
   return (
     <>
@@ -99,7 +106,7 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
               scrollViewRef?.current?.scrollToEnd({ animated: true })
             }
           >
-            {filters?.map(filter => (
+            {filters?.map((filter) => (
               <Filter
                 key={filter.name}
                 onPress={() => handleSelectFilter(filter.name)}
@@ -110,7 +117,12 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
               </Filter>
             ))}
           </ScrollView>
-          <FontAwesome5 name="sort-amount-up" size={24} color={color.title} />
+          <FontAwesome5
+            name="sort-amount-up"
+            size={24}
+            color={color.title}
+            iconStyle="solid"
+          />
         </FiltersContainer>
       </Wrapper>
     </>

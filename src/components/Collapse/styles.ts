@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-export const Wrapper = styled.SafeAreaView`
+export const Wrapper = styled.View`
   margin: 8px 0;
   flex: 0;
   border: 1px solid ${({ theme }) => theme.color.success};

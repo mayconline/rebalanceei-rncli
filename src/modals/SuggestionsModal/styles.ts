@@ -1,6 +1,14 @@
 import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+export const FormContainer = styled.KeyboardAvoidingView`
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  elevation: 5;
+`;
+
 export const SuggestionContainer = styled(SafeAreaView)`
   background-color: ${({ theme }) => theme.color.secondary};
   padding: 20px 20px 4px;
@@ -9,10 +17,7 @@ export const SuggestionContainer = styled(SafeAreaView)`
 
   min-height: 380px;
   width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  elevation: 5;
+
 `;
 
 export const SuggestionList = styled.ScrollView`

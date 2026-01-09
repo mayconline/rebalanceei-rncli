@@ -83,8 +83,8 @@ android {
         applicationId "com.rebalanceei"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 47
-        versionName "2.2.0"
+        versionCode 48
+        versionName "2.3.0"
         multiDexEnabled true
         missingDimensionStrategy 'store', 'play'
     }   
@@ -119,8 +119,9 @@ android {
 }
 
 dependencies {
-    def billing_version = "7.0.0"
-    implementation "com.android.billingclient:billing:$billing_version"
+    def billing_version = "8.3.0"
+
+    implementation("com.android.billingclient:billing:$billing_version")
 
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
@@ -137,7 +138,4 @@ dependencies {
 
 
 
-project.ext.vectoricons = [
-    iconFontNames:['Feather.ttf','Entypo.ttf','FontAwesome.ttf','FontAwesome5_Brands.ttf','FontAwesome5_Regular.ttf','FontAwesome5_Solid.ttf','AntDesign.ttf','MaterialCommunityIcons.ttf','Octicons.ttf']
-];
-apply from: '../../node_modules/react-native-vector-icons/fonts.gradle'
+

@@ -43,11 +43,11 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       handleSelectPlan(duration);
       setErrorMessage(undefined);
     },
-    [handleSelectPlan, setErrorMessage, setSelectedSku],
+    [handleSelectPlan, setErrorMessage, setSelectedSku]
   );
 
   const hasPurchaseLoading = ['LOADING_LIST', 'PROCESSING_PAYMENT'].includes(
-    purchaseStatus,
+    purchaseStatus
   );
 
   return hasPurchaseLoading ? (
@@ -64,9 +64,9 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
       {!!listSubscriptions?.length && <CopyPremmium />}
 
       {listSubscriptions?.length ? (
-        listSubscriptions?.map(subscription => {
+        listSubscriptions?.map((subscription) => {
           const subsDetails =
-            subscription?.subscriptionOfferDetails?.[0]?.pricingPhases
+            subscription?.subscriptionOfferDetailsAndroid?.[0]?.pricingPhases
               ?.pricingPhaseList?.[0];
 
           const subscriptionPeriodAndroid = subsDetails?.billingPeriod;
@@ -74,8 +74,8 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
           return (
             <CardPlan
-              key={subscription.productId}
-              title={subscription.name}
+              key={subscription.id}
+              title={subscription.nameAndroid}
               descriptions={
                 subscriptionPeriodAndroid === 'P1M'
                   ? []

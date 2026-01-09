@@ -1,6 +1,5 @@
 import { useCallback, useContext } from 'react';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-
+import { FontAwesome5 } from '../../services/icons';
 import { MenuButton, MenuButtonText, MenuWrapper } from './styles';
 import { ThemeContext } from 'styled-components/native';
 import useAmplitude from '../../hooks/useAmplitude';
@@ -23,19 +22,22 @@ export const RentabilityMenuTab = ({
   const { color } = useContext(ThemeContext);
   const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
 
-  const handleSelectMenu = useCallback((menu: string) => {
-    logEvent(`selected ${menu} menu`);
+  const handleSelectMenu = useCallback(
+    (menu: string) => {
+      logEvent(`selected ${menu} menu`);
 
-    if (verifyPremiumFilter(menu)) {
-      openModal('PLAN');
-    } else {
-      handleChangeMenu(menu);
-    }
-  }, []);
+      if (verifyPremiumFilter(menu)) {
+        openModal('PLAN');
+      } else {
+        handleChangeMenu(menu);
+      }
+    },
+    [verifyPremiumFilter, openModal, handleChangeMenu, logEvent]
+  );
 
   return (
     <MenuWrapper>
-      {menuTitles?.map(menu => (
+      {menuTitles?.map((menu) => (
         <MenuButton key={menu} onPress={() => handleSelectMenu(menu)}>
           <MenuButtonText
             focused={menu === selectedMenu}
@@ -49,6 +51,7 @@ export const RentabilityMenuTab = ({
                   ? color.filterFocused
                   : color.filterDisabled
               }
+              iconStyle="solid"
             />{' '}
             {menu}
           </MenuButtonText>

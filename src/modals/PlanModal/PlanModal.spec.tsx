@@ -10,7 +10,7 @@ const mockedLinkCancelPlan = jest.spyOn(CancelPlan, 'getLinkCancelPlan');
 
 const SUBSCRIPTIONS_MOCK = [
   {
-    subscriptionOfferDetails: [
+    subscriptionOfferDetailsAndroid: [
       {
         pricingPhases: {
           pricingPhaseList: [
@@ -28,13 +28,13 @@ const SUBSCRIPTIONS_MOCK = [
         offerToken: 'tokenOfferAnual',
       },
     ],
-    name: 'Premium Anual 2024',
+    nameAndroid: 'Premium Anual 2024',
     productType: 'subs',
     title: 'Premium Anual 2024 (Rebalanceei Investimento Ações)',
-    productId: 'rebalanceei_premium_anual_2024',
+    id: 'rebalanceei_premium_anual_2024',
   },
   {
-    subscriptionOfferDetails: [
+    subscriptionOfferDetailsAndroid: [
       {
         pricingPhases: {
           pricingPhaseList: [
@@ -52,10 +52,10 @@ const SUBSCRIPTIONS_MOCK = [
         offerToken: 'tokenOfferMensal',
       },
     ],
-    name: 'Premium Mensal 2024',
+    nameAndroid: 'Premium Mensal 2024',
     productType: 'subs',
     title: 'Premium Mensal 2024 (Rebalanceei Investimento Ações)',
-    productId: 'rebalanceei_premium_mensal_24',
+    id: 'rebalanceei_premium_mensal_24',
   },
 ];
 
@@ -75,12 +75,10 @@ jest.mock('../../services/Iap', () => ({
   useIAP: (): Record<string, unknown> => ({
     connected: true,
     subscriptions: SUBSCRIPTIONS_MOCK.reverse(),
-    getSubscriptions: jest.fn(),
+    fetchProducts: jest.fn(),
     finishTransaction: jest.fn(),
   }),
   sendRequestSubscription: jest.fn(),
-  flushFailedPurchasesCachedAsPendingAndroid: jest.fn().mockResolvedValue(true),
-  withIAPContext: jest.fn,
 }));
 
 describe('PlanModal', () => {
@@ -128,12 +126,7 @@ describe('PlanModal', () => {
     expect(sendRequestSubscription).toHaveBeenCalledTimes(1);
     expect(sendRequestSubscription).toHaveBeenLastCalledWith(
       'rebalanceei_premium_mensal_24',
-      [
-        {
-          offerToken: 'tokenOfferMensal',
-          sku: 'rebalanceei_premium_mensal_24',
-        },
-      ],
+      'tokenOfferMensal'
     );
   });
 
@@ -176,7 +169,7 @@ describe('PlanModal', () => {
     getByText(/^Data da Renovação$/i);
     getByText(formatDate({ dateNumber: 1613978855335 }));
     getByText(
-      /\*Seu Plano será renovado automáticamente na data da renovação./i,
+      /\*Seu Plano será renovado automáticamente na data da renovação./i
     );
 
     getByText('Premium');
@@ -195,13 +188,13 @@ describe('PlanModal', () => {
 
     expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
     expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
-      'Tem certeza que deseja cancelar o plano?',
+      'Tem certeza que deseja cancelar o plano?'
     );
     expect(mockOpenConfirmModal.mock.calls[0][0].legend).toBe(
       `Seu plano continuará ativo até o fim do ciclo contratado: ${formatDate({
         dateNumber: 1613978855335,
         withTime: false,
-      })}`,
+      })}`
     );
 
     await act(async () => {
@@ -211,7 +204,7 @@ describe('PlanModal', () => {
     expect(mockedLinkCancelPlan).toHaveBeenCalledTimes(1);
     expect(mockedLinkCancelPlan).toHaveBeenCalledWith(
       'com.rebalanceei',
-      'rebalanceei_premium_mensal_24',
+      'rebalanceei_premium_mensal_24'
     );
   });
 });

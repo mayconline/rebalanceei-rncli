@@ -38,7 +38,7 @@ const EditWallet = ({
     ({ openConfirmModal, setLoading }) => ({
       openConfirmModal,
       setLoading,
-    }),
+    })
   );
 
   const { color } = useContext(ThemeContext);
@@ -48,7 +48,7 @@ const EditWallet = ({
   useFocusEffect(
     useCallback(() => {
       walletData && setWallet(walletData);
-    }, [walletData]),
+    }, [walletData])
   );
 
   const handleSetName = useCallback((walletName: string) => {
@@ -165,7 +165,7 @@ const EditWallet = ({
       setFocus(nextFocus);
       logEvent(`filled ${nameInput} input at Add Wallet`);
     },
-    [logEvent],
+    [logEvent]
   );
 
   return (

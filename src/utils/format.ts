@@ -56,7 +56,7 @@ export const formatFilter = (filter: string) =>
     amount: 'Valor',
     month: 'Mês',
     accumulated: 'Acumulado',
-  }[filter]);
+  })[filter];
 
 export const PREMIUM_FILTER = ['SECTOR', 'INDUSTRY', 'Proventos'];
 
@@ -98,7 +98,7 @@ export const formatErrors = (error: string) =>
     'You already own this item.': 'Sua conta google já possui esta assinatura',
     'Billing is unavailable. This may be a problem with your device, or the Play Store may be down.':
       'Houve uma falha ao se conectar a google play.',
-  }[error]);
+  })[error];
 
 export const openPlanModalOnError = (errorMessage?: string) => {
   if (!errorMessage?.length) return false;
@@ -108,19 +108,6 @@ export const openPlanModalOnError = (errorMessage?: string) => {
     errorMessage === 'Wallet limit Reached';
 
   return openPlanModal;
-};
-
-export const formatDate = ({
-  dateNumber,
-  withTime = true,
-}: {
-  dateNumber: number;
-  withTime?: boolean;
-}) => {
-  const date = new Date(dateNumber).toLocaleDateString();
-  const time = new Date(dateNumber).toLocaleTimeString();
-
-  return withTime ? `${date} às ${time}` : date;
 };
 
 export const formatMonth = (month: number): string =>
@@ -137,7 +124,27 @@ export const formatMonth = (month: number): string =>
     10: 'Outubro',
     11: 'Novembro',
     12: 'Dezembro',
-  }[month] ?? '');
+  })[month] ?? '';
+
+export const formatDate = ({
+  dateNumber,
+  withTime = true,
+}: {
+  dateNumber: number;
+  withTime?: boolean;
+}) => {
+  const time = new Date(dateNumber).toLocaleTimeString();
+
+  const day = new Date(dateNumber).getDate();
+  const month = new Date(dateNumber).getMonth();
+  const year = new Date(dateNumber).getFullYear();
+
+  const formattedDay = day.toString().padStart(2, '0');
+
+  const dateFormatted = `${formattedDay} de ${formatMonth(month + 1).slice(0, 3)} de ${year}`;
+
+  return withTime ? `${dateFormatted} às ${time}` : dateFormatted;
+};
 
 export const formatNumberRound = (number?: number) => {
   if (!number) return 0;
