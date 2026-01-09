@@ -17,10 +17,7 @@ export const SuggestionContainer = styled(SafeAreaView)`
 
   min-height: 380px;
   width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  elevation: 5;
+
 `;
 
 export const SuggestionList = styled.ScrollView`

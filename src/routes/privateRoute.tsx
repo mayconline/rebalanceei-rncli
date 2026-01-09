@@ -13,6 +13,7 @@ import Rentability from '../pages/Rentability';
 import Chart from '../pages/Chart';
 import { useModalStore } from '../store/useModalStore';
 import AddTicketModal from '../modals/AddTicketModal';
+import { useNavigation } from '@react-navigation/native';
 
 interface labelProps {
   focused: boolean;
@@ -71,10 +72,16 @@ const icons: Icons = {
 const privateRoute = () => {
   const { color } = useContext(ThemeContext);
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
 
   const { openModal, modalType } = useModalStore(
     ({ openModal, modalType }) => ({ openModal, modalType })
   );
+
+  const handleClickAddTicket = () => {
+    navigation.navigate('Ticket');
+    openModal('AddTicket');
+  };
 
   return (
     <Tab.Navigator
@@ -83,7 +90,7 @@ const privateRoute = () => {
           if (route.name === 'AddTicket') {
             return (
               <AddButton
-                onPress={() => openModal('AddTicket')}
+                onPress={handleClickAddTicket}
                 focused={focused}
                 size={64}
                 mb={64}

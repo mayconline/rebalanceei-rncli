@@ -16,6 +16,7 @@ import Button from '../../components/Button';
 import { useAuth } from '../../contexts/authContext';
 import useWalletMonitor from '../../hooks/useWalletMonitor';
 import { useModalStore } from '../../store/useModalStore';
+import { useNavigation } from '@react-navigation/native';
 
 interface IEmpty {
   errorMessage?: string;
@@ -24,18 +25,27 @@ interface IEmpty {
 const Empty = ({ errorMessage }: IEmpty) => {
   const { handleSignOut, wallet } = useAuth();
   const { hasInvalidWallet, hasServerFailed } = useWalletMonitor(errorMessage);
+  const navigation = useNavigation();
 
   const { openModal } = useModalStore(({ openModal }) => ({ openModal }));
 
   const handlePressAction = useCallback(() => {
     if (hasServerFailed) {
-      return handleSignOut();
+      handleSignOut();
     } else if (hasInvalidWallet || !wallet) {
-      return openModal('Wallet');
+      openModal('Wallet');
     } else if (!hasInvalidWallet && !hasServerFailed && !!wallet) {
-      return openModal('AddTicket');
+      navigation.navigate('Ticket');
+      openModal('AddTicket');
     } else return;
-  }, [hasInvalidWallet, hasServerFailed, wallet]);
+  }, [
+    hasInvalidWallet,
+    hasServerFailed,
+    wallet,
+    handleSignOut,
+    openModal,
+    navigation,
+  ]);
 
   return (
     <Wrapper>
@@ -54,15 +64,15 @@ const Empty = ({ errorMessage }: IEmpty) => {
             {hasServerFailed
               ? 'Não conseguimos conectar ao servidor.'
               : hasInvalidWallet
-              ? 'Não conseguimos carregar sua carteira.'
-              : 'Adicione um ativo dando uma nota para ele.'}
+                ? 'Não conseguimos carregar sua carteira.'
+                : 'Adicione um ativo dando uma nota para ele.'}
           </Subtitle>
           <Subtitle accessibilityRole="text">
             {hasServerFailed
               ? 'Por favor verifique sua conexão e tente logar novamente.'
               : hasInvalidWallet
-              ? 'Por favor tente selecionar novamente a carteira.'
-              : 'Usaremos essa nota para calcular a % ideal desse ativo nessa carteira.'}
+                ? 'Por favor tente selecionar novamente a carteira.'
+                : 'Usaremos essa nota para calcular a % ideal desse ativo nessa carteira.'}
           </Subtitle>
         </ContainerTitle>
       </Main>
@@ -71,8 +81,8 @@ const Empty = ({ errorMessage }: IEmpty) => {
           {hasServerFailed
             ? 'Tentar Novamente'
             : hasInvalidWallet
-            ? 'Selecionar Carteira'
-            : 'Adicionar Ativo'}
+              ? 'Selecionar Carteira'
+              : 'Adicionar Ativo'}
         </Button>
       </Footer>
     </Wrapper>
