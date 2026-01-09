@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { Pressable } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import { Feather } from '../../services/icons';
 import { ThemeContext } from 'styled-components/native';
 
 import {
@@ -30,7 +29,7 @@ const YearFilter = ({
       <Divider mt={'16px'} />
       <ContainerYearFilter>
         <YearButton
-          onPress={() => setCurrentYear(current => current - 1)}
+          onPress={() => setCurrentYear((current) => current - 1)}
           accessibilityRole="button"
           accessibilityLabel="Ano Anterior"
           disabled={isAccumulated}
@@ -51,7 +50,7 @@ const YearFilter = ({
         </YearContainer>
 
         <YearButton
-          onPress={() => setCurrentYear(current => current + 1)}
+          onPress={() => setCurrentYear((current) => current + 1)}
           accessibilityRole="button"
           accessibilityLabel="Próximo Ano"
           disabled={isAccumulated}

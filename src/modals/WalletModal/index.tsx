@@ -22,7 +22,7 @@ import AddWalletModal from '../AddWalletModal';
 import ListTicket from '../../components/ListTicket';
 import ListItem from './ListItem';
 import useAmplitude from '../../hooks/useAmplitude';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '../../services/icons';
 import { ListFooter } from './ListFooter';
 
 interface IWalletProps {
@@ -60,7 +60,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Wallet Modal');
-    }, [logEvent]),
+    }, [logEvent])
   );
 
   const [getWalletByUser, { data, loading: queryLoading, error: queryError }] =
@@ -71,13 +71,13 @@ const WalletModal = ({ onClose }: IWalletProps) => {
   useFocusEffect(
     useCallback(() => {
       handleSetLoading(queryLoading);
-    }, [queryLoading, handleSetLoading]),
+    }, [queryLoading, handleSetLoading])
   );
 
   useFocusEffect(
     useCallback(() => {
       !data?.getWalletByUser && getWalletByUser();
-    }, [data?.getWalletByUser, getWalletByUser]),
+    }, [data?.getWalletByUser, getWalletByUser])
   );
 
   const handleSelectWallet = useCallback(
@@ -88,21 +88,21 @@ const WalletModal = ({ onClose }: IWalletProps) => {
       logEvent('click on select wallet');
       onClose();
     },
-    [handleSetWallet, onClose, logEvent],
+    [handleSetWallet, onClose, logEvent]
   );
 
   const handleAddWallet = useCallback(() => {
-    setOpenModal(openModal => !openModal);
+    setOpenModal((openModal) => !openModal);
     logEvent('click on add wallet');
   }, [logEvent]);
 
   const handleEditWallet = useCallback(
     (_id: string, description: string) => {
       setEditWallet({ _id, description });
-      setOpenModal(openModal => !openModal);
+      setOpenModal((openModal) => !openModal);
       logEvent('click on edit wallet');
     },
-    [logEvent],
+    [logEvent]
   );
 
   const handleResetEditWallet = useCallback(() => {
@@ -119,7 +119,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
             accessibilityLabel="Voltar"
             onPress={onClose}
           >
-            <MaterialCommunityIcons
+            <MaterialDesignIcons
               name="close"
               size={24}
               color={color.closeIcon}
@@ -130,7 +130,7 @@ const WalletModal = ({ onClose }: IWalletProps) => {
         <ListTicket
           data={data?.getWalletByUser}
           extraData={!!queryLoading}
-          keyExtractor={item => item._id}
+          keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <ListItem
               item={item}

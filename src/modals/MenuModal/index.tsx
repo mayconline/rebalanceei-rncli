@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useContext, useState } from 'react';
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '../../services/icons';
 
 import { useAuth } from '../../contexts/authContext';
 import { getTerms } from '../../utils/Terms';
@@ -28,37 +28,37 @@ import { Modal } from '../../components/Modal';
 
 const menuItens = [
   {
-    lib: MaterialCommunityIcons,
+    lib: MaterialDesignIcons,
     icon: 'face-man-profile',
     description: 'Minha Conta',
   },
   {
-    lib: MaterialCommunityIcons,
+    lib: MaterialDesignIcons,
     icon: 'crown',
     description: 'Meu Plano Atual',
   },
   {
-    lib: MaterialCommunityIcons,
+    lib: MaterialDesignIcons,
     icon: 'theme-light-dark',
     description: 'Modo Escuro',
   },
   {
-    lib: MaterialCommunityIcons,
+    lib: MaterialDesignIcons,
     icon: 'help-circle',
     description: 'Ajuda',
   },
   {
-    lib: MaterialCommunityIcons,
+    lib: MaterialDesignIcons,
     icon: 'application-cog-outline',
     description: 'Versão do APP - v2.3.0',
   },
   {
-    lib: MaterialCommunityIcons,
+    lib: MaterialDesignIcons,
     icon: 'shield-check',
     description: 'Termos de Uso',
   },
   {
-    lib: MaterialCommunityIcons,
+    lib: MaterialDesignIcons,
     icon: 'logout-variant',
     description: 'Sair',
   },
@@ -124,7 +124,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
               accessibilityLabel="Voltar"
               onPress={onClose}
             >
-              <MaterialCommunityIcons
+              <MaterialDesignIcons
                 name="close"
                 size={20}
                 color={color.closeIcon}

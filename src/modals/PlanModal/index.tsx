@@ -8,7 +8,7 @@ import { Wrapper, ScrollView, ContainerTitle, BackIcon, Title } from './styles';
 import Free from './components/Free';
 import Premium from './components/Premium';
 import { useAuth } from '../../contexts/authContext';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '../../services/icons';
 
 interface PlanModal {
   onClose(): void;
@@ -25,7 +25,7 @@ const PlanModal = ({ onClose }: PlanModal) => {
   useFocusEffect(
     useCallback(() => {
       showBanner ? handleSelectPlan('P1Y') : handleSelectPlan('FREE');
-    }, [showBanner]),
+    }, [showBanner])
   );
 
   const handleSelectPlan = useCallback((plan: IPlanName) => {
@@ -42,7 +42,7 @@ const PlanModal = ({ onClose }: PlanModal) => {
             accessibilityLabel="Voltar"
             onPress={onClose}
           >
-            <MaterialCommunityIcons
+            <MaterialDesignIcons
               name="close"
               size={24}
               color={color.closeIcon}

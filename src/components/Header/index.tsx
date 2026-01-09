@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import { ThemeContext } from 'styled-components/native';
 import { useAuth } from '../../contexts/authContext';
-import Entypo from 'react-native-vector-icons/Entypo';
+import { Entypo, MaterialDesignIcons } from '../../services/icons';
 
 import {
   Wrapper,
@@ -20,7 +20,6 @@ import {
 import { useModalStore } from '../../store/useModalStore';
 import RebalanceeiLogo from '../../../assets/svg/RebalanceeiLogo';
 import Divider from '../Divider';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Header = () => {
   const { walletName, userEmail } = useAuth();
@@ -48,7 +47,7 @@ const Header = () => {
         </WrapperLogo>
         <Icons>
           <Menu onPress={() => openModal('Menu')}>
-            <MaterialCommunityIcons
+            <MaterialDesignIcons
               name="menu"
               size={32}
               color={color.headerPrimary}

@@ -4,7 +4,7 @@ import { ThemeContext } from 'styled-components/native';
 import { Title, FormContainer, Form, TitleContainer } from './styles';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import useAmplitude from '../../hooks/useAmplitude';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '../../services/icons';
 import { BackIcon } from '../../modals/PlanModal/styles';
 
 interface LayoutFormProps {
@@ -27,7 +27,7 @@ const LayoutForm = ({
   useFocusEffect(
     useCallback(() => {
       logEvent(`open ${routeName}`);
-    }, [logEvent, routeName]),
+    }, [logEvent, routeName])
   );
 
   const handleGoBack = useCallback(() => {
@@ -52,7 +52,7 @@ const LayoutForm = ({
               accessibilityLabel="Voltar"
               onPress={handleGoBack}
             >
-              <MaterialCommunityIcons
+              <MaterialDesignIcons
                 name="close"
                 size={24}
                 color={color.closeIcon}

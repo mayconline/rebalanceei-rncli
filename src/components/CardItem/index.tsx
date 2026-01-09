@@ -15,7 +15,7 @@ import {
   AmountTextStyle,
 } from './styles';
 import { colors } from '../../themes/colors';
-import Feather from 'react-native-vector-icons/Feather';
+import { Feather } from '../../services/icons';
 import { formatTicket } from '../../utils/format';
 import type { TextProps } from 'react-native';
 import { ThemeContext } from 'styled-components/native';
@@ -89,7 +89,7 @@ const CardSubTitle = memo(
         {text}
       </CardSubTitleStyle>
     );
-  },
+  }
 );
 
 const CardEditButton = memo(({ onPress, ...props }: ICardEditButtonProps) => {
@@ -129,7 +129,7 @@ const CardAmountText = memo(
         {text}
       </AmountTextStyle>
     );
-  },
+  }
 );
 
 const MemoizedBaseCardItem = memo(({ children }: ICardItemProps) => {

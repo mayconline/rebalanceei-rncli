@@ -11,7 +11,7 @@ import {
 } from './styles';
 
 import SuggestionsModal from '../../modals/SuggestionsModal';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '../../services/icons';
 import EditTicket from '../EditTicket';
 import type { ITickets } from '../../pages/Ticket';
 import Button from '../../components/Button';
@@ -73,7 +73,7 @@ const AddTicketModal = ({ onClose, contentModal }: IAddTicketModalProps) => {
   }, [wallet]);
 
   const handleSelectTicket = useCallback((symbol: string, name: string) => {
-    setTicketForm(ticketForm => ({
+    setTicketForm((ticketForm) => ({
       ...ticketForm,
       symbol,
       name,
@@ -147,17 +147,17 @@ const AddTicketModal = ({ onClose, contentModal }: IAddTicketModalProps) => {
   }, [mutationError, openModal]);
 
   const handleSetGrade = useCallback((grade: string) => {
-    setTicketForm(ticketForm => ({ ...ticketForm, grade }));
+    setTicketForm((ticketForm) => ({ ...ticketForm, grade }));
   }, []);
 
   const handleSetQuantity = useCallback((quantity: string) => {
-    setTicketForm(ticketForm => ({ ...ticketForm, quantity }));
+    setTicketForm((ticketForm) => ({ ...ticketForm, quantity }));
   }, []);
 
   const handleSetPrice = useCallback((averagePrice: string) => {
     const { value, preview } = formatAveragePricePreview(averagePrice);
 
-    setTicketForm(ticketForm => ({
+    setTicketForm((ticketForm) => ({
       ...ticketForm,
       averagePrice: value,
       averagePreview: preview,
@@ -169,7 +169,7 @@ const AddTicketModal = ({ onClose, contentModal }: IAddTicketModalProps) => {
       setFocus(nextFocus);
       logEvent(`filled ${nameInput} input at Add Ticket`);
     },
-    [logEvent],
+    [logEvent]
   );
 
   return (
@@ -189,7 +189,7 @@ const AddTicketModal = ({ onClose, contentModal }: IAddTicketModalProps) => {
           <>
             <FormRow>
               <SuggestButton onPress={HandleOpenSuggestionsModal}>
-                <MaterialCommunityIcons
+                <MaterialDesignIcons
                   name="file-document-edit-outline"
                   size={24}
                   color={color.titleNotImport}

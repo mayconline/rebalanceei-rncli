@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { ThemeContext } from 'styled-components/native';
 import type { TextInputProps } from 'react-native';
-import Entypo from 'react-native-vector-icons/Entypo';
+import { Entypo } from '../../services/icons';
 
 import {
   Container,
@@ -78,7 +78,7 @@ const InputForm = ({
         <InputIcon
           accessibilityLabel="Ver Senha"
           onPress={() =>
-            setVisiblePassword(visiblePassword => !visiblePassword)
+            setVisiblePassword((visiblePassword) => !visiblePassword)
           }
         >
           <Entypo
