@@ -50,7 +50,7 @@ const menuItens = [
   {
     lib: MaterialCommunityIcons,
     icon: 'application-cog-outline',
-    description: 'Versão do APP - v2.2.0',
+    description: 'Versão do APP - v2.3.0',
   },
   {
     lib: MaterialCommunityIcons,
@@ -82,7 +82,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
   useFocusEffect(
     useCallback(() => {
       logEvent('open Menu Modal');
-    }, [logEvent]),
+    }, [logEvent])
   );
 
   const onSignOut = useCallback(() => {
@@ -102,7 +102,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
         return setSelectTheme(name === 'LIGHT' ? 'DARK' : 'LIGHT');
       case 'Ajuda':
         return setOpenModal('Help');
-      case 'Versão do APP - v2.2.0':
+      case 'Versão do APP - v2.3.0':
         return;
       case 'Termos de Uso':
         return getTerms();
