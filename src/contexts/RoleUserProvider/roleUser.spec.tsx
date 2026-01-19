@@ -175,7 +175,6 @@ describe('RoleUserProvider', () => {
 
     jest.spyOn(IapService, 'validHasSubscription').mockResolvedValue(true);
     jest.spyOn(IapService, 'restoreSubscription').mockResolvedValue([]);
-    // Removido mock de setNewSubscriptionsDate pois não existe ou não é exportado
   });
 
   it('should initialize with null plan and statePlan', async () => {
