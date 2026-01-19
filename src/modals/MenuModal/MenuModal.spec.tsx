@@ -9,6 +9,7 @@ const mockedTerms = jest.spyOn(Terms, 'getTerms');
 const mockedOnClose = jest.fn();
 const mockedhandleSignOut = jest.fn();
 const mockedSetSelectTheme = jest.fn();
+const mockedHandleShareXLS = jest.fn();
 
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
@@ -18,25 +19,33 @@ jest.mock('../../contexts/authContext', () => ({
   }),
 }));
 
+jest.mock('../../hooks/useXLS', () => ({
+  useXLS: () => ({
+    handleShareXLS: mockedHandleShareXLS,
+  }),
+}));
+
 describe('Menu Modal', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('should display menu items', async () => {
-    const { getByText, findByRole, getByRole, getAllByRole } = render(
-      <MenuModal onClose={mockedOnClose} />,
+    const { getByText, findByRole, getAllByRole } = render(
+      <MenuModal onClose={mockedOnClose} />
     );
 
     const title = await findByRole('header');
     expect(title).toHaveProperty('children', ['Menu']);
 
     const menuItems = getAllByRole('menuitem');
-    expect(menuItems).toHaveLength(7);
+    expect(menuItems).toHaveLength(8);
 
     getByText(/Minha Conta/i);
 
     getByText(/Meu Plano Atual/i);
+
+    getByText(/Exportar Carteira/i);
 
     getByText(/Modo Escuro/i);
 
@@ -93,7 +102,7 @@ describe('Menu Modal', () => {
   it('should open help modal', async () => {
     const { getByText, findAllByRole } = render(
       <MenuModal onClose={mockedOnClose} />,
-      [SUCCESSFUL_LIST_QUESTIONS],
+      [SUCCESSFUL_LIST_QUESTIONS]
     );
 
     const help = getByText(/Ajuda/i);
@@ -113,6 +122,15 @@ describe('Menu Modal', () => {
     await act(async () => fireEvent.press(signOut));
 
     expect(mockedhandleSignOut).toHaveBeenCalledTimes(1);
+  });
+
+  it('should export wallet to xls', async () => {
+    const { getByText } = render(<MenuModal onClose={mockedOnClose} />);
+
+    const exportWallet = getByText(/Exportar Carteira/i);
+    await act(async () => fireEvent.press(exportWallet));
+
+    expect(mockedHandleShareXLS).toHaveBeenCalledTimes(1);
   });
 });
 
