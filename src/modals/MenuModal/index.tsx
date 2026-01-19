@@ -25,6 +25,10 @@ import useAmplitude from '../../hooks/useAmplitude';
 import { useFocusEffect } from '@react-navigation/native';
 import { useModalStore } from '../../store/useModalStore';
 import { Modal } from '../../components/Modal';
+import { useXLS } from '../../hooks/useXLS';
+import { useQuery } from '@apollo/client';
+import type { TicketResponseProps } from '../../types/ticketsProps';
+import { GET_TICKETS_BY_WALLET } from '../../graphql/queries';
 
 const menuItens = [
   {
@@ -36,6 +40,11 @@ const menuItens = [
     lib: MaterialDesignIcons,
     icon: 'crown',
     description: 'Meu Plano Atual',
+  },
+  {
+    lib: MaterialDesignIcons,
+    icon: 'file-export-outline',
+    description: 'Exportar Carteira',
   },
   {
     lib: MaterialDesignIcons,
@@ -72,10 +81,21 @@ const MenuModal = ({ onClose }: MenuProps) => {
   const { logEvent } = useAmplitude();
 
   const { color, name } = useContext(ThemeContext);
-  const { handleSignOut, setSelectTheme } = useAuth();
+  const { handleSignOut, setSelectTheme, walletName, wallet } = useAuth();
   const { openModal: openPlanModal } = useModalStore(({ openModal }) => ({
     openModal,
   }));
+
+  const { data } = useQuery<TicketResponseProps>(GET_TICKETS_BY_WALLET, {
+    variables: { walletID: wallet, sort: 'grade' },
+    fetchPolicy: 'cache-first',
+    skip: !wallet,
+  });
+
+  const { handleShareXLS } = useXLS({
+    tickets: data?.getTicketsByWallet || [],
+    walletName,
+  });
 
   const [openModal, setOpenModal] = useState<'User' | 'Help' | null>(null);
 
@@ -98,6 +118,8 @@ const MenuModal = ({ onClose }: MenuProps) => {
         return setOpenModal('User');
       case 'Meu Plano Atual':
         return openPlanModal('PLAN');
+      case 'Exportar Carteira':
+        return handleShareXLS();
       case 'Modo Escuro':
         return setSelectTheme(name === 'LIGHT' ? 'DARK' : 'LIGHT');
       case 'Ajuda':

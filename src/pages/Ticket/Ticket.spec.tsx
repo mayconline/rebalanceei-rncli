@@ -1,7 +1,8 @@
 import React from 'react';
-import Ticket, { GET_TICKETS_BY_WALLET } from './index';
+import Ticket from './index';
 import { render, fireEvent, act } from '../../utils/testProvider';
 import { GraphQLError } from 'graphql';
+import { GET_TICKETS_BY_WALLET } from '../../graphql/queries';
 
 jest.mock('../../contexts/authContext', () => ({
   useAuth: () => ({
@@ -42,13 +43,13 @@ describe('Ticket Tab', () => {
     ]);
 
     const quantityItemOne = getAllByLabelText(
-      /Quantidade e Preço Médio do Ativo/i,
+      /Quantidade e Preço Médio do Ativo/i
     )[0];
 
     expect(quantityItemOne).toHaveProperty('children', ['174x R$ 5,42']);
 
     const gradeItemOne = getAllByLabelText(
-      /Nota para o peso do ativo esperado pela carteira/i,
+      /Nota para o peso do ativo esperado pela carteira/i
     )[0];
     expect(gradeItemOne).toHaveProperty('children', ['6']);
 
@@ -78,19 +79,19 @@ describe('Ticket Tab', () => {
   it('should render empty component', async () => {
     const { getByText, findByText, getByRole, mockOpenModal } = render(
       <Ticket />,
-      [EMPTY_LIST_TICKETS],
+      [EMPTY_LIST_TICKETS]
     );
 
     const title = await findByText('Meus Ativos');
     expect(title).toBeTruthy();
 
     const emptyMessage = await findByText(
-      'Adicione um ativo dando uma nota para ele.',
+      'Adicione um ativo dando uma nota para ele.'
     );
     expect(emptyMessage).toBeTruthy();
 
     const subTitleText = getByText(
-      'Usaremos essa nota para calcular a % ideal desse ativo nessa carteira.',
+      'Usaremos essa nota para calcular a % ideal desse ativo nessa carteira.'
     );
     expect(subTitleText).toBeTruthy();
 

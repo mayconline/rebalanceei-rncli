@@ -1,9 +1,9 @@
 import { GET_WALLET_BY_USER } from '../modals/WalletModal';
 import { GET_SUM_EARNING } from '../pages/Earning';
-import { GET_TICKETS_BY_WALLET } from '../pages/Ticket';
+import { GET_TICKETS_BY_WALLET } from '../graphql/queries';
 import { CURRENT_YEAR } from './currentYear';
 
-export const refetchQuery = (wallet: string, isAdmin: boolean = false) => {
+export const refetchQuery = (wallet: string, isAdmin = false) => {
   if (isAdmin) {
     return [
       {
