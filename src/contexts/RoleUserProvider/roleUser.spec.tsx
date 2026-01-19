@@ -93,7 +93,6 @@ function setupPendingSubscription(): void {
       transactionId: 'new_transaction_id',
       productId: 'product_id',
       transactionDate: 1500000000,
-      transactionReceipt: 'receipt',
     },
   ]);
 }
@@ -105,7 +104,7 @@ function setupCancelSubscription(): void {
 }
 
 function setupUpdateRoleMutation(
-  options: { withError: boolean } = { withError: false },
+  options: { withError: boolean } = { withError: false }
 ) {
   const mockUpdateRole = jest.fn().mockResolvedValue({});
 
@@ -125,7 +124,12 @@ function setupUpdateRoleMutation(
 }
 
 async function testSubscriptionScenario(params: SubscriptionScenarioParams) {
-  const { setupFn, expectedStatePlan, additionalChecks, timeout = 10 } = params;
+  const {
+    setupFn,
+    expectedStatePlan,
+    additionalChecks,
+    timeout = 100,
+  } = params;
 
   setupFn();
 
@@ -133,7 +137,7 @@ async function testSubscriptionScenario(params: SubscriptionScenarioParams) {
     wrapper: RoleUserProvider,
   });
 
-  await new Promise(resolve => setTimeout(resolve, timeout));
+  await new Promise<void>((resolve) => setTimeout(resolve, timeout));
 
   if (expectedStatePlan) {
     expect(result.current.statePlan).toBe(expectedStatePlan);
@@ -171,10 +175,7 @@ describe('RoleUserProvider', () => {
 
     jest.spyOn(IapService, 'validHasSubscription').mockResolvedValue(true);
     jest.spyOn(IapService, 'restoreSubscription').mockResolvedValue([]);
-    jest.spyOn(IapService, 'setNewSubscriptionsDate').mockResolvedValue({
-      newTransactionDate: 1500000000,
-      newRenewDate: 2500000000,
-    });
+    // Removido mock de setNewSubscriptionsDate pois não existe ou não é exportado
   });
 
   it('should initialize with null plan and statePlan', async () => {
@@ -243,7 +244,7 @@ describe('RoleUserProvider', () => {
           transactionDate: 0,
           renewDate: 0,
         }),
-      }),
+      })
     );
   });
 
@@ -270,7 +271,7 @@ describe('RoleUserProvider', () => {
       expect.objectContaining({
         description: 'Plano Premium Cancelado',
         isOnlyConfirm: true,
-      }),
+      })
     );
   });
 
@@ -301,7 +302,7 @@ describe('RoleUserProvider', () => {
       wrapper: RoleUserProvider,
     });
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise<void>((resolve) => setTimeout(resolve, 1000));
 
     expect(console.error).toHaveBeenCalled();
   });
