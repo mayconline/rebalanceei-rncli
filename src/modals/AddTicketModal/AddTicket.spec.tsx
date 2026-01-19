@@ -1,7 +1,7 @@
 import React from 'react';
 import AddTicket, { CREATE_TICKET } from './index';
 import { UPDATE_TICKET, DELETE_TICKET } from '../EditTicket';
-import { GET_TICKETS_BY_WALLET } from '../../pages/Ticket';
+import { GET_TICKETS_BY_WALLET } from '../../graphql/queries';
 import { render, fireEvent, act, waitFor } from '../../utils/testProvider';
 import { GraphQLError } from 'graphql';
 import MockAdapter from 'axios-mock-adapter';
@@ -68,7 +68,7 @@ describe('AddTicket Tab', () => {
 
     getByText(/Ativo Selecionado/i);
     const inputSelectedTicket = getByPlaceholderText(
-      /Nenhum ativo selecionado/i,
+      /Nenhum ativo selecionado/i
     );
 
     await act(async () => fireEvent.press(suggestButton));
@@ -126,7 +126,7 @@ describe('AddTicket Tab', () => {
         SUCCESSFUL_LIST_WALLET,
         SUCCESSFUL_SUM_EARNINGS(2022),
       ],
-      MOCKED_PARAMS,
+      MOCKED_PARAMS
     );
 
     const title = await findByRole('header');
@@ -158,7 +158,7 @@ describe('AddTicket Tab', () => {
     expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
 
     expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
-      'Tem certeza que deseja alterar o ativo?',
+      'Tem certeza que deseja alterar o ativo?'
     );
 
     await act(async () => {
@@ -181,7 +181,7 @@ describe('AddTicket Tab', () => {
         SUCCESSFUL_LIST_WALLET,
         SUCCESSFUL_SUM_EARNINGS(2022),
       ],
-      MOCKED_PARAMS,
+      MOCKED_PARAMS
     );
 
     const submitButton = await findAllByRole('button');
@@ -192,7 +192,7 @@ describe('AddTicket Tab', () => {
     expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
 
     expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
-      'Tem certeza que deseja excluir o ativo?',
+      'Tem certeza que deseja excluir o ativo?'
     );
 
     await act(async () => {
@@ -222,7 +222,7 @@ describe('AddTicket Tab', () => {
     await act(async () => fireEvent.press(suggestButton));
 
     const inputSelectedTicket = getByPlaceholderText(
-      /Nenhum ativo selecionado/i,
+      /Nenhum ativo selecionado/i
     );
 
     getByText(/Pesquise e selecione um ativo/i);
@@ -262,7 +262,7 @@ describe('AddTicket Tab', () => {
     const { findAllByRole, findByText, mockOpenConfirmModal } = render(
       <AddTicket contentModal={MOCKED_PARAMS} />,
       [INVALID_EDIT_TICKET],
-      MOCKED_PARAMS,
+      MOCKED_PARAMS
     );
 
     const submitButton = await findAllByRole('button');
@@ -273,7 +273,7 @@ describe('AddTicket Tab', () => {
     expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
 
     expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
-      'Tem certeza que deseja alterar o ativo?',
+      'Tem certeza que deseja alterar o ativo?'
     );
 
     await act(async () => {
@@ -287,7 +287,7 @@ describe('AddTicket Tab', () => {
     const { findAllByRole, findByText, mockOpenConfirmModal } = render(
       <AddTicket contentModal={MOCKED_PARAMS} />,
       [INVALID_DELETE_TICKET],
-      MOCKED_PARAMS,
+      MOCKED_PARAMS
     );
 
     const submitButton = await findAllByRole('button');
@@ -298,7 +298,7 @@ describe('AddTicket Tab', () => {
     expect(mockOpenConfirmModal).toHaveBeenCalledTimes(1);
 
     expect(mockOpenConfirmModal.mock.calls[0][0].description).toBe(
-      'Tem certeza que deseja excluir o ativo?',
+      'Tem certeza que deseja excluir o ativo?'
     );
 
     await act(async () => {

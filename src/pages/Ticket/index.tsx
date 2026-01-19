@@ -11,6 +11,7 @@ import ListItem from './ListItem';
 
 import LayoutTab from '../../components/LayoutTab';
 import { useModalStore } from '../../store/useModalStore';
+import { GET_TICKETS_BY_WALLET } from '../../graphql/queries';
 
 const initialFilter = [
   {
@@ -53,8 +54,8 @@ const Ticket = () => {
 
   useFocusEffect(
     useCallback(() => {
-      !data?.getTicketsByWallet && getTicketsByWallet();
-    }, [data?.getTicketsByWallet, getTicketsByWallet]),
+      !data?.getTicketsByWallet && wallet && getTicketsByWallet();
+    }, [data?.getTicketsByWallet, wallet, getTicketsByWallet])
   );
 
   useFocusEffect(
@@ -63,10 +64,10 @@ const Ticket = () => {
         setTicketData(
           getArraySortByParams<ITickets>(
             data?.getTicketsByWallet,
-            selectedFilter,
-          ),
+            selectedFilter
+          )
         );
-    }, [data, selectedFilter]),
+    }, [data, selectedFilter])
   );
 
   const handleChangeFilter = useCallback((filterName: string) => {
@@ -77,7 +78,7 @@ const Ticket = () => {
     (item: ITickets) => {
       openModal('AddTicket', { ticket: item });
     },
-    [openModal],
+    [openModal]
   );
 
   const hasEmptyTickets = !wallet || (!queryLoading && !ticketData?.length);
@@ -98,7 +99,7 @@ const Ticket = () => {
       <ListTicket
         data={ticketData}
         extraData={ticketData}
-        keyExtractor={item => item._id}
+        keyExtractor={(item) => item._id}
         renderItem={({ item, index }) => (
           <ListItem
             item={item}
@@ -110,19 +111,5 @@ const Ticket = () => {
     </LayoutTab>
   );
 };
-
-export const GET_TICKETS_BY_WALLET = gql`
-  query getTicketsByWallet($walletID: ID!, $sort: SortTickets!) {
-    getTicketsByWallet(walletID: $walletID, sort: $sort) {
-      _id
-      symbol
-      name
-      quantity
-      averagePrice
-      grade
-      classSymbol
-    }
-  }
-`;
 
 export default Ticket;

@@ -48,3 +48,7 @@ jest.mock('./config/envs', () => ({
   suggestionsApiUrl: 'suggestions-api-url',
   backApiUrl: 'back-api-url',
 }));
+
+jest.mock('react-native-share', () => ({
+  default: jest.fn(),
+}));
