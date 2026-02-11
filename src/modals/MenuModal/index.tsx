@@ -59,7 +59,7 @@ const menuItens = [
   {
     lib: MaterialDesignIcons,
     icon: 'application-cog-outline',
-    description: 'Versão do APP - v2.4.0',
+    description: 'Versão do APP - v2.5.0',
   },
   {
     lib: MaterialDesignIcons,
@@ -124,7 +124,7 @@ const MenuModal = ({ onClose }: MenuProps) => {
         return setSelectTheme(name === 'LIGHT' ? 'DARK' : 'LIGHT');
       case 'Ajuda':
         return setOpenModal('Help');
-      case 'Versão do APP - v2.4.0':
+      case 'Versão do APP - v2.5.0':
         return;
       case 'Termos de Uso':
         return getTerms();

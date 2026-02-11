@@ -67,6 +67,14 @@ const usePurchase = () => {
                   validatePurchaseRequest
                 );
 
+                const subsDetailsPhases =
+                  selectedSku?.subscriptionOfferDetailsAndroid?.[0]
+                    ?.pricingPhases;
+
+                const subsDetails =
+                  subsDetailsPhases?.pricingPhaseList?.[1] ??
+                  subsDetailsPhases?.pricingPhaseList?.[0];
+
                 const transactionData = {
                   transactionDate: validatedPurchase?.transactionDate,
                   renewDate: validatedPurchase?.renewDate,
@@ -77,12 +85,8 @@ const usePurchase = () => {
                   platform: validatedPurchase?.platform,
                   autoRenewing: validatedPurchase?.autoRenewing,
                   description: selectedSku?.nameAndroid,
-                  localizedPrice:
-                    selectedSku?.subscriptionOfferDetailsAndroid?.[0]
-                      ?.pricingPhases?.pricingPhaseList?.[0]?.formattedPrice,
-                  subscriptionPeriodAndroid:
-                    selectedSku?.subscriptionOfferDetailsAndroid?.[0]
-                      ?.pricingPhases?.pricingPhaseList?.[0]?.billingPeriod,
+                  localizedPrice: subsDetails?.formattedPrice,
+                  subscriptionPeriodAndroid: subsDetails?.billingPeriod,
                 };
 
                 await finishTransaction({ purchase });
