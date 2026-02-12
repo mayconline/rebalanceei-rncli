@@ -65,9 +65,12 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
 
       {listSubscriptions?.length ? (
         listSubscriptions?.map((subscription) => {
+          const subsDetailsPhases =
+            subscription?.subscriptionOfferDetailsAndroid?.[0]?.pricingPhases;
+
           const subsDetails =
-            subscription?.subscriptionOfferDetailsAndroid?.[0]?.pricingPhases
-              ?.pricingPhaseList?.[0];
+            subsDetailsPhases?.pricingPhaseList?.[1] ??
+            subsDetailsPhases?.pricingPhaseList?.[0];
 
           const subscriptionPeriodAndroid = subsDetails?.billingPeriod;
           const localizedPrice = subsDetails?.formattedPrice;
@@ -79,7 +82,7 @@ const Free = ({ planName, handleSelectPlan }: IFree) => {
               descriptions={
                 subscriptionPeriodAndroid === 'P1M'
                   ? []
-                  : ['🔖 Promoção limitada', '💰 R$ 120,00 OFF Anual']
+                  : ['💰 20% de desconto', '🔖 Menos de R$ 1,00 por dia']
               }
               plan={`${localizedPrice} / ${
                 subscriptionPeriodAndroid === 'P1M' ? 'Mês' : 'Ano'

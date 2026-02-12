@@ -1,6 +1,6 @@
 {
   "name": "rebalanceei",
-  "version": "0.0.1",
+  "version": "2.5.0",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -82,21 +82,12 @@
   },
   "jest": {
     "preset": "react-native",
-    "setupFilesAfterEnv": [
-      "@testing-library/jest-native/extend-expect"
-    ],
+    "setupFilesAfterEnv": ["@testing-library/jest-native/extend-expect"],
     "setupFiles": [
       "./src/setupTests.ts",
       "./node_modules/react-native-gesture-handler/jestSetup.js"
     ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
     "transformIgnorePatterns": [
       "node_modules/(?!(@react-native|react-native|react-native-progress|react-navigation|@apollo/client|@react-native-community|@react-navigation)/)"
     ],

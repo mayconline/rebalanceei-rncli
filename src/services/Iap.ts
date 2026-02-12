@@ -5,29 +5,29 @@ import {
   requestPurchase,
   ErrorCode,
   type ProductSubscriptionAndroid as SubscriptionAndroid,
-} from 'react-native-iap'
-import type { IPlan } from '../types/plan-types'
+} from 'react-native-iap';
+import type { IPlan } from '../types/plan-types';
 
 export const listSku = [
-  'rebalanceei_premium_mensal_24',
-  'rebalanceei_premium_anual_2024',
-]
+  'rebalanceei_premium_mensal_26',
+  'rebalanceei_premium_anual_26',
+];
 
 export const validHasSubscription = async (plan?: IPlan) => {
-  if (!plan) return false
+  if (!plan) return false;
 
-  const { renewDate } = plan
+  const { renewDate } = plan;
 
-  const today = new Date().getTime()
+  const today = new Date().getTime();
 
-  return today < Number(renewDate)
-}
+  return today < Number(renewDate);
+};
 
 export const restoreSubscription = async () => {
-  const purchases = await getAvailablePurchases()
+  const purchases = await getAvailablePurchases();
 
-  return purchases
-}
+  return purchases;
+};
 
 export const sendRequestSubscription = async (
   skuID: string,
@@ -46,10 +46,10 @@ export const sendRequestSubscription = async (
       },
     },
     type: 'subs',
-  })
-}
+  });
+};
 
-export type Subscription = SubscriptionAndroid
-export type Purchase = PurchaseType
+export type Subscription = SubscriptionAndroid;
+export type Purchase = PurchaseType;
 
-export { useIAP, ErrorCode }
+export { useIAP, ErrorCode };
